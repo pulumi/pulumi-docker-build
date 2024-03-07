@@ -1,10 +1,10 @@
-PROJECT_NAME := Pulumi Xyz Resource Provider
+PROJECT_NAME := Pulumi Docker Native Resource Provider
 
-PACK             := xyz
+PACK             := docker-native
 PACKDIR          := sdk
 PROJECT          := github.com/pulumi/pulumi-docker-native
-NODE_MODULE_NAME := @pulumi/xyz
-NUGET_PKG_NAME   := Pulumi.Xyz
+NODE_MODULE_NAME := @pulumi/docker-native
+NUGET_PKG_NAME   := Pulumi.DockerNative
 
 PROVIDER        := pulumi-resource-${PACK}
 VERSION         ?= $(shell pulumictl get version)

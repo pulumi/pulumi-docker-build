@@ -80,7 +80,7 @@ class Random(pulumi.CustomResource):
             __props__.__dict__["length"] = length
             __props__.__dict__["result"] = None
         super(Random, __self__).__init__(
-            'xyz:index:Random',
+            'docker-native:index:Random',
             resource_name,
             __props__,
             opts)

@@ -7,9 +7,9 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Xyz
+namespace Pulumi.DockerNative
 {
-    [XyzResourceType("xyz:index:Random")]
+    [DockerNativeResourceType("docker-native:index:Random")]
     public partial class Random : global::Pulumi.CustomResource
     {
         [Output("length")]
@@ -27,12 +27,12 @@ namespace Pulumi.Xyz
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
         public Random(string name, RandomArgs args, CustomResourceOptions? options = null)
-            : base("xyz:index:Random", name, args ?? new RandomArgs(), MakeResourceOptions(options, ""))
+            : base("docker-native:index:Random", name, args ?? new RandomArgs(), MakeResourceOptions(options, ""))
         {
         }
 
         private Random(string name, Input<string> id, CustomResourceOptions? options = null)
-            : base("xyz:index:Random", name, null, MakeResourceOptions(options, id))
+            : base("docker-native:index:Random", name, null, MakeResourceOptions(options, id))
         {
         }
 
@@ -41,6 +41,7 @@ namespace Pulumi.Xyz
             var defaultOptions = new CustomResourceOptions
             {
                 Version = Utilities.Version,
+                PluginDownloadURL = "github.com/pulumi/pulumi-docker-native",
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
             // Override the ID if one was specified for consistency with other language SDKs.

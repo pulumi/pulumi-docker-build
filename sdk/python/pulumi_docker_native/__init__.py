@@ -11,11 +11,11 @@ _utilities.register(
     resource_modules="""
 [
  {
-  "pkg": "xyz",
+  "pkg": "docker-native",
   "mod": "index",
-  "fqn": "pulumi_xyz",
+  "fqn": "pulumi_docker_native",
   "classes": {
-   "xyz:index:Random": "Random"
+   "docker-native:index:Random": "Random"
   }
  }
 ]
@@ -23,9 +23,9 @@ _utilities.register(
     resource_packages="""
 [
  {
-  "pkg": "xyz",
-  "token": "pulumi:providers:xyz",
-  "fqn": "pulumi_xyz",
+  "pkg": "docker-native",
+  "token": "pulumi:providers:docker-native",
+  "fqn": "pulumi_docker_native",
   "class": "Provider"
  }
 ]

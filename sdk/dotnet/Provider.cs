@@ -7,9 +7,9 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Xyz
+namespace Pulumi.DockerNative
 {
-    [XyzResourceType("pulumi:providers:xyz")]
+    [DockerNativeResourceType("pulumi:providers:docker-native")]
     public partial class Provider : global::Pulumi.ProviderResource
     {
         /// <summary>
@@ -20,7 +20,7 @@ namespace Pulumi.Xyz
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
         public Provider(string name, ProviderArgs? args = null, CustomResourceOptions? options = null)
-            : base("xyz", name, args ?? new ProviderArgs(), MakeResourceOptions(options, ""))
+            : base("docker-native", name, args ?? new ProviderArgs(), MakeResourceOptions(options, ""))
         {
         }
 
@@ -29,6 +29,7 @@ namespace Pulumi.Xyz
             var defaultOptions = new CustomResourceOptions
             {
                 Version = Utilities.Version,
+                PluginDownloadURL = "github.com/pulumi/pulumi-docker-native",
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
             // Override the ID if one was specified for consistency with other language SDKs.

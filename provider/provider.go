@@ -20,18 +20,36 @@ import (
 
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
+	"github.com/pulumi/pulumi-go-provider/middleware/schema"
+	gen "github.com/pulumi/pulumi/pkg/v3/codegen/go"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
 )
 
 // Version is initialized by the Go linker to contain the semver of this build.
 var Version string
 
-const Name string = "xyz"
+const Name string = "docker-native"
 
 func Provider() p.Provider {
 	// We tell the provider what resources it needs to support.
 	// In this case, a single custom resource.
 	return infer.Provider(infer.Options{
+		Metadata: schema.Metadata{
+			LanguageMap: map[string]any{
+				"go": gen.GoPackageInfo{
+					Generics:           gen.GenericsSettingGenericsOnly,
+					RootPackageName:    "docker",
+					InternalModuleName: "internal",
+					ImportBasePath:     "github.com/pulumi/pulumi-docker-native/sdk/go",
+				},
+			},
+			Description:       "Description",
+			Keywords:          []string{"keywords"},
+			Homepage:          "pulumi.com",
+			Publisher:         "pulumi",
+			Repository:        "https://github.com/pulumi/pulumi-docker-native",
+			PluginDownloadURL: "github.com/pulumi/pulumi-docker-native",
+		},
 		Resources: []infer.InferredResource{
 			infer.Resource[Random, RandomArgs, RandomState](),
 		},
