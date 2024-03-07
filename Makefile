@@ -2,7 +2,7 @@ PROJECT_NAME := Pulumi Xyz Resource Provider
 
 PACK             := xyz
 PACKDIR          := sdk
-PROJECT          := github.com/pulumi/pulumi-xyz
+PROJECT          := github.com/pulumi/pulumi-docker-native
 NODE_MODULE_NAME := @pulumi/xyz
 NUGET_PKG_NAME   := Pulumi.Xyz
 

@@ -1,4 +1,4 @@
-module github.com/pulumi/pulumi-xyz/provider
+module github.com/pulumi/pulumi-docker-native/provider
 
 go 1.21
 
