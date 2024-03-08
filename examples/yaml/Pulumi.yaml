@@ -1,13 +1,13 @@
-name: provider-xyz-native
+name: provider-docker-native
 runtime: yaml
 plugins:
   providers:
-    - name: xyz
+    - name: docker-native
       path: ../../bin
 
 resources:
   myRandomResource:
-    type: xyz:Random
+    type: docker-native:Random
     properties:
       length: 24
 

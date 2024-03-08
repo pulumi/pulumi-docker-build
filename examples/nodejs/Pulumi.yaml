@@ -1,6 +1,6 @@
-name: provider-xyz-native
+name: provider-docker-native
 runtime: nodejs
 plugins:
   providers:
-    - name: xyz
+    - name: docker-native
       path: ../../bin
