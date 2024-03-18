@@ -66,6 +66,8 @@ python_sdk::
 		rm ./bin/setup.py.bak && \
 		cd ./bin && python3 setup.py build sdist
 
+codegen: gen_examples
+
 gen_examples: gen_go_example \
 		gen_nodejs_example \
 		gen_python_example \
