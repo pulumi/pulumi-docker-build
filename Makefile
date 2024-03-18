@@ -150,7 +150,7 @@ install_nodejs_sdk::
 	yarn link --cwd $(WORKING_DIR)/sdk/nodejs/bin
 
 .PHONY:
-codegen: sdk
+codegen:
 
 .PHONY:
 generate_schema: ${SCHEMA_PATH}
