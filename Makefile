@@ -153,7 +153,7 @@ install_nodejs_sdk::
 codegen:
 
 .PHONY:
-generate_schema: ${SCHEMA_PATH}
+generate_schema:
 
 ${SCHEMA_PATH}: bin/${PROVIDER}
 	pulumi package get-schema bin/${PROVIDER} > $(SCHEMA_PATH)
