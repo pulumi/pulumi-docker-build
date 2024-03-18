@@ -10,7 +10,7 @@ PROVIDER        := pulumi-resource-${PACK}
 VERSION         ?= $(shell pulumictl get version)
 PROVIDER_PATH   := provider
 VERSION_PATH    := ${PROVIDER_PATH}.Version
-SCHEMA_PATH     := bin/schema.json
+SCHEMA_PATH     := ${PROVIDER_PATH}/cmd/pulumi-resource-${PACK}/schema.json
 
 GOPATH			:= $(shell go env GOPATH)
 
@@ -154,10 +154,10 @@ codegen: gen_examples sdk
 generate_schema: ${SCHEMA_PATH}
 
 ${SCHEMA_PATH}: bin/${PROVIDER}
-	pulumi package get-schema ./bin/${PROVIDER} > $(SCHEMA_PATH)
+	pulumi package get-schema bin/${PROVIDER} > $(SCHEMA_PATH)
 
 bin/${PROVIDER}: provider/**.go
-	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
+	(cd provider && go build -o bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
 
 bin/pulumi-java-gen: .pulumi-java-gen.version
 	pulumictl download-binary -n pulumi-language-java -v v$(shell cat .pulumi-java-gen.version) -r pulumi/pulumi-java
@@ -166,7 +166,7 @@ sdk: sdk/python sdk/nodejs sdk/java sdk/python sdk/go sdk/dotnet
 
 sdk/python: bin/${PROVIDER}
 	rm -rf sdk/python
-	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language python
+	pulumi package gen-sdk bin/$(PROVIDER) --language python
 	cp README.md ${PACKDIR}/python/
 	cd ${PACKDIR}/python/ && \
 		python3 setup.py clean --all 2>/dev/null && \
@@ -177,7 +177,7 @@ sdk/python: bin/${PROVIDER}
 
 sdk/nodejs: bin/${PROVIDER}
 	rm -rf sdk/nodejs
-	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language nodejs
+	pulumi package gen-sdk bin/$(PROVIDER) --language nodejs
 	cd ${PACKDIR}/nodejs/ && \
 		yarn install && \
 		yarn run tsc && \
@@ -185,19 +185,19 @@ sdk/nodejs: bin/${PROVIDER}
 		sed -i.bak 's/$${VERSION}/$(NODE_VERSION)/g' bin/package.json && \
 		rm ./bin/package.json.bak
 
-sdk/go: 	bin/${PROVIDER}
+sdk/go: bin/${PROVIDER}
 	rm -rf sdk/go
-	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language go
+	pulumi package gen-sdk bin/$(PROVIDER) --language go
 
 sdk/dotnet: bin/${PROVIDER}
 	rm -rf sdk/dotnet
-	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language dotnet
-	cd ${PACKDIR}/dotnet/&& \
-		echo "${DOTNET_VERSION}" >version.txt && \
+	pulumi package gen-sdk bin/$(PROVIDER) --language dotnet
+	cd ${PACKDIR}/dotnet/ && \
+		echo "${DOTNET_VERSION}" > version.txt && \
 		dotnet build /p:Version=${DOTNET_VERSION}
 
 sdk/java: bin/${PROVIDER} bin/pulumi-java-gen ${SCHEMA_PATH}
-	$(WORKING_DIR)/bin/pulumi-java-gen generate --schema ${SCHEMA_PATH} --out sdk/java  --build gradle-nexus
+	bin/pulumi-java-gen generate --schema ${SCHEMA_PATH} --out sdk/java  --build gradle-nexus
 	cd sdk/java/ && \
     printf "module fake_java_module // Exclude this directory from Go tools\n\ngo 1.17\n" > go.mod && \
     gradle --console=plain build
