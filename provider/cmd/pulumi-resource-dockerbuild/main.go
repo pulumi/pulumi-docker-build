@@ -17,7 +17,7 @@ package main
 import (
 	p "github.com/pulumi/pulumi-go-provider"
 
-	xyz "github.com/pulumi/pulumi-docker-native/provider"
+	xyz "github.com/pulumi/pulumi-dockerbuild/provider"
 )
 
 // Serve the provider against Pulumi's Provider protocol.

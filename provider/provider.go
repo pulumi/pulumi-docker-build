@@ -28,7 +28,7 @@ import (
 // Version is initialized by the Go linker to contain the semver of this build.
 var Version string
 
-const Name string = "docker-native" // Needs to match $PACK in Makefile.
+const Name string = "dockerbuild" // Needs to match $PACK in Makefile.
 
 func Provider() p.Provider {
 	// We tell the provider what resources it needs to support.
@@ -40,17 +40,17 @@ func Provider() p.Provider {
 				"go": gen.GoPackageInfo{
 					Generics: gen.GenericsSettingGenericsOnly,
 					PackageImportAliases: map[string]string{
-						"github.com/pulumi/pulumi-docker-native/sdk/go/docker": "docker",
+						"github.com/pulumi/pulumi-dockerbuild/sdk/go/docker": "docker",
 					},
-					ImportBasePath: "github.com/pulumi/pulumi-docker-native/sdk/go/docker",
+					ImportBasePath: "github.com/pulumi/pulumi-dockerbuild/sdk/go/docker",
 				},
 			},
 			Description:       "Description",
 			Keywords:          []string{"keywords"},
 			Homepage:          "pulumi.com",
 			Publisher:         "pulumi",
-			Repository:        "https://github.com/pulumi/pulumi-docker-native",
-			PluginDownloadURL: "github.com/pulumi/pulumi-docker-native",
+			Repository:        "https://github.com/pulumi/pulumi-dockerbuild",
+			PluginDownloadURL: "github.com/pulumi/pulumi-dockerbuild",
 		},
 		Resources: []infer.InferredResource{
 			infer.Resource[Random, RandomArgs, RandomState](),
