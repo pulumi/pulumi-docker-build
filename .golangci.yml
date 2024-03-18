@@ -1,0 +1,77 @@
+linters:
+  enable-all: false
+  enable:
+    - errcheck
+    - exhaustive
+    - prealloc
+    - gofumpt
+    - revive
+    - gci
+    - gosec
+    - govet
+    - ineffassign
+    - lll
+    - misspell
+    - nolintlint
+    - nakedret
+    - unconvert
+    - unused
+    - paralleltest
+    - perfsprint
+    - depguard
+    - importas
+
+linters-settings:
+  nakedret:
+    # Make an issue if func has more lines of code than this setting, and it has naked returns.
+    # Default: 30
+    max-func-lines: 60
+  nolintlint:
+    # Some linter exclusions are added to generated or templated files
+    # pre-emptively.
+    # Don't complain about these.
+    allow-unused: true
+  govet:
+    enable:
+      - nilness
+      # Reject comparisons of reflect.Value with DeepEqual or '=='.
+      - reflectvaluecompare
+      # Reject sort.Slice calls with a non-slice argument.
+      - sortslice
+      # Detect write to struct/arrays by-value that aren't read again.
+      - unusedwrite
+  gci:
+    sections:
+      - standard # Standard section: captures all standard library packages.
+      - blank # Blank section: contains all blank imports.
+      - default # Default section: contains all imports that could not be matched to another section type.
+      - prefix(github.com/pulumi/) # Custom section: groups all imports with the github.com/pulumi/ prefix.
+      - prefix(github.com/pulumi/pulumi-dockerbuild) # Custom section: local imports
+    custom-order: true
+  depguard:
+    rules:
+      protobuf:
+        deny:
+          - pkg: "github.com/golang/protobuf"
+            desc: Use google.golang.org/protobuf instead
+
+issues:
+  exclude-rules:
+    # Don't warn on unused parameters.
+    # Parameter names are useful; replacing them with '_' is undesirable.
+    - linters: [revive]
+      text: 'unused-parameter: parameter \S+ seems to be unused, consider removing or renaming it as _'
+
+    # staticcheck already has smarter checks for empty blocks.
+    # revive's empty-block linter has false positives.
+    # For example, as of writing this, the following is not allowed.
+    #   for foo() { }
+    - linters: [revive]
+      text: "empty-block: this block is empty, you can remove it"
+
+    # We *frequently* use the term 'new' in the context of properties
+    # (new and old properties),
+    # and we rarely use the 'new' built-in function.
+    # It's fine to ignore these cases.
+    - linters: [revive]
+      text: "redefines-builtin-id: redefinition of the built-in function new"
