@@ -197,8 +197,5 @@ sdk/dotnet: bin/${PROVIDER}
 		dotnet build /p:Version=${DOTNET_VERSION}
 
 sdk/java: bin/${PROVIDER} bin/pulumi-java-gen ${SCHEMA_PATH}
-	bin/pulumi-java-gen generate --schema ${SCHEMA_PATH} --out sdk/java  --build gradle-nexus
-	cd sdk/java/ && \
-    printf "module fake_java_module // Exclude this directory from Go tools\n\ngo 1.17\n" > go.mod && \
-    gradle --console=plain build
-
+	rm -rf sdk/java
+	pulumi package gen-sdk bin/${PROVIDER} --language java
