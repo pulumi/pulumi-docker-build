@@ -117,7 +117,7 @@ only_build:: build
 
 lint::
 	for DIR in "provider" "sdk" "tests" ; do \
-		pushd $$DIR && golangci-lint run -c ../.golangci.yml --timeout 10m && popd ; \
+		pushd $$DIR && golangci-lint run --fix -c ../.golangci.yml --timeout 10m && popd ; \
 	done
 
 install:: install_nodejs_sdk install_dotnet_sdk

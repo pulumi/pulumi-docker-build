@@ -18,17 +18,20 @@ import (
 	"testing"
 
 	"github.com/blang/semver"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/integration"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 
 	xyz "github.com/pulumi/pulumi-dockerbuild/provider"
 )
 
 func TestRandomCreate(t *testing.T) {
+	t.Parallel()
+
 	prov := provider()
 
 	response, err := prov.Create(p.CreateRequest{

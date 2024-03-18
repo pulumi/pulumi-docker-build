@@ -100,7 +100,7 @@ func (Random) Create(ctx p.Context, name string, input RandomArgs, preview bool)
 }
 
 func makeRandom(length int) string {
-	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
+	seededRand := rand.New(rand.NewSource(time.Now().UnixNano())) //nolint: gosec
 	charset := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
 	result := make([]rune, length)
