@@ -8,7 +8,7 @@ on:
     - "!v*.*.*-**"
 env:
   GITHUB_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
-  PROVIDER: docker-native
+  PROVIDER: dockerbuild
   PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
   PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -368,6 +368,15 @@ jobs:
       uses: actions/setup-go@v5
       with:
         go-version: ${{ env.GOVERSION }}
+    - name: Clear GitHub Actions Ubuntu runner disk space
+      uses: jlumbroso/free-disk-space@v1.3.1
+      with:
+        tool-cache: false
+        dotnet: false
+        android: true
+        haskell: true
+        swap-storage: true
+        large-packages: false
     - name: Install pulumictl
       uses: jaxxstorm/action-install-gh-release@v1.11.0
       with:
@@ -390,7 +399,7 @@ jobs:
     - name: Run GoReleaser
       uses: goreleaser/goreleaser-action@v5
       with:
-        args: -p 3 release --rm-dist --timeout 60m0s
+        args: -p 3 release --clean --timeout 60m0s
         version: latest
     - if: failure() && github.event_name == 'push'
       name: Notify Slack
