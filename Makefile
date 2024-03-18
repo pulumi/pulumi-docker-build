@@ -148,7 +148,7 @@ install_nodejs_sdk::
 
 
 .PHONY:
-codegen: gen_examples sdk
+codegen: bin/${PROVIDER} gen_examples sdk
 
 .PHONY:
 generate_schema: ${SCHEMA_PATH}

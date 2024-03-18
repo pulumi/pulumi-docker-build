@@ -3,6 +3,8 @@ package generated_program;
 import com.pulumi.Context;
 import com.pulumi.Pulumi;
 import com.pulumi.core.Output;
+import com.pulumi.dockerbuild.Random;
+import com.pulumi.dockerbuild.RandomArgs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -16,6 +18,10 @@ public class App {
     }
 
     public static void stack(Context ctx) {
-        ctx.export("output", %!v(PANIC=Format method: runtime error: invalid memory address or nil pointer dereference));
+        var myRandomResource = new Random("myRandomResource", RandomArgs.builder()        
+            .length(24)
+            .build());
+
+        ctx.export("output", Map.of("value", myRandomResource.result()));
     }
 }

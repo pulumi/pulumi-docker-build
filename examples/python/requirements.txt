@@ -1,1 +1,2 @@
 pulumi>=3.0.0,<4.0.0
+pulumi-dockerbuild==0.0.1-alpha.1710800081+042bd882.dirty

@@ -1,6 +1,6 @@
-name: provider-docker-native
+name: provider-dockerbuild
 runtime: java
 plugins:
   providers:
-    - name: docker-native
+    - name: dockerbuild
       path: ../../bin
