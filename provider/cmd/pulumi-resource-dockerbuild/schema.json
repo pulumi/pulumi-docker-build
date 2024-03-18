@@ -1,0 +1,54 @@
+{
+  "name": "dockerbuild",
+  "displayName": "docker",
+  "version": "0.0.1-alpha.1710800081+042bd882.dirty",
+  "description": "Description",
+  "keywords": [
+    "keywords"
+  ],
+  "homepage": "pulumi.com",
+  "repository": "https://github.com/pulumi/pulumi-dockerbuild",
+  "pluginDownloadURL": "github.com/pulumi/pulumi-dockerbuild",
+  "publisher": "pulumi",
+  "meta": {
+    "moduleFormat": "(.*)"
+  },
+  "language": {
+    "go": {
+      "importBasePath": "github.com/pulumi/pulumi-dockerbuild/sdk/go/docker",
+      "packageImportAliases": {
+        "github.com/pulumi/pulumi-dockerbuild/sdk/go/docker": "docker"
+      },
+      "generics": "generics-only"
+    }
+  },
+  "config": {},
+  "provider": {
+    "type": "object"
+  },
+  "resources": {
+    "dockerbuild:index:Random": {
+      "properties": {
+        "length": {
+          "type": "integer"
+        },
+        "result": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "required": [
+        "length",
+        "result"
+      ],
+      "inputProperties": {
+        "length": {
+          "type": "integer"
+        }
+      },
+      "requiredInputs": [
+        "length"
+      ]
+    }
+  }
+}
