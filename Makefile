@@ -73,7 +73,7 @@ python_sdk::
 
 gen_examples: examples/go examples/nodejs examples/python examples/dotnet examples/java
 
-examples/%:  ${WORKING_DIR}/examples/yaml/Pulumi.yaml
+examples/%: bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 	rm -rf ${WORKING_DIR}/examples/$*
 	pulumi convert \
 		--cwd ${WORKING_DIR}/examples/yaml \

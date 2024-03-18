@@ -26,7 +26,7 @@
 				<dependency>
             		<groupId>com.pulumi</groupId>
             		<artifactId>dockerbuild</artifactId>
-            		<version>0.0.1-alpha.1710800081+042bd882.dirty</version>
+            		<version>0.0.1-alpha.1710803103+c70da8db</version>
         		</dependency>
 			</dependencies>
 
