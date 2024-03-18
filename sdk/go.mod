@@ -1,4 +1,4 @@
-module github.com/pulumi/pulumi-docker-native/sdk
+module github.com/pulumi/pulumi-dockerbuild/sdk
 
 go 1.21
 

@@ -10,12 +10,17 @@ PROVIDER        := pulumi-resource-${PACK}
 VERSION         ?= $(shell pulumictl get version)
 PROVIDER_PATH   := provider
 VERSION_PATH    := ${PROVIDER_PATH}.Version
+SCHEMA_PATH     := bin/schema.json
 
 GOPATH			:= $(shell go env GOPATH)
 
 WORKING_DIR     := $(shell pwd)
 EXAMPLES_DIR    := ${WORKING_DIR}/examples/yaml
 TESTPARALLELISM := 4
+
+PYPI_VERSION    := $(shell pulumictl get version --language python)
+NODE_VERSION    := $(shell pulumictl get version --language javascript)
+DOTNET_VERSION  := $(shell pulumictl get version --language dotnet)
 
 ensure::
 	cd provider && go mod tidy
@@ -66,14 +71,9 @@ python_sdk::
 		rm ./bin/setup.py.bak && \
 		cd ./bin && python3 setup.py build sdist
 
-codegen: gen_examples
+gen_examples: examples/go examples/nodejs examples/python examples/dotnet examples/java
 
-gen_examples: gen_go_example \
-		gen_nodejs_example \
-		gen_python_example \
-		gen_dotnet_example
-
-gen_%_example:
+examples/%:  ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 	rm -rf ${WORKING_DIR}/examples/$*
 	pulumi convert \
 		--cwd ${WORKING_DIR}/examples/yaml \
@@ -145,3 +145,60 @@ install_go_sdk::
 install_nodejs_sdk::
 	-yarn unlink --cwd $(WORKING_DIR)/sdk/nodejs/bin
 	yarn link --cwd $(WORKING_DIR)/sdk/nodejs/bin
+
+
+.PHONY:
+codegen: gen_examples sdk
+
+.PHONY:
+generate_schema: ${SCHEMA_PATH}
+
+${SCHEMA_PATH}: bin/${PROVIDER}
+	pulumi package get-schema ./bin/${PROVIDER} > $(SCHEMA_PATH)
+
+bin/${PROVIDER}: provider/**.go
+	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
+
+bin/pulumi-java-gen: .pulumi-java-gen.version
+	pulumictl download-binary -n pulumi-language-java -v v$(shell cat .pulumi-java-gen.version) -r pulumi/pulumi-java
+
+sdk: sdk/python sdk/nodejs sdk/java sdk/python sdk/go sdk/dotnet
+
+sdk/python: bin/${PROVIDER}
+	rm -rf sdk/python
+	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language python
+	cp README.md ${PACKDIR}/python/
+	cd ${PACKDIR}/python/ && \
+		python3 setup.py clean --all 2>/dev/null && \
+		rm -rf ./bin/ ../python.bin/ && cp -R . ../python.bin && mv ../python.bin ./bin && \
+		sed -i.bak -e 's/^VERSION = .*/VERSION = "$(PYPI_VERSION)"/g' -e 's/^PLUGIN_VERSION = .*/PLUGIN_VERSION = "$(VERSION)"/g' ./bin/setup.py && \
+		rm ./bin/setup.py.bak && \
+		cd ./bin && python3 setup.py build sdist
+
+sdk/nodejs: bin/${PROVIDER}
+	rm -rf sdk/nodejs
+	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language nodejs
+	cd ${PACKDIR}/nodejs/ && \
+		yarn install && \
+		yarn run tsc && \
+		cp ../../README.md ../../LICENSE package.json yarn.lock bin/ && \
+		sed -i.bak 's/$${VERSION}/$(NODE_VERSION)/g' bin/package.json && \
+		rm ./bin/package.json.bak
+
+sdk/go: 	bin/${PROVIDER}
+	rm -rf sdk/go
+	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language go
+
+sdk/dotnet: bin/${PROVIDER}
+	rm -rf sdk/dotnet
+	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language dotnet
+	cd ${PACKDIR}/dotnet/&& \
+		echo "${DOTNET_VERSION}" >version.txt && \
+		dotnet build /p:Version=${DOTNET_VERSION}
+
+sdk/java: bin/${PROVIDER} bin/pulumi-java-gen ${SCHEMA_PATH}
+	$(WORKING_DIR)/bin/pulumi-java-gen generate --schema ${SCHEMA_PATH} --out sdk/java  --build gradle-nexus
+	cd sdk/java/ && \
+    printf "module fake_java_module // Exclude this directory from Go tools\n\ngo 1.17\n" > go.mod && \
+    gradle --console=plain build
+

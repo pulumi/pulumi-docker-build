@@ -53,7 +53,7 @@ export function getVersion(): string {
 
 /** @internal */
 export function resourceOptsDefaults(): any {
-    return { version: getVersion(), pluginDownloadURL: "github.com/pulumi/pulumi-docker-native" };
+    return { version: getVersion(), pluginDownloadURL: "github.com/pulumi/pulumi-dockerbuild" };
 }
 
 /** @internal */

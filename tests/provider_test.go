@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	xyz "github.com/pulumi/pulumi-docker-native/provider"
+	xyz "github.com/pulumi/pulumi-dockerbuild/provider"
 )
 
 func TestRandomCreate(t *testing.T) {

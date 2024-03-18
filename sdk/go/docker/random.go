@@ -8,7 +8,7 @@ import (
 	"reflect"
 
 	"errors"
-	"github.com/pulumi/pulumi-docker-native/sdk/go/docker/internal"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/docker/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
@@ -32,7 +32,7 @@ func NewRandom(ctx *pulumi.Context,
 	}
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource Random
-	err := ctx.RegisterResource("docker-native:index:Random", name, args, &resource, opts...)
+	err := ctx.RegisterResource("dockerbuild:index:Random", name, args, &resource, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func NewRandom(ctx *pulumi.Context,
 func GetRandom(ctx *pulumi.Context,
 	name string, id pulumi.IDInput, state *RandomState, opts ...pulumi.ResourceOption) (*Random, error) {
 	var resource Random
-	err := ctx.ReadResource("docker-native:index:Random", name, id, state, &resource, opts...)
+	err := ctx.ReadResource("dockerbuild:index:Random", name, id, state, &resource, opts...)
 	if err != nil {
 		return nil, err
 	}

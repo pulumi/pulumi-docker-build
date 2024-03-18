@@ -1,5 +1,0 @@
-{
-  "resource": true,
-  "name": "docker-native",
-  "server": "github.com/pulumi/pulumi-docker-native"
-}

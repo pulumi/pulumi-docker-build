@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/blang/semver"
-	"github.com/pulumi/pulumi-docker-native/sdk/go/docker/internal"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/docker/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -21,7 +21,7 @@ func (m *module) Version() semver.Version {
 
 func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi.Resource, err error) {
 	switch typ {
-	case "docker-native:index:Random":
+	case "dockerbuild:index:Random":
 		r = &Random{}
 	default:
 		return nil, fmt.Errorf("unknown resource type: %s", typ)
@@ -40,7 +40,7 @@ func (p *pkg) Version() semver.Version {
 }
 
 func (p *pkg) ConstructProvider(ctx *pulumi.Context, name, typ, urn string) (pulumi.ProviderResource, error) {
-	if typ != "pulumi:providers:docker-native" {
+	if typ != "pulumi:providers:dockerbuild" {
 		return nil, fmt.Errorf("unknown provider type: %s", typ)
 	}
 
@@ -55,12 +55,12 @@ func init() {
 		version = semver.Version{Major: 1}
 	}
 	pulumi.RegisterResourceModule(
-		"docker-native",
+		"dockerbuild",
 		"index",
 		&module{version},
 	)
 	pulumi.RegisterResourcePackage(
-		"docker-native",
+		"dockerbuild",
 		&pkg{version},
 	)
 }

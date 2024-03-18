@@ -15,10 +15,10 @@ def readme():
         with open('README.md', encoding='utf-8') as f:
             return f.read()
     except FileNotFoundError:
-        return "docker-native Pulumi Package - Development Version"
+        return "dockerbuild Pulumi Package - Development Version"
 
 
-setup(name='pulumi_docker_native',
+setup(name='pulumi_dockerbuild',
       python_requires='>=3.8',
       version=VERSION,
       description="Description",
@@ -27,11 +27,11 @@ setup(name='pulumi_docker_native',
       keywords='keywords',
       url='pulumi.com',
       project_urls={
-          'Repository': 'https://github.com/pulumi/pulumi-docker-native'
+          'Repository': 'https://github.com/pulumi/pulumi-dockerbuild'
       },
       packages=find_packages(),
       package_data={
-          'pulumi_docker_native': [
+          'pulumi_dockerbuild': [
               'py.typed',
               'pulumi-plugin.json',
           ]

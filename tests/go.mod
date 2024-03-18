@@ -1,12 +1,12 @@
-module github.com/pulumi/pulumi-docker-native
+module github.com/pulumi/pulumi-dockerbuild
 
 go 1.21
 
-replace github.com/pulumi/pulumi-docker-native/provider => ../provider
+replace github.com/pulumi/pulumi-dockerbuild/provider => ../provider
 
 require (
 	github.com/blang/semver v3.5.1+incompatible
-	github.com/pulumi/pulumi-docker-native/provider v0.0.0-00010101000000-000000000000
+	github.com/pulumi/pulumi-dockerbuild/provider v0.0.0-00010101000000-000000000000
 	github.com/pulumi/pulumi-go-provider v0.14.1-0.20240301190400-aeddefa8dc54
 	github.com/pulumi/pulumi-go-provider/integration v0.10.0
 	github.com/pulumi/pulumi/sdk/v3 v3.107.0
