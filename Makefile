@@ -71,7 +71,10 @@ python_sdk::
 		rm ./bin/setup.py.bak && \
 		cd ./bin && python3 setup.py build sdist
 
+.PHONY:
 gen_examples: examples/go examples/nodejs examples/python examples/dotnet examples/java
+
+examples: gen_examples
 
 examples/%: bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 	rm -rf ${WORKING_DIR}/examples/$*
@@ -146,9 +149,8 @@ install_nodejs_sdk::
 	-yarn unlink --cwd $(WORKING_DIR)/sdk/nodejs/bin
 	yarn link --cwd $(WORKING_DIR)/sdk/nodejs/bin
 
-
 .PHONY:
-codegen: bin/${PROVIDER} gen_examples sdk
+codegen: sdk
 
 .PHONY:
 generate_schema: ${SCHEMA_PATH}
