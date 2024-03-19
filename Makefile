@@ -224,7 +224,8 @@ sdk/dotnet: $(PULUMI) bin/${PROVIDER}
 	$(PULUMI) package gen-sdk bin/${PROVIDER} --language dotnet -o ${TMPDIR}
 	cd ${TMPDIR}/dotnet/ && \
 		echo "$(DOTNET_VERSION)" > version.txt && \
-		dotnet build /p:Version=${DOTNET_VERSION}
+		dotnet build /p:Version=${DOTNET_VERSION} && \
+		rm version.txt
 	mv -f ${TMPDIR}/dotnet ${WORKING_DIR}/sdk/.
 
 sdk/java: TMPDIR := $(shell mktemp -d)
