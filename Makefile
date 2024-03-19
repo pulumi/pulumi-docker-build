@@ -22,9 +22,10 @@ PYPI_VERSION    := $(shell pulumictl get version --language python)
 NODE_VERSION    := $(shell pulumictl get version --language javascript)
 DOTNET_VERSION  := $(shell pulumictl get version --language dotnet)
 
-ensure::
-	cd provider && go mod tidy
-	cd tests && go mod tidy
+ensure:: tidy lint test_provider sdk
+
+.PHONY:
+tidy: provider/go.sum tests/go.sum
 
 provider::
 	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
@@ -119,7 +120,7 @@ build:: provider dotnet_sdk go_sdk nodejs_sdk python_sdk
 only_build:: build
 
 lint::
-	for DIR in "provider" "sdk" "tests" ; do \
+	for DIR in "provider" "tests" ; do \
 		pushd $$DIR && golangci-lint run --fix -c ../.golangci.yml --timeout 10m && popd ; \
 	done
 
@@ -155,6 +156,9 @@ codegen:
 .PHONY:
 generate_schema:
 
+.PHONY:
+generate_go:
+
 ${SCHEMA_PATH}: bin/${PROVIDER}
 	pulumi package get-schema bin/${PROVIDER} > $(SCHEMA_PATH)
 
@@ -163,6 +167,12 @@ bin/${PROVIDER}: provider/**.go
 
 bin/pulumi-java-gen: .pulumi-java-gen.version
 	pulumictl download-binary -n pulumi-language-java -v v$(shell cat .pulumi-java-gen.version) -r pulumi/pulumi-java
+
+provider/go.sum: provider/go.mod
+	cd provider && go mod tidy
+
+tests/go.sum: tests/go.mod
+	cd tests && go mod tidy
 
 $(shell mkdir -p sdk)
 sdk: sdk/python sdk/nodejs sdk/java sdk/python sdk/go sdk/dotnet
