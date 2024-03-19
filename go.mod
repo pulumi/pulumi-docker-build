@@ -1,12 +1,15 @@
-module github.com/pulumi/pulumi-dockerbuild/provider
+module github.com/pulumi/pulumi-dockerbuild
 
 go 1.21
 
 require (
+	github.com/blang/semver v3.5.1+incompatible
 	github.com/pulumi/pulumi-go-provider v0.14.1-0.20240301190400-aeddefa8dc54
+	github.com/pulumi/pulumi-go-provider/integration v0.10.0
 	github.com/pulumi/pulumi-java/pkg v0.9.9
 	github.com/pulumi/pulumi/pkg/v3 v3.111.1
 	github.com/pulumi/pulumi/sdk/v3 v3.111.1
+	github.com/stretchr/testify v1.8.4
 )
 
 require (
@@ -50,7 +53,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.26.5 // indirect
 	github.com/aws/smithy-go v1.19.0 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
-	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/charmbracelet/bubbles v0.16.1 // indirect
 	github.com/charmbracelet/bubbletea v0.24.2 // indirect
@@ -155,7 +157,6 @@ require (
 	github.com/spf13/afero v1.9.5 // indirect
 	github.com/spf13/cobra v1.7.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/stretchr/testify v1.8.4 // indirect
 	github.com/texttheater/golang-levenshtein v1.0.1 // indirect
 	github.com/tweekmonster/luser v0.0.0-20161003172636-3fa38070dbd7 // indirect
 	github.com/uber/jaeger-client-go v2.30.0+incompatible // indirect

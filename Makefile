@@ -18,9 +18,6 @@ WORKING_DIR     := $(shell pwd)
 EXAMPLES_DIR    := ${WORKING_DIR}/examples/yaml
 TESTPARALLELISM := 4
 
-PYPI_VERSION    := $(shell pulumictl get version --language python)
-NODE_VERSION    := $(shell pulumictl get version --language javascript)
-DOTNET_VERSION  := $(shell pulumictl get version --language dotnet)
 
 ensure:: tidy lint test_provider sdk
 
@@ -36,41 +33,6 @@ provider_debug::
 
 test_provider::
 	cd tests && go test -short -v -count=1 -cover -timeout 2h -parallel ${TESTPARALLELISM} ./...
-
-dotnet_sdk:: DOTNET_VERSION := $(shell pulumictl get version --language dotnet)
-dotnet_sdk::
-	rm -rf sdk/dotnet
-	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language dotnet
-	cd ${PACKDIR}/dotnet/&& \
-		echo "${DOTNET_VERSION}" >version.txt && \
-		dotnet build /p:Version=${DOTNET_VERSION}
-
-go_sdk:: $(WORKING_DIR)/bin/$(PROVIDER)
-	rm -rf sdk/go
-	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language go
-
-nodejs_sdk:: VERSION := $(shell pulumictl get version --language javascript)
-nodejs_sdk::
-	rm -rf sdk/nodejs
-	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language nodejs
-	cd ${PACKDIR}/nodejs/ && \
-		yarn install && \
-		yarn run tsc && \
-		cp ../../README.md ../../LICENSE package.json yarn.lock bin/ && \
-		sed -i.bak 's/$${VERSION}/$(VERSION)/g' bin/package.json && \
-		rm ./bin/package.json.bak
-
-python_sdk:: PYPI_VERSION := $(shell pulumictl get version --language python)
-python_sdk::
-	rm -rf sdk/python
-	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language python
-	cp README.md ${PACKDIR}/python/
-	cd ${PACKDIR}/python/ && \
-		python3 setup.py clean --all 2>/dev/null && \
-		rm -rf ./bin/ ../python.bin/ && cp -R . ../python.bin && mv ../python.bin ./bin && \
-		sed -i.bak -e 's/^VERSION = .*/VERSION = "$(PYPI_VERSION)"/g' -e 's/^PLUGIN_VERSION = .*/PLUGIN_VERSION = "$(VERSION)"/g' ./bin/setup.py && \
-		rm ./bin/setup.py.bak && \
-		cd ./bin && python3 setup.py build sdist
 
 .PHONY:
 gen_examples: examples/go examples/nodejs examples/python examples/dotnet examples/java
@@ -191,7 +153,8 @@ tests/go.sum: tests/go.mod
 $(shell mkdir -p sdk)
 sdk: sdk/python sdk/nodejs sdk/java sdk/python sdk/go sdk/dotnet
 
-TMPDIR := $(shell mktemp -d)
+sdk/python: PYPI_VERSION := $(shell pulumictl get version --language python)
+sdk/python: TMPDIR := $(shell mktemp -d)
 sdk/python: bin/${PROVIDER}
 	pulumi package gen-sdk bin/$(PROVIDER) --language python -o ${TMPDIR}
 	cp README.md ${TMPDIR}/python/
@@ -205,7 +168,8 @@ sdk/python: bin/${PROVIDER}
 		../venv/bin/python -m build .
 	mv ${TMPDIR}/python ${WORKING_DIR}/sdk/python
 
-TMPDIR := $(shell mktemp -d)
+sdk/nodejs: NODE_VERSION := $(shell pulumictl get version --language javascript)
+sdk/nodejs: TMPDIR := $(shell mktemp -d)
 sdk/nodejs: bin/${PROVIDER}
 	pulumi package gen-sdk bin/$(PROVIDER) --language nodejs -o ${TMPDIR}
 	cp README.md LICENSE ${TMPDIR}/nodejs
@@ -217,12 +181,13 @@ sdk/nodejs: bin/${PROVIDER}
 		rm ./bin/package.json.bak
 	mv ${TMPDIR}/nodejs ${WORKING_DIR}/sdk/nodejs
 
-TMPDIR := $(shell mktemp -d)
+sdk/go: TMPDIR := $(shell mktemp -d)
 sdk/go: bin/${PROVIDER}
 	pulumi package gen-sdk bin/$(PROVIDER) --language go -o ${TMPDIR}
 	mv ${TMPDIR}/go ${WORKING_DIR}/sdk/go
 
-TMPDIR := $(shell mktemp -d)
+sdk/dotnet: DOTNET_VERSION  := $(shell pulumictl get version --language dotnet)
+sdk/dotnet: TMPDIR := $(shell mktemp -d)
 sdk/dotnet: bin/${PROVIDER}
 	pulumi package gen-sdk bin/${PROVIDER} --language dotnet -o ${TMPDIR}
 	cd ${TMPDIR}/dotnet/ && \
@@ -230,7 +195,7 @@ sdk/dotnet: bin/${PROVIDER}
 		dotnet build /p:Version=${DOTNET_VERSION}
 	mv ${TMPDIR}/dotnet ${WORKING_DIR}/sdk/dotnet
 
-TMPDIR := $(shell mktemp -d)
+sdk/java: TMPDIR := $(shell mktemp -d)
 sdk/java: bin/${PROVIDER}
 	pulumi package gen-sdk --language java bin/${PROVIDER} -o ${TMPDIR}
 	cd ${TMPDIR}/java/ && gradle --console=plain build
