@@ -1,7 +1,7 @@
 {
   "name": "dockerbuild",
   "displayName": "docker",
-  "version": "0.0.1-alpha.1710803103+c70da8db",
+  "version": "0.0.1-alpha.1710805517+1af3a9ed.dirty",
   "description": "Description",
   "keywords": [
     "keywords"
@@ -14,12 +14,42 @@
     "moduleFormat": "(.*)"
   },
   "language": {
+    "csharp": {
+      "packageReferences": {
+        "Pulumi": "3.*"
+      }
+    },
     "go": {
       "importBasePath": "github.com/pulumi/pulumi-dockerbuild/sdk/go/docker",
       "packageImportAliases": {
         "github.com/pulumi/pulumi-dockerbuild/sdk/go/docker": "docker"
       },
+      "generateResourceContainerTypes": true,
       "generics": "generics-only"
+    },
+    "java": {
+      "basePackage": "",
+      "buildFiles": "gradle",
+      "dependencies": {
+        "com.google.code.findbugs:jsr305": "3.0.2",
+        "com.google.code.gson:gson": "2.8.9",
+        "com.pulumi:pulumi": "0.9.9"
+      },
+      "gradleNexusPublishPluginVersion": "1.1.0",
+      "gradleTest": ""
+    },
+    "nodejs": {
+      "dependencies": {
+        "@pulumi/pulumi": "^3.0.0"
+      }
+    },
+    "python": {
+      "requires": {
+        "pulumi": "\u003e=3.0.0,\u003c4.0.0"
+      },
+      "pyproject": {
+        "enabled": true
+      }
     }
   },
   "config": {},

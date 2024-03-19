@@ -4,8 +4,9 @@ go 1.21
 
 require (
 	github.com/pulumi/pulumi-go-provider v0.14.1-0.20240301190400-aeddefa8dc54
-	github.com/pulumi/pulumi/pkg/v3 v3.107.0
-	github.com/pulumi/pulumi/sdk/v3 v3.107.0
+	github.com/pulumi/pulumi-java/pkg v0.9.9
+	github.com/pulumi/pulumi/pkg/v3 v3.111.1
+	github.com/pulumi/pulumi/sdk/v3 v3.111.1
 )
 
 require (
@@ -24,6 +25,7 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/azkeys v0.10.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/keyvault/internal v0.7.1 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v1.2.0 // indirect
+	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230828082145-3c4c8a2d2371 // indirect
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect

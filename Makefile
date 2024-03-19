@@ -165,40 +165,50 @@ bin/${PROVIDER}: provider/**.go
 bin/pulumi-java-gen: .pulumi-java-gen.version
 	pulumictl download-binary -n pulumi-language-java -v v$(shell cat .pulumi-java-gen.version) -r pulumi/pulumi-java
 
+$(shell mkdir -p sdk)
 sdk: sdk/python sdk/nodejs sdk/java sdk/python sdk/go sdk/dotnet
 
+TMPDIR := $(shell mktemp -d)
 sdk/python: bin/${PROVIDER}
-	rm -rf sdk/python
-	pulumi package gen-sdk bin/$(PROVIDER) --language python
-	cp README.md ${PACKDIR}/python/
-	cd ${PACKDIR}/python/ && \
-		python3 setup.py clean --all 2>/dev/null && \
+	pulumi package gen-sdk bin/$(PROVIDER) --language python -o ${TMPDIR}
+	cp README.md ${TMPDIR}/python/
+	cd ${TMPDIR}/python/ && \
 		rm -rf ./bin/ ../python.bin/ && cp -R . ../python.bin && mv ../python.bin ./bin && \
-		sed -i.bak -e 's/^VERSION = .*/VERSION = "$(PYPI_VERSION)"/g' -e 's/^PLUGIN_VERSION = .*/PLUGIN_VERSION = "$(VERSION)"/g' ./bin/setup.py && \
-		rm ./bin/setup.py.bak && \
-		cd ./bin && python3 setup.py build sdist
+		sed -i.bak -e 's/^  version = .*/  version = "$(PYPI_VERSION)"/g' ./bin/pyproject.toml && \
+		rm ./bin/pyproject.toml.bak && \
+		python3 -m venv venv && \
+		./venv/bin/python -m pip install build && \
+		cd ./bin && \
+		../venv/bin/python -m build .
+	mv ${TMPDIR}/python ${WORKING_DIR}/sdk/python
 
+TMPDIR := $(shell mktemp -d)
 sdk/nodejs: bin/${PROVIDER}
-	rm -rf sdk/nodejs
-	pulumi package gen-sdk bin/$(PROVIDER) --language nodejs
-	cd ${PACKDIR}/nodejs/ && \
+	pulumi package gen-sdk bin/$(PROVIDER) --language nodejs -o ${TMPDIR}
+	cp README.md LICENSE ${TMPDIR}/nodejs
+	cd ${TMPDIR}/nodejs/ && \
 		yarn install && \
 		yarn run tsc && \
-		cp ../../README.md ../../LICENSE package.json yarn.lock bin/ && \
+		cp README.md LICENSE package.json yarn.lock bin/ && \
 		sed -i.bak 's/$${VERSION}/$(NODE_VERSION)/g' bin/package.json && \
 		rm ./bin/package.json.bak
+	mv ${TMPDIR}/nodejs ${WORKING_DIR}/sdk/nodejs
 
+TMPDIR := $(shell mktemp -d)
 sdk/go: bin/${PROVIDER}
-	rm -rf sdk/go
-	pulumi package gen-sdk bin/$(PROVIDER) --language go
+	pulumi package gen-sdk bin/$(PROVIDER) --language go -o ${TMPDIR}
+	mv ${TMPDIR}/go ${WORKING_DIR}/sdk/go
 
+TMPDIR := $(shell mktemp -d)
 sdk/dotnet: bin/${PROVIDER}
-	rm -rf sdk/dotnet
-	pulumi package gen-sdk bin/$(PROVIDER) --language dotnet
-	cd ${PACKDIR}/dotnet/ && \
-		echo "${DOTNET_VERSION}" > version.txt && \
+	pulumi package gen-sdk bin/${PROVIDER} --language dotnet -o ${TMPDIR}
+	cd ${TMPDIR}/dotnet/ && \
+		echo "$(DOTNET_VERSION)" > version.txt && \
 		dotnet build /p:Version=${DOTNET_VERSION}
+	mv ${TMPDIR}/dotnet ${WORKING_DIR}/sdk/dotnet
 
+TMPDIR := $(shell mktemp -d)
 sdk/java: bin/${PROVIDER} bin/pulumi-java-gen ${SCHEMA_PATH}
-	rm -rf sdk/java
-	pulumi package gen-sdk bin/${PROVIDER} --language java
+	pulumi package gen-sdk --language java bin/${PROVIDER} -o ${TMPDIR}
+	cd ${TMPDIR}/java/ && gradle --console=plain build
+	mv ${TMPDIR}/java ${WORKING_DIR}/sdk/java
