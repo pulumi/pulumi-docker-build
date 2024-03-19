@@ -24,7 +24,6 @@ DOTNET_VERSION  := $(shell pulumictl get version --language dotnet)
 
 ensure::
 	cd provider && go mod tidy
-	cd sdk && go mod tidy
 	cd tests && go mod tidy
 
 provider::
