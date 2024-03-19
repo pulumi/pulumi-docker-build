@@ -182,9 +182,6 @@ ${SCHEMA_PATH}: bin/${PROVIDER}
 bin/${PROVIDER}: provider/**.go
 	(cd provider && go build -o ../bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
 
-bin/pulumi-java-gen: .pulumi-java-gen.version
-	pulumictl download-binary -n pulumi-language-java -v v$(shell cat .pulumi-java-gen.version) -r pulumi/pulumi-java
-
 provider/go.sum: provider/go.mod
 	cd provider && go mod tidy
 
@@ -234,7 +231,7 @@ sdk/dotnet: bin/${PROVIDER}
 	mv ${TMPDIR}/dotnet ${WORKING_DIR}/sdk/dotnet
 
 TMPDIR := $(shell mktemp -d)
-sdk/java: bin/${PROVIDER} bin/pulumi-java-gen ${SCHEMA_PATH}
+sdk/java: bin/${PROVIDER}
 	pulumi package gen-sdk --language java bin/${PROVIDER} -o ${TMPDIR}
 	cd ${TMPDIR}/java/ && gradle --console=plain build
 	mv ${TMPDIR}/java ${WORKING_DIR}/sdk/java
