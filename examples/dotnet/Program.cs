@@ -12,10 +12,7 @@ return await Deployment.RunAsync(() =>
 
     return new Dictionary<string, object?>
     {
-        ["output"] = 
-        {
-            { "value", myRandomResource.Result },
-        },
+        ["value"] = myRandomResource.Result,
     };
 });
 

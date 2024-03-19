@@ -13,9 +13,7 @@ func main() {
 		if err != nil {
 			return err
 		}
-		ctx.Export("output", map[string]interface{}{
-			"value": myRandomResource.Result,
-		})
+		ctx.Export("value", myRandomResource.Result)
 		return nil
 	})
 }

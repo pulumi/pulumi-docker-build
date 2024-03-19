@@ -12,5 +12,4 @@ resources:
       length: 24
 
 outputs:
-  output:
-    value: ${myRandomResource.result}
+  value: ${myRandomResource.result}

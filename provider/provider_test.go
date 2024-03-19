@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package tests
+package provider
 
 import (
 	"testing"
@@ -25,8 +25,6 @@ import (
 	"github.com/pulumi/pulumi-go-provider/integration"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
-
-	xyz "github.com/pulumi/pulumi-dockerbuild/provider"
 )
 
 func TestRandomCreate(t *testing.T) {
@@ -55,5 +53,5 @@ func urn(typ string) resource.URN {
 
 // Create a test server.
 func provider() integration.Server {
-	return integration.NewServer(xyz.Name, semver.MustParse("1.0.0"), xyz.Provider())
+	return integration.NewServer(Name, semver.MustParse("1.0.0"), Provider())
 }

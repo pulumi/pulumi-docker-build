@@ -42,8 +42,8 @@ func Provider() p.Provider {
 			DisplayName: "docker",
 			LanguageMap: map[string]any{
 				"go": gogen.GoPackageInfo{
-					GenerateResourceContainerTypes: true,
-					Generics:                       gogen.GenericsSettingGenericsOnly,
+					// GenerateResourceContainerTypes: true,
+					Generics: gogen.GenericsSettingGenericsOnly,
 					PackageImportAliases: map[string]string{
 						"github.com/pulumi/pulumi-dockerbuild/sdk/go/docker": "docker",
 					},
@@ -118,7 +118,7 @@ type RandomState struct {
 	// It is generally a good idea to embed args in outputs, but it isn't strictly necessary.
 	RandomArgs
 	// Here we define a required output called result.
-	Result string `pulumi:"result"`
+	Result string `pulumi:"result" provider:"output"`
 }
 
 // All resources must implement Create at a minimum.

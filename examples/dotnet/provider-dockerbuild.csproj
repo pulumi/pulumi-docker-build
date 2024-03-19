@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Pulumi" Version="3.*" />
-		<PackageReference Include="Pulumi.Dockerbuild" Version="0.0.1-alpha.1710803103+c70da8db" />
+		<PackageReference Include="Pulumi.Dockerbuild" Version="*" />
 	</ItemGroup>
 
 </Project>

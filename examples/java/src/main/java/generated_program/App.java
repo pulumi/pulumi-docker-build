@@ -22,6 +22,6 @@ public class App {
             .length(24)
             .build());
 
-        ctx.export("output", Map.of("value", myRandomResource.result()));
+        ctx.export("value", myRandomResource.result());
     }
 }
