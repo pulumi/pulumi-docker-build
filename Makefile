@@ -153,34 +153,28 @@ install_nodejs_sdk::
 .PHONY: codegen
 codegen:
 
-
 .PHONY: generate_schema
 generate_schema:
 
 .PHONY: build_go install_go_sdk
 generate_go: sdk/go
 build_go:
-install_go_sdk:
 
 .PHONY: build_java install_java_sdk
 generate_java: sdk/java
 build_java:
-install_java_sdk:
 
 .PHONY: build_python install_python_sdk
 generate_python: sdk/python
 build_python:
-install_python_sdk:
 
 .PHONY: build_nodejs install_nodejs_sdk
 generate_nodejs: sdk/nodejs
 build_nodejs:
-install_nodejs_sdk:
 
 .PHONY: build_dotnet install_dotnet_sdk
 generate_dotnet: sdk/dotnet
 build_dotnet:
-install_dotnet_sdk:
 
 ${SCHEMA_PATH}: bin/${PROVIDER}
 	pulumi package get-schema bin/${PROVIDER} > $(SCHEMA_PATH)
