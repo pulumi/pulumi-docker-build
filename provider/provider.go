@@ -39,15 +39,15 @@ func Provider() p.Provider {
 	// In this case, a single custom resource.
 	return infer.Provider(infer.Options{
 		Metadata: schema.Metadata{
-			DisplayName: "docker",
+			DisplayName: "dockerbuild",
 			LanguageMap: map[string]any{
 				"go": gogen.GoPackageInfo{
 					// GenerateResourceContainerTypes: true,
 					Generics: gogen.GenericsSettingGenericsOnly,
 					PackageImportAliases: map[string]string{
-						"github.com/pulumi/pulumi-dockerbuild/sdk/go/docker": "docker",
+						"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild": "dockerbuild",
 					},
-					ImportBasePath: "github.com/pulumi/pulumi-dockerbuild/sdk/go/docker",
+					ImportBasePath: "github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild",
 				},
 				"csharp": csgen.CSharpPackageInfo{
 					PackageReferences: map[string]string{

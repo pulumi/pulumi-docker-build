@@ -23,7 +23,7 @@ PULUMI           := bin/pulumi
 
 
 .PHONY: ensure
-ensure:: tidy lint test_provider sdk
+ensure:: tidy lint test_provider examples
 
 .PHONY: tidy
 tidy: go.sum
@@ -46,7 +46,7 @@ test_all:: test_provider test_examples
 gen_examples:
 
 examples: $(shell mkdir -p examples)
-examples: examples/go examples/nodejs examples/python examples/dotnet examples/java
+examples: sdk examples/go examples/nodejs examples/python examples/dotnet examples/java
 
 examples/go: ${PULUMI} bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 	$(call example,go)
