@@ -20,8 +20,6 @@ TESTPARALLELISM  := 4
 
 PULUMI           := bin/pulumi
 
-
-
 .PHONY: ensure
 ensure:: tidy lint test_provider examples
 
