@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: gomod
+    directory: /
+    schedule:
+      interval: daily
+    groups:
+      pulumi:
+        patterns:
+          - "github.com/pulumi/*"
+        exclude-patterns:
+          - "k8s.io/utils"
+    labels:
+      - dependencies
+      - impact/no-changelog-required
