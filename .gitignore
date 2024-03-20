@@ -10,6 +10,7 @@ Pulumi.*.yaml
 yarn.lock
 ci-scripts
 nuget/
+coverage.txt
 
 
 sdk/dotnet/version.txt
