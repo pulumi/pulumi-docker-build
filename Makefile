@@ -215,6 +215,9 @@ sdk/go: TMPDIR := $(shell mktemp -d)
 sdk/go: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/go
 	$(PULUMI) package gen-sdk bin/$(PROVIDER) --language go -o ${TMPDIR}
+	cd ${TMPDIR}/go/${PACK} && \
+		go mod init github.com/pulumi/pulumi-${PACK}/${PACKDIR}/go/${PACK} && \
+		go mod tidy
 	mv -f ${TMPDIR}/go ${WORKING_DIR}/sdk/.
 
 sdk/dotnet: DOTNET_VERSION  := $(shell pulumictl get version --language dotnet)

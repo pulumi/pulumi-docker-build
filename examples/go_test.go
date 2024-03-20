@@ -19,7 +19,7 @@ func TestGoExample(t *testing.T) {
 	test := integration.ProgramTestOptions{
 		Dir: path.Join(cwd, "go"),
 		Dependencies: []string{
-			"github.com/pulumi/pulumi-dockerbuild=../",
+			"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild=../sdk/go/dockerbuild",
 		},
 		Secrets: map[string]string{
 			"dockerHubPassword": os.Getenv("DOCKER_HUB_PASSWORD"),
