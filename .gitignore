@@ -13,9 +13,8 @@ ci-scripts
 provider/**/schema-embed.json
 
 
-sdk/python/venv
-sdk/java/build
+sdk/dotnet/version.txt
 sdk/java/.gradle
-sdk/java/gradle
-sdk/java/gradlew
-sdk/java/gradlew.bat
+sdk/java/build/
+sdk/java/build.gradle
+sdk/python/venv
