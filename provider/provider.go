@@ -21,36 +21,68 @@ import (
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi-go-provider/middleware/schema"
-	gen "github.com/pulumi/pulumi/pkg/v3/codegen/go"
+	"github.com/pulumi/pulumi-java/pkg/codegen/java"
+	csgen "github.com/pulumi/pulumi/pkg/v3/codegen/dotnet"
+	gogen "github.com/pulumi/pulumi/pkg/v3/codegen/go"
+	tsgen "github.com/pulumi/pulumi/pkg/v3/codegen/nodejs"
+	pygen "github.com/pulumi/pulumi/pkg/v3/codegen/python"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
 )
 
 // Version is initialized by the Go linker to contain the semver of this build.
 var Version string
 
-const Name string = "docker-native" // Needs to match $PACK in Makefile.
+const Name string = "dockerbuild" // Needs to match $PACK in Makefile.
 
 func Provider() p.Provider {
 	// We tell the provider what resources it needs to support.
 	// In this case, a single custom resource.
 	return infer.Provider(infer.Options{
 		Metadata: schema.Metadata{
-			DisplayName: "docker",
+			DisplayName: "dockerbuild",
 			LanguageMap: map[string]any{
-				"go": gen.GoPackageInfo{
-					Generics: gen.GenericsSettingGenericsOnly,
+				"go": gogen.GoPackageInfo{
+					// GenerateResourceContainerTypes: true,
+					Generics: gogen.GenericsSettingGenericsOnly,
 					PackageImportAliases: map[string]string{
-						"github.com/pulumi/pulumi-docker-native/sdk/go/docker": "docker",
+						"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild": "dockerbuild",
 					},
-					ImportBasePath: "github.com/pulumi/pulumi-docker-native/sdk/go/docker",
+					ImportBasePath: "github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild",
+				},
+				"csharp": csgen.CSharpPackageInfo{
+					PackageReferences: map[string]string{
+						"Pulumi": "3.*",
+					},
+				},
+				"java": java.PackageInfo{
+					BuildFiles:                      "gradle",
+					GradleNexusPublishPluginVersion: "1.1.0",
+					Dependencies: map[string]string{
+						"com.pulumi:pulumi":               "0.9.9",
+						"com.google.code.gson:gson":       "2.8.9",
+						"com.google.code.findbugs:jsr305": "3.0.2",
+					},
+				},
+				"nodejs": tsgen.NodePackageInfo{
+					Dependencies: map[string]string{
+						"@pulumi/pulumi": "^3.0.0",
+					},
+				},
+				"python": pygen.PackageInfo{
+					PyProject: struct {
+						Enabled bool `json:"enabled,omitempty"`
+					}{Enabled: true},
+					Requires: map[string]string{
+						"pulumi": ">=3.0.0,<4.0.0",
+					},
 				},
 			},
 			Description:       "Description",
 			Keywords:          []string{"keywords"},
 			Homepage:          "pulumi.com",
 			Publisher:         "pulumi",
-			Repository:        "https://github.com/pulumi/pulumi-docker-native",
-			PluginDownloadURL: "github.com/pulumi/pulumi-docker-native",
+			Repository:        "https://github.com/pulumi/pulumi-dockerbuild",
+			PluginDownloadURL: "github.com/pulumi/pulumi-dockerbuild",
 		},
 		Resources: []infer.InferredResource{
 			infer.Resource[Random, RandomArgs, RandomState](),
@@ -86,7 +118,7 @@ type RandomState struct {
 	// It is generally a good idea to embed args in outputs, but it isn't strictly necessary.
 	RandomArgs
 	// Here we define a required output called result.
-	Result string `pulumi:"result"`
+	Result string `pulumi:"result" provider:"output"`
 }
 
 // All resources must implement Create at a minimum.
@@ -100,7 +132,7 @@ func (Random) Create(ctx p.Context, name string, input RandomArgs, preview bool)
 }
 
 func makeRandom(length int) string {
-	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
+	seededRand := rand.New(rand.NewSource(time.Now().UnixNano())) //nolint: gosec
 	charset := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
 	result := make([]rune, length)

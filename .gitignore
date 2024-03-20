@@ -5,12 +5,16 @@
 **/.vs
 **/.idea
 **/.ionide
-.pulumi
+*.swp
 Pulumi.*.yaml
 yarn.lock
 ci-scripts
-/nuget/
-provider/**/schema-embed.json
+nuget/
+coverage.txt
 
 
+sdk/dotnet/version.txt
+sdk/java/.gradle
+sdk/java/build/
+sdk/java/build.gradle
 sdk/python/venv

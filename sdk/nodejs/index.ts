@@ -20,18 +20,18 @@ const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
-            case "docker-native:index:Random":
+            case "dockerbuild:index:Random":
                 return new Random(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }
     },
 };
-pulumi.runtime.registerResourceModule("docker-native", "index", _module)
-pulumi.runtime.registerResourcePackage("docker-native", {
+pulumi.runtime.registerResourceModule("dockerbuild", "index", _module)
+pulumi.runtime.registerResourcePackage("dockerbuild", {
     version: utilities.getVersion(),
     constructProvider: (name: string, type: string, urn: string): pulumi.ProviderResource => {
-        if (type !== "pulumi:providers:docker-native") {
+        if (type !== "pulumi:providers:dockerbuild") {
             throw new Error(`unknown provider type ${type}`);
         }
         return new Provider(name, <any>undefined, { urn });

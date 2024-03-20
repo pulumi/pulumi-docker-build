@@ -1,0 +1,6 @@
+name: provider-dockerbuild
+runtime: java
+plugins:
+  providers:
+    - name: dockerbuild
+      path: ../../bin

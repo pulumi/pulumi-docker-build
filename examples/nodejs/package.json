@@ -1,11 +1,11 @@
 {
-	"name": "provider-docker-native",
-	"devDependencies": {
-		"@types/node": "^14"
-	},
-	"dependencies": {
-		"typescript": "^4.0.0",
-		"@pulumi/pulumi": "^3.0.0",
-		"@pulumi/docker-native": "0.0.1-alpha.1709857395+e809180b"
-	}
+  "name": "provider-dockerbuild",
+  "devDependencies": {
+    "@types/node": "^18"
+  },
+  "dependencies": {
+    "typescript": "^4.0.0",
+    "@pulumi/pulumi": "^3.0.0"
+  }
 }
+

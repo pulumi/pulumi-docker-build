@@ -1,7 +1,5 @@
 import pulumi
-import pulumi_docker_native as docker_native
+import pulumi_dockerbuild as dockerbuild
 
-my_random_resource = docker_native.Random("myRandomResource", length=24)
-pulumi.export("output", {
-    "value": my_random_resource.result,
-})
+my_random_resource = dockerbuild.Random("myRandomResource", length=24)
+pulumi.export("value", my_random_resource.result)
