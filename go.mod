@@ -9,7 +9,7 @@ require (
 	github.com/pulumi/pulumi-java/pkg v0.9.9
 	github.com/pulumi/pulumi/pkg/v3 v3.111.1
 	github.com/pulumi/pulumi/sdk/v3 v3.111.1
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 )
 
 require (
