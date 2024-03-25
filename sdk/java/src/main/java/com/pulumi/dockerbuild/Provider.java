@@ -4,14 +4,32 @@
 package com.pulumi.dockerbuild;
 
 import com.pulumi.core.Output;
+import com.pulumi.core.annotations.Export;
 import com.pulumi.core.annotations.ResourceType;
 import com.pulumi.core.internal.Codegen;
 import com.pulumi.dockerbuild.ProviderArgs;
 import com.pulumi.dockerbuild.Utilities;
+import java.lang.String;
+import java.util.Optional;
 import javax.annotation.Nullable;
 
 @ResourceType(type="pulumi:providers:dockerbuild")
 public class Provider extends com.pulumi.resources.ProviderResource {
+    /**
+     * The build daemon&#39;s address.
+     * 
+     */
+    @Export(name="host", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> host;
+
+    /**
+     * @return The build daemon&#39;s address.
+     * 
+     */
+    public Output<Optional<String>> host() {
+        return Codegen.optional(this.host);
+    }
+
     /**
      *
      * @param name The _unique_ name of the resulting resource.

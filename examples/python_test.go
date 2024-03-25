@@ -17,7 +17,8 @@ func TestPythonExample(t *testing.T) {
 	require.NoError(t, err)
 
 	test := integration.ProgramTestOptions{
-		Dir: path.Join(cwd, "python"),
+		Dir:             path.Join(cwd, "python"),
+		RelativeWorkDir: ".",
 		Dependencies: []string{
 			path.Join("..", "sdk", "python", "bin"),
 		},

@@ -5,8 +5,20 @@
 from . import _utilities
 import typing
 # Export this package's modules as members:
+from ._enums import *
+from .image import *
+from .index import *
 from .provider import *
-from .random import *
+from ._inputs import *
+from . import outputs
+
+# Make subpackages available:
+if typing.TYPE_CHECKING:
+    import pulumi_dockerbuild.config as __config
+    config = __config
+else:
+    config = _utilities.lazy_import('pulumi_dockerbuild.config')
+
 _utilities.register(
     resource_modules="""
 [
@@ -15,7 +27,8 @@ _utilities.register(
   "mod": "index",
   "fqn": "pulumi_dockerbuild",
   "classes": {
-   "dockerbuild:index:Random": "Random"
+   "dockerbuild:index:Image": "Image",
+   "dockerbuild:index:Index": "Index"
   }
  }
 ]

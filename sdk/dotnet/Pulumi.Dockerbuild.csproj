@@ -4,7 +4,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>pulumi</Authors>
     <Company>pulumi</Company>
-    <Description>Description</Description>
+    <Description>A Pulumi provider for Docker buildx</Description>
     <PackageLicenseExpression></PackageLicenseExpression>
     <PackageProjectUrl>pulumi.com</PackageProjectUrl>
     <RepositoryUrl>https://github.com/pulumi/pulumi-dockerbuild</RepositoryUrl>

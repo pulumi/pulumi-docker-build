@@ -1,5 +1,9 @@
 name: provider-dockerbuild
 runtime: python
+config:
+  dockerHubPassword:
+    type: string
+    secret: true
 plugins:
   providers:
     - name: dockerbuild

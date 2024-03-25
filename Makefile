@@ -44,7 +44,11 @@ test_all:: test_provider test_examples
 gen_examples:
 
 examples: $(shell mkdir -p examples)
-examples: sdk examples/go examples/nodejs examples/python examples/dotnet examples/java
+examples: sdk examples/yaml examples/go examples/nodejs examples/python examples/dotnet examples/java
+
+examples/yaml:
+	rm -rf ${WORKING_DIR}/examples/yaml/app
+	cp -r ${WORKING_DIR}/examples/app ${WORKING_DIR}/examples/yaml/app
 
 examples/go: ${PULUMI} bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 	$(call example,go)
@@ -75,7 +79,6 @@ define pulumi_login
 endef
 
 define example
-	echo "GOT $(1)"
 	rm -rf ${WORKING_DIR}/examples/$(1)
 	$(PULUMI) convert \
 		--cwd ${WORKING_DIR}/examples/yaml \
@@ -84,6 +87,7 @@ define example
 		--non-interactive \
 		--language $(1) \
 		--out ${WORKING_DIR}/examples/$(1)
+	cp -r ${WORKING_DIR}/examples/app ${WORKING_DIR}/examples/$(1)/app
 endef
 
 up::
@@ -236,3 +240,7 @@ sdk/java: $(PULUMI) bin/${PROVIDER}
 	$(PULUMI) package gen-sdk --language java bin/${PROVIDER} -o ${TMPDIR}
 	cd ${TMPDIR}/java/ && gradle --console=plain build
 	mv -f ${TMPDIR}/java ${WORKING_DIR}/sdk/.
+
+docs: $(shell find docs/yaml -type f)
+	go generate docs/generate.go
+	@touch docs

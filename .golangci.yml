@@ -1,36 +1,61 @@
 linters:
   enable-all: false
   enable:
+    - depguard
     - errcheck
     - exhaustive
-    - prealloc
-    - gofumpt
-    - revive
+    - exportloopref
     - gci
+    - gocritic
+    - gofumpt
+    - goheader
     - gosec
     - govet
+    - importas
     - ineffassign
     - lll
     - misspell
-    - nolintlint
     - nakedret
-    - unconvert
-    - unused
+    - nolintlint
     - paralleltest
     - perfsprint
-    - depguard
-    - importas
+    - prealloc
+    - revive
+    - unconvert
+    - unused
 
 linters-settings:
-  nakedret:
-    # Make an issue if func has more lines of code than this setting, and it has naked returns.
-    # Default: 30
-    max-func-lines: 60
-  nolintlint:
-    # Some linter exclusions are added to generated or templated files
-    # pre-emptively.
-    # Don't complain about these.
-    allow-unused: true
+  depguard:
+    rules:
+      protobuf:
+        deny:
+          - pkg: "github.com/golang/protobuf"
+            desc: Use google.golang.org/protobuf instead
+  gci:
+    sections:
+      - standard # Standard section: captures all standard library packages.
+      - blank # Blank section: contains all blank imports.
+      - default # Default section: contains all imports that could not be matched to another section type.
+      - prefix(github.com/pulumi/) # Custom section: groups all imports with the github.com/pulumi/ prefix.
+      - prefix(github.com/pulumi/pulumi-dockerbuild/) # Custom section: local imports
+    custom-order: true
+  gocritic:
+    enable-all: true
+  goheader:
+    template: |-
+      Copyright 2024, Pulumi Corporation.
+
+      Licensed under the Apache License, Version 2.0 (the "License");
+      you may not use this file except in compliance with the License.
+      You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+      Unless required by applicable law or agreed to in writing, software
+      distributed under the License is distributed on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      See the License for the specific language governing permissions and
+      limitations under the License.
   govet:
     enable:
       - nilness
@@ -40,22 +65,18 @@ linters-settings:
       - sortslice
       # Detect write to struct/arrays by-value that aren't read again.
       - unusedwrite
-  gci:
-    sections:
-      - standard # Standard section: captures all standard library packages.
-      - blank # Blank section: contains all blank imports.
-      - default # Default section: contains all imports that could not be matched to another section type.
-      - prefix(github.com/pulumi/) # Custom section: groups all imports with the github.com/pulumi/ prefix.
-      - prefix(github.com/pulumi/pulumi-dockerbuild) # Custom section: local imports
-    custom-order: true
-  depguard:
-    rules:
-      protobuf:
-        deny:
-          - pkg: "github.com/golang/protobuf"
-            desc: Use google.golang.org/protobuf instead
+  nakedret:
+    # Make an issue if func has more lines of code than this setting, and it has naked returns.
+    # Default: 30
+    max-func-lines: 60
+  nolintlint:
+    # Some linter exclusions are added to generated or templated files
+    # pre-emptively.
+    # Don't complain about these.
+    allow-unused: true
 
 issues:
+  exclude-use-default: false
   exclude-rules:
     # Don't warn on unused parameters.
     # Parameter names are useful; replacing them with '_' is undesirable.

@@ -13,6 +13,13 @@ namespace Pulumi.Dockerbuild
     public partial class Provider : global::Pulumi.ProviderResource
     {
         /// <summary>
+        /// The build daemon's address.
+        /// </summary>
+        [Output("host")]
+        public Output<string?> Host { get; private set; } = null!;
+
+
+        /// <summary>
         /// Create a Provider resource with the given unique name, arguments, and options.
         /// </summary>
         ///
@@ -40,8 +47,23 @@ namespace Pulumi.Dockerbuild
 
     public sealed class ProviderArgs : global::Pulumi.ResourceArgs
     {
+        /// <summary>
+        /// The build daemon's address.
+        /// </summary>
+        [Input("host")]
+        public Input<string>? Host { get; set; }
+
+        [Input("registries", json: true)]
+        private InputList<Inputs.RegistryArgs>? _registries;
+        public InputList<Inputs.RegistryArgs> Registries
+        {
+            get => _registries ?? (_registries = new InputList<Inputs.RegistryArgs>());
+            set => _registries = value;
+        }
+
         public ProviderArgs()
         {
+            Host = Utilities.GetEnv("DOCKER_HOST") ?? "";
         }
         public static new ProviderArgs Empty => new ProviderArgs();
     }

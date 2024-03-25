@@ -1,8 +1,8 @@
 [project]
   name = "pulumi_dockerbuild"
-  description = "Description"
+  description = "A Pulumi provider for Docker buildx"
   dependencies = ["parver>=0.2.1", "pulumi>=3.0.0,<4.0.0", "semver>=2.8.1"]
-  keywords = ["keywords"]
+  keywords = ["docker", "buildkit", "buildx"]
   readme = "README.md"
   requires-python = ">=3.8"
   version = "0.0.0"

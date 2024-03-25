@@ -8,16 +8,46 @@ import pulumi
 import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
 from . import _utilities
+from ._inputs import *
 
 __all__ = ['ProviderArgs', 'Provider']
 
 @pulumi.input_type
 class ProviderArgs:
-    def __init__(__self__):
+    def __init__(__self__, *,
+                 host: Optional[pulumi.Input[str]] = None,
+                 registries: Optional[pulumi.Input[Sequence[pulumi.Input['RegistryArgs']]]] = None):
         """
         The set of arguments for constructing a Provider resource.
+        :param pulumi.Input[str] host: The build daemon's address.
         """
-        pass
+        if host is None:
+            host = (_utilities.get_env('DOCKER_HOST') or '')
+        if host is not None:
+            pulumi.set(__self__, "host", host)
+        if registries is not None:
+            pulumi.set(__self__, "registries", registries)
+
+    @property
+    @pulumi.getter
+    def host(self) -> Optional[pulumi.Input[str]]:
+        """
+        The build daemon's address.
+        """
+        return pulumi.get(self, "host")
+
+    @host.setter
+    def host(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "host", value)
+
+    @property
+    @pulumi.getter
+    def registries(self) -> Optional[pulumi.Input[Sequence[pulumi.Input['RegistryArgs']]]]:
+        return pulumi.get(self, "registries")
+
+    @registries.setter
+    def registries(self, value: Optional[pulumi.Input[Sequence[pulumi.Input['RegistryArgs']]]]):
+        pulumi.set(self, "registries", value)
 
 
 class Provider(pulumi.ProviderResource):
@@ -25,11 +55,14 @@ class Provider(pulumi.ProviderResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 host: Optional[pulumi.Input[str]] = None,
+                 registries: Optional[pulumi.Input[Sequence[pulumi.Input[pulumi.InputType['RegistryArgs']]]]] = None,
                  __props__=None):
         """
         Create a Dockerbuild resource with the given unique name, props, and options.
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input[str] host: The build daemon's address.
         """
         ...
     @overload
@@ -54,6 +87,8 @@ class Provider(pulumi.ProviderResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 host: Optional[pulumi.Input[str]] = None,
+                 registries: Optional[pulumi.Input[Sequence[pulumi.Input[pulumi.InputType['RegistryArgs']]]]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -63,9 +98,21 @@ class Provider(pulumi.ProviderResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = ProviderArgs.__new__(ProviderArgs)
 
+            if host is None:
+                host = (_utilities.get_env('DOCKER_HOST') or '')
+            __props__.__dict__["host"] = host
+            __props__.__dict__["registries"] = pulumi.Output.from_input(registries).apply(pulumi.runtime.to_json) if registries is not None else None
         super(Provider, __self__).__init__(
             'dockerbuild',
             resource_name,
             __props__,
             opts)
+
+    @property
+    @pulumi.getter
+    def host(self) -> pulumi.Output[Optional[str]]:
+        """
+        The build daemon's address.
+        """
+        return pulumi.get(self, "host")
 

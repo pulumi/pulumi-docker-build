@@ -1,4 +1,4 @@
-// Copyright 2016-2023, Pulumi Corporation.
+// Copyright 2024, Pulumi Corporation.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,43 +15,36 @@
 package provider
 
 import (
+	"context"
 	"testing"
 
-	"github.com/blang/semver"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/types/known/structpb"
 
-	p "github.com/pulumi/pulumi-go-provider"
-	"github.com/pulumi/pulumi-go-provider/integration"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
+	pulumirpc "github.com/pulumi/pulumi/sdk/v3/proto/go"
 )
 
-func TestRandomCreate(t *testing.T) {
+// TestConfigure checks backwards-compatibility with SDKs that still send
+// provider config as JSON-encoded strings. This test can be removed once we
+// upgrade to a version of pulumi that no longer generates SDKs with that
+// behavior.
+func TestConfigure(t *testing.T) {
 	t.Parallel()
 
-	prov := provider()
+	ctx := context.Background()
 
-	response, err := prov.Create(p.CreateRequest{
-		Urn: urn("Random"),
-		Properties: resource.PropertyMap{
-			"length": resource.NewNumberProperty(12),
-		},
-		Preview: false,
+	p, err := New(nil)
+	require.NoError(t, err)
+
+	args, err := structpb.NewStruct(map[string]any{
+		"registries": `[{"address": "docker.io"}]`,
+	})
+	require.NoError(t, err)
+
+	_, err = p.Configure(ctx, &pulumirpc.ConfigureRequest{
+		Args: args,
 	})
 
-	require.NoError(t, err)
-	result := response.Properties["result"].StringValue()
-	assert.Len(t, result, 12)
-}
-
-// urn is a helper function to build an urn for running integration tests.
-func urn(typ string) resource.URN {
-	return resource.NewURN("stack", "proj", "",
-		tokens.Type("test:index:"+typ), "name")
-}
-
-// Create a test server.
-func provider() integration.Server {
-	return integration.NewServer(Name, semver.MustParse("1.0.0"), Provider())
+	assert.NoError(t, err)
 }
