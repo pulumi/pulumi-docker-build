@@ -28,9 +28,9 @@ import (
 )
 
 var (
-	_ infer.Annotated                             = (infer.Annotated)((*Index)(nil))
-	_ infer.Annotated                             = (infer.Annotated)((*IndexArgs)(nil))
-	_ infer.Annotated                             = (infer.Annotated)((*IndexState)(nil))
+	_ infer.Annotated                             = (*Index)(nil)
+	_ infer.Annotated                             = (*IndexArgs)(nil)
+	_ infer.Annotated                             = (*IndexState)(nil)
 	_ infer.CustomCheck[IndexArgs]                = (*Index)(nil)
 	_ infer.CustomResource[IndexArgs, IndexState] = (*Index)(nil)
 	_ infer.CustomDelete[IndexState]              = (*Index)(nil)
@@ -299,8 +299,7 @@ func (i *Index) client(
 	}
 
 	auths := cfg.Registries
-	auths = append(auths, state.Registry)
-	auths = append(auths, args.Registry)
+	auths = append(auths, state.Registry, args.Registry)
 
 	return wrap(cfg.host, auths...)
 }

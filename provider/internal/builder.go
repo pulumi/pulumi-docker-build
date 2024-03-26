@@ -18,7 +18,7 @@ import (
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
-var _ = (infer.Annotated)((*BuilderConfig)(nil))
+var _ infer.Annotated = (*BuilderConfig)(nil)
 
 // BuilderConfig configures the builder to use for an image build.
 type BuilderConfig struct {

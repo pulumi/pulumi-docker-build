@@ -41,6 +41,9 @@ linters-settings:
     custom-order: true
   gocritic:
     enable-all: true
+    disabled-checks:
+      - hugeParam
+      - importShadow
   goheader:
     template: |-
       Copyright 2024, Pulumi Corporation.

@@ -112,7 +112,8 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 			if err != nil {
 				continue
 			}
-			for _, n := range nodes {
+			for idx := range nodes {
+				n := nodes[idx]
 				if n.Driver == nil {
 					continue nextbuilder
 				}
@@ -128,7 +129,12 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 
 	if b.Driver == "" && opts.Builder == "" {
 		// If we STILL don't have a builder, create a docker-container instance.
-		b, err = builder.Create(context.Background(), txn, h.cli, builder.CreateOpts{Driver: "docker-container"})
+		b, err = builder.Create(
+			context.Background(),
+			txn,
+			h.cli,
+			builder.CreateOpts{Driver: "docker-container"},
+		)
 		if err != nil {
 			return nil, err
 		}

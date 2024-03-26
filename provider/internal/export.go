@@ -15,6 +15,7 @@
 package internal
 
 import (
+	"errors"
 	"fmt"
 	"slices"
 	"strings"
@@ -26,24 +27,24 @@ import (
 )
 
 var (
-	_ = (fmt.Stringer)((*Export)(nil))
-	_ = (fmt.Stringer)((*ExportDocker)(nil))
-	_ = (fmt.Stringer)((*ExportImage)(nil))
-	_ = (fmt.Stringer)((*ExportLocal)(nil))
-	_ = (fmt.Stringer)((*ExportOCI)(nil))
-	_ = (fmt.Stringer)((*ExportRegistry)(nil))
-	_ = (fmt.Stringer)((*ExportTar)(nil))
-	_ = (fmt.Stringer)(ExportWithAnnotations{})
-	_ = (fmt.Stringer)(ExportWithCompression{})
-	_ = (fmt.Stringer)(ExportWithNames{})
-	_ = (fmt.Stringer)(ExportWithOCI{})
-	_ = (infer.Annotated)((*Export)(nil))
-	_ = (infer.Annotated)((*ExportDocker)(nil))
-	_ = (infer.Annotated)((*ExportImage)(nil))
-	_ = (infer.Annotated)((*ExportLocal)(nil))
-	_ = (infer.Annotated)((*ExportOCI)(nil))
-	_ = (infer.Annotated)((*ExportRegistry)(nil))
-	_ = (infer.Annotated)((*ExportTar)(nil))
+	_ fmt.Stringer    = (*Export)(nil)
+	_ fmt.Stringer    = (*ExportDocker)(nil)
+	_ fmt.Stringer    = (*ExportImage)(nil)
+	_ fmt.Stringer    = (*ExportLocal)(nil)
+	_ fmt.Stringer    = (*ExportOCI)(nil)
+	_ fmt.Stringer    = (*ExportRegistry)(nil)
+	_ fmt.Stringer    = (*ExportTar)(nil)
+	_ fmt.Stringer    = ExportWithAnnotations{}
+	_ fmt.Stringer    = ExportWithCompression{}
+	_ fmt.Stringer    = ExportWithNames{}
+	_ fmt.Stringer    = ExportWithOCI{}
+	_ infer.Annotated = (*Export)(nil)
+	_ infer.Annotated = (*ExportDocker)(nil)
+	_ infer.Annotated = (*ExportImage)(nil)
+	_ infer.Annotated = (*ExportLocal)(nil)
+	_ infer.Annotated = (*ExportOCI)(nil)
+	_ infer.Annotated = (*ExportRegistry)(nil)
+	_ infer.Annotated = (*ExportTar)(nil)
 )
 
 // Export is a "union" type for all of our available `--output` options.
@@ -124,7 +125,7 @@ func (e Export) pushed() bool {
 
 func (e Export) validate(preview bool, tags []string) (*controllerapi.ExportEntry, error) {
 	if strings.Count(e.String(), "type=") > 1 {
-		return nil, fmt.Errorf("exports should only specify one export type")
+		return nil, errors.New("exports should only specify one export type")
 	}
 	ee, err := buildflags.ParseExports([]string{e.String()})
 	if err != nil {
@@ -132,7 +133,9 @@ func (e Export) validate(preview bool, tags []string) (*controllerapi.ExportEntr
 	}
 	exp := ee[0]
 	if len(tags) == 0 && isRegistryPush(exp) && exp.Attrs["name"] == "" {
-		return nil, fmt.Errorf("at least one tag or export name is needed when pushing to a registry")
+		return nil, errors.New(
+			"at least one tag or export name is needed when pushing to a registry",
+		)
 	}
 	if !preview {
 		return exp, nil
@@ -187,7 +190,7 @@ func (e *ExportDocker) String() string {
 	}
 	parts := []string{}
 	if e.Dest != "" {
-		parts = append(parts, fmt.Sprintf("dest=%s", e.Dest))
+		parts = append(parts, "dest="+e.Dest)
 	}
 	if e.Tar != nil {
 		parts = append(parts, fmt.Sprintf("tar=%t", *e.Tar))
@@ -288,7 +291,7 @@ func (e *ExportImage) String() string {
 		parts = append(parts, fmt.Sprintf("insecure=%t", *e.Insecure))
 	}
 	if e.DanglingNamePrefix != "" {
-		parts = append(parts, fmt.Sprintf("dangling-name-prefix=%s", e.DanglingNamePrefix))
+		parts = append(parts, "dangling-name-prefix="+e.DanglingNamePrefix)
 	}
 	if e.NameCanonical != nil {
 		parts = append(parts, fmt.Sprintf("name-canonical=%t", *e.NameCanonical))
@@ -342,7 +345,7 @@ func (e *ExportLocal) String() string {
 	if e == nil {
 		return ""
 	}
-	return fmt.Sprintf("type=local,dest=%s", e.Dest)
+	return "type=local,dest=" + e.Dest
 }
 
 // Annotate sets docstrings on ExportLocal.
@@ -359,7 +362,7 @@ func (e *ExportTar) String() string {
 	if e == nil {
 		return ""
 	}
-	return fmt.Sprintf("type=tar,dest=%s", e.Dest)
+	return "type=tar,dest=" + e.Dest
 }
 
 // ExportWithOCI is an export that support OCI media types.
@@ -428,14 +431,17 @@ type ExportWithNames struct {
 func (e ExportWithNames) String() string {
 	parts := []string{}
 	for _, n := range e.Names {
-		parts = append(parts, fmt.Sprintf("name=%s", n))
+		parts = append(parts, "name="+n)
 	}
 	return strings.Join(parts, ",")
 }
 
 // Annotate sets docstrings on ExportWithNames.
 func (e *ExportWithNames) Annotate(a infer.Annotator) {
-	a.Describe(&e.Names, "Specify images names to export. This is overridden if tags are already specified.")
+	a.Describe(
+		&e.Names,
+		"Specify images names to export. This is overridden if tags are already specified.",
+	)
 }
 
 // ExportWithAnnotations is an export with configurable annotations.

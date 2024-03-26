@@ -136,18 +136,35 @@ func TestHashIgnoresFile(t *testing.T) {
 func TestHashIgnoresWildcards(t *testing.T) {
 	t.Parallel()
 	baselineDir := "testdata/ignores-wildcard/basedir"
-	baselineResult, err := hashBuildContext(baselineDir, filepath.Join(baselineDir, _dockerfile), nil)
+	baselineResult, err := hashBuildContext(
+		baselineDir,
+		filepath.Join(baselineDir, _dockerfile),
+		nil,
+	)
 	require.NoError(t, err)
 
 	modIgnoredDir := "testdata/ignores-wildcard/basedir-modified-ignored-file"
-	modIgnoredResult, err := hashBuildContext(modIgnoredDir, filepath.Join(modIgnoredDir, _dockerfile), nil)
+	modIgnoredResult, err := hashBuildContext(
+		modIgnoredDir,
+		filepath.Join(modIgnoredDir, _dockerfile),
+		nil,
+	)
 	require.NoError(t, err)
 
 	modIncludedDir := "testdata/ignores-wildcard/basedir-modified-included-file"
-	modIncludedResult, err := hashBuildContext(modIncludedDir, filepath.Join(modIncludedDir, _dockerfile), nil)
+	modIncludedResult, err := hashBuildContext(
+		modIncludedDir,
+		filepath.Join(modIncludedDir, _dockerfile),
+		nil,
+	)
 	require.NoError(t, err)
 
-	assert.Equal(t, baselineResult, modIgnoredResult, "hash should not change when modifying ignored files")
+	assert.Equal(
+		t,
+		baselineResult,
+		modIgnoredResult,
+		"hash should not change when modifying ignored files",
+	)
 	assert.NotEqual(t, baselineResult, modIncludedResult,
 		"hash should change when modifying included (via wildcard ignore exclusion) files")
 }
@@ -174,18 +191,35 @@ func TestHashIgnoresWildcardsRelative(t *testing.T) {
 	}()
 
 	baselineDir := "../testdata/ignores-wildcard/basedir"
-	baselineResult, err := hashBuildContext(baselineDir, filepath.Join(baselineDir, _dockerfile), nil)
+	baselineResult, err := hashBuildContext(
+		baselineDir,
+		filepath.Join(baselineDir, _dockerfile),
+		nil,
+	)
 	require.NoError(t, err)
 
 	modIgnoredDir := "../testdata/ignores-wildcard/basedir-modified-ignored-file"
-	modIgnoredResult, err := hashBuildContext(modIgnoredDir, filepath.Join(modIgnoredDir, _dockerfile), nil)
+	modIgnoredResult, err := hashBuildContext(
+		modIgnoredDir,
+		filepath.Join(modIgnoredDir, _dockerfile),
+		nil,
+	)
 	require.NoError(t, err)
 
 	modIncludedDir := "../testdata/ignores-wildcard/basedir-modified-included-file"
-	modIncludedResult, err := hashBuildContext(modIncludedDir, filepath.Join(modIncludedDir, _dockerfile), nil)
+	modIncludedResult, err := hashBuildContext(
+		modIncludedDir,
+		filepath.Join(modIncludedDir, _dockerfile),
+		nil,
+	)
 	require.NoError(t, err)
 
-	assert.Equal(t, baselineResult, modIgnoredResult, "hash should not change when modifying ignored files")
+	assert.Equal(
+		t,
+		baselineResult,
+		modIgnoredResult,
+		"hash should not change when modifying ignored files",
+	)
 	assert.NotEqual(t, baselineResult, modIncludedResult,
 		"hash should change when modifying included (via wildcard ignore exclusion) files")
 }
@@ -193,10 +227,18 @@ func TestHashIgnoresWildcardsRelative(t *testing.T) {
 func TestHashIgnoresDockerfileOutsideDirMove(t *testing.T) {
 	t.Parallel()
 	appDir := "./testdata/dockerfile-location-irrelevant/app"
-	baseResult, err := hashBuildContext(appDir, "./testdata/dockerfile-location-irrelevant/step1.Dockerfile", nil)
+	baseResult, err := hashBuildContext(
+		appDir,
+		"./testdata/dockerfile-location-irrelevant/step1.Dockerfile",
+		nil,
+	)
 	require.NoError(t, err)
 
-	result, err := hashBuildContext(appDir, "./testdata/dockerfile-location-irrelevant/step2.Dockerfile", nil)
+	result, err := hashBuildContext(
+		appDir,
+		"./testdata/dockerfile-location-irrelevant/step2.Dockerfile",
+		nil,
+	)
 	require.NoError(t, err)
 
 	assert.Equal(t, result, baseResult)
@@ -362,7 +404,7 @@ func TestDockerIgnore(t *testing.T) {
 			for fname, fdata := range tt.fs {
 				f, err := fs.Create(fname)
 				require.NoError(t, err)
-				_, err = f.Write([]byte(fdata))
+				_, err = f.WriteString(fdata)
 				require.NoError(t, err)
 			}
 			actual, err := getIgnorePatterns(fs, tt.dockerfile, tt.context)

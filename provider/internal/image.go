@@ -45,9 +45,9 @@ import (
 )
 
 var (
-	_ infer.Annotated                             = (infer.Annotated)((*Image)(nil))
-	_ infer.Annotated                             = (infer.Annotated)((*ImageArgs)(nil))
-	_ infer.Annotated                             = (infer.Annotated)((*ImageState)(nil))
+	_ infer.Annotated                             = (*Image)(nil)
+	_ infer.Annotated                             = (*ImageArgs)(nil)
+	_ infer.Annotated                             = (*ImageState)(nil)
 	_ infer.CustomCheck[ImageArgs]                = (*Image)(nil)
 	_ infer.CustomDelete[ImageState]              = (*Image)(nil)
 	_ infer.CustomDiff[ImageArgs, ImageState]     = (*Image)(nil)
@@ -295,9 +295,9 @@ func (ia *ImageArgs) Annotate(a infer.Annotator) {
 type ImageState struct {
 	ImageArgs
 
-	Digest      string `pulumi:"digest"     provider:"output"`
+	Digest      string `pulumi:"digest"      provider:"output"`
 	ContextHash string `pulumi:"contextHash" provider:"output"`
-	Ref         string `pulumi:"ref" provider:"output"`
+	Ref         string `pulumi:"ref"         provider:"output"`
 }
 
 // Annotate describes outputs of the Image resource.
@@ -391,7 +391,9 @@ func (cf checkFailure) Error() string {
 }
 
 func newCheckFailure(err error, format string, args ...any) error {
-	return checkFailure{provider.CheckFailure{Property: fmt.Sprintf(format, args...), Reason: err.Error()}}
+	return checkFailure{
+		provider.CheckFailure{Property: fmt.Sprintf(format, args...), Reason: err.Error()},
+	}
 }
 
 // normalize returns a copy of ImageArgs after accounting for unknown (preview)
@@ -510,9 +512,11 @@ func (ia ImageArgs) toBuild(
 	}
 
 	if len(opts.Platforms) > 1 && len(opts.CacheTo) > 0 {
-		ctx.Log(diag.Warning,
+		ctx.Log(
+			diag.Warning,
 			"Caching doesn't work reliably with multi-platform builds (https://github.com/docker/buildx/discussions/1382). "+
-				"Instead, perform one cached build per platform and create an Index to join them all together.")
+				"Instead, perform one cached build per platform and create an Index to join them all together.",
+		)
 	}
 
 	return build{
@@ -530,17 +534,21 @@ func (ia *ImageArgs) validate(preview bool) (controllerapi.BuildOptions, error) 
 
 	if len(ia.Exports) > 1 {
 		multierr = errors.Join(multierr,
-			newCheckFailure(fmt.Errorf("multiple exports are currently unsupported"), "exports"),
+			newCheckFailure(errors.New("multiple exports are currently unsupported"), "exports"),
 		)
 	}
 	if ia.Push && ia.Load {
-		multierr = errors.Join(multierr,
-			newCheckFailure(fmt.Errorf("push and load may not be set together at the moment"), "push"),
+		multierr = errors.Join(
+			multierr,
+			newCheckFailure(
+				errors.New("push and load may not be set together at the moment"),
+				"push",
+			),
 		)
 	}
 	if len(ia.Exports) > 0 && (ia.Push || ia.Load) {
 		multierr = errors.Join(multierr,
-			newCheckFailure(fmt.Errorf("exports can't be provided with push or load"), "exports"),
+			newCheckFailure(errors.New("exports can't be provided with push or load"), "exports"),
 		)
 	}
 
@@ -689,7 +697,7 @@ func (i *Image) Create(
 		return id, state, fmt.Errorf("checking buildkit compatibility: %w", err)
 	}
 	if !ok {
-		return id, state, fmt.Errorf("buildkit is not supported on this host")
+		return id, state, errors.New("buildkit is not supported on this host")
 	}
 
 	build, err := input.toBuild(ctx, preview)

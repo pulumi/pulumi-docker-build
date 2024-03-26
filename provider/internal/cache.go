@@ -15,6 +15,7 @@
 package internal
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -25,38 +26,38 @@ import (
 )
 
 var (
-	_ = (fmt.Stringer)((*CacheFrom)(nil))
-	_ = (fmt.Stringer)((*CacheFromAzureBlob)(nil))
-	_ = (fmt.Stringer)((*CacheFromGitHubActions)(nil))
-	_ = (fmt.Stringer)((*CacheFromLocal)(nil))
-	_ = (fmt.Stringer)((*CacheFromRegistry)(nil))
-	_ = (fmt.Stringer)((*CacheFromS3)(nil))
-	_ = (fmt.Stringer)((*CacheTo)(nil))
-	_ = (fmt.Stringer)((*CacheToAzureBlob)(nil))
-	_ = (fmt.Stringer)((*CacheToGitHubActions)(nil))
-	_ = (fmt.Stringer)((*CacheToInline)(nil))
-	_ = (fmt.Stringer)((*CacheToLocal)(nil))
-	_ = (fmt.Stringer)((*CacheToRegistry)(nil))
-	_ = (fmt.Stringer)((*CacheToS3)(nil))
-	_ = (fmt.Stringer)(CacheWithCompression{})
-	_ = (fmt.Stringer)(CacheWithIgnoreError{})
-	_ = (fmt.Stringer)(CacheWithMode{})
-	_ = (fmt.Stringer)(CacheWithOCI{})
-	_ = (infer.Annotated)((*CacheFrom)(nil))
-	_ = (infer.Annotated)((*CacheFromAzureBlob)(nil))
-	_ = (infer.Annotated)((*CacheFromGitHubActions)(nil))
-	_ = (infer.Annotated)((*CacheFromLocal)(nil))
-	_ = (infer.Annotated)((*CacheFromRegistry)(nil))
-	_ = (infer.Annotated)((*CacheFromS3)(nil))
-	_ = (infer.Annotated)((*CacheTo)(nil))
-	_ = (infer.Annotated)((*CacheToInline)(nil))
-	_ = (infer.Annotated)((*CacheToLocal)(nil))
-	_ = (infer.Annotated)((*CacheWithCompression)(nil))
-	_ = (infer.Annotated)((*CacheWithIgnoreError)(nil))
-	_ = (infer.Annotated)((*CacheWithMode)(nil))
-	_ = (infer.Annotated)((*CacheWithOCI)(nil))
-	_ = (infer.Enum[CacheMode])((*CacheMode)(nil))
-	_ = (infer.Enum[CompressionType])((*CompressionType)(nil))
+	_ fmt.Stringer                = (*CacheFrom)(nil)
+	_ fmt.Stringer                = (*CacheFromAzureBlob)(nil)
+	_ fmt.Stringer                = (*CacheFromGitHubActions)(nil)
+	_ fmt.Stringer                = (*CacheFromLocal)(nil)
+	_ fmt.Stringer                = (*CacheFromRegistry)(nil)
+	_ fmt.Stringer                = (*CacheFromS3)(nil)
+	_ fmt.Stringer                = (*CacheTo)(nil)
+	_ fmt.Stringer                = (*CacheToAzureBlob)(nil)
+	_ fmt.Stringer                = (*CacheToGitHubActions)(nil)
+	_ fmt.Stringer                = (*CacheToInline)(nil)
+	_ fmt.Stringer                = (*CacheToLocal)(nil)
+	_ fmt.Stringer                = (*CacheToRegistry)(nil)
+	_ fmt.Stringer                = (*CacheToS3)(nil)
+	_ fmt.Stringer                = CacheWithCompression{}
+	_ fmt.Stringer                = CacheWithIgnoreError{}
+	_ fmt.Stringer                = CacheWithMode{}
+	_ fmt.Stringer                = CacheWithOCI{}
+	_ infer.Annotated             = (*CacheFrom)(nil)
+	_ infer.Annotated             = (*CacheFromAzureBlob)(nil)
+	_ infer.Annotated             = (*CacheFromGitHubActions)(nil)
+	_ infer.Annotated             = (*CacheFromLocal)(nil)
+	_ infer.Annotated             = (*CacheFromRegistry)(nil)
+	_ infer.Annotated             = (*CacheFromS3)(nil)
+	_ infer.Annotated             = (*CacheTo)(nil)
+	_ infer.Annotated             = (*CacheToInline)(nil)
+	_ infer.Annotated             = (*CacheToLocal)(nil)
+	_ infer.Annotated             = (*CacheWithCompression)(nil)
+	_ infer.Annotated             = (*CacheWithIgnoreError)(nil)
+	_ infer.Annotated             = (*CacheWithMode)(nil)
+	_ infer.Annotated             = (*CacheWithOCI)(nil)
+	_ infer.Enum[CacheMode]       = (*CacheMode)(nil)
+	_ infer.Enum[CompressionType] = (*CompressionType)(nil)
 )
 
 // CacheFromLocal pulls cache manifests from a local directory.
@@ -73,10 +74,10 @@ func (c *CacheFromLocal) String() string {
 	}
 	parts := []string{"type=local"}
 	if c.Src != "" {
-		parts = append(parts, fmt.Sprintf("src=%s", c.Src))
+		parts = append(parts, "src="+c.Src)
 	}
 	if c.Digest != "" {
-		parts = append(parts, fmt.Sprintf("digest=%s", c.Digest))
+		parts = append(parts, "digest="+c.Digest)
 	}
 	return strings.Join(parts, ",")
 }
@@ -103,7 +104,7 @@ func (c *CacheFromRegistry) String() string {
 	if c == nil {
 		return ""
 	}
-	return fmt.Sprintf("type=registry,ref=%s", c.Ref)
+	return "type=registry,ref=" + c.Ref
 }
 
 // CacheWithOCI exposes OCI media type options.
@@ -188,13 +189,13 @@ func (c *CacheFromGitHubActions) String() string {
 	}
 	parts := []string{"type=gha"}
 	if c.Scope != "" {
-		parts = append(parts, fmt.Sprintf("scope=%s", c.Scope))
+		parts = append(parts, "scope="+c.Scope)
 	}
 	if c.Token != "" {
-		parts = append(parts, fmt.Sprintf("token=%s", c.Token))
+		parts = append(parts, "token="+c.Token)
 	}
 	if c.URL != "" {
-		parts = append(parts, fmt.Sprintf("url=%s", c.URL))
+		parts = append(parts, "url="+c.URL)
 	}
 	return strings.Join(parts, ",")
 }
@@ -215,13 +216,13 @@ func (c *CacheFromAzureBlob) String() string {
 	}
 	parts := []string{"type=azblob"}
 	if c.Name != "" {
-		parts = append(parts, fmt.Sprintf("name=%s", c.Name))
+		parts = append(parts, "name="+c.Name)
 	}
 	if c.AccountURL != "" {
-		parts = append(parts, fmt.Sprintf("account_url=%s", c.AccountURL))
+		parts = append(parts, "account_url="+c.AccountURL)
 	}
 	if c.SecretAccessKey != "" {
-		parts = append(parts, fmt.Sprintf("secret_access_key=%s", c.SecretAccessKey))
+		parts = append(parts, "secret_access_key="+c.SecretAccessKey)
 	}
 	return strings.Join(parts, ",")
 }
@@ -259,7 +260,7 @@ type CacheFromS3 struct {
 	UsePathStyle    *bool  `pulumi:"usePathStyle,optional"`
 	AccessKeyID     string `pulumi:"accessKeyId,optional"`
 	SecretAccessKey string `pulumi:"secretAccessKey,optional" provider:"secret"`
-	SessionToken    string `pulumi:"sessionToken,optional" provider:"secret"`
+	SessionToken    string `pulumi:"sessionToken,optional"    provider:"secret"`
 }
 
 // Annotate sets docstrings and defaults on CacheFromS3.
@@ -309,31 +310,31 @@ func (c *CacheFromS3) String() string {
 	}
 	parts := []string{"type=s3"}
 	if c.Bucket != "" {
-		parts = append(parts, fmt.Sprintf("bucket=%s", c.Bucket))
+		parts = append(parts, "bucket="+c.Bucket)
 	}
 	if c.Name != "" {
-		parts = append(parts, fmt.Sprintf("name=%s", c.Name))
+		parts = append(parts, "name="+c.Name)
 	}
 	if c.EndpointURL != "" {
-		parts = append(parts, fmt.Sprintf("endpoint_url=%s", c.EndpointURL))
+		parts = append(parts, "endpoint_url="+c.EndpointURL)
 	}
 	if c.BlobsPrefix != "" {
-		parts = append(parts, fmt.Sprintf("blobs_prefix=%s", c.BlobsPrefix))
+		parts = append(parts, "blobs_prefix="+c.BlobsPrefix)
 	}
 	if c.ManifestsPrefix != "" {
-		parts = append(parts, fmt.Sprintf("manifests_prefix=%s", c.ManifestsPrefix))
+		parts = append(parts, "manifests_prefix="+c.ManifestsPrefix)
 	}
 	if c.UsePathStyle != nil {
 		parts = append(parts, fmt.Sprintf("use_path_type=%t", *c.UsePathStyle))
 	}
 	if c.AccessKeyID != "" {
-		parts = append(parts, fmt.Sprintf("access_key_id=%s", c.AccessKeyID))
+		parts = append(parts, "access_key_id="+c.AccessKeyID)
 	}
 	if c.SecretAccessKey != "" {
-		parts = append(parts, fmt.Sprintf("secret_access_key=%s", c.SecretAccessKey))
+		parts = append(parts, "secret_access_key="+c.SecretAccessKey)
 	}
 	if c.SessionToken != "" {
-		parts = append(parts, fmt.Sprintf("session_token=%s", c.SessionToken))
+		parts = append(parts, "session_token="+c.SessionToken)
 	}
 
 	return strings.Join(parts, ",")
@@ -460,7 +461,7 @@ func (c CacheFrom) String() string {
 
 func (c CacheFrom) validate(preview bool) (*controllerapi.CacheOptionsEntry, error) {
 	if strings.Count(c.String(), "type=") > 1 {
-		return nil, fmt.Errorf("cacheFrom should only specify one cache type")
+		return nil, errors.New("cacheFrom should only specify one cache type")
 	}
 	parsed, err := buildflags.ParseCacheEntry([]string{c.String()})
 	if err != nil {
@@ -517,7 +518,7 @@ func (c *CacheToLocal) String() string {
 		return ""
 	}
 	return join(
-		Raw(fmt.Sprintf("type=local,dest=%s", c.Dest)),
+		Raw("type=local,dest="+c.Dest),
 		c.CacheWithCompression,
 		c.CacheWithIgnoreError,
 	)
@@ -669,7 +670,7 @@ func (c CacheTo) String() string {
 
 func (c CacheTo) validate(preview bool) (*controllerapi.CacheOptionsEntry, error) {
 	if strings.Count(c.String(), "type=") > 1 {
-		return nil, fmt.Errorf("cacheTo should only specify one cache type")
+		return nil, errors.New("cacheTo should only specify one cache type")
 	}
 	parsed, err := buildflags.ParseCacheEntry([]string{c.String()})
 	if err != nil {

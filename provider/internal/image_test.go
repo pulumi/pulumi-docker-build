@@ -75,7 +75,8 @@ func TestImageLifecycle(t *testing.T) {
 				).AnyTimes()
 				c.EXPECT().Delete(gomock.Any(),
 					"docker.io/pulumibot/buildkit-e2e@sha256:98ea6e4f216f2fb4b69fff9b3a44842c38686ca685f3f55dc48c5d3fb1107be4",
-				).Return(nil)
+				).
+					Return(nil)
 				return c
 			},
 			op: func(t *testing.T) integration.Operation {
@@ -112,7 +113,9 @@ func TestImageLifecycle(t *testing.T) {
 								resource.NewObjectProperty(resource.PropertyMap{
 									"address":  resource.NewStringProperty("fakeaddress"),
 									"username": resource.NewStringProperty("fakeuser"),
-									"password": resource.MakeSecret(resource.NewStringProperty("password")),
+									"password": resource.MakeSecret(
+										resource.NewStringProperty("password"),
+									),
 								}),
 							},
 						),
@@ -294,7 +297,9 @@ func TestDelete(t *testing.T) {
 		t.Parallel()
 		ctrl := gomock.NewController(t)
 		client := NewMockClient(ctrl)
-		client.EXPECT().Delete(gomock.Any(), "docker.io/pulumi/test@sha256:foo").Return(errNotFound{})
+		client.EXPECT().
+			Delete(gomock.Any(), "docker.io/pulumi/test@sha256:foo").
+			Return(errNotFound{})
 
 		s := newServer(client)
 		err := s.Configure(provider.ConfigureRequest{})

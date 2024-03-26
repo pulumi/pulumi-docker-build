@@ -5,5 +5,6 @@
 package tools
 
 import (
+	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
 	_ "github.com/pulumi/pulumi/pkg/v3/cmd/pulumi"
 )

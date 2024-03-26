@@ -19,6 +19,7 @@ EXAMPLES_DIR     := ${WORKING_DIR}/examples/yaml
 TESTPARALLELISM  := 4
 
 PULUMI           := bin/pulumi
+GOGLANGCILINT    := bin/golangci-lint
 
 .PHONY: ensure
 ensure:: tidy lint test_provider examples
@@ -73,6 +74,9 @@ examples/java: ${PULUMI} bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yam
 ${PULUMI}: go.sum
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/pkg/v3/cmd/pulumi
 
+${GOGLANGCILINT}: go.sum
+	GOBIN=${WORKING_DIR}/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint
+
 define pulumi_login
     export PULUMI_CONFIG_PASSPHRASE=asdfqwerty1234; \
     pulumi login --local;
@@ -117,8 +121,8 @@ build:: provider dotnet_sdk go_sdk nodejs_sdk python_sdk
 only_build:: build
 
 .PHONY: lint
-lint:
-	golangci-lint run --fix -c .golangci.yml --timeout 10m
+lint: ${GOGLANGCILINT}
+	${GOGLANGCILINT} run --fix -c .golangci.yml --timeout 10m
 
 install:: install_nodejs_sdk install_dotnet_sdk
 	cp $(WORKING_DIR)/bin/${PROVIDER} ${GOPATH}/bin

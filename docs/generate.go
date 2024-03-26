@@ -121,7 +121,7 @@ func convert(language, tempDir, programFile string) (string, error) {
 	return string(content), nil
 }
 
-func processYaml(path string, mdDir string) error {
+func processYaml(path, mdDir string) error {
 	yamlFile, err := os.Open(filepath.Clean(path))
 	if err != nil {
 		return err
@@ -134,65 +134,75 @@ func processYaml(path string, mdDir string) error {
 	decoder := yaml.NewDecoder(yamlFile)
 	exampleStrings := []string{}
 	for {
-		example := map[string]interface{}{}
-		err := decoder.Decode(&example)
-		if err == io.EOF {
+		keepGoing, err := func() (bool, error) {
+			example := map[string]interface{}{}
+			err := decoder.Decode(&example)
+			if err == io.EOF {
+				return false, nil
+			}
+
+			description, ok := example["description"].(string)
+			if !ok {
+				description = ""
+			}
+			dir, err := os.MkdirTemp("", "")
+			if err != nil {
+				return false, err
+			}
+
+			defer func() {
+				contract.IgnoreError(os.RemoveAll(dir))
+			}()
+
+			src, err := os.OpenFile(filepath.Clean(filepath.Join(dir, "Pulumi.yaml")), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0o600)
+			if err != nil {
+				return false, err
+			}
+
+			fmt.Println("Converting:", example)
+
+			if err := yaml.NewEncoder(src).Encode(example); err != nil {
+				return false, err
+			}
+			contract.AssertNoErrorf(src.Close(), "closing")
+
+			typescript, err := convert("typescript", dir, "index.ts")
+			if err != nil {
+				return false, err
+			}
+			python, err := convert("python", dir, "__main__.py")
+			if err != nil {
+				return false, err
+			}
+			csharp, err := convert("csharp", dir, "Program.cs")
+			if err != nil {
+				return false, err
+			}
+			golang, err := convert("go", dir, "main.go")
+			if err != nil {
+				return false, err
+			}
+			java, err := convert("java", dir, "src/main/java/generated_program/App.java")
+			if err != nil {
+				return false, err
+			}
+
+			yamlContent, err := os.ReadFile(filepath.Clean(filepath.Join(dir, "Pulumi.yaml")))
+			if err != nil {
+				return false, err
+			}
+			yaml := string(yamlContent)
+
+			exampleStrings = append(exampleStrings, markdownExample(description, typescript, python, csharp, golang, yaml, java))
+
+			return true, nil
+		}()
+		if err != nil {
+			return err
+		}
+		if !keepGoing {
 			break
 		}
-
-		description, ok := example["description"].(string)
-		if !ok {
-			description = "TODO: Description"
-		}
-		dir, err := os.MkdirTemp("", "")
-		if err != nil {
-			return err
-		}
-
-		defer func() {
-			contract.IgnoreError(os.RemoveAll(dir))
-		}()
-
-		src, err := os.OpenFile(filepath.Clean(filepath.Join(dir, "Pulumi.yaml")), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0o600)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println("Converting:", example)
-
-		if err = yaml.NewEncoder(src).Encode(example); err != nil {
-			return err
-		}
-		contract.AssertNoErrorf(src.Close(), "closing")
-
-		typescript, err := convert("typescript", dir, "index.ts")
-		if err != nil {
-			return err
-		}
-		python, err := convert("python", dir, "__main__.py")
-		if err != nil {
-			return err
-		}
-		csharp, err := convert("csharp", dir, "Program.cs")
-		if err != nil {
-			return err
-		}
-		golang, err := convert("go", dir, "main.go")
-		if err != nil {
-			return err
-		}
-		java, err := convert("java", dir, "src/main/java/generated_program/App.java")
-		if err != nil {
-			return err
-		}
-
-		yamlContent, err := os.ReadFile(filepath.Clean(filepath.Join(dir, "Pulumi.yaml")))
-		if err != nil {
-			return err
-		}
-		yaml := string(yamlContent)
-
-		exampleStrings = append(exampleStrings, markdownExample(description, typescript, python, csharp, golang, yaml, java))
 	}
 	fmt.Fprintf(os.Stdout, "Writing %s\n", filepath.Join(mdDir, md))
 	f, err := os.OpenFile(filepath.Clean(filepath.Join(mdDir, md)), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0o600)
@@ -200,7 +210,7 @@ func processYaml(path string, mdDir string) error {
 		return err
 	}
 	defer contract.IgnoreClose(f)
-	_, err = f.Write([]byte(markdownExamples(exampleStrings)))
+	_, err = f.WriteString(markdownExamples(exampleStrings))
 	contract.AssertNoErrorf(err, "writing examples")
 	return nil
 }

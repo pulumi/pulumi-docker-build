@@ -38,8 +38,8 @@ import (
 )
 
 var (
-	_ = (infer.Annotated)((*Context)(nil))
-	_ = (infer.Annotated)((*BuildContext)(nil))
+	_ infer.Annotated = (*Context)(nil)
+	_ infer.Annotated = (*BuildContext)(nil)
 )
 
 // Context represents Docker's `PATH | URL | -` context argument. Inline
@@ -115,7 +115,10 @@ func (c *Context) validate(preview bool, d Dockerfile) (Dockerfile, error) {
 	}
 
 	if c.Location != "-" {
-		return d, newCheckFailure(fmt.Errorf("%q: not a valid directory or URL", c.Location), "context.location")
+		return d, newCheckFailure(
+			fmt.Errorf("%q: not a valid directory or URL", c.Location),
+			"context.location",
+		)
 	}
 
 	return d, nil
@@ -172,7 +175,10 @@ func hashFile(
 // a symlink, the location it points to is hashed. If it is a regular file, we
 // hash the contents of the file. In order to detect file renames and mode
 // changes, we also write to the accumulator a relative name and file mode.
-func hashBuildContext(contextPath, dockerfilePath string, namedContexts map[string]string) (string, error) {
+func hashBuildContext(
+	contextPath, dockerfilePath string,
+	namedContexts map[string]string,
+) (string, error) {
 	h := sha256.New()
 	fs := afero.NewOsFs()
 
@@ -222,21 +228,25 @@ func hashBuildContext(contextPath, dockerfilePath string, namedContexts map[stri
 
 // hashPath hashes all paths within the provided FS.
 func hashPath(h hash.Hash, fs fsutil.FS) (string, error) {
-	err := fs.Walk(context.Background(), "/", func(filePath string, dir gofs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if dir.IsDir() {
-			return nil
-		}
-		// fsutil.Walk makes filePath relative to the root, we join it back to get an absolute path to
-		// the file to hash.
-		fi, err := dir.Info()
-		if err != nil {
-			return err
-		}
-		return hashFile(h, fs, filePath, fi.Mode())
-	})
+	err := fs.Walk(
+		context.Background(),
+		"/",
+		func(filePath string, dir gofs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			if dir.IsDir() {
+				return nil
+			}
+			// fsutil.Walk makes filePath relative to the root, we join it back to get an absolute path to
+			// the file to hash.
+			fi, err := dir.Info()
+			if err != nil {
+				return err
+			}
+			return hashFile(h, fs, filePath, fi.Mode())
+		},
+	)
 	if err != nil {
 		return "", fmt.Errorf("unable to hash build context: %w", err)
 	}
@@ -286,12 +296,13 @@ func getIgnorePatterns(fs afero.Fs, dockerfilePath, contextRoot string) ([]strin
 		if err != nil {
 			return nil, fmt.Errorf("reading %q: %w", p, err)
 		}
-		defer contract.IgnoreClose(f)
 
 		ignorePatterns, err := ignorefile.ReadAll(f)
 		if err != nil {
+			contract.IgnoreClose(f)
 			return nil, fmt.Errorf("unable to parse %q: %w", p, err)
 		}
+		contract.IgnoreClose(f)
 		return ignorePatterns, nil
 	}
 

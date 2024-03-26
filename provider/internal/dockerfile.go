@@ -15,7 +15,7 @@
 package internal
 
 import (
-	"fmt"
+	"errors"
 	"io"
 	"os"
 	"path/filepath"
@@ -57,7 +57,7 @@ func (d *Dockerfile) Annotate(a infer.Annotator) {
 func (d *Dockerfile) validate(preview bool, c Context) error {
 	if d.Location != "" && d.Inline != "" {
 		return newCheckFailure(
-			fmt.Errorf(`only specify "file" or "inline", not both`),
+			errors.New(`only specify "file" or "inline", not both`),
 			"dockerfile",
 		)
 	}
@@ -89,7 +89,7 @@ func (d *Dockerfile) validate(preview bool, c Context) error {
 	}
 
 	if !preview && !buildx.IsRemoteURL(c.Location) {
-		return newCheckFailure(fmt.Errorf("missing 'location' or 'inline'"), "dockerfile")
+		return newCheckFailure(errors.New("missing 'location' or 'inline'"), "dockerfile")
 	}
 
 	return nil

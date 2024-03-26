@@ -48,7 +48,7 @@ func TestCacheString(t *testing.T) {
 					SessionToken:    "session",
 				},
 			}},
-			//nolint:lll
+			//nolint:lll // Taken from AWS reference docs.
 			want: "type=s3,bucket=bucket-foo,name=myname,endpoint_url=https://some.endpoint,blobs_prefix=blob-prefix,manifests_prefix=manifest-prefix,use_path_type=true,access_key_id=access-key-id,secret_access_key=secret-key,session_token=session",
 		},
 		{
@@ -91,7 +91,9 @@ func TestCacheString(t *testing.T) {
 		{
 			name: "ignore-error",
 			given: CacheTo{
-				AZBlob: &CacheToAzureBlob{CacheWithIgnoreError: CacheWithIgnoreError{pulumi.BoolRef(true)}},
+				AZBlob: &CacheToAzureBlob{
+					CacheWithIgnoreError: CacheWithIgnoreError{pulumi.BoolRef(true)},
+				},
 			},
 			want: "type=azblob,ignore-error=true",
 		},
@@ -100,7 +102,10 @@ func TestCacheString(t *testing.T) {
 			given: CacheTo{
 				Registry: &CacheToRegistry{
 					CacheFromRegistry: CacheFromRegistry{Ref: "docker.io/foo/bar:baz"},
-					CacheWithOCI:      CacheWithOCI{OCI: pulumi.BoolRef(true), ImageManifest: pulumi.BoolRef(true)},
+					CacheWithOCI: CacheWithOCI{
+						OCI:           pulumi.BoolRef(true),
+						ImageManifest: pulumi.BoolRef(true),
+					},
 				},
 			},
 			want: "type=registry,ref=docker.io/foo/bar:baz,oci-mediatypes=true,image-manifest=true",

@@ -64,9 +64,9 @@ func TestSchema(t *testing.T) {
 
 type annotator struct{}
 
-func (annotator) Describe(_ any, _ string)             {}
-func (annotator) SetDefault(_ any, _ any, _ ...string) {}
-func (annotator) SetToken(_, _ string)                 {}
+func (annotator) Describe(_ any, _ string)         {}
+func (annotator) SetDefault(_, _ any, _ ...string) {}
+func (annotator) SetToken(_, _ string)             {}
 
 func newServer(client Client) integration.Server {
 	p := NewBuildxProvider()

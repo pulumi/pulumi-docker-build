@@ -176,7 +176,9 @@ func (enc *ConfigEncoding) unmarshalPropertyValue(key resource.PropertyKey,
 }
 
 // UnmarshalProperties is copied from plugin.UnmarshalProperties substituting plugin.UnmarshalPropertyValue.
-func (enc *ConfigEncoding) UnmarshalProperties(props *structpb.Struct) (resource.PropertyMap, error) {
+func (enc *ConfigEncoding) UnmarshalProperties(
+	props *structpb.Struct,
+) (resource.PropertyMap, error) {
 	opts := enc.unmarshalOpts()
 
 	result := make(resource.PropertyMap)

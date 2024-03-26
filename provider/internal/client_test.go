@@ -41,7 +41,8 @@ func TestAuth(t *testing.T) {
 		Password: password,
 	})
 
-	_, err := cli.Client().RegistryLogin(context.Background(), registry.AuthConfig{ServerAddress: address})
+	_, err := cli.Client().
+		RegistryLogin(context.Background(), registry.AuthConfig{ServerAddress: address})
 	assert.NoError(t, err)
 }
 
@@ -81,7 +82,10 @@ func TestBuild(t *testing.T) {
 	pctx.EXPECT().Log(gomock.Any(), gomock.Any()).AnyTimes()
 	pctx.EXPECT().LogStatus(gomock.Any(), gomock.Any()).AnyTimes()
 	pctx.EXPECT().Done().Return(ctx.Done()).AnyTimes()
-	pctx.EXPECT().Value(gomock.Any()).DoAndReturn(func(key any) any { return ctx.Value(key) }).AnyTimes()
+	pctx.EXPECT().
+		Value(gomock.Any()).
+		DoAndReturn(func(key any) any { return ctx.Value(key) }).
+		AnyTimes()
 	pctx.EXPECT().Err().Return(ctx.Err()).AnyTimes()
 	pctx.EXPECT().Deadline().Return(ctx.Deadline()).AnyTimes()
 
@@ -316,7 +320,11 @@ func TestInspect(t *testing.T) {
 	cli := testcli(t, false)
 	descriptors, err := cli.Inspect(context.Background(), "pulumibot/myapp:buildx")
 	assert.NoError(t, err)
-	assert.Equal(t, "application/vnd.docker.distribution.manifest.v2+json", descriptors[0].MediaType)
+	assert.Equal(
+		t,
+		"application/vnd.docker.distribution.manifest.v2+json",
+		descriptors[0].MediaType,
+	)
 }
 
 func TestNormalizatReference(t *testing.T) {

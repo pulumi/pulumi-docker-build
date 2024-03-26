@@ -33,8 +33,8 @@ import (
 
 var (
 	_ infer.CustomConfigure = (*Config)(nil)
-	_ infer.Annotated       = (infer.Annotated)((*Config)(nil))
-	_ infer.Annotated       = (infer.Annotated)((*Registry)(nil))
+	_ infer.Annotated       = (*Config)(nil)
+	_ infer.Annotated       = (*Registry)(nil)
 )
 
 // Config configures the buildx provider.

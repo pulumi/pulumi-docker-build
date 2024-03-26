@@ -44,7 +44,9 @@ func TestIndexLifecycle(t *testing.T) {
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: resource.PropertyMap{
-						"tag": resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:manifest-unit"),
+						"tag": resource.NewStringProperty(
+							"docker.io/pulumibot/buildkit-e2e:manifest-unit",
+						),
 						"sources": resource.NewArrayProperty([]resource.PropertyValue{
 							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:arm64"),
 							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:amd64"),
@@ -61,7 +63,9 @@ func TestIndexLifecycle(t *testing.T) {
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: resource.PropertyMap{
-						"tag": resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:manifest"),
+						"tag": resource.NewStringProperty(
+							"docker.io/pulumibot/buildkit-e2e:manifest",
+						),
 						"sources": resource.NewArrayProperty([]resource.PropertyValue{
 							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:arm64"),
 							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:amd64"),
@@ -71,7 +75,9 @@ func TestIndexLifecycle(t *testing.T) {
 							"address":  resource.NewStringProperty("docker.io"),
 							"username": resource.NewStringProperty("pulumibot"),
 							"password": resource.NewSecretProperty(&resource.Secret{
-								Element: resource.NewStringProperty(os.Getenv("DOCKER_HUB_PASSWORD")),
+								Element: resource.NewStringProperty(
+									os.Getenv("DOCKER_HUB_PASSWORD"),
+								),
 							}),
 						}),
 					},

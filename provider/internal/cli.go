@@ -199,8 +199,8 @@ func (c *cli) execBuild(b Build) (*client.SolveResponse, error) {
 	// directory for auth, but BUILDX_CONFIG will point to the host. There's a
 	// bunch of builder state in there that we want to preserve.
 	env := []string{
-		fmt.Sprintf("DOCKER_CONFIG=%s", tmp),
-		fmt.Sprintf("BUILDX_CONFIG=%s", filepath.Join(hostConfigDir, "buildx")),
+		"DOCKER_CONFIG=" + tmp,
+		"BUILDX_CONFIG=" + filepath.Join(hostConfigDir, "buildx"),
 	}
 
 	// We need to write to this file in order to recover information about the
@@ -338,9 +338,9 @@ func (c *cli) execBuild(b Build) (*client.SolveResponse, error) {
 
 // exec invokes a Docker plugin binary. The first argument should be the name
 // of the plugin's subcommand, e.g. "buildx".
-func (c *cli) exec(args []string, extraEnv []string) error {
+func (c *cli) exec(args, extraEnv []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("args must be non-empty")
+		return errors.New("args must be non-empty")
 	}
 	name := args[0]
 
@@ -371,7 +371,7 @@ func (c *cli) exec(args []string, extraEnv []string) error {
 
 // attrcsv transforms key/values into a CSV: key1=value1,key2=value2,...
 func attrcsv(typ string, m map[string]string) string {
-	s := []string{fmt.Sprintf("type=%s", typ)}
+	s := []string{"type=" + typ}
 	for k, v := range m {
 		s = append(s, fmt.Sprintf("%s=%s", k, v))
 	}

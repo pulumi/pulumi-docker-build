@@ -41,7 +41,10 @@ func TestValidateExport(t *testing.T) {
 			preview:   true,
 			e:         Export{Raw: "type=registry"},
 			givenTags: []string{"docker.io/foo/bar"},
-			wantExp:   &controllerapi.ExportEntry{Type: "image", Attrs: map[string]string{"push": "false"}},
+			wantExp: &controllerapi.ExportEntry{
+				Type:  "image",
+				Attrs: map[string]string{"push": "false"},
+			},
 		},
 		{
 			name:    "raw - push requires tags",
@@ -53,7 +56,10 @@ func TestValidateExport(t *testing.T) {
 			preview:   true,
 			e:         Export{Registry: &ExportRegistry{}},
 			givenTags: []string{"docker.io/foo/bar"},
-			wantExp:   &controllerapi.ExportEntry{Type: "image", Attrs: map[string]string{"push": "false"}},
+			wantExp: &controllerapi.ExportEntry{
+				Type:  "image",
+				Attrs: map[string]string{"push": "false"},
+			},
 		},
 		{
 			name:    "registry - push requires tags",
@@ -136,7 +142,6 @@ func TestExportString(t *testing.T) {
 					Store:              pulumi.BoolRef(false),
 				},
 			},
-			//nolint:lll
 			want: "type=image,push=true,push-by-digest=true,insecure=true,dangling-name-prefix=prefix,unpack=true,store=false",
 		},
 		{
@@ -192,7 +197,6 @@ func TestExportString(t *testing.T) {
 
 func TestExportPushed(t *testing.T) {
 	t.Parallel()
-	tru, fls := true, false
 	tests := []struct {
 		name string
 		e    Export
@@ -215,12 +219,12 @@ func TestExportPushed(t *testing.T) {
 		},
 		{
 			name: "registry with explicit push",
-			e:    Export{Registry: &ExportRegistry{ExportImage{Push: &fls}}},
+			e:    Export{Registry: &ExportRegistry{ExportImage{Push: pulumi.BoolRef(false)}}},
 			want: false,
 		},
 		{
 			name: "image with explicit push",
-			e:    Export{Image: &ExportImage{Push: &tru}},
+			e:    Export{Image: &ExportImage{Push: pulumi.BoolRef(true)}},
 			want: true,
 		},
 		{
