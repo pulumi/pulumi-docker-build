@@ -20,7 +20,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDockerfileValidate(t *testing.T) {
+func TestValidateDockerfile(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name    string

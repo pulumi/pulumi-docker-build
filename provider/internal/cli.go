@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:generate go run go.uber.org/mock/mockgen -typed -package internal -source client.go -destination mockcli_test.go --self_package github.com/pulumi/pulumi-dockerbuild/provider/internal
+
 package internal
 
 import (
@@ -56,6 +58,11 @@ type cli struct {
 	r, w *os.File      // stdout
 	err  bytes.Buffer  // stderr
 	done chan struct{} // signaled when all logs have been forwarded to the engine.
+}
+
+// Cli wraps the Docker interface for mock generation.
+type Cli interface {
+	command.Cli
 }
 
 // wrap creates a new cli client with auth configs layered on top of our host's

@@ -30,7 +30,6 @@ import (
 
 	"github.com/distribution/reference"
 	controllerapi "github.com/docker/buildx/controller/pb"
-	"github.com/docker/buildx/util/buildflags"
 	"github.com/docker/docker/errdefs"
 	"github.com/moby/buildkit/exporter/containerimage/exptypes"
 	"github.com/moby/buildkit/session"
@@ -617,15 +616,12 @@ func (ia *ImageArgs) validate(preview bool) (controllerapi.BuildOptions, error) 
 
 	ssh := []*controllerapi.SSH{}
 	for idx, s := range normalized.SSH {
-		parsed, err := buildflags.ParseSSHSpecs([]string{s.String()})
+		ss, err := s.validate()
 		if err != nil {
 			multierr = errors.Join(multierr, newCheckFailure(err, "ssh[%d]", idx))
 			continue
 		}
-		if len(parsed) == 0 {
-			continue
-		}
-		ssh = append(ssh, parsed[0])
+		ssh = append(ssh, ss)
 	}
 
 	for idx, t := range normalized.Tags {

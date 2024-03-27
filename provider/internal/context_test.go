@@ -29,7 +29,7 @@ import (
 
 var _dockerfile = "Dockerfile"
 
-func TestContextValidate(t *testing.T) {
+func TestValidateContext(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name    string
