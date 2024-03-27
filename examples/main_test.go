@@ -1,6 +1,3 @@
-//go:build nodejs || python || dotnet || java || all
-// +build nodejs python dotnet java all
-
 package examples
 
 import (
