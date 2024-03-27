@@ -39,7 +39,7 @@ export class Provider extends pulumi.ProviderResource {
         opts = opts || {};
         {
             resourceInputs["host"] = (args ? args.host : undefined) ?? (utilities.getEnv("DOCKER_HOST") || "");
-            resourceInputs["registries"] = pulumi.output(args ? args.registries : undefined);
+            resourceInputs["registries"] = pulumi.output(args ? args.registries : undefined).apply(JSON.stringify);
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         super(Provider.__pulumiType, name, resourceInputs, opts);
