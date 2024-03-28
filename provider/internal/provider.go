@@ -72,8 +72,9 @@ func NewBuildxProvider() provider.Provider {
 				DisplayName:       "dockerbuild",
 				Keywords:          []string{"docker", "buildkit", "buildx"},
 				Description:       "A Pulumi provider for Docker buildx",
-				Homepage:          "pulumi.com",
+				Homepage:          "https://pulumi.io",
 				Publisher:         "pulumi",
+				License:           "Apache-2.0",
 				Repository:        "https://github.com/pulumi/pulumi-dockerbuild",
 				PluginDownloadURL: "github.com/pulumi/pulumi-dockerbuild",
 				LanguageMap: map[string]any{
@@ -86,7 +87,6 @@ func NewBuildxProvider() provider.Provider {
 						ImportBasePath: "github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild",
 					},
 					"csharp": csgen.CSharpPackageInfo{
-						Compatibility: "tfbridge20",
 						PackageReferences: map[string]string{
 							"Pulumi": "3.*",
 						},

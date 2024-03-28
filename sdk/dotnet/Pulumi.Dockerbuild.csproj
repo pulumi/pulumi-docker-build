@@ -5,8 +5,8 @@
     <Authors>pulumi</Authors>
     <Company>pulumi</Company>
     <Description>A Pulumi provider for Docker buildx</Description>
-    <PackageLicenseExpression></PackageLicenseExpression>
-    <PackageProjectUrl>pulumi.com</PackageProjectUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://pulumi.io</PackageProjectUrl>
     <RepositoryUrl>https://github.com/pulumi/pulumi-dockerbuild</RepositoryUrl>
     <PackageIcon>logo.png</PackageIcon>
 

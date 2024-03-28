@@ -6,8 +6,9 @@
         "buildkit",
         "buildx"
     ],
-    "homepage": "pulumi.com",
+    "homepage": "https://pulumi.io",
     "repository": "https://github.com/pulumi/pulumi-dockerbuild",
+    "license": "Apache-2.0",
     "scripts": {
         "build": "tsc"
     },
