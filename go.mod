@@ -14,7 +14,7 @@ require (
 	github.com/moby/patternmatcher v0.6.0
 	github.com/muesli/reflow v0.3.0
 	github.com/otiai10/copy v1.14.0
-	github.com/pulumi/pulumi-go-provider v0.14.1-0.20240314105842-9fbffb634faf
+	github.com/pulumi/pulumi-go-provider v0.14.1-0.20240329220324-55b011092652
 	github.com/pulumi/pulumi-go-provider/integration v0.10.1-0.20240314105842-9fbffb634faf
 	github.com/pulumi/pulumi-java/pkg v0.9.9
 	github.com/pulumi/pulumi/pkg/v3 v3.111.2-0.20240324200353-583e06df0c70
