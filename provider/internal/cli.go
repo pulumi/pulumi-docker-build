@@ -30,6 +30,7 @@ import (
 	"github.com/docker/buildx/commands"
 	"github.com/docker/cli/cli-plugins/manager"
 	"github.com/docker/cli/cli/command"
+	"github.com/docker/cli/cli/config/credentials"
 	cfgtypes "github.com/docker/cli/cli/config/types"
 	"github.com/docker/cli/cli/streams"
 	"github.com/moby/buildkit/client"
@@ -66,7 +67,8 @@ type Cli interface {
 }
 
 // wrap creates a new cli client with auth configs layered on top of our host's
-// auth.
+// auth. Repeated auth for the same host will take precedence over earlier
+// credentials.
 func wrap(host *host, registries ...Registry) (*cli, error) {
 	// We need to create a new DockerCLI instance because we don't want the
 	// auth changes we make to the ConfigFile to leak to the host.
@@ -81,10 +83,17 @@ func wrap(host *host, registries ...Registry) (*cli, error) {
 	}
 
 	for _, r := range registries {
-		// HostNewName takes care of DockerHub's special-casing for us.
-		h := config.HostNewName(r.Address)
-		auths[h.CredHost] = cfgtypes.AuthConfig{
-			ServerAddress: h.Hostname,
+		// Special handling for legacy DockerHub domains. The OCI-compliant
+		// registry is registry-1.docker.io but this is stored in config under the
+		// legacy name.
+		// https://github.com/docker/cli/issues/3793#issuecomment-1269051403
+		key := credentials.ConvertToHostname(r.Address)
+		if key == "registry-1.docker.io" || key == "index.docker.io" || key == "docker.io" {
+			key = "https://index.docker.io/v1/"
+		}
+
+		auths[key] = cfgtypes.AuthConfig{
+			ServerAddress: r.Address,
 			Username:      r.Username,
 			Password:      r.Password,
 		}

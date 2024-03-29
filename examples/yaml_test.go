@@ -25,3 +25,18 @@ func TestYAMLExample(t *testing.T) {
 
 	integration.ProgramTest(t, &test)
 }
+
+func TestECR(t *testing.T) {
+	if os.Getenv("AWS_SESSION_TOKEN") == "" {
+		t.Skip("Missing AWS credentials")
+	}
+
+	cwd, err := os.Getwd()
+	require.NoError(t, err)
+
+	test := integration.ProgramTestOptions{
+		Dir: path.Join(cwd, "tests/ecr"),
+	}
+
+	integration.ProgramTest(t, &test)
+}

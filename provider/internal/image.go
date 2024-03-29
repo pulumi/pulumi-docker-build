@@ -338,16 +338,20 @@ func (is *ImageState) Annotate(a infer.Annotator) {
 
 // client produces a CLI client with scoped to this resource and layered on top
 // of any host-level credentials.
-func (i *Image) client(ctx provider.Context, state ImageState, args ImageArgs) (Client, error) {
-	cfg := infer.GetConfig[Config](ctx)
+func (i *Image) client(pctx provider.Context, state ImageState, args ImageArgs) (Client, error) {
+	ctx := context.Context(pctx)
+
+	cfg := infer.GetConfig[Config](pctx)
 
 	if cli, ok := ctx.Value(_mockClientKey).(Client); ok {
 		return cli, nil
 	}
 
-	// Layer auth from args, state, and the provider in that order.
-	auths := cfg.Registries
-	auths = append(auths, state.Registries...)
+	// We prefer auth from args, the provider, and state in that order. We
+	// build a slice in reverse order because wrap() will overwrite earlier
+	// entries with later ones.
+	auths := state.Registries
+	auths = append(auths, cfg.Registries...)
 	auths = append(auths, args.Registries...)
 
 	return wrap(cfg.host, auths...)

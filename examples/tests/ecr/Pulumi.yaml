@@ -1,0 +1,36 @@
+name: ecr
+description: Push to AWS ECR with caching
+outputs:
+  ref: ${my-image.ref}
+resources:
+  ecr-repository:
+    type: aws:ecr:Repository
+    properties:
+      forceDelete: true
+  my-image:
+    type: dockerbuild:Image
+    properties:
+      tags:
+        - ${ecr-repository.repositoryUrl}:tag-name
+      push: true
+      context:
+        location: .
+      dockerfile:
+        inline: FROM alpine
+      cacheFrom:
+        - registry:
+            ref: ${ecr-repository.repositoryUrl}:cache
+      cacheTo:
+        - registry:
+            ref: ${ecr-repository.repositoryUrl}:cache
+            imageManifest: true
+            ociMediaTypes: true
+      registries:
+        - username: ${auth-token.userName}
+          password: ${auth-token.password}
+          address: ${ecr-repository.repositoryUrl}
+runtime: yaml
+variables:
+  auth-token:
+    fn::aws:ecr:getAuthorizationToken:
+      registryId: ${ecr-repository.registryId}

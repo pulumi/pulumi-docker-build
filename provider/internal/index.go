@@ -298,8 +298,12 @@ func (i *Index) client(
 		return cli, nil
 	}
 
-	auths := cfg.Registries
-	auths = append(auths, state.Registry, args.Registry)
+	// We prefer auth from args, the provider, and state in that order. We
+	// build a slice in reverse order because wrap() will overwrite earlier
+	// entries with later ones.
+	auths := []Registry{state.Registry}
+	auths = append(auths, cfg.Registries...)
+	auths = append(auths, args.Registry)
 
 	return wrap(cfg.host, auths...)
 }
