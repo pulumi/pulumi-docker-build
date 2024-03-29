@@ -629,12 +629,12 @@ class Image(pulumi.CustomResource):
 
         ## Migrating v3 and v4 Image resources
 
-        The `buildx.Image` resource provides a superset of functionality over the `Image` resources available in versions 3 and 4 of the Pulumi Docker provider.
-        Existing `Image` resources can be converted to `build.Image` resources with minor modifications.
+        The `dockerbuild.Image` resource provides a superset of functionality over the `Image` resources available in versions 3 and 4 of the Pulumi Docker provider.
+        Existing `Image` resources can be converted to `dockerbuild.Image` resources with minor modifications.
 
         ### Behavioral differences
 
-        There are several key behavioral differences to keep in mind when transitioning images to the new `buildx.Image` resource.
+        There are several key behavioral differences to keep in mind when transitioning images to the new `dockerbuild.Image` resource.
 
         #### Previews
 
@@ -645,8 +645,8 @@ class Image(pulumi.CustomResource):
         By default, `v4.x` `Image` resources do _not_ build during previews, but this behavior can be toggled with the `buildOnPreview` option.
         Some users felt this made previews in CI less helpful because they no longer detected bad images by default.
 
-        The default behavior of the `buildx.Image` resource has been changed to strike a better balance between CI use cases and manual updates.
-        By default, Pulumi will now only build `buildx.Image` resources during previews when it detects a CI environment like GitHub Actions.
+        The default behavior of the `dockerbuild.Image` resource has been changed to strike a better balance between CI use cases and manual updates.
+        By default, Pulumi will now only build `dockerbuild.Image` resources during previews when it detects a CI environment like GitHub Actions.
         Previews run in non-CI environments will not build images.
         This behavior is still configurable with `buildOnPreview`.
 
@@ -655,7 +655,7 @@ class Image(pulumi.CustomResource):
         Versions `3.x` and `4.x` of the Pulumi Docker provider attempt to push images to remote registries by default.
         They expose a `skipPush: true` option to disable pushing.
 
-        The `buildx.Image` resource matches the Docker CLI's behavior and does not push images anywhere by default.
+        The `dockerbuild.Image` resource matches the Docker CLI's behavior and does not push images anywhere by default.
 
         To push images to a registry you can include `push: true` (equivalent to Docker's `--push` flag) or configure an `export` of type `registry` (equivalent to Docker's `--output type=registry`).
         Like Docker, if an image is configured without exports you will see a warning with instructions for how to enable pushing, but the build will still proceed normally.
@@ -666,7 +666,7 @@ class Image(pulumi.CustomResource):
 
         Version `4.x` of the Pulumi Docker provider does not support secrets.
 
-        The `buildx.Image` resource supports secrets but does not require those secrets to exist on-disk or in environment variables.
+        The `dockerbuild.Image` resource supports secrets but does not require those secrets to exist on-disk or in environment variables.
         Instead, they should be passed directly as values.
         (Please be sure to familiarize yourself with Pulumi's [native secret handling](https://www.pulumi.com/docs/concepts/secrets/).)
         Pulumi also provides [ESC](https://www.pulumi.com/product/esc/) to make it easier to share secrets across stacks and environments.
@@ -681,7 +681,7 @@ class Image(pulumi.CustomResource):
         Both versions 3 and 4 require specific environment variables to be set and deviate from Docker's native caching behavior.
         This can result in inefficient builds due to unnecessary image pulls, repeated file transfers, etc.
 
-        The `buildx.Image` resource delegates all caching behavior to Docker.
+        The `dockerbuild.Image` resource delegates all caching behavior to Docker.
         `cacheFrom` and `cacheTo` options (equivalent to Docker's `--cache-to` and `--cache-from`) are exposed and provide additional cache targets, such as local disk, S3 storage, etc.
 
         #### Outputs
@@ -689,7 +689,7 @@ class Image(pulumi.CustomResource):
         Versions `3.x` and `4.x` of the provider exposed a `repoDigest` output which was a fully qualified tag with digest.
         In `4.x` this could also be a single sha256 hash if the image wasn't pushed.
 
-        Unlike earlier providers the `buildx.Image` resource can push multiple tags.
+        Unlike earlier providers the `dockerbuild.Image` resource can push multiple tags.
         As a convenience, it exposes a `ref` output consisting of a tag with digest as long as the image was pushed.
         If multiple tags were pushed this uses one at random.
 
@@ -702,7 +702,7 @@ class Image(pulumi.CustomResource):
         The `buidx.Image` will query your registries during `refresh` to ensure the expected tags exist.
         If any are missing a subsequent `update` will push them.
 
-        When a `buildx.Image` is deleted, it will _attempt_ to also delete any pushed tags.
+        When a `dockerbuild.Image` is deleted, it will _attempt_ to also delete any pushed tags.
         Deletion of remote tags is not guaranteed because not all registries support the manifest `DELETE` API (`docker.io` in particular).
         Manifests are _not_ deleted in the same way during updates -- to do so safely would require a full build to determine whether a Pulumi operation should be an update or update-replace.
 
@@ -710,11 +710,11 @@ class Image(pulumi.CustomResource):
 
         ### Example migration
 
-        Examples of "fully-featured" `v3` and `v4` `Image` resources are shown below, along with an example `buildx.Image` resource showing how they would look after migration.
+        Examples of "fully-featured" `v3` and `v4` `Image` resources are shown below, along with an example `dockerbuild.Image` resource showing how they would look after migration.
 
         The `v3` resource leverages `buildx` via a `DOCKER_BUILDKIT` environment variable and CLI flags passed in with `extraOption`.
-        After migration, the environment variable is no longer needed and CLI flags are now properties on the `buildx.Image`.
-        In almost all cases, properties of `buildx.Image` are named after the Docker CLI flag they correspond to.
+        After migration, the environment variable is no longer needed and CLI flags are now properties on the `dockerbuild.Image`.
+        In almost all cases, properties of `dockerbuild.Image` are named after the Docker CLI flag they correspond to.
 
         The `v4` resource is less functional than its `v3` counterpart because it lacks the flexibility of `extraOptions`.
         It it is shown with parameters similar to the `v3` example for completeness.
@@ -726,28 +726,28 @@ class Image(pulumi.CustomResource):
         ```python
         import pulumi
         import pulumi_aws as aws
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
         ecr_repository = aws.ecr.Repository("ecr-repository")
         auth_token = aws.ecr.get_authorization_token_output(registry_id=ecr_repository.registry_id)
-        my_image = docker.buildx.Image("my-image",
-            cache_from=[docker.buildx.CacheFromArgs(
-                registry=docker.buildx.CacheFromRegistryArgs(
+        my_image = dockerbuild.Image("my-image",
+            cache_from=[dockerbuild.CacheFromArgs(
+                registry=dockerbuild.CacheFromRegistryArgs(
                     ref=ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
                 ),
             )],
-            cache_to=[docker.buildx.CacheToArgs(
-                registry=docker.buildx.CacheToRegistryArgs(
+            cache_to=[dockerbuild.CacheToArgs(
+                registry=dockerbuild.CacheToRegistryArgs(
                     image_manifest=True,
                     oci_media_types=True,
                     ref=ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
                 ),
             )],
-            context=docker.buildx.BuildContextArgs(
+            context=dockerbuild.BuildContextArgs(
                 location="./app",
             ),
             push=True,
-            registries=[docker.buildx.RegistryAuthArgs(
+            registries=[dockerbuild.RegistryArgs(
                 address=ecr_repository.repository_url,
                 password=auth_token.password,
                 username=auth_token.user_name,
@@ -758,28 +758,28 @@ class Image(pulumi.CustomResource):
         ### Multi-platform image
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image",
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ),
             platforms=[
-                docker.buildx.image.Platform.PLAN9_AMD64,
-                docker.buildx.image.Platform.PLAN9_386,
+                dockerbuild.Platform.PLAN9_AMD64,
+                dockerbuild.Platform.PLAN9_386,
             ])
         ```
         ### Registry export
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image",
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ),
             push=True,
-            registries=[docker.buildx.RegistryAuthArgs(
+            registries=[dockerbuild.RegistryArgs(
                 address="docker.io",
                 password=docker_hub_password,
                 username="pulumibot",
@@ -790,34 +790,34 @@ class Image(pulumi.CustomResource):
         ### Caching
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            cache_from=[docker.buildx.CacheFromArgs(
-                local=docker.buildx.CacheFromLocalArgs(
+        image = dockerbuild.Image("image",
+            cache_from=[dockerbuild.CacheFromArgs(
+                local=dockerbuild.CacheFromLocalArgs(
                     src="tmp/cache",
                 ),
             )],
-            cache_to=[docker.buildx.CacheToArgs(
-                local=docker.buildx.CacheToLocalArgs(
+            cache_to=[dockerbuild.CacheToArgs(
+                local=dockerbuild.CacheToLocalArgs(
                     dest="tmp/cache",
-                    mode=docker.buildx.image.CacheMode.MAX,
+                    mode=dockerbuild.CacheMode.MAX,
                 ),
             )],
-            context=docker.buildx.BuildContextArgs(
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ))
         ```
         ### Docker Build Cloud
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            builder=docker.buildx.BuilderConfigArgs(
+        image = dockerbuild.Image("image",
+            builder=dockerbuild.BuilderConfigArgs(
                 name="cloud-builder-name",
             ),
-            context=docker.buildx.BuildContextArgs(
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ),
             exec_=True)
@@ -825,23 +825,23 @@ class Image(pulumi.CustomResource):
         ### Build arguments
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
+        image = dockerbuild.Image("image",
             build_args={
                 "SET_ME_TO_TRUE": "true",
             },
-            context=docker.buildx.BuildContextArgs(
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ))
         ```
         ### Build target
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image",
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ),
             target="build-me")
@@ -849,12 +849,12 @@ class Image(pulumi.CustomResource):
         ### Named contexts
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image", context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image", context=dockerbuild.BuildContextArgs(
             location="app",
             named={
-                "golang:latest": docker.buildx.ContextArgs(
+                "golang:latest": dockerbuild.ContextArgs(
                     location="docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
                 ),
             },
@@ -863,22 +863,22 @@ class Image(pulumi.CustomResource):
         ### Remote context
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image", context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image", context=dockerbuild.BuildContextArgs(
             location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
         ))
         ```
         ### Inline Dockerfile
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image",
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ),
-            dockerfile=docker.buildx.DockerfileArgs(
+            dockerfile=dockerbuild.DockerfileArgs(
                 inline=\"\"\"FROM busybox
         COPY hello.c ./
         \"\"\",
@@ -887,27 +887,27 @@ class Image(pulumi.CustomResource):
         ### Remote context
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image",
+            context=dockerbuild.BuildContextArgs(
                 location="https://github.com/docker-library/hello-world.git",
             ),
-            dockerfile=docker.buildx.DockerfileArgs(
+            dockerfile=dockerbuild.DockerfileArgs(
                 location="app/Dockerfile",
             ))
         ```
         ### Local export
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image",
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ),
-            exports=[docker.buildx.ExportArgs(
-                docker=docker.buildx.ExportDockerArgs(
+            exports=[dockerbuild.ExportArgs(
+                docker=dockerbuild.ExportDockerArgs(
                     tar=True,
                 ),
             )])
@@ -1066,12 +1066,12 @@ class Image(pulumi.CustomResource):
 
         ## Migrating v3 and v4 Image resources
 
-        The `buildx.Image` resource provides a superset of functionality over the `Image` resources available in versions 3 and 4 of the Pulumi Docker provider.
-        Existing `Image` resources can be converted to `build.Image` resources with minor modifications.
+        The `dockerbuild.Image` resource provides a superset of functionality over the `Image` resources available in versions 3 and 4 of the Pulumi Docker provider.
+        Existing `Image` resources can be converted to `dockerbuild.Image` resources with minor modifications.
 
         ### Behavioral differences
 
-        There are several key behavioral differences to keep in mind when transitioning images to the new `buildx.Image` resource.
+        There are several key behavioral differences to keep in mind when transitioning images to the new `dockerbuild.Image` resource.
 
         #### Previews
 
@@ -1082,8 +1082,8 @@ class Image(pulumi.CustomResource):
         By default, `v4.x` `Image` resources do _not_ build during previews, but this behavior can be toggled with the `buildOnPreview` option.
         Some users felt this made previews in CI less helpful because they no longer detected bad images by default.
 
-        The default behavior of the `buildx.Image` resource has been changed to strike a better balance between CI use cases and manual updates.
-        By default, Pulumi will now only build `buildx.Image` resources during previews when it detects a CI environment like GitHub Actions.
+        The default behavior of the `dockerbuild.Image` resource has been changed to strike a better balance between CI use cases and manual updates.
+        By default, Pulumi will now only build `dockerbuild.Image` resources during previews when it detects a CI environment like GitHub Actions.
         Previews run in non-CI environments will not build images.
         This behavior is still configurable with `buildOnPreview`.
 
@@ -1092,7 +1092,7 @@ class Image(pulumi.CustomResource):
         Versions `3.x` and `4.x` of the Pulumi Docker provider attempt to push images to remote registries by default.
         They expose a `skipPush: true` option to disable pushing.
 
-        The `buildx.Image` resource matches the Docker CLI's behavior and does not push images anywhere by default.
+        The `dockerbuild.Image` resource matches the Docker CLI's behavior and does not push images anywhere by default.
 
         To push images to a registry you can include `push: true` (equivalent to Docker's `--push` flag) or configure an `export` of type `registry` (equivalent to Docker's `--output type=registry`).
         Like Docker, if an image is configured without exports you will see a warning with instructions for how to enable pushing, but the build will still proceed normally.
@@ -1103,7 +1103,7 @@ class Image(pulumi.CustomResource):
 
         Version `4.x` of the Pulumi Docker provider does not support secrets.
 
-        The `buildx.Image` resource supports secrets but does not require those secrets to exist on-disk or in environment variables.
+        The `dockerbuild.Image` resource supports secrets but does not require those secrets to exist on-disk or in environment variables.
         Instead, they should be passed directly as values.
         (Please be sure to familiarize yourself with Pulumi's [native secret handling](https://www.pulumi.com/docs/concepts/secrets/).)
         Pulumi also provides [ESC](https://www.pulumi.com/product/esc/) to make it easier to share secrets across stacks and environments.
@@ -1118,7 +1118,7 @@ class Image(pulumi.CustomResource):
         Both versions 3 and 4 require specific environment variables to be set and deviate from Docker's native caching behavior.
         This can result in inefficient builds due to unnecessary image pulls, repeated file transfers, etc.
 
-        The `buildx.Image` resource delegates all caching behavior to Docker.
+        The `dockerbuild.Image` resource delegates all caching behavior to Docker.
         `cacheFrom` and `cacheTo` options (equivalent to Docker's `--cache-to` and `--cache-from`) are exposed and provide additional cache targets, such as local disk, S3 storage, etc.
 
         #### Outputs
@@ -1126,7 +1126,7 @@ class Image(pulumi.CustomResource):
         Versions `3.x` and `4.x` of the provider exposed a `repoDigest` output which was a fully qualified tag with digest.
         In `4.x` this could also be a single sha256 hash if the image wasn't pushed.
 
-        Unlike earlier providers the `buildx.Image` resource can push multiple tags.
+        Unlike earlier providers the `dockerbuild.Image` resource can push multiple tags.
         As a convenience, it exposes a `ref` output consisting of a tag with digest as long as the image was pushed.
         If multiple tags were pushed this uses one at random.
 
@@ -1139,7 +1139,7 @@ class Image(pulumi.CustomResource):
         The `buidx.Image` will query your registries during `refresh` to ensure the expected tags exist.
         If any are missing a subsequent `update` will push them.
 
-        When a `buildx.Image` is deleted, it will _attempt_ to also delete any pushed tags.
+        When a `dockerbuild.Image` is deleted, it will _attempt_ to also delete any pushed tags.
         Deletion of remote tags is not guaranteed because not all registries support the manifest `DELETE` API (`docker.io` in particular).
         Manifests are _not_ deleted in the same way during updates -- to do so safely would require a full build to determine whether a Pulumi operation should be an update or update-replace.
 
@@ -1147,11 +1147,11 @@ class Image(pulumi.CustomResource):
 
         ### Example migration
 
-        Examples of "fully-featured" `v3` and `v4` `Image` resources are shown below, along with an example `buildx.Image` resource showing how they would look after migration.
+        Examples of "fully-featured" `v3` and `v4` `Image` resources are shown below, along with an example `dockerbuild.Image` resource showing how they would look after migration.
 
         The `v3` resource leverages `buildx` via a `DOCKER_BUILDKIT` environment variable and CLI flags passed in with `extraOption`.
-        After migration, the environment variable is no longer needed and CLI flags are now properties on the `buildx.Image`.
-        In almost all cases, properties of `buildx.Image` are named after the Docker CLI flag they correspond to.
+        After migration, the environment variable is no longer needed and CLI flags are now properties on the `dockerbuild.Image`.
+        In almost all cases, properties of `dockerbuild.Image` are named after the Docker CLI flag they correspond to.
 
         The `v4` resource is less functional than its `v3` counterpart because it lacks the flexibility of `extraOptions`.
         It it is shown with parameters similar to the `v3` example for completeness.
@@ -1163,28 +1163,28 @@ class Image(pulumi.CustomResource):
         ```python
         import pulumi
         import pulumi_aws as aws
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
         ecr_repository = aws.ecr.Repository("ecr-repository")
         auth_token = aws.ecr.get_authorization_token_output(registry_id=ecr_repository.registry_id)
-        my_image = docker.buildx.Image("my-image",
-            cache_from=[docker.buildx.CacheFromArgs(
-                registry=docker.buildx.CacheFromRegistryArgs(
+        my_image = dockerbuild.Image("my-image",
+            cache_from=[dockerbuild.CacheFromArgs(
+                registry=dockerbuild.CacheFromRegistryArgs(
                     ref=ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
                 ),
             )],
-            cache_to=[docker.buildx.CacheToArgs(
-                registry=docker.buildx.CacheToRegistryArgs(
+            cache_to=[dockerbuild.CacheToArgs(
+                registry=dockerbuild.CacheToRegistryArgs(
                     image_manifest=True,
                     oci_media_types=True,
                     ref=ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
                 ),
             )],
-            context=docker.buildx.BuildContextArgs(
+            context=dockerbuild.BuildContextArgs(
                 location="./app",
             ),
             push=True,
-            registries=[docker.buildx.RegistryAuthArgs(
+            registries=[dockerbuild.RegistryArgs(
                 address=ecr_repository.repository_url,
                 password=auth_token.password,
                 username=auth_token.user_name,
@@ -1195,28 +1195,28 @@ class Image(pulumi.CustomResource):
         ### Multi-platform image
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image",
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ),
             platforms=[
-                docker.buildx.image.Platform.PLAN9_AMD64,
-                docker.buildx.image.Platform.PLAN9_386,
+                dockerbuild.Platform.PLAN9_AMD64,
+                dockerbuild.Platform.PLAN9_386,
             ])
         ```
         ### Registry export
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image",
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ),
             push=True,
-            registries=[docker.buildx.RegistryAuthArgs(
+            registries=[dockerbuild.RegistryArgs(
                 address="docker.io",
                 password=docker_hub_password,
                 username="pulumibot",
@@ -1227,34 +1227,34 @@ class Image(pulumi.CustomResource):
         ### Caching
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            cache_from=[docker.buildx.CacheFromArgs(
-                local=docker.buildx.CacheFromLocalArgs(
+        image = dockerbuild.Image("image",
+            cache_from=[dockerbuild.CacheFromArgs(
+                local=dockerbuild.CacheFromLocalArgs(
                     src="tmp/cache",
                 ),
             )],
-            cache_to=[docker.buildx.CacheToArgs(
-                local=docker.buildx.CacheToLocalArgs(
+            cache_to=[dockerbuild.CacheToArgs(
+                local=dockerbuild.CacheToLocalArgs(
                     dest="tmp/cache",
-                    mode=docker.buildx.image.CacheMode.MAX,
+                    mode=dockerbuild.CacheMode.MAX,
                 ),
             )],
-            context=docker.buildx.BuildContextArgs(
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ))
         ```
         ### Docker Build Cloud
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            builder=docker.buildx.BuilderConfigArgs(
+        image = dockerbuild.Image("image",
+            builder=dockerbuild.BuilderConfigArgs(
                 name="cloud-builder-name",
             ),
-            context=docker.buildx.BuildContextArgs(
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ),
             exec_=True)
@@ -1262,23 +1262,23 @@ class Image(pulumi.CustomResource):
         ### Build arguments
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
+        image = dockerbuild.Image("image",
             build_args={
                 "SET_ME_TO_TRUE": "true",
             },
-            context=docker.buildx.BuildContextArgs(
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ))
         ```
         ### Build target
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image",
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ),
             target="build-me")
@@ -1286,12 +1286,12 @@ class Image(pulumi.CustomResource):
         ### Named contexts
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image", context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image", context=dockerbuild.BuildContextArgs(
             location="app",
             named={
-                "golang:latest": docker.buildx.ContextArgs(
+                "golang:latest": dockerbuild.ContextArgs(
                     location="docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
                 ),
             },
@@ -1300,22 +1300,22 @@ class Image(pulumi.CustomResource):
         ### Remote context
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image", context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image", context=dockerbuild.BuildContextArgs(
             location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
         ))
         ```
         ### Inline Dockerfile
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image",
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ),
-            dockerfile=docker.buildx.DockerfileArgs(
+            dockerfile=dockerbuild.DockerfileArgs(
                 inline=\"\"\"FROM busybox
         COPY hello.c ./
         \"\"\",
@@ -1324,27 +1324,27 @@ class Image(pulumi.CustomResource):
         ### Remote context
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image",
+            context=dockerbuild.BuildContextArgs(
                 location="https://github.com/docker-library/hello-world.git",
             ),
-            dockerfile=docker.buildx.DockerfileArgs(
+            dockerfile=dockerbuild.DockerfileArgs(
                 location="app/Dockerfile",
             ))
         ```
         ### Local export
         ```python
         import pulumi
-        import pulumi_docker as docker
+        import pulumi_dockerbuild as dockerbuild
 
-        image = docker.buildx.Image("image",
-            context=docker.buildx.BuildContextArgs(
+        image = dockerbuild.Image("image",
+            context=dockerbuild.BuildContextArgs(
                 location="app",
             ),
-            exports=[docker.buildx.ExportArgs(
-                docker=docker.buildx.ExportDockerArgs(
+            exports=[dockerbuild.ExportArgs(
+                docker=dockerbuild.ExportDockerArgs(
                     tar=True,
                 ),
             )])

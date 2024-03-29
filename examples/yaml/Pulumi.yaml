@@ -8,7 +8,7 @@ plugins:
 resources:
   # docker buildx build -f app/Dockerfile.multiPlatform --platform plan9/amd64,plan9/386 app
   multiPlatform:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       dockerfile:
         location: "./app/Dockerfile.multiPlatform"
@@ -20,7 +20,7 @@ resources:
 
   # docker buildx build --output=type=registry app
   registryPush:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       context:
         location: "./app"
@@ -36,7 +36,7 @@ resources:
 
   # docker buildx build --cache-to=type=local,dest=tmp/cache,mode=max --cache-from=type=local,src=tmp/cache app
   cached:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       context:
         location: "./app"
@@ -50,7 +50,7 @@ resources:
 
   # docker buildx build -f app/Dockerfile.buildArgs --build-arg SET_ME_TO_TRUE=true app
   buildArgs:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       dockerfile:
         location: "./app/Dockerfile.buildArgs"
@@ -61,7 +61,7 @@ resources:
 
   # docker buildx build -f app/Dockerfile.extraHosts --add-host metadata.google.internal:169.254.169.254 app
   extraHosts:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       dockerfile:
         location: "./app/Dockerfile.extraHosts"
@@ -72,7 +72,7 @@ resources:
 
   # docker buildx build -f app/Dockerfile.sshMount --ssh default app
   sshMount:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       dockerfile:
         location: "./app/Dockerfile.sshMount"
@@ -83,7 +83,7 @@ resources:
 
   # PASSWORD=hunter2 docker buildx build -f app/Dockerfile.secrets --secret id=password,env=PASSWORD app
   secrets:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       dockerfile:
         location: "./app/Dockerfile.secrets"
@@ -94,7 +94,7 @@ resources:
 
   # docker buildx build --label "description=This image will get a descriptive label 👍" app
   labels:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       context:
         location: "./app"
@@ -103,7 +103,7 @@ resources:
 
   # docker buildx build -f app/Dockerfile.target --target build-me app
   target:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       dockerfile:
         location: "./app/Dockerfile.target"
@@ -114,7 +114,7 @@ resources:
   # docker buildx build -f app/Dockerfile.namedContexts \
   #   --build-context golang:latest=docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984 app
   namedContexts:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       dockerfile:
         location: "./app/Dockerfile.namedContexts"
@@ -126,7 +126,7 @@ resources:
 
   # docker buildx build https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile
   remoteContext:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       context:
         location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile"
@@ -136,7 +136,7 @@ resources:
   #  COPY hello.c ./
   #  EOF
   remoteContextWithInline:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       dockerfile:
         inline: |
@@ -147,7 +147,7 @@ resources:
 
   # echo "FROM alpine" | docker buildx build -f - .
   inline:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       dockerfile:
         inline: |
@@ -158,7 +158,7 @@ resources:
 
   # docker buildx build --load .
   dockerLoad:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       context:
         location: "./app"
@@ -168,7 +168,7 @@ resources:
 
   # docker buildx build - < app/Dockerfile.emptyContext
   #emptyContext:
-  #  type: dockerbuild:index:Image
+  #  type: dockerbuild:Image
   #  properties:
   #    file: "app/Dockerfile.emptyContext"
   #    context: "-"

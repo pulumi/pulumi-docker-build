@@ -21,9 +21,9 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as docker from "@pulumi/docker";
+ * import * as dockerbuild from "@pulumi/dockerbuild";
  *
- * const amd64 = new docker.buildx.Image("amd64", {
+ * const amd64 = new dockerbuild.Image("amd64", {
  *     cacheFrom: [{
  *         registry: {
  *             ref: "docker.io/pulumi/pulumi:cache-amd64",
@@ -31,17 +31,17 @@ import * as utilities from "./utilities";
  *     }],
  *     cacheTo: [{
  *         registry: {
- *             mode: docker.buildx.image.CacheMode.Max,
+ *             mode: dockerbuild.CacheMode.Max,
  *             ref: "docker.io/pulumi/pulumi:cache-amd64",
  *         },
  *     }],
  *     context: {
  *         location: "app",
  *     },
- *     platforms: [docker.buildx.image.Platform.Linux_amd64],
+ *     platforms: [dockerbuild.Platform.Linux_amd64],
  *     tags: ["docker.io/pulumi/pulumi:3.107.0-amd64"],
  * });
- * const arm64 = new docker.buildx.Image("arm64", {
+ * const arm64 = new dockerbuild.Image("arm64", {
  *     cacheFrom: [{
  *         registry: {
  *             ref: "docker.io/pulumi/pulumi:cache-arm64",
@@ -49,17 +49,17 @@ import * as utilities from "./utilities";
  *     }],
  *     cacheTo: [{
  *         registry: {
- *             mode: docker.buildx.image.CacheMode.Max,
+ *             mode: dockerbuild.CacheMode.Max,
  *             ref: "docker.io/pulumi/pulumi:cache-arm64",
  *         },
  *     }],
  *     context: {
  *         location: "app",
  *     },
- *     platforms: [docker.buildx.image.Platform.Linux_arm64],
+ *     platforms: [dockerbuild.Platform.Linux_arm64],
  *     tags: ["docker.io/pulumi/pulumi:3.107.0-arm64"],
  * });
- * const index = new docker.buildx.Index("index", {
+ * const index = new dockerbuild.Index("index", {
  *     sources: [
  *         amd64.ref,
  *         arm64.ref,

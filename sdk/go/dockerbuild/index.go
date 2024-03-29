@@ -28,34 +28,34 @@ import (
 //
 // import (
 //
-//	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker/buildx"
+//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )
 //
 //	func main() {
 //		pulumi.Run(func(ctx *pulumi.Context) error {
-//			amd64, err := buildx.NewImage(ctx, "amd64", &buildx.ImageArgs{
-//				CacheFrom: buildx.CacheFromArray{
-//					&buildx.CacheFromArgs{
-//						Registry: &buildx.CacheFromRegistryArgs{
+//			amd64, err := dockerbuild.NewImage(ctx, "amd64", &dockerbuild.ImageArgs{
+//				CacheFrom: dockerbuild.CacheFromArray{
+//					&dockerbuild.CacheFromArgs{
+//						Registry: &dockerbuild.CacheFromRegistryArgs{
 //							Ref: pulumi.String("docker.io/pulumi/pulumi:cache-amd64"),
 //						},
 //					},
 //				},
-//				CacheTo: buildx.CacheToArray{
-//					&buildx.CacheToArgs{
-//						Registry: &buildx.CacheToRegistryArgs{
-//							Mode: buildx.CacheModeMax,
+//				CacheTo: dockerbuild.CacheToArray{
+//					&dockerbuild.CacheToArgs{
+//						Registry: &dockerbuild.CacheToRegistryArgs{
+//							Mode: dockerbuild.CacheModeMax,
 //							Ref:  pulumi.String("docker.io/pulumi/pulumi:cache-amd64"),
 //						},
 //					},
 //				},
-//				Context: &buildx.BuildContextArgs{
+//				Context: &dockerbuild.BuildContextArgs{
 //					Location: pulumi.String("app"),
 //				},
-//				Platforms: buildx.PlatformArray{
-//					buildx.Platform_Linux_amd64,
+//				Platforms: dockerbuild.PlatformArray{
+//					dockerbuild.Platform_Linux_amd64,
 //				},
 //				Tags: pulumi.StringArray{
 //					pulumi.String("docker.io/pulumi/pulumi:3.107.0-amd64"),
@@ -64,27 +64,27 @@ import (
 //			if err != nil {
 //				return err
 //			}
-//			arm64, err := buildx.NewImage(ctx, "arm64", &buildx.ImageArgs{
-//				CacheFrom: buildx.CacheFromArray{
-//					&buildx.CacheFromArgs{
-//						Registry: &buildx.CacheFromRegistryArgs{
+//			arm64, err := dockerbuild.NewImage(ctx, "arm64", &dockerbuild.ImageArgs{
+//				CacheFrom: dockerbuild.CacheFromArray{
+//					&dockerbuild.CacheFromArgs{
+//						Registry: &dockerbuild.CacheFromRegistryArgs{
 //							Ref: pulumi.String("docker.io/pulumi/pulumi:cache-arm64"),
 //						},
 //					},
 //				},
-//				CacheTo: buildx.CacheToArray{
-//					&buildx.CacheToArgs{
-//						Registry: &buildx.CacheToRegistryArgs{
-//							Mode: buildx.CacheModeMax,
+//				CacheTo: dockerbuild.CacheToArray{
+//					&dockerbuild.CacheToArgs{
+//						Registry: &dockerbuild.CacheToRegistryArgs{
+//							Mode: dockerbuild.CacheModeMax,
 //							Ref:  pulumi.String("docker.io/pulumi/pulumi:cache-arm64"),
 //						},
 //					},
 //				},
-//				Context: &buildx.BuildContextArgs{
+//				Context: &dockerbuild.BuildContextArgs{
 //					Location: pulumi.String("app"),
 //				},
-//				Platforms: buildx.PlatformArray{
-//					buildx.Platform_Linux_arm64,
+//				Platforms: dockerbuild.PlatformArray{
+//					dockerbuild.Platform_Linux_arm64,
 //				},
 //				Tags: pulumi.StringArray{
 //					pulumi.String("docker.io/pulumi/pulumi:3.107.0-arm64"),
@@ -93,7 +93,7 @@ import (
 //			if err != nil {
 //				return err
 //			}
-//			index, err := buildx.NewIndex(ctx, "index", &buildx.IndexArgs{
+//			index, err := dockerbuild.NewIndex(ctx, "index", &dockerbuild.IndexArgs{
 //				Sources: pulumi.StringArray{
 //					amd64.Ref,
 //					arm64.Ref,

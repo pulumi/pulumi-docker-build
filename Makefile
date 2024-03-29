@@ -172,13 +172,11 @@ build_dotnet: # Required by CI
 ${SCHEMA_PATH}: bin/${PROVIDER}
 	pulumi package get-schema bin/${PROVIDER} > $(SCHEMA_PATH)
 
-bin/${PROVIDER}: $(shell find ./provider -name '*.go') go.mod
+bin/${PROVIDER}: $(shell find ./provider -name '*.go') go.mod docs
 	(cd provider && go build -o ../bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
 
 bin/pulumi-gen-${PACK}: # Required by CI
 	touch bin/pulumi-gen-${PACK}
-
-$(shell find . -name '*.go'):
 
 go.mod: $(shell find . -name '*.go')
 go.sum: go.mod
@@ -245,6 +243,6 @@ sdk/java: $(PULUMI) bin/${PROVIDER}
 	cd ${TMPDIR}/java/ && gradle --console=plain build
 	mv -f ${TMPDIR}/java ${WORKING_DIR}/sdk/.
 
-docs: $(shell find docs/yaml -type f)
+docs: $(shell find docs/yaml -type f) $(shell find ./provider/internal/embed -name '*.md')
 	go generate docs/generate.go
 	@touch docs

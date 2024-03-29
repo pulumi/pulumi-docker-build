@@ -28,12 +28,12 @@ namespace Pulumi.Dockerbuild
     /// 
     /// ## Migrating v3 and v4 Image resources
     /// 
-    /// The `buildx.Image` resource provides a superset of functionality over the `Image` resources available in versions 3 and 4 of the Pulumi Docker provider.
-    /// Existing `Image` resources can be converted to `build.Image` resources with minor modifications.
+    /// The `dockerbuild.Image` resource provides a superset of functionality over the `Image` resources available in versions 3 and 4 of the Pulumi Docker provider.
+    /// Existing `Image` resources can be converted to `dockerbuild.Image` resources with minor modifications.
     /// 
     /// ### Behavioral differences
     /// 
-    /// There are several key behavioral differences to keep in mind when transitioning images to the new `buildx.Image` resource.
+    /// There are several key behavioral differences to keep in mind when transitioning images to the new `dockerbuild.Image` resource.
     /// 
     /// #### Previews
     /// 
@@ -44,8 +44,8 @@ namespace Pulumi.Dockerbuild
     /// By default, `v4.x` `Image` resources do _not_ build during previews, but this behavior can be toggled with the `buildOnPreview` option.
     /// Some users felt this made previews in CI less helpful because they no longer detected bad images by default.
     /// 
-    /// The default behavior of the `buildx.Image` resource has been changed to strike a better balance between CI use cases and manual updates.
-    /// By default, Pulumi will now only build `buildx.Image` resources during previews when it detects a CI environment like GitHub Actions.
+    /// The default behavior of the `dockerbuild.Image` resource has been changed to strike a better balance between CI use cases and manual updates.
+    /// By default, Pulumi will now only build `dockerbuild.Image` resources during previews when it detects a CI environment like GitHub Actions.
     /// Previews run in non-CI environments will not build images.
     /// This behavior is still configurable with `buildOnPreview`.
     /// 
@@ -54,7 +54,7 @@ namespace Pulumi.Dockerbuild
     /// Versions `3.x` and `4.x` of the Pulumi Docker provider attempt to push images to remote registries by default.
     /// They expose a `skipPush: true` option to disable pushing.
     /// 
-    /// The `buildx.Image` resource matches the Docker CLI's behavior and does not push images anywhere by default.
+    /// The `dockerbuild.Image` resource matches the Docker CLI's behavior and does not push images anywhere by default.
     /// 
     /// To push images to a registry you can include `push: true` (equivalent to Docker's `--push` flag) or configure an `export` of type `registry` (equivalent to Docker's `--output type=registry`).
     /// Like Docker, if an image is configured without exports you will see a warning with instructions for how to enable pushing, but the build will still proceed normally.
@@ -65,7 +65,7 @@ namespace Pulumi.Dockerbuild
     /// 
     /// Version `4.x` of the Pulumi Docker provider does not support secrets.
     /// 
-    /// The `buildx.Image` resource supports secrets but does not require those secrets to exist on-disk or in environment variables.
+    /// The `dockerbuild.Image` resource supports secrets but does not require those secrets to exist on-disk or in environment variables.
     /// Instead, they should be passed directly as values.
     /// (Please be sure to familiarize yourself with Pulumi's [native secret handling](https://www.pulumi.com/docs/concepts/secrets/).)
     /// Pulumi also provides [ESC](https://www.pulumi.com/product/esc/) to make it easier to share secrets across stacks and environments.
@@ -80,7 +80,7 @@ namespace Pulumi.Dockerbuild
     /// Both versions 3 and 4 require specific environment variables to be set and deviate from Docker's native caching behavior.
     /// This can result in inefficient builds due to unnecessary image pulls, repeated file transfers, etc.
     /// 
-    /// The `buildx.Image` resource delegates all caching behavior to Docker.
+    /// The `dockerbuild.Image` resource delegates all caching behavior to Docker.
     /// `cacheFrom` and `cacheTo` options (equivalent to Docker's `--cache-to` and `--cache-from`) are exposed and provide additional cache targets, such as local disk, S3 storage, etc.
     /// 
     /// #### Outputs
@@ -88,7 +88,7 @@ namespace Pulumi.Dockerbuild
     /// Versions `3.x` and `4.x` of the provider exposed a `repoDigest` output which was a fully qualified tag with digest.
     /// In `4.x` this could also be a single sha256 hash if the image wasn't pushed.
     /// 
-    /// Unlike earlier providers the `buildx.Image` resource can push multiple tags.
+    /// Unlike earlier providers the `dockerbuild.Image` resource can push multiple tags.
     /// As a convenience, it exposes a `ref` output consisting of a tag with digest as long as the image was pushed.
     /// If multiple tags were pushed this uses one at random.
     /// 
@@ -101,7 +101,7 @@ namespace Pulumi.Dockerbuild
     /// The `buidx.Image` will query your registries during `refresh` to ensure the expected tags exist.
     /// If any are missing a subsequent `update` will push them.
     /// 
-    /// When a `buildx.Image` is deleted, it will _attempt_ to also delete any pushed tags.
+    /// When a `dockerbuild.Image` is deleted, it will _attempt_ to also delete any pushed tags.
     /// Deletion of remote tags is not guaranteed because not all registries support the manifest `DELETE` API (`docker.io` in particular).
     /// Manifests are _not_ deleted in the same way during updates -- to do so safely would require a full build to determine whether a Pulumi operation should be an update or update-replace.
     /// 
@@ -109,11 +109,11 @@ namespace Pulumi.Dockerbuild
     /// 
     /// ### Example migration
     /// 
-    /// Examples of "fully-featured" `v3` and `v4` `Image` resources are shown below, along with an example `buildx.Image` resource showing how they would look after migration.
+    /// Examples of "fully-featured" `v3` and `v4` `Image` resources are shown below, along with an example `dockerbuild.Image` resource showing how they would look after migration.
     /// 
     /// The `v3` resource leverages `buildx` via a `DOCKER_BUILDKIT` environment variable and CLI flags passed in with `extraOption`.
-    /// After migration, the environment variable is no longer needed and CLI flags are now properties on the `buildx.Image`.
-    /// In almost all cases, properties of `buildx.Image` are named after the Docker CLI flag they correspond to.
+    /// After migration, the environment variable is no longer needed and CLI flags are now properties on the `dockerbuild.Image`.
+    /// In almost all cases, properties of `dockerbuild.Image` are named after the Docker CLI flag they correspond to.
     /// 
     /// The `v4` resource is less functional than its `v3` counterpart because it lacks the flexibility of `extraOptions`.
     /// It it is shown with parameters similar to the `v3` example for completeness.
@@ -127,7 +127,7 @@ namespace Pulumi.Dockerbuild
     /// using System.Linq;
     /// using Pulumi;
     /// using Aws = Pulumi.Aws;
-    /// using Docker = Pulumi.Docker;
+    /// using Dockerbuild = Pulumi.Dockerbuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
@@ -138,13 +138,13 @@ namespace Pulumi.Dockerbuild
     ///         RegistryId = ecrRepository.RegistryId,
     ///     });
     /// 
-    ///     var myImage = new Docker.Buildx.Image("my-image", new()
+    ///     var myImage = new Dockerbuild.Image("my-image", new()
     ///     {
     ///         CacheFrom = new[]
     ///         {
-    ///             new Docker.Buildx.Inputs.CacheFromArgs
+    ///             new Dockerbuild.Inputs.CacheFromArgs
     ///             {
-    ///                 Registry = new Docker.Buildx.Inputs.CacheFromRegistryArgs
+    ///                 Registry = new Dockerbuild.Inputs.CacheFromRegistryArgs
     ///                 {
     ///                     Ref = ecrRepository.RepositoryUrl.Apply(repositoryUrl =&gt; $"{repositoryUrl}:cache"),
     ///                 },
@@ -152,9 +152,9 @@ namespace Pulumi.Dockerbuild
     ///         },
     ///         CacheTo = new[]
     ///         {
-    ///             new Docker.Buildx.Inputs.CacheToArgs
+    ///             new Dockerbuild.Inputs.CacheToArgs
     ///             {
-    ///                 Registry = new Docker.Buildx.Inputs.CacheToRegistryArgs
+    ///                 Registry = new Dockerbuild.Inputs.CacheToRegistryArgs
     ///                 {
     ///                     ImageManifest = true,
     ///                     OciMediaTypes = true,
@@ -162,14 +162,14 @@ namespace Pulumi.Dockerbuild
     ///                 },
     ///             },
     ///         },
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "./app",
     ///         },
     ///         Push = true,
     ///         Registries = new[]
     ///         {
-    ///             new Docker.Buildx.Inputs.RegistryAuthArgs
+    ///             new Dockerbuild.Inputs.RegistryArgs
     ///             {
     ///                 Address = ecrRepository.RepositoryUrl,
     ///                 Password = authToken.Apply(getAuthorizationTokenResult =&gt; getAuthorizationTokenResult.Password),
@@ -194,20 +194,20 @@ namespace Pulumi.Dockerbuild
     /// using System.Collections.Generic;
     /// using System.Linq;
     /// using Pulumi;
-    /// using Docker = Pulumi.Docker;
+    /// using Dockerbuild = Pulumi.Dockerbuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
-    ///     var image = new Docker.Buildx.Image("image", new()
+    ///     var image = new Dockerbuild.Image("image", new()
     ///     {
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "app",
     ///         },
     ///         Platforms = new[]
     ///         {
-    ///             Docker.Buildx.Image.Platform.Plan9_amd64,
-    ///             Docker.Buildx.Image.Platform.Plan9_386,
+    ///             Dockerbuild.Platform.Plan9_amd64,
+    ///             Dockerbuild.Platform.Plan9_386,
     ///         },
     ///     });
     /// 
@@ -219,20 +219,20 @@ namespace Pulumi.Dockerbuild
     /// using System.Collections.Generic;
     /// using System.Linq;
     /// using Pulumi;
-    /// using Docker = Pulumi.Docker;
+    /// using Dockerbuild = Pulumi.Dockerbuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
-    ///     var image = new Docker.Buildx.Image("image", new()
+    ///     var image = new Dockerbuild.Image("image", new()
     ///     {
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "app",
     ///         },
     ///         Push = true,
     ///         Registries = new[]
     ///         {
-    ///             new Docker.Buildx.Inputs.RegistryAuthArgs
+    ///             new Dockerbuild.Inputs.RegistryArgs
     ///             {
     ///                 Address = "docker.io",
     ///                 Password = dockerHubPassword,
@@ -257,17 +257,17 @@ namespace Pulumi.Dockerbuild
     /// using System.Collections.Generic;
     /// using System.Linq;
     /// using Pulumi;
-    /// using Docker = Pulumi.Docker;
+    /// using Dockerbuild = Pulumi.Dockerbuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
-    ///     var image = new Docker.Buildx.Image("image", new()
+    ///     var image = new Dockerbuild.Image("image", new()
     ///     {
     ///         CacheFrom = new[]
     ///         {
-    ///             new Docker.Buildx.Inputs.CacheFromArgs
+    ///             new Dockerbuild.Inputs.CacheFromArgs
     ///             {
-    ///                 Local = new Docker.Buildx.Inputs.CacheFromLocalArgs
+    ///                 Local = new Dockerbuild.Inputs.CacheFromLocalArgs
     ///                 {
     ///                     Src = "tmp/cache",
     ///                 },
@@ -275,16 +275,16 @@ namespace Pulumi.Dockerbuild
     ///         },
     ///         CacheTo = new[]
     ///         {
-    ///             new Docker.Buildx.Inputs.CacheToArgs
+    ///             new Dockerbuild.Inputs.CacheToArgs
     ///             {
-    ///                 Local = new Docker.Buildx.Inputs.CacheToLocalArgs
+    ///                 Local = new Dockerbuild.Inputs.CacheToLocalArgs
     ///                 {
     ///                     Dest = "tmp/cache",
-    ///                     Mode = Docker.Buildx.Image.CacheMode.Max,
+    ///                     Mode = Dockerbuild.CacheMode.Max,
     ///                 },
     ///             },
     ///         },
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "app",
     ///         },
@@ -298,17 +298,17 @@ namespace Pulumi.Dockerbuild
     /// using System.Collections.Generic;
     /// using System.Linq;
     /// using Pulumi;
-    /// using Docker = Pulumi.Docker;
+    /// using Dockerbuild = Pulumi.Dockerbuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
-    ///     var image = new Docker.Buildx.Image("image", new()
+    ///     var image = new Dockerbuild.Image("image", new()
     ///     {
-    ///         Builder = new Docker.Buildx.Inputs.BuilderConfigArgs
+    ///         Builder = new Dockerbuild.Inputs.BuilderConfigArgs
     ///         {
     ///             Name = "cloud-builder-name",
     ///         },
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "app",
     ///         },
@@ -323,17 +323,17 @@ namespace Pulumi.Dockerbuild
     /// using System.Collections.Generic;
     /// using System.Linq;
     /// using Pulumi;
-    /// using Docker = Pulumi.Docker;
+    /// using Dockerbuild = Pulumi.Dockerbuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
-    ///     var image = new Docker.Buildx.Image("image", new()
+    ///     var image = new Dockerbuild.Image("image", new()
     ///     {
     ///         BuildArgs = 
     ///         {
     ///             { "SET_ME_TO_TRUE", "true" },
     ///         },
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "app",
     ///         },
@@ -347,13 +347,13 @@ namespace Pulumi.Dockerbuild
     /// using System.Collections.Generic;
     /// using System.Linq;
     /// using Pulumi;
-    /// using Docker = Pulumi.Docker;
+    /// using Dockerbuild = Pulumi.Dockerbuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
-    ///     var image = new Docker.Buildx.Image("image", new()
+    ///     var image = new Dockerbuild.Image("image", new()
     ///     {
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "app",
     ///         },
@@ -368,18 +368,18 @@ namespace Pulumi.Dockerbuild
     /// using System.Collections.Generic;
     /// using System.Linq;
     /// using Pulumi;
-    /// using Docker = Pulumi.Docker;
+    /// using Dockerbuild = Pulumi.Dockerbuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
-    ///     var image = new Docker.Buildx.Image("image", new()
+    ///     var image = new Dockerbuild.Image("image", new()
     ///     {
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "app",
     ///             Named = 
     ///             {
-    ///                 { "golang:latest", new Docker.Buildx.Inputs.ContextArgs
+    ///                 { "golang:latest", new Dockerbuild.Inputs.ContextArgs
     ///                 {
     ///                     Location = "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
     ///                 } },
@@ -395,13 +395,13 @@ namespace Pulumi.Dockerbuild
     /// using System.Collections.Generic;
     /// using System.Linq;
     /// using Pulumi;
-    /// using Docker = Pulumi.Docker;
+    /// using Dockerbuild = Pulumi.Dockerbuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
-    ///     var image = new Docker.Buildx.Image("image", new()
+    ///     var image = new Dockerbuild.Image("image", new()
     ///     {
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
     ///         },
@@ -415,17 +415,17 @@ namespace Pulumi.Dockerbuild
     /// using System.Collections.Generic;
     /// using System.Linq;
     /// using Pulumi;
-    /// using Docker = Pulumi.Docker;
+    /// using Dockerbuild = Pulumi.Dockerbuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
-    ///     var image = new Docker.Buildx.Image("image", new()
+    ///     var image = new Dockerbuild.Image("image", new()
     ///     {
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "app",
     ///         },
-    ///         Dockerfile = new Docker.Buildx.Inputs.DockerfileArgs
+    ///         Dockerfile = new Dockerbuild.Inputs.DockerfileArgs
     ///         {
     ///             Inline = @"FROM busybox
     /// COPY hello.c ./
@@ -441,17 +441,17 @@ namespace Pulumi.Dockerbuild
     /// using System.Collections.Generic;
     /// using System.Linq;
     /// using Pulumi;
-    /// using Docker = Pulumi.Docker;
+    /// using Dockerbuild = Pulumi.Dockerbuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
-    ///     var image = new Docker.Buildx.Image("image", new()
+    ///     var image = new Dockerbuild.Image("image", new()
     ///     {
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "https://github.com/docker-library/hello-world.git",
     ///         },
-    ///         Dockerfile = new Docker.Buildx.Inputs.DockerfileArgs
+    ///         Dockerfile = new Dockerbuild.Inputs.DockerfileArgs
     ///         {
     ///             Location = "app/Dockerfile",
     ///         },
@@ -465,21 +465,21 @@ namespace Pulumi.Dockerbuild
     /// using System.Collections.Generic;
     /// using System.Linq;
     /// using Pulumi;
-    /// using Docker = Pulumi.Docker;
+    /// using Dockerbuild = Pulumi.Dockerbuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
-    ///     var image = new Docker.Buildx.Image("image", new()
+    ///     var image = new Dockerbuild.Image("image", new()
     ///     {
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "app",
     ///         },
     ///         Exports = new[]
     ///         {
-    ///             new Docker.Buildx.Inputs.ExportArgs
+    ///             new Dockerbuild.Inputs.ExportArgs
     ///             {
-    ///                 Docker = new Docker.Buildx.Inputs.ExportDockerArgs
+    ///                 Docker = new Dockerbuild.Inputs.ExportDockerArgs
     ///                 {
     ///                     Tar = true,
     ///                 },

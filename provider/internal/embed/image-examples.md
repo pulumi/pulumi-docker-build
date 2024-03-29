@@ -6,13 +6,13 @@
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/dockerbuild";
 
 const ecrRepository = new aws.ecr.Repository("ecr-repository", {});
 const authToken = aws.ecr.getAuthorizationTokenOutput({
     registryId: ecrRepository.registryId,
 });
-const myImage = new docker.buildx.Image("my-image", {
+const myImage = new dockerbuild.Image("my-image", {
     cacheFrom: [{
         registry: {
             ref: pulumi.interpolate`${ecrRepository.repositoryUrl}:cache`,
@@ -41,28 +41,28 @@ export const ref = myImage.ref;
 ```python
 import pulumi
 import pulumi_aws as aws
-import pulumi_docker as docker
+import pulumi_dockerbuild as dockerbuild
 
 ecr_repository = aws.ecr.Repository("ecr-repository")
 auth_token = aws.ecr.get_authorization_token_output(registry_id=ecr_repository.registry_id)
-my_image = docker.buildx.Image("my-image",
-    cache_from=[docker.buildx.CacheFromArgs(
-        registry=docker.buildx.CacheFromRegistryArgs(
+my_image = dockerbuild.Image("my-image",
+    cache_from=[dockerbuild.CacheFromArgs(
+        registry=dockerbuild.CacheFromRegistryArgs(
             ref=ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
         ),
     )],
-    cache_to=[docker.buildx.CacheToArgs(
-        registry=docker.buildx.CacheToRegistryArgs(
+    cache_to=[dockerbuild.CacheToArgs(
+        registry=dockerbuild.CacheToRegistryArgs(
             image_manifest=True,
             oci_media_types=True,
             ref=ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
         ),
     )],
-    context=docker.buildx.BuildContextArgs(
+    context=dockerbuild.BuildContextArgs(
         location="./app",
     ),
     push=True,
-    registries=[docker.buildx.RegistryAuthArgs(
+    registries=[dockerbuild.RegistryArgs(
         address=ecr_repository.repository_url,
         password=auth_token.password,
         username=auth_token.user_name,
@@ -75,7 +75,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
 using Aws = Pulumi.Aws;
-using Docker = Pulumi.Docker;
+using Dockerbuild = Pulumi.Dockerbuild;
 
 return await Deployment.RunAsync(() => 
 {
@@ -86,13 +86,13 @@ return await Deployment.RunAsync(() =>
         RegistryId = ecrRepository.RegistryId,
     });
 
-    var myImage = new Docker.Buildx.Image("my-image", new()
+    var myImage = new Dockerbuild.Image("my-image", new()
     {
         CacheFrom = new[]
         {
-            new Docker.Buildx.Inputs.CacheFromArgs
+            new Dockerbuild.Inputs.CacheFromArgs
             {
-                Registry = new Docker.Buildx.Inputs.CacheFromRegistryArgs
+                Registry = new Dockerbuild.Inputs.CacheFromRegistryArgs
                 {
                     Ref = ecrRepository.RepositoryUrl.Apply(repositoryUrl => $"{repositoryUrl}:cache"),
                 },
@@ -100,9 +100,9 @@ return await Deployment.RunAsync(() =>
         },
         CacheTo = new[]
         {
-            new Docker.Buildx.Inputs.CacheToArgs
+            new Dockerbuild.Inputs.CacheToArgs
             {
-                Registry = new Docker.Buildx.Inputs.CacheToRegistryArgs
+                Registry = new Dockerbuild.Inputs.CacheToRegistryArgs
                 {
                     ImageManifest = true,
                     OciMediaTypes = true,
@@ -110,14 +110,14 @@ return await Deployment.RunAsync(() =>
                 },
             },
         },
-        Context = new Docker.Buildx.Inputs.BuildContextArgs
+        Context = new Dockerbuild.Inputs.BuildContextArgs
         {
             Location = "./app",
         },
         Push = true,
         Registries = new[]
         {
-            new Docker.Buildx.Inputs.RegistryAuthArgs
+            new Dockerbuild.Inputs.RegistryArgs
             {
                 Address = ecrRepository.RepositoryUrl,
                 Password = authToken.Apply(getAuthorizationTokenResult => getAuthorizationTokenResult.Password),
@@ -144,7 +144,7 @@ import (
 	"fmt"
 
 	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ecr"
-	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker/buildx"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -157,19 +157,19 @@ func main() {
 		authToken := ecr.GetAuthorizationTokenOutput(ctx, ecr.GetAuthorizationTokenOutputArgs{
 			RegistryId: ecrRepository.RegistryId,
 		}, nil)
-		myImage, err := buildx.NewImage(ctx, "my-image", &buildx.ImageArgs{
-			CacheFrom: buildx.CacheFromArray{
-				&buildx.CacheFromArgs{
-					Registry: &buildx.CacheFromRegistryArgs{
+		myImage, err := dockerbuild.NewImage(ctx, "my-image", &dockerbuild.ImageArgs{
+			CacheFrom: dockerbuild.CacheFromArray{
+				&dockerbuild.CacheFromArgs{
+					Registry: &dockerbuild.CacheFromRegistryArgs{
 						Ref: ecrRepository.RepositoryUrl.ApplyT(func(repositoryUrl string) (string, error) {
 							return fmt.Sprintf("%v:cache", repositoryUrl), nil
 						}).(pulumi.StringOutput),
 					},
 				},
 			},
-			CacheTo: buildx.CacheToArray{
-				&buildx.CacheToArgs{
-					Registry: &buildx.CacheToRegistryArgs{
+			CacheTo: dockerbuild.CacheToArray{
+				&dockerbuild.CacheToArgs{
+					Registry: &dockerbuild.CacheToRegistryArgs{
 						ImageManifest: pulumi.Bool(true),
 						OciMediaTypes: pulumi.Bool(true),
 						Ref: ecrRepository.RepositoryUrl.ApplyT(func(repositoryUrl string) (string, error) {
@@ -178,12 +178,12 @@ func main() {
 					},
 				},
 			},
-			Context: &buildx.BuildContextArgs{
+			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("./app"),
 			},
 			Push: pulumi.Bool(true),
-			Registries: buildx.RegistryAuthArray{
-				&buildx.RegistryAuthArgs{
+			Registries: dockerbuild.RegistryArray{
+				&dockerbuild.RegistryArgs{
 					Address: ecrRepository.RepositoryUrl,
 					Password: authToken.ApplyT(func(authToken ecr.GetAuthorizationTokenResult) (*string, error) {
 						return &authToken.Password, nil
@@ -234,7 +234,7 @@ resources:
                   username: ${auth-token.userName}
             tags:
                 - ${ecr-repository.repositoryUrl}:latest
-        type: docker:buildx/image:Image
+        type: dockerbuild:Image
 runtime: yaml
 variables:
     auth-token:
@@ -250,14 +250,14 @@ import com.pulumi.core.Output;
 import com.pulumi.aws.ecr.Repository;
 import com.pulumi.aws.ecr.EcrFunctions;
 import com.pulumi.aws.ecr.inputs.GetAuthorizationTokenArgs;
-import com.pulumi.docker.buildx.Image;
-import com.pulumi.docker.buildx.ImageArgs;
-import com.pulumi.docker.buildx.inputs.CacheFromArgs;
-import com.pulumi.docker.buildx.inputs.CacheFromRegistryArgs;
-import com.pulumi.docker.buildx.inputs.CacheToArgs;
-import com.pulumi.docker.buildx.inputs.CacheToRegistryArgs;
-import com.pulumi.docker.buildx.inputs.BuildContextArgs;
-import com.pulumi.docker.buildx.inputs.RegistryAuthArgs;
+import com.pulumi.dockerbuild.Image;
+import com.pulumi.dockerbuild.ImageArgs;
+import com.pulumi.dockerbuild.inputs.CacheFromArgs;
+import com.pulumi.dockerbuild.inputs.CacheFromRegistryArgs;
+import com.pulumi.dockerbuild.inputs.CacheToArgs;
+import com.pulumi.dockerbuild.inputs.CacheToRegistryArgs;
+import com.pulumi.dockerbuild.inputs.BuildContextArgs;
+import com.pulumi.dockerbuild.inputs.RegistryArgs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -294,7 +294,7 @@ public class App {
                 .location("./app")
                 .build())
             .push(true)
-            .registries(RegistryAuthArgs.builder()
+            .registries(RegistryArgs.builder()
                 .address(ecrRepository.repositoryUrl())
                 .password(authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult).applyValue(authToken -> authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult.password())))
                 .username(authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult).applyValue(authToken -> authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult.userName())))
@@ -312,49 +312,49 @@ public class App {
 
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/dockerbuild";
 
-const image = new docker.buildx.Image("image", {
+const image = new dockerbuild.Image("image", {
     context: {
         location: "app",
     },
     platforms: [
-        docker.buildx.image.Platform.Plan9_amd64,
-        docker.buildx.image.Platform.Plan9_386,
+        dockerbuild.Platform.Plan9_amd64,
+        dockerbuild.Platform.Plan9_386,
     ],
 });
 ```
 ```python
 import pulumi
-import pulumi_docker as docker
+import pulumi_dockerbuild as dockerbuild
 
-image = docker.buildx.Image("image",
-    context=docker.buildx.BuildContextArgs(
+image = dockerbuild.Image("image",
+    context=dockerbuild.BuildContextArgs(
         location="app",
     ),
     platforms=[
-        docker.buildx.image.Platform.PLAN9_AMD64,
-        docker.buildx.image.Platform.PLAN9_386,
+        dockerbuild.Platform.PLAN9_AMD64,
+        dockerbuild.Platform.PLAN9_386,
     ])
 ```
 ```csharp
 using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
-using Docker = Pulumi.Docker;
+using Dockerbuild = Pulumi.Dockerbuild;
 
 return await Deployment.RunAsync(() => 
 {
-    var image = new Docker.Buildx.Image("image", new()
+    var image = new Dockerbuild.Image("image", new()
     {
-        Context = new Docker.Buildx.Inputs.BuildContextArgs
+        Context = new Dockerbuild.Inputs.BuildContextArgs
         {
             Location = "app",
         },
         Platforms = new[]
         {
-            Docker.Buildx.Image.Platform.Plan9_amd64,
-            Docker.Buildx.Image.Platform.Plan9_386,
+            Dockerbuild.Platform.Plan9_amd64,
+            Dockerbuild.Platform.Plan9_386,
         },
     });
 
@@ -365,19 +365,19 @@ return await Deployment.RunAsync(() =>
 package main
 
 import (
-	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker/buildx"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		_, err := buildx.NewImage(ctx, "image", &buildx.ImageArgs{
-			Context: &buildx.BuildContextArgs{
+		_, err := dockerbuild.NewImage(ctx, "image", &dockerbuild.ImageArgs{
+			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
-			Platforms: buildx.PlatformArray{
-				buildx.Platform_Plan9_amd64,
-				buildx.Platform_Plan9_386,
+			Platforms: dockerbuild.PlatformArray{
+				dockerbuild.Platform_Plan9_amd64,
+				dockerbuild.Platform_Plan9_386,
 			},
 		})
 		if err != nil {
@@ -398,7 +398,7 @@ resources:
             platforms:
                 - plan9/amd64
                 - plan9/386
-        type: docker:buildx/image:Image
+        type: dockerbuild:Image
 runtime: yaml
 ```
 ```java
@@ -407,9 +407,9 @@ package generated_program;
 import com.pulumi.Context;
 import com.pulumi.Pulumi;
 import com.pulumi.core.Output;
-import com.pulumi.docker.buildx.Image;
-import com.pulumi.docker.buildx.ImageArgs;
-import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+import com.pulumi.dockerbuild.Image;
+import com.pulumi.dockerbuild.ImageArgs;
+import com.pulumi.dockerbuild.inputs.BuildContextArgs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -441,9 +441,9 @@ public class App {
 
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/dockerbuild";
 
-const image = new docker.buildx.Image("image", {
+const image = new dockerbuild.Image("image", {
     context: {
         location: "app",
     },
@@ -459,14 +459,14 @@ export const ref = myImage.ref;
 ```
 ```python
 import pulumi
-import pulumi_docker as docker
+import pulumi_dockerbuild as dockerbuild
 
-image = docker.buildx.Image("image",
-    context=docker.buildx.BuildContextArgs(
+image = dockerbuild.Image("image",
+    context=dockerbuild.BuildContextArgs(
         location="app",
     ),
     push=True,
-    registries=[docker.buildx.RegistryAuthArgs(
+    registries=[dockerbuild.RegistryArgs(
         address="docker.io",
         password=docker_hub_password,
         username="pulumibot",
@@ -478,20 +478,20 @@ pulumi.export("ref", my_image["ref"])
 using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
-using Docker = Pulumi.Docker;
+using Dockerbuild = Pulumi.Dockerbuild;
 
 return await Deployment.RunAsync(() => 
 {
-    var image = new Docker.Buildx.Image("image", new()
+    var image = new Dockerbuild.Image("image", new()
     {
-        Context = new Docker.Buildx.Inputs.BuildContextArgs
+        Context = new Dockerbuild.Inputs.BuildContextArgs
         {
             Location = "app",
         },
         Push = true,
         Registries = new[]
         {
-            new Docker.Buildx.Inputs.RegistryAuthArgs
+            new Dockerbuild.Inputs.RegistryArgs
             {
                 Address = "docker.io",
                 Password = dockerHubPassword,
@@ -515,19 +515,19 @@ return await Deployment.RunAsync(() =>
 package main
 
 import (
-	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker/buildx"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		_, err := buildx.NewImage(ctx, "image", &buildx.ImageArgs{
-			Context: &buildx.BuildContextArgs{
+		_, err := dockerbuild.NewImage(ctx, "image", &dockerbuild.ImageArgs{
+			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
 			Push: pulumi.Bool(true),
-			Registries: buildx.RegistryAuthArray{
-				&buildx.RegistryAuthArgs{
+			Registries: dockerbuild.RegistryArray{
+				&dockerbuild.RegistryArgs{
 					Address:  pulumi.String("docker.io"),
 					Password: pulumi.Any(dockerHubPassword),
 					Username: pulumi.String("pulumibot"),
@@ -562,7 +562,7 @@ resources:
                   username: pulumibot
             tags:
                 - docker.io/pulumi/pulumi:3.107.0
-        type: docker:buildx/image:Image
+        type: dockerbuild:Image
 runtime: yaml
 ```
 ```java
@@ -571,10 +571,10 @@ package generated_program;
 import com.pulumi.Context;
 import com.pulumi.Pulumi;
 import com.pulumi.core.Output;
-import com.pulumi.docker.buildx.Image;
-import com.pulumi.docker.buildx.ImageArgs;
-import com.pulumi.docker.buildx.inputs.BuildContextArgs;
-import com.pulumi.docker.buildx.inputs.RegistryAuthArgs;
+import com.pulumi.dockerbuild.Image;
+import com.pulumi.dockerbuild.ImageArgs;
+import com.pulumi.dockerbuild.inputs.BuildContextArgs;
+import com.pulumi.dockerbuild.inputs.RegistryArgs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -593,7 +593,7 @@ public class App {
                 .location("app")
                 .build())
             .push(true)
-            .registries(RegistryAuthArgs.builder()
+            .registries(RegistryArgs.builder()
                 .address("docker.io")
                 .password(dockerHubPassword)
                 .username("pulumibot")
@@ -611,9 +611,9 @@ public class App {
 
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/dockerbuild";
 
-const image = new docker.buildx.Image("image", {
+const image = new dockerbuild.Image("image", {
     cacheFrom: [{
         local: {
             src: "tmp/cache",
@@ -622,7 +622,7 @@ const image = new docker.buildx.Image("image", {
     cacheTo: [{
         local: {
             dest: "tmp/cache",
-            mode: docker.buildx.image.CacheMode.Max,
+            mode: dockerbuild.CacheMode.Max,
         },
     }],
     context: {
@@ -632,21 +632,21 @@ const image = new docker.buildx.Image("image", {
 ```
 ```python
 import pulumi
-import pulumi_docker as docker
+import pulumi_dockerbuild as dockerbuild
 
-image = docker.buildx.Image("image",
-    cache_from=[docker.buildx.CacheFromArgs(
-        local=docker.buildx.CacheFromLocalArgs(
+image = dockerbuild.Image("image",
+    cache_from=[dockerbuild.CacheFromArgs(
+        local=dockerbuild.CacheFromLocalArgs(
             src="tmp/cache",
         ),
     )],
-    cache_to=[docker.buildx.CacheToArgs(
-        local=docker.buildx.CacheToLocalArgs(
+    cache_to=[dockerbuild.CacheToArgs(
+        local=dockerbuild.CacheToLocalArgs(
             dest="tmp/cache",
-            mode=docker.buildx.image.CacheMode.MAX,
+            mode=dockerbuild.CacheMode.MAX,
         ),
     )],
-    context=docker.buildx.BuildContextArgs(
+    context=dockerbuild.BuildContextArgs(
         location="app",
     ))
 ```
@@ -654,17 +654,17 @@ image = docker.buildx.Image("image",
 using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
-using Docker = Pulumi.Docker;
+using Dockerbuild = Pulumi.Dockerbuild;
 
 return await Deployment.RunAsync(() => 
 {
-    var image = new Docker.Buildx.Image("image", new()
+    var image = new Dockerbuild.Image("image", new()
     {
         CacheFrom = new[]
         {
-            new Docker.Buildx.Inputs.CacheFromArgs
+            new Dockerbuild.Inputs.CacheFromArgs
             {
-                Local = new Docker.Buildx.Inputs.CacheFromLocalArgs
+                Local = new Dockerbuild.Inputs.CacheFromLocalArgs
                 {
                     Src = "tmp/cache",
                 },
@@ -672,16 +672,16 @@ return await Deployment.RunAsync(() =>
         },
         CacheTo = new[]
         {
-            new Docker.Buildx.Inputs.CacheToArgs
+            new Dockerbuild.Inputs.CacheToArgs
             {
-                Local = new Docker.Buildx.Inputs.CacheToLocalArgs
+                Local = new Dockerbuild.Inputs.CacheToLocalArgs
                 {
                     Dest = "tmp/cache",
-                    Mode = Docker.Buildx.Image.CacheMode.Max,
+                    Mode = Dockerbuild.CacheMode.Max,
                 },
             },
         },
-        Context = new Docker.Buildx.Inputs.BuildContextArgs
+        Context = new Dockerbuild.Inputs.BuildContextArgs
         {
             Location = "app",
         },
@@ -694,29 +694,29 @@ return await Deployment.RunAsync(() =>
 package main
 
 import (
-	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker/buildx"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		_, err := buildx.NewImage(ctx, "image", &buildx.ImageArgs{
-			CacheFrom: buildx.CacheFromArray{
-				&buildx.CacheFromArgs{
-					Local: &buildx.CacheFromLocalArgs{
+		_, err := dockerbuild.NewImage(ctx, "image", &dockerbuild.ImageArgs{
+			CacheFrom: dockerbuild.CacheFromArray{
+				&dockerbuild.CacheFromArgs{
+					Local: &dockerbuild.CacheFromLocalArgs{
 						Src: pulumi.String("tmp/cache"),
 					},
 				},
 			},
-			CacheTo: buildx.CacheToArray{
-				&buildx.CacheToArgs{
-					Local: &buildx.CacheToLocalArgs{
+			CacheTo: dockerbuild.CacheToArray{
+				&dockerbuild.CacheToArgs{
+					Local: &dockerbuild.CacheToLocalArgs{
 						Dest: pulumi.String("tmp/cache"),
-						Mode: buildx.CacheModeMax,
+						Mode: dockerbuild.CacheModeMax,
 					},
 				},
 			},
-			Context: &buildx.BuildContextArgs{
+			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
 		})
@@ -742,7 +742,7 @@ resources:
                     mode: max
             context:
                 location: app
-        type: docker:buildx/image:Image
+        type: dockerbuild:Image
 runtime: yaml
 ```
 ```java
@@ -751,13 +751,13 @@ package generated_program;
 import com.pulumi.Context;
 import com.pulumi.Pulumi;
 import com.pulumi.core.Output;
-import com.pulumi.docker.buildx.Image;
-import com.pulumi.docker.buildx.ImageArgs;
-import com.pulumi.docker.buildx.inputs.CacheFromArgs;
-import com.pulumi.docker.buildx.inputs.CacheFromLocalArgs;
-import com.pulumi.docker.buildx.inputs.CacheToArgs;
-import com.pulumi.docker.buildx.inputs.CacheToLocalArgs;
-import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+import com.pulumi.dockerbuild.Image;
+import com.pulumi.dockerbuild.ImageArgs;
+import com.pulumi.dockerbuild.inputs.CacheFromArgs;
+import com.pulumi.dockerbuild.inputs.CacheFromLocalArgs;
+import com.pulumi.dockerbuild.inputs.CacheToArgs;
+import com.pulumi.dockerbuild.inputs.CacheToLocalArgs;
+import com.pulumi.dockerbuild.inputs.BuildContextArgs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -797,9 +797,9 @@ public class App {
 
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/dockerbuild";
 
-const image = new docker.buildx.Image("image", {
+const image = new dockerbuild.Image("image", {
     builder: {
         name: "cloud-builder-name",
     },
@@ -811,13 +811,13 @@ const image = new docker.buildx.Image("image", {
 ```
 ```python
 import pulumi
-import pulumi_docker as docker
+import pulumi_dockerbuild as dockerbuild
 
-image = docker.buildx.Image("image",
-    builder=docker.buildx.BuilderConfigArgs(
+image = dockerbuild.Image("image",
+    builder=dockerbuild.BuilderConfigArgs(
         name="cloud-builder-name",
     ),
-    context=docker.buildx.BuildContextArgs(
+    context=dockerbuild.BuildContextArgs(
         location="app",
     ),
     exec_=True)
@@ -826,17 +826,17 @@ image = docker.buildx.Image("image",
 using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
-using Docker = Pulumi.Docker;
+using Dockerbuild = Pulumi.Dockerbuild;
 
 return await Deployment.RunAsync(() => 
 {
-    var image = new Docker.Buildx.Image("image", new()
+    var image = new Dockerbuild.Image("image", new()
     {
-        Builder = new Docker.Buildx.Inputs.BuilderConfigArgs
+        Builder = new Dockerbuild.Inputs.BuilderConfigArgs
         {
             Name = "cloud-builder-name",
         },
-        Context = new Docker.Buildx.Inputs.BuildContextArgs
+        Context = new Dockerbuild.Inputs.BuildContextArgs
         {
             Location = "app",
         },
@@ -850,17 +850,17 @@ return await Deployment.RunAsync(() =>
 package main
 
 import (
-	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker/buildx"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		_, err := buildx.NewImage(ctx, "image", &buildx.ImageArgs{
-			Builder: &buildx.BuilderConfigArgs{
+		_, err := dockerbuild.NewImage(ctx, "image", &dockerbuild.ImageArgs{
+			Builder: &dockerbuild.BuilderConfigArgs{
 				Name: pulumi.String("cloud-builder-name"),
 			},
-			Context: &buildx.BuildContextArgs{
+			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
 			Exec: pulumi.Bool(true),
@@ -883,7 +883,7 @@ resources:
             context:
                 location: app
             exec: true
-        type: docker:buildx/image:Image
+        type: dockerbuild:Image
 runtime: yaml
 ```
 ```java
@@ -892,10 +892,10 @@ package generated_program;
 import com.pulumi.Context;
 import com.pulumi.Pulumi;
 import com.pulumi.core.Output;
-import com.pulumi.docker.buildx.Image;
-import com.pulumi.docker.buildx.ImageArgs;
-import com.pulumi.docker.buildx.inputs.BuilderConfigArgs;
-import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+import com.pulumi.dockerbuild.Image;
+import com.pulumi.dockerbuild.ImageArgs;
+import com.pulumi.dockerbuild.inputs.BuilderConfigArgs;
+import com.pulumi.dockerbuild.inputs.BuildContextArgs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -928,9 +928,9 @@ public class App {
 
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/dockerbuild";
 
-const image = new docker.buildx.Image("image", {
+const image = new dockerbuild.Image("image", {
     buildArgs: {
         SET_ME_TO_TRUE: "true",
     },
@@ -941,13 +941,13 @@ const image = new docker.buildx.Image("image", {
 ```
 ```python
 import pulumi
-import pulumi_docker as docker
+import pulumi_dockerbuild as dockerbuild
 
-image = docker.buildx.Image("image",
+image = dockerbuild.Image("image",
     build_args={
         "SET_ME_TO_TRUE": "true",
     },
-    context=docker.buildx.BuildContextArgs(
+    context=dockerbuild.BuildContextArgs(
         location="app",
     ))
 ```
@@ -955,17 +955,17 @@ image = docker.buildx.Image("image",
 using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
-using Docker = Pulumi.Docker;
+using Dockerbuild = Pulumi.Dockerbuild;
 
 return await Deployment.RunAsync(() => 
 {
-    var image = new Docker.Buildx.Image("image", new()
+    var image = new Dockerbuild.Image("image", new()
     {
         BuildArgs = 
         {
             { "SET_ME_TO_TRUE", "true" },
         },
-        Context = new Docker.Buildx.Inputs.BuildContextArgs
+        Context = new Dockerbuild.Inputs.BuildContextArgs
         {
             Location = "app",
         },
@@ -978,17 +978,17 @@ return await Deployment.RunAsync(() =>
 package main
 
 import (
-	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker/buildx"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		_, err := buildx.NewImage(ctx, "image", &buildx.ImageArgs{
+		_, err := dockerbuild.NewImage(ctx, "image", &dockerbuild.ImageArgs{
 			BuildArgs: pulumi.StringMap{
 				"SET_ME_TO_TRUE": pulumi.String("true"),
 			},
-			Context: &buildx.BuildContextArgs{
+			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
 		})
@@ -1009,7 +1009,7 @@ resources:
                 SET_ME_TO_TRUE: "true"
             context:
                 location: app
-        type: docker:buildx/image:Image
+        type: dockerbuild:Image
 runtime: yaml
 ```
 ```java
@@ -1018,9 +1018,9 @@ package generated_program;
 import com.pulumi.Context;
 import com.pulumi.Pulumi;
 import com.pulumi.core.Output;
-import com.pulumi.docker.buildx.Image;
-import com.pulumi.docker.buildx.ImageArgs;
-import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+import com.pulumi.dockerbuild.Image;
+import com.pulumi.dockerbuild.ImageArgs;
+import com.pulumi.dockerbuild.inputs.BuildContextArgs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -1050,9 +1050,9 @@ public class App {
 
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/dockerbuild";
 
-const image = new docker.buildx.Image("image", {
+const image = new dockerbuild.Image("image", {
     context: {
         location: "app",
     },
@@ -1061,10 +1061,10 @@ const image = new docker.buildx.Image("image", {
 ```
 ```python
 import pulumi
-import pulumi_docker as docker
+import pulumi_dockerbuild as dockerbuild
 
-image = docker.buildx.Image("image",
-    context=docker.buildx.BuildContextArgs(
+image = dockerbuild.Image("image",
+    context=dockerbuild.BuildContextArgs(
         location="app",
     ),
     target="build-me")
@@ -1073,13 +1073,13 @@ image = docker.buildx.Image("image",
 using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
-using Docker = Pulumi.Docker;
+using Dockerbuild = Pulumi.Dockerbuild;
 
 return await Deployment.RunAsync(() => 
 {
-    var image = new Docker.Buildx.Image("image", new()
+    var image = new Dockerbuild.Image("image", new()
     {
-        Context = new Docker.Buildx.Inputs.BuildContextArgs
+        Context = new Dockerbuild.Inputs.BuildContextArgs
         {
             Location = "app",
         },
@@ -1093,14 +1093,14 @@ return await Deployment.RunAsync(() =>
 package main
 
 import (
-	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker/buildx"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		_, err := buildx.NewImage(ctx, "image", &buildx.ImageArgs{
-			Context: &buildx.BuildContextArgs{
+		_, err := dockerbuild.NewImage(ctx, "image", &dockerbuild.ImageArgs{
+			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
 			Target: pulumi.String("build-me"),
@@ -1121,7 +1121,7 @@ resources:
             context:
                 location: app
             target: build-me
-        type: docker:buildx/image:Image
+        type: dockerbuild:Image
 runtime: yaml
 ```
 ```java
@@ -1130,9 +1130,9 @@ package generated_program;
 import com.pulumi.Context;
 import com.pulumi.Pulumi;
 import com.pulumi.core.Output;
-import com.pulumi.docker.buildx.Image;
-import com.pulumi.docker.buildx.ImageArgs;
-import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+import com.pulumi.dockerbuild.Image;
+import com.pulumi.dockerbuild.ImageArgs;
+import com.pulumi.dockerbuild.inputs.BuildContextArgs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -1162,9 +1162,9 @@ public class App {
 
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/dockerbuild";
 
-const image = new docker.buildx.Image("image", {context: {
+const image = new dockerbuild.Image("image", {context: {
     location: "app",
     named: {
         "golang:latest": {
@@ -1175,12 +1175,12 @@ const image = new docker.buildx.Image("image", {context: {
 ```
 ```python
 import pulumi
-import pulumi_docker as docker
+import pulumi_dockerbuild as dockerbuild
 
-image = docker.buildx.Image("image", context=docker.buildx.BuildContextArgs(
+image = dockerbuild.Image("image", context=dockerbuild.BuildContextArgs(
     location="app",
     named={
-        "golang:latest": docker.buildx.ContextArgs(
+        "golang:latest": dockerbuild.ContextArgs(
             location="docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
         ),
     },
@@ -1190,18 +1190,18 @@ image = docker.buildx.Image("image", context=docker.buildx.BuildContextArgs(
 using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
-using Docker = Pulumi.Docker;
+using Dockerbuild = Pulumi.Dockerbuild;
 
 return await Deployment.RunAsync(() => 
 {
-    var image = new Docker.Buildx.Image("image", new()
+    var image = new Dockerbuild.Image("image", new()
     {
-        Context = new Docker.Buildx.Inputs.BuildContextArgs
+        Context = new Dockerbuild.Inputs.BuildContextArgs
         {
             Location = "app",
             Named = 
             {
-                { "golang:latest", new Docker.Buildx.Inputs.ContextArgs
+                { "golang:latest", new Dockerbuild.Inputs.ContextArgs
                 {
                     Location = "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
                 } },
@@ -1216,17 +1216,17 @@ return await Deployment.RunAsync(() =>
 package main
 
 import (
-	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker/buildx"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		_, err := buildx.NewImage(ctx, "image", &buildx.ImageArgs{
-			Context: &buildx.BuildContextArgs{
+		_, err := dockerbuild.NewImage(ctx, "image", &dockerbuild.ImageArgs{
+			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
-				Named: buildx.ContextMap{
-					"golang:latest": &buildx.ContextArgs{
+				Named: dockerbuild.ContextMap{
+					"golang:latest": &dockerbuild.ContextArgs{
 						Location: pulumi.String("docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984"),
 					},
 				},
@@ -1250,7 +1250,7 @@ resources:
                 named:
                     golang:latest:
                         location: docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984
-        type: docker:buildx/image:Image
+        type: dockerbuild:Image
 runtime: yaml
 ```
 ```java
@@ -1259,9 +1259,9 @@ package generated_program;
 import com.pulumi.Context;
 import com.pulumi.Pulumi;
 import com.pulumi.core.Output;
-import com.pulumi.docker.buildx.Image;
-import com.pulumi.docker.buildx.ImageArgs;
-import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+import com.pulumi.dockerbuild.Image;
+import com.pulumi.dockerbuild.ImageArgs;
+import com.pulumi.dockerbuild.inputs.BuildContextArgs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -1291,17 +1291,17 @@ public class App {
 
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/dockerbuild";
 
-const image = new docker.buildx.Image("image", {context: {
+const image = new dockerbuild.Image("image", {context: {
     location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
 }});
 ```
 ```python
 import pulumi
-import pulumi_docker as docker
+import pulumi_dockerbuild as dockerbuild
 
-image = docker.buildx.Image("image", context=docker.buildx.BuildContextArgs(
+image = dockerbuild.Image("image", context=dockerbuild.BuildContextArgs(
     location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
 ))
 ```
@@ -1309,13 +1309,13 @@ image = docker.buildx.Image("image", context=docker.buildx.BuildContextArgs(
 using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
-using Docker = Pulumi.Docker;
+using Dockerbuild = Pulumi.Dockerbuild;
 
 return await Deployment.RunAsync(() => 
 {
-    var image = new Docker.Buildx.Image("image", new()
+    var image = new Dockerbuild.Image("image", new()
     {
-        Context = new Docker.Buildx.Inputs.BuildContextArgs
+        Context = new Dockerbuild.Inputs.BuildContextArgs
         {
             Location = "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
         },
@@ -1328,14 +1328,14 @@ return await Deployment.RunAsync(() =>
 package main
 
 import (
-	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker/buildx"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		_, err := buildx.NewImage(ctx, "image", &buildx.ImageArgs{
-			Context: &buildx.BuildContextArgs{
+		_, err := dockerbuild.NewImage(ctx, "image", &dockerbuild.ImageArgs{
+			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile"),
 			},
 		})
@@ -1354,7 +1354,7 @@ resources:
         properties:
             context:
                 location: https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile
-        type: docker:buildx/image:Image
+        type: dockerbuild:Image
 runtime: yaml
 ```
 ```java
@@ -1363,9 +1363,9 @@ package generated_program;
 import com.pulumi.Context;
 import com.pulumi.Pulumi;
 import com.pulumi.core.Output;
-import com.pulumi.docker.buildx.Image;
-import com.pulumi.docker.buildx.ImageArgs;
-import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+import com.pulumi.dockerbuild.Image;
+import com.pulumi.dockerbuild.ImageArgs;
+import com.pulumi.dockerbuild.inputs.BuildContextArgs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -1394,9 +1394,9 @@ public class App {
 
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/dockerbuild";
 
-const image = new docker.buildx.Image("image", {
+const image = new dockerbuild.Image("image", {
     context: {
         location: "app",
     },
@@ -1409,13 +1409,13 @@ COPY hello.c ./
 ```
 ```python
 import pulumi
-import pulumi_docker as docker
+import pulumi_dockerbuild as dockerbuild
 
-image = docker.buildx.Image("image",
-    context=docker.buildx.BuildContextArgs(
+image = dockerbuild.Image("image",
+    context=dockerbuild.BuildContextArgs(
         location="app",
     ),
-    dockerfile=docker.buildx.DockerfileArgs(
+    dockerfile=dockerbuild.DockerfileArgs(
         inline="""FROM busybox
 COPY hello.c ./
 """,
@@ -1425,17 +1425,17 @@ COPY hello.c ./
 using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
-using Docker = Pulumi.Docker;
+using Dockerbuild = Pulumi.Dockerbuild;
 
 return await Deployment.RunAsync(() => 
 {
-    var image = new Docker.Buildx.Image("image", new()
+    var image = new Dockerbuild.Image("image", new()
     {
-        Context = new Docker.Buildx.Inputs.BuildContextArgs
+        Context = new Dockerbuild.Inputs.BuildContextArgs
         {
             Location = "app",
         },
-        Dockerfile = new Docker.Buildx.Inputs.DockerfileArgs
+        Dockerfile = new Dockerbuild.Inputs.DockerfileArgs
         {
             Inline = @"FROM busybox
 COPY hello.c ./
@@ -1450,17 +1450,17 @@ COPY hello.c ./
 package main
 
 import (
-	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker/buildx"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		_, err := buildx.NewImage(ctx, "image", &buildx.ImageArgs{
-			Context: &buildx.BuildContextArgs{
+		_, err := dockerbuild.NewImage(ctx, "image", &dockerbuild.ImageArgs{
+			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
-			Dockerfile: &buildx.DockerfileArgs{
+			Dockerfile: &dockerbuild.DockerfileArgs{
 				Inline: pulumi.String("FROM busybox\nCOPY hello.c ./\n"),
 			},
 		})
@@ -1483,7 +1483,7 @@ resources:
                 inline: |
                     FROM busybox
                     COPY hello.c ./
-        type: docker:buildx/image:Image
+        type: dockerbuild:Image
 runtime: yaml
 ```
 ```java
@@ -1492,10 +1492,10 @@ package generated_program;
 import com.pulumi.Context;
 import com.pulumi.Pulumi;
 import com.pulumi.core.Output;
-import com.pulumi.docker.buildx.Image;
-import com.pulumi.docker.buildx.ImageArgs;
-import com.pulumi.docker.buildx.inputs.BuildContextArgs;
-import com.pulumi.docker.buildx.inputs.DockerfileArgs;
+import com.pulumi.dockerbuild.Image;
+import com.pulumi.dockerbuild.ImageArgs;
+import com.pulumi.dockerbuild.inputs.BuildContextArgs;
+import com.pulumi.dockerbuild.inputs.DockerfileArgs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -1530,9 +1530,9 @@ COPY hello.c ./
 
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/dockerbuild";
 
-const image = new docker.buildx.Image("image", {
+const image = new dockerbuild.Image("image", {
     context: {
         location: "https://github.com/docker-library/hello-world.git",
     },
@@ -1543,13 +1543,13 @@ const image = new docker.buildx.Image("image", {
 ```
 ```python
 import pulumi
-import pulumi_docker as docker
+import pulumi_dockerbuild as dockerbuild
 
-image = docker.buildx.Image("image",
-    context=docker.buildx.BuildContextArgs(
+image = dockerbuild.Image("image",
+    context=dockerbuild.BuildContextArgs(
         location="https://github.com/docker-library/hello-world.git",
     ),
-    dockerfile=docker.buildx.DockerfileArgs(
+    dockerfile=dockerbuild.DockerfileArgs(
         location="app/Dockerfile",
     ))
 ```
@@ -1557,17 +1557,17 @@ image = docker.buildx.Image("image",
 using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
-using Docker = Pulumi.Docker;
+using Dockerbuild = Pulumi.Dockerbuild;
 
 return await Deployment.RunAsync(() => 
 {
-    var image = new Docker.Buildx.Image("image", new()
+    var image = new Dockerbuild.Image("image", new()
     {
-        Context = new Docker.Buildx.Inputs.BuildContextArgs
+        Context = new Dockerbuild.Inputs.BuildContextArgs
         {
             Location = "https://github.com/docker-library/hello-world.git",
         },
-        Dockerfile = new Docker.Buildx.Inputs.DockerfileArgs
+        Dockerfile = new Dockerbuild.Inputs.DockerfileArgs
         {
             Location = "app/Dockerfile",
         },
@@ -1580,17 +1580,17 @@ return await Deployment.RunAsync(() =>
 package main
 
 import (
-	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker/buildx"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		_, err := buildx.NewImage(ctx, "image", &buildx.ImageArgs{
-			Context: &buildx.BuildContextArgs{
+		_, err := dockerbuild.NewImage(ctx, "image", &dockerbuild.ImageArgs{
+			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("https://github.com/docker-library/hello-world.git"),
 			},
-			Dockerfile: &buildx.DockerfileArgs{
+			Dockerfile: &dockerbuild.DockerfileArgs{
 				Location: pulumi.String("app/Dockerfile"),
 			},
 		})
@@ -1611,7 +1611,7 @@ resources:
                 location: https://github.com/docker-library/hello-world.git
             dockerfile:
                 location: app/Dockerfile
-        type: docker:buildx/image:Image
+        type: dockerbuild:Image
 runtime: yaml
 ```
 ```java
@@ -1620,10 +1620,10 @@ package generated_program;
 import com.pulumi.Context;
 import com.pulumi.Pulumi;
 import com.pulumi.core.Output;
-import com.pulumi.docker.buildx.Image;
-import com.pulumi.docker.buildx.ImageArgs;
-import com.pulumi.docker.buildx.inputs.BuildContextArgs;
-import com.pulumi.docker.buildx.inputs.DockerfileArgs;
+import com.pulumi.dockerbuild.Image;
+import com.pulumi.dockerbuild.ImageArgs;
+import com.pulumi.dockerbuild.inputs.BuildContextArgs;
+import com.pulumi.dockerbuild.inputs.DockerfileArgs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -1655,9 +1655,9 @@ public class App {
 
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
-import * as docker from "@pulumi/docker";
+import * as dockerbuild from "@pulumi/dockerbuild";
 
-const image = new docker.buildx.Image("image", {
+const image = new dockerbuild.Image("image", {
     context: {
         location: "app",
     },
@@ -1670,14 +1670,14 @@ const image = new docker.buildx.Image("image", {
 ```
 ```python
 import pulumi
-import pulumi_docker as docker
+import pulumi_dockerbuild as dockerbuild
 
-image = docker.buildx.Image("image",
-    context=docker.buildx.BuildContextArgs(
+image = dockerbuild.Image("image",
+    context=dockerbuild.BuildContextArgs(
         location="app",
     ),
-    exports=[docker.buildx.ExportArgs(
-        docker=docker.buildx.ExportDockerArgs(
+    exports=[dockerbuild.ExportArgs(
+        docker=dockerbuild.ExportDockerArgs(
             tar=True,
         ),
     )])
@@ -1686,21 +1686,21 @@ image = docker.buildx.Image("image",
 using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
-using Docker = Pulumi.Docker;
+using Dockerbuild = Pulumi.Dockerbuild;
 
 return await Deployment.RunAsync(() => 
 {
-    var image = new Docker.Buildx.Image("image", new()
+    var image = new Dockerbuild.Image("image", new()
     {
-        Context = new Docker.Buildx.Inputs.BuildContextArgs
+        Context = new Dockerbuild.Inputs.BuildContextArgs
         {
             Location = "app",
         },
         Exports = new[]
         {
-            new Docker.Buildx.Inputs.ExportArgs
+            new Dockerbuild.Inputs.ExportArgs
             {
-                Docker = new Docker.Buildx.Inputs.ExportDockerArgs
+                Docker = new Dockerbuild.Inputs.ExportDockerArgs
                 {
                     Tar = true,
                 },
@@ -1715,19 +1715,19 @@ return await Deployment.RunAsync(() =>
 package main
 
 import (
-	"github.com/pulumi/pulumi-docker/sdk/v4/go/docker/buildx"
+	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		_, err := buildx.NewImage(ctx, "image", &buildx.ImageArgs{
-			Context: &buildx.BuildContextArgs{
+		_, err := dockerbuild.NewImage(ctx, "image", &dockerbuild.ImageArgs{
+			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
-			Exports: buildx.ExportArray{
-				&buildx.ExportArgs{
-					Docker: &buildx.ExportDockerArgs{
+			Exports: dockerbuild.ExportArray{
+				&dockerbuild.ExportArgs{
+					Docker: &dockerbuild.ExportDockerArgs{
 						Tar: pulumi.Bool(true),
 					},
 				},
@@ -1751,7 +1751,7 @@ resources:
             exports:
                 - docker:
                     tar: true
-        type: docker:buildx/image:Image
+        type: dockerbuild:Image
 runtime: yaml
 ```
 ```java
@@ -1760,11 +1760,11 @@ package generated_program;
 import com.pulumi.Context;
 import com.pulumi.Pulumi;
 import com.pulumi.core.Output;
-import com.pulumi.docker.buildx.Image;
-import com.pulumi.docker.buildx.ImageArgs;
-import com.pulumi.docker.buildx.inputs.BuildContextArgs;
-import com.pulumi.docker.buildx.inputs.ExportArgs;
-import com.pulumi.docker.buildx.inputs.ExportDockerArgs;
+import com.pulumi.dockerbuild.Image;
+import com.pulumi.dockerbuild.ImageArgs;
+import com.pulumi.dockerbuild.inputs.BuildContextArgs;
+import com.pulumi.dockerbuild.inputs.ExportArgs;
+import com.pulumi.dockerbuild.inputs.ExportDockerArgs;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;

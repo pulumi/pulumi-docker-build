@@ -24,17 +24,17 @@ namespace Pulumi.Dockerbuild
     /// using System.Collections.Generic;
     /// using System.Linq;
     /// using Pulumi;
-    /// using Docker = Pulumi.Docker;
+    /// using Dockerbuild = Pulumi.Dockerbuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
-    ///     var amd64 = new Docker.Buildx.Image("amd64", new()
+    ///     var amd64 = new Dockerbuild.Image("amd64", new()
     ///     {
     ///         CacheFrom = new[]
     ///         {
-    ///             new Docker.Buildx.Inputs.CacheFromArgs
+    ///             new Dockerbuild.Inputs.CacheFromArgs
     ///             {
-    ///                 Registry = new Docker.Buildx.Inputs.CacheFromRegistryArgs
+    ///                 Registry = new Dockerbuild.Inputs.CacheFromRegistryArgs
     ///                 {
     ///                     Ref = "docker.io/pulumi/pulumi:cache-amd64",
     ///                 },
@@ -42,22 +42,22 @@ namespace Pulumi.Dockerbuild
     ///         },
     ///         CacheTo = new[]
     ///         {
-    ///             new Docker.Buildx.Inputs.CacheToArgs
+    ///             new Dockerbuild.Inputs.CacheToArgs
     ///             {
-    ///                 Registry = new Docker.Buildx.Inputs.CacheToRegistryArgs
+    ///                 Registry = new Dockerbuild.Inputs.CacheToRegistryArgs
     ///                 {
-    ///                     Mode = Docker.Buildx.Image.CacheMode.Max,
+    ///                     Mode = Dockerbuild.CacheMode.Max,
     ///                     Ref = "docker.io/pulumi/pulumi:cache-amd64",
     ///                 },
     ///             },
     ///         },
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "app",
     ///         },
     ///         Platforms = new[]
     ///         {
-    ///             Docker.Buildx.Image.Platform.Linux_amd64,
+    ///             Dockerbuild.Platform.Linux_amd64,
     ///         },
     ///         Tags = new[]
     ///         {
@@ -65,13 +65,13 @@ namespace Pulumi.Dockerbuild
     ///         },
     ///     });
     /// 
-    ///     var arm64 = new Docker.Buildx.Image("arm64", new()
+    ///     var arm64 = new Dockerbuild.Image("arm64", new()
     ///     {
     ///         CacheFrom = new[]
     ///         {
-    ///             new Docker.Buildx.Inputs.CacheFromArgs
+    ///             new Dockerbuild.Inputs.CacheFromArgs
     ///             {
-    ///                 Registry = new Docker.Buildx.Inputs.CacheFromRegistryArgs
+    ///                 Registry = new Dockerbuild.Inputs.CacheFromRegistryArgs
     ///                 {
     ///                     Ref = "docker.io/pulumi/pulumi:cache-arm64",
     ///                 },
@@ -79,22 +79,22 @@ namespace Pulumi.Dockerbuild
     ///         },
     ///         CacheTo = new[]
     ///         {
-    ///             new Docker.Buildx.Inputs.CacheToArgs
+    ///             new Dockerbuild.Inputs.CacheToArgs
     ///             {
-    ///                 Registry = new Docker.Buildx.Inputs.CacheToRegistryArgs
+    ///                 Registry = new Dockerbuild.Inputs.CacheToRegistryArgs
     ///                 {
-    ///                     Mode = Docker.Buildx.Image.CacheMode.Max,
+    ///                     Mode = Dockerbuild.CacheMode.Max,
     ///                     Ref = "docker.io/pulumi/pulumi:cache-arm64",
     ///                 },
     ///             },
     ///         },
-    ///         Context = new Docker.Buildx.Inputs.BuildContextArgs
+    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "app",
     ///         },
     ///         Platforms = new[]
     ///         {
-    ///             Docker.Buildx.Image.Platform.Linux_arm64,
+    ///             Dockerbuild.Platform.Linux_arm64,
     ///         },
     ///         Tags = new[]
     ///         {
@@ -102,7 +102,7 @@ namespace Pulumi.Dockerbuild
     ///         },
     ///     });
     /// 
-    ///     var index = new Docker.Buildx.Index("index", new()
+    ///     var index = new Dockerbuild.Index("index", new()
     ///     {
     ///         Sources = new[]
     ///         {

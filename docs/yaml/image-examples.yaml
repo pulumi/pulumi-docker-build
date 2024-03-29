@@ -6,7 +6,7 @@ resources:
   ecr-repository:
     type: aws:ecr:Repository
   my-image:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       tags:
         - ${ecr-repository.repositoryUrl}:latest
@@ -36,7 +36,7 @@ runtime: yaml
 description: Multi-platform image
 resources:
   image:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       context:
         location: "app"
@@ -49,7 +49,7 @@ runtime: yaml
 description: Registry export
 resources:
   image:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       tags:
         - "docker.io/pulumi/pulumi:3.107.0"
@@ -68,7 +68,7 @@ runtime: yaml
 description: Caching
 resources:
   image:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       context:
         location: "app"
@@ -85,7 +85,7 @@ runtime: yaml
 description: Docker Build Cloud
 resources:
   image:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       context:
         location: "app"
@@ -98,7 +98,7 @@ runtime: yaml
 description: Build arguments
 resources:
   image:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       context:
         location: "app"
@@ -110,7 +110,7 @@ runtime: yaml
 description: Build target
 resources:
   image:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       context:
         location: "app"
@@ -121,7 +121,7 @@ runtime: yaml
 description: Named contexts
 resources:
   image:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       context:
         location: app
@@ -134,7 +134,7 @@ runtime: yaml
 description: Remote context
 resources:
   image:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       context:
         location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile"
@@ -145,7 +145,7 @@ runtime: yaml
 description: Inline Dockerfile
 resources:
   image:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       dockerfile:
         inline: |
@@ -159,7 +159,7 @@ runtime: yaml
 description: Remote context
 resources:
   image:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       dockerfile:
         location: app/Dockerfile
@@ -171,7 +171,7 @@ runtime: yaml
 description: Local export
 resources:
   image:
-    type: dockerbuild:index:Image
+    type: dockerbuild:Image
     properties:
       context:
         location: "app"

@@ -44,12 +44,12 @@ import javax.annotation.Nullable;
  * 
  * ## Migrating v3 and v4 Image resources
  * 
- * The `buildx.Image` resource provides a superset of functionality over the `Image` resources available in versions 3 and 4 of the Pulumi Docker provider.
- * Existing `Image` resources can be converted to `build.Image` resources with minor modifications.
+ * The `dockerbuild.Image` resource provides a superset of functionality over the `Image` resources available in versions 3 and 4 of the Pulumi Docker provider.
+ * Existing `Image` resources can be converted to `dockerbuild.Image` resources with minor modifications.
  * 
  * ### Behavioral differences
  * 
- * There are several key behavioral differences to keep in mind when transitioning images to the new `buildx.Image` resource.
+ * There are several key behavioral differences to keep in mind when transitioning images to the new `dockerbuild.Image` resource.
  * 
  * #### Previews
  * 
@@ -60,8 +60,8 @@ import javax.annotation.Nullable;
  * By default, `v4.x` `Image` resources do _not_ build during previews, but this behavior can be toggled with the `buildOnPreview` option.
  * Some users felt this made previews in CI less helpful because they no longer detected bad images by default.
  * 
- * The default behavior of the `buildx.Image` resource has been changed to strike a better balance between CI use cases and manual updates.
- * By default, Pulumi will now only build `buildx.Image` resources during previews when it detects a CI environment like GitHub Actions.
+ * The default behavior of the `dockerbuild.Image` resource has been changed to strike a better balance between CI use cases and manual updates.
+ * By default, Pulumi will now only build `dockerbuild.Image` resources during previews when it detects a CI environment like GitHub Actions.
  * Previews run in non-CI environments will not build images.
  * This behavior is still configurable with `buildOnPreview`.
  * 
@@ -70,7 +70,7 @@ import javax.annotation.Nullable;
  * Versions `3.x` and `4.x` of the Pulumi Docker provider attempt to push images to remote registries by default.
  * They expose a `skipPush: true` option to disable pushing.
  * 
- * The `buildx.Image` resource matches the Docker CLI&#39;s behavior and does not push images anywhere by default.
+ * The `dockerbuild.Image` resource matches the Docker CLI&#39;s behavior and does not push images anywhere by default.
  * 
  * To push images to a registry you can include `push: true` (equivalent to Docker&#39;s `--push` flag) or configure an `export` of type `registry` (equivalent to Docker&#39;s `--output type=registry`).
  * Like Docker, if an image is configured without exports you will see a warning with instructions for how to enable pushing, but the build will still proceed normally.
@@ -81,7 +81,7 @@ import javax.annotation.Nullable;
  * 
  * Version `4.x` of the Pulumi Docker provider does not support secrets.
  * 
- * The `buildx.Image` resource supports secrets but does not require those secrets to exist on-disk or in environment variables.
+ * The `dockerbuild.Image` resource supports secrets but does not require those secrets to exist on-disk or in environment variables.
  * Instead, they should be passed directly as values.
  * (Please be sure to familiarize yourself with Pulumi&#39;s [native secret handling](https://www.pulumi.com/docs/concepts/secrets/).)
  * Pulumi also provides [ESC](https://www.pulumi.com/product/esc/) to make it easier to share secrets across stacks and environments.
@@ -96,7 +96,7 @@ import javax.annotation.Nullable;
  * Both versions 3 and 4 require specific environment variables to be set and deviate from Docker&#39;s native caching behavior.
  * This can result in inefficient builds due to unnecessary image pulls, repeated file transfers, etc.
  * 
- * The `buildx.Image` resource delegates all caching behavior to Docker.
+ * The `dockerbuild.Image` resource delegates all caching behavior to Docker.
  * `cacheFrom` and `cacheTo` options (equivalent to Docker&#39;s `--cache-to` and `--cache-from`) are exposed and provide additional cache targets, such as local disk, S3 storage, etc.
  * 
  * #### Outputs
@@ -104,7 +104,7 @@ import javax.annotation.Nullable;
  * Versions `3.x` and `4.x` of the provider exposed a `repoDigest` output which was a fully qualified tag with digest.
  * In `4.x` this could also be a single sha256 hash if the image wasn&#39;t pushed.
  * 
- * Unlike earlier providers the `buildx.Image` resource can push multiple tags.
+ * Unlike earlier providers the `dockerbuild.Image` resource can push multiple tags.
  * As a convenience, it exposes a `ref` output consisting of a tag with digest as long as the image was pushed.
  * If multiple tags were pushed this uses one at random.
  * 
@@ -117,7 +117,7 @@ import javax.annotation.Nullable;
  * The `buidx.Image` will query your registries during `refresh` to ensure the expected tags exist.
  * If any are missing a subsequent `update` will push them.
  * 
- * When a `buildx.Image` is deleted, it will _attempt_ to also delete any pushed tags.
+ * When a `dockerbuild.Image` is deleted, it will _attempt_ to also delete any pushed tags.
  * Deletion of remote tags is not guaranteed because not all registries support the manifest `DELETE` API (`docker.io` in particular).
  * Manifests are _not_ deleted in the same way during updates -- to do so safely would require a full build to determine whether a Pulumi operation should be an update or update-replace.
  * 
@@ -125,11 +125,11 @@ import javax.annotation.Nullable;
  * 
  * ### Example migration
  * 
- * Examples of &#34;fully-featured&#34; `v3` and `v4` `Image` resources are shown below, along with an example `buildx.Image` resource showing how they would look after migration.
+ * Examples of &#34;fully-featured&#34; `v3` and `v4` `Image` resources are shown below, along with an example `dockerbuild.Image` resource showing how they would look after migration.
  * 
  * The `v3` resource leverages `buildx` via a `DOCKER_BUILDKIT` environment variable and CLI flags passed in with `extraOption`.
- * After migration, the environment variable is no longer needed and CLI flags are now properties on the `buildx.Image`.
- * In almost all cases, properties of `buildx.Image` are named after the Docker CLI flag they correspond to.
+ * After migration, the environment variable is no longer needed and CLI flags are now properties on the `dockerbuild.Image`.
+ * In almost all cases, properties of `dockerbuild.Image` are named after the Docker CLI flag they correspond to.
  * 
  * The `v4` resource is less functional than its `v3` counterpart because it lacks the flexibility of `extraOptions`.
  * It it is shown with parameters similar to the `v3` example for completeness.
@@ -147,14 +147,14 @@ import javax.annotation.Nullable;
  * import com.pulumi.aws.ecr.Repository;
  * import com.pulumi.aws.ecr.EcrFunctions;
  * import com.pulumi.aws.ecr.inputs.GetAuthorizationTokenArgs;
- * import com.pulumi.docker.buildx.Image;
- * import com.pulumi.docker.buildx.ImageArgs;
- * import com.pulumi.docker.buildx.inputs.CacheFromArgs;
- * import com.pulumi.docker.buildx.inputs.CacheFromRegistryArgs;
- * import com.pulumi.docker.buildx.inputs.CacheToArgs;
- * import com.pulumi.docker.buildx.inputs.CacheToRegistryArgs;
- * import com.pulumi.docker.buildx.inputs.BuildContextArgs;
- * import com.pulumi.docker.buildx.inputs.RegistryAuthArgs;
+ * import com.pulumi.dockerbuild.Image;
+ * import com.pulumi.dockerbuild.ImageArgs;
+ * import com.pulumi.dockerbuild.inputs.CacheFromArgs;
+ * import com.pulumi.dockerbuild.inputs.CacheFromRegistryArgs;
+ * import com.pulumi.dockerbuild.inputs.CacheToArgs;
+ * import com.pulumi.dockerbuild.inputs.CacheToRegistryArgs;
+ * import com.pulumi.dockerbuild.inputs.BuildContextArgs;
+ * import com.pulumi.dockerbuild.inputs.RegistryArgs;
  * import java.util.List;
  * import java.util.ArrayList;
  * import java.util.Map;
@@ -191,7 +191,7 @@ import javax.annotation.Nullable;
  *                 .location(&#34;./app&#34;)
  *                 .build())
  *             .push(true)
- *             .registries(RegistryAuthArgs.builder()
+ *             .registries(RegistryArgs.builder()
  *                 .address(ecrRepository.repositoryUrl())
  *                 .password(authToken.applyValue(getAuthorizationTokenResult -&gt; getAuthorizationTokenResult).applyValue(authToken -&gt; authToken.applyValue(getAuthorizationTokenResult -&gt; getAuthorizationTokenResult.password())))
  *                 .username(authToken.applyValue(getAuthorizationTokenResult -&gt; getAuthorizationTokenResult).applyValue(authToken -&gt; authToken.applyValue(getAuthorizationTokenResult -&gt; getAuthorizationTokenResult.userName())))
@@ -210,9 +210,9 @@ import javax.annotation.Nullable;
  * import com.pulumi.Context;
  * import com.pulumi.Pulumi;
  * import com.pulumi.core.Output;
- * import com.pulumi.docker.buildx.Image;
- * import com.pulumi.docker.buildx.ImageArgs;
- * import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+ * import com.pulumi.dockerbuild.Image;
+ * import com.pulumi.dockerbuild.ImageArgs;
+ * import com.pulumi.dockerbuild.inputs.BuildContextArgs;
  * import java.util.List;
  * import java.util.ArrayList;
  * import java.util.Map;
@@ -245,10 +245,10 @@ import javax.annotation.Nullable;
  * import com.pulumi.Context;
  * import com.pulumi.Pulumi;
  * import com.pulumi.core.Output;
- * import com.pulumi.docker.buildx.Image;
- * import com.pulumi.docker.buildx.ImageArgs;
- * import com.pulumi.docker.buildx.inputs.BuildContextArgs;
- * import com.pulumi.docker.buildx.inputs.RegistryAuthArgs;
+ * import com.pulumi.dockerbuild.Image;
+ * import com.pulumi.dockerbuild.ImageArgs;
+ * import com.pulumi.dockerbuild.inputs.BuildContextArgs;
+ * import com.pulumi.dockerbuild.inputs.RegistryArgs;
  * import java.util.List;
  * import java.util.ArrayList;
  * import java.util.Map;
@@ -267,7 +267,7 @@ import javax.annotation.Nullable;
  *                 .location(&#34;app&#34;)
  *                 .build())
  *             .push(true)
- *             .registries(RegistryAuthArgs.builder()
+ *             .registries(RegistryArgs.builder()
  *                 .address(&#34;docker.io&#34;)
  *                 .password(dockerHubPassword)
  *                 .username(&#34;pulumibot&#34;)
@@ -286,13 +286,13 @@ import javax.annotation.Nullable;
  * import com.pulumi.Context;
  * import com.pulumi.Pulumi;
  * import com.pulumi.core.Output;
- * import com.pulumi.docker.buildx.Image;
- * import com.pulumi.docker.buildx.ImageArgs;
- * import com.pulumi.docker.buildx.inputs.CacheFromArgs;
- * import com.pulumi.docker.buildx.inputs.CacheFromLocalArgs;
- * import com.pulumi.docker.buildx.inputs.CacheToArgs;
- * import com.pulumi.docker.buildx.inputs.CacheToLocalArgs;
- * import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+ * import com.pulumi.dockerbuild.Image;
+ * import com.pulumi.dockerbuild.ImageArgs;
+ * import com.pulumi.dockerbuild.inputs.CacheFromArgs;
+ * import com.pulumi.dockerbuild.inputs.CacheFromLocalArgs;
+ * import com.pulumi.dockerbuild.inputs.CacheToArgs;
+ * import com.pulumi.dockerbuild.inputs.CacheToLocalArgs;
+ * import com.pulumi.dockerbuild.inputs.BuildContextArgs;
  * import java.util.List;
  * import java.util.ArrayList;
  * import java.util.Map;
@@ -333,10 +333,10 @@ import javax.annotation.Nullable;
  * import com.pulumi.Context;
  * import com.pulumi.Pulumi;
  * import com.pulumi.core.Output;
- * import com.pulumi.docker.buildx.Image;
- * import com.pulumi.docker.buildx.ImageArgs;
- * import com.pulumi.docker.buildx.inputs.BuilderConfigArgs;
- * import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+ * import com.pulumi.dockerbuild.Image;
+ * import com.pulumi.dockerbuild.ImageArgs;
+ * import com.pulumi.dockerbuild.inputs.BuilderConfigArgs;
+ * import com.pulumi.dockerbuild.inputs.BuildContextArgs;
  * import java.util.List;
  * import java.util.ArrayList;
  * import java.util.Map;
@@ -370,9 +370,9 @@ import javax.annotation.Nullable;
  * import com.pulumi.Context;
  * import com.pulumi.Pulumi;
  * import com.pulumi.core.Output;
- * import com.pulumi.docker.buildx.Image;
- * import com.pulumi.docker.buildx.ImageArgs;
- * import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+ * import com.pulumi.dockerbuild.Image;
+ * import com.pulumi.dockerbuild.ImageArgs;
+ * import com.pulumi.dockerbuild.inputs.BuildContextArgs;
  * import java.util.List;
  * import java.util.ArrayList;
  * import java.util.Map;
@@ -403,9 +403,9 @@ import javax.annotation.Nullable;
  * import com.pulumi.Context;
  * import com.pulumi.Pulumi;
  * import com.pulumi.core.Output;
- * import com.pulumi.docker.buildx.Image;
- * import com.pulumi.docker.buildx.ImageArgs;
- * import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+ * import com.pulumi.dockerbuild.Image;
+ * import com.pulumi.dockerbuild.ImageArgs;
+ * import com.pulumi.dockerbuild.inputs.BuildContextArgs;
  * import java.util.List;
  * import java.util.ArrayList;
  * import java.util.Map;
@@ -436,9 +436,9 @@ import javax.annotation.Nullable;
  * import com.pulumi.Context;
  * import com.pulumi.Pulumi;
  * import com.pulumi.core.Output;
- * import com.pulumi.docker.buildx.Image;
- * import com.pulumi.docker.buildx.ImageArgs;
- * import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+ * import com.pulumi.dockerbuild.Image;
+ * import com.pulumi.dockerbuild.ImageArgs;
+ * import com.pulumi.dockerbuild.inputs.BuildContextArgs;
  * import java.util.List;
  * import java.util.ArrayList;
  * import java.util.Map;
@@ -469,9 +469,9 @@ import javax.annotation.Nullable;
  * import com.pulumi.Context;
  * import com.pulumi.Pulumi;
  * import com.pulumi.core.Output;
- * import com.pulumi.docker.buildx.Image;
- * import com.pulumi.docker.buildx.ImageArgs;
- * import com.pulumi.docker.buildx.inputs.BuildContextArgs;
+ * import com.pulumi.dockerbuild.Image;
+ * import com.pulumi.dockerbuild.ImageArgs;
+ * import com.pulumi.dockerbuild.inputs.BuildContextArgs;
  * import java.util.List;
  * import java.util.ArrayList;
  * import java.util.Map;
@@ -501,10 +501,10 @@ import javax.annotation.Nullable;
  * import com.pulumi.Context;
  * import com.pulumi.Pulumi;
  * import com.pulumi.core.Output;
- * import com.pulumi.docker.buildx.Image;
- * import com.pulumi.docker.buildx.ImageArgs;
- * import com.pulumi.docker.buildx.inputs.BuildContextArgs;
- * import com.pulumi.docker.buildx.inputs.DockerfileArgs;
+ * import com.pulumi.dockerbuild.Image;
+ * import com.pulumi.dockerbuild.ImageArgs;
+ * import com.pulumi.dockerbuild.inputs.BuildContextArgs;
+ * import com.pulumi.dockerbuild.inputs.DockerfileArgs;
  * import java.util.List;
  * import java.util.ArrayList;
  * import java.util.Map;
@@ -540,10 +540,10 @@ import javax.annotation.Nullable;
  * import com.pulumi.Context;
  * import com.pulumi.Pulumi;
  * import com.pulumi.core.Output;
- * import com.pulumi.docker.buildx.Image;
- * import com.pulumi.docker.buildx.ImageArgs;
- * import com.pulumi.docker.buildx.inputs.BuildContextArgs;
- * import com.pulumi.docker.buildx.inputs.DockerfileArgs;
+ * import com.pulumi.dockerbuild.Image;
+ * import com.pulumi.dockerbuild.ImageArgs;
+ * import com.pulumi.dockerbuild.inputs.BuildContextArgs;
+ * import com.pulumi.dockerbuild.inputs.DockerfileArgs;
  * import java.util.List;
  * import java.util.ArrayList;
  * import java.util.Map;
@@ -576,11 +576,11 @@ import javax.annotation.Nullable;
  * import com.pulumi.Context;
  * import com.pulumi.Pulumi;
  * import com.pulumi.core.Output;
- * import com.pulumi.docker.buildx.Image;
- * import com.pulumi.docker.buildx.ImageArgs;
- * import com.pulumi.docker.buildx.inputs.BuildContextArgs;
- * import com.pulumi.docker.buildx.inputs.ExportArgs;
- * import com.pulumi.docker.buildx.inputs.ExportDockerArgs;
+ * import com.pulumi.dockerbuild.Image;
+ * import com.pulumi.dockerbuild.ImageArgs;
+ * import com.pulumi.dockerbuild.inputs.BuildContextArgs;
+ * import com.pulumi.dockerbuild.inputs.ExportArgs;
+ * import com.pulumi.dockerbuild.inputs.ExportDockerArgs;
  * import java.util.List;
  * import java.util.ArrayList;
  * import java.util.Map;
