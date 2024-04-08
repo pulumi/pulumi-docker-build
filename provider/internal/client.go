@@ -133,6 +133,9 @@ func (c *cli) Build(
 
 	cacheFrom := []client.CacheOptionsEntry{}
 	for _, c := range opts.CacheFrom {
+		if c == nil {
+			continue
+		}
 		cacheFrom = append(cacheFrom, client.CacheOptionsEntry{
 			Type:  c.Type,
 			Attrs: c.Attrs,
@@ -140,6 +143,9 @@ func (c *cli) Build(
 	}
 	cacheTo := []client.CacheOptionsEntry{}
 	for _, c := range opts.CacheTo {
+		if c == nil {
+			continue
+		}
 		cacheTo = append(cacheTo, client.CacheOptionsEntry{
 			Type:  c.Type,
 			Attrs: c.Attrs,
@@ -147,6 +153,9 @@ func (c *cli) Build(
 	}
 	exports := []client.ExportEntry{}
 	for _, e := range opts.Exports {
+		if e == nil {
+			continue
+		}
 		exports = append(exports, client.ExportEntry{
 			Type:      e.Type,
 			Attrs:     e.Attrs,
