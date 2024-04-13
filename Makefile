@@ -114,7 +114,7 @@ only_build:: build
 
 .PHONY: lint
 lint:
-	golangci-lint run --fix -c .golangci.yml --timeout 10m
+	golangci-lint run --fix -c .golangci.yml
 
 install:: install_nodejs_sdk install_dotnet_sdk
 	cp $(WORKING_DIR)/bin/${PROVIDER} ${GOPATH}/bin
