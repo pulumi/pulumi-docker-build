@@ -7,7 +7,7 @@ import (
 	"context"
 	"reflect"
 
-	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild/internal"
+	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
@@ -731,7 +731,7 @@ func NewImage(ctx *pulumi.Context,
 	}
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource Image
-	err := ctx.RegisterResource("dockerbuild:index:Image", name, args, &resource, opts...)
+	err := ctx.RegisterResource("docker-build:index:Image", name, args, &resource, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -743,7 +743,7 @@ func NewImage(ctx *pulumi.Context,
 func GetImage(ctx *pulumi.Context,
 	name string, id pulumi.IDInput, state *ImageState, opts ...pulumi.ResourceOption) (*Image, error) {
 	var resource Image
-	err := ctx.ReadResource("dockerbuild:index:Image", name, id, state, &resource, opts...)
+	err := ctx.ReadResource("docker-build:index:Image", name, id, state, &resource, opts...)
 	if err != nil {
 		return nil, err
 	}

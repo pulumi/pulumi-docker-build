@@ -1,4 +1,4 @@
-name: provider-dockerbuild
+name: provider-docker-build
 runtime: dotnet
 config:
   dockerHubPassword:
@@ -6,5 +6,5 @@ config:
     secret: true
 plugins:
   providers:
-    - name: dockerbuild
+    - name: docker-build
       path: ../../bin

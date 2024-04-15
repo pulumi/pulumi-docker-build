@@ -59,7 +59,7 @@ class Provider(pulumi.ProviderResource):
                  registries: Optional[pulumi.Input[Sequence[pulumi.Input[pulumi.InputType['RegistryArgs']]]]] = None,
                  __props__=None):
         """
-        Create a Dockerbuild resource with the given unique name, props, and options.
+        Create a Docker-build resource with the given unique name, props, and options.
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[str] host: The build daemon's address.
@@ -71,7 +71,7 @@ class Provider(pulumi.ProviderResource):
                  args: Optional[ProviderArgs] = None,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Create a Dockerbuild resource with the given unique name, props, and options.
+        Create a Docker-build resource with the given unique name, props, and options.
         :param str resource_name: The name of the resource.
         :param ProviderArgs args: The arguments to use to populate this resource's properties.
         :param pulumi.ResourceOptions opts: Options for the resource.
@@ -103,7 +103,7 @@ class Provider(pulumi.ProviderResource):
             __props__.__dict__["host"] = host
             __props__.__dict__["registries"] = pulumi.Output.from_input(registries).apply(pulumi.runtime.to_json) if registries is not None else None
         super(Provider, __self__).__init__(
-            'dockerbuild',
+            'docker-build',
             resource_name,
             __props__,
             opts)

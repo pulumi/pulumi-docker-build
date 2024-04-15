@@ -18,7 +18,7 @@ func TestNodeExample(t *testing.T) {
 
 	test := integration.ProgramTestOptions{
 		Dir:          path.Join(cwd, "nodejs"),
-		Dependencies: []string{"@pulumi/dockerbuild"},
+		Dependencies: []string{"@pulumi/docker-build"},
 		Secrets: map[string]string{
 			"dockerHubPassword": os.Getenv("DOCKER_HUB_PASSWORD"),
 		},

@@ -18,20 +18,19 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/pulumi/pulumi-docker-build/provider/internal"
+	"github.com/pulumi/pulumi-docker-build/provider/internal/deprecated"
 	gp "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi/pkg/v3/resource/provider"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource/plugin"
 	rpc "github.com/pulumi/pulumi/sdk/v3/proto/go"
-
-	"github.com/pulumi/pulumi-dockerbuild/provider/internal"
-	"github.com/pulumi/pulumi-dockerbuild/provider/internal/deprecated"
 )
 
 // Version is initialized by the Go linker to contain the semver of this build.
 var Version string
 
 // Name needs to match $PACK in Makefile.
-const Name string = "dockerbuild"
+const Name string = "docker-build"
 
 // Serve launches the gRPC server for the resource provider.
 func Serve() error {

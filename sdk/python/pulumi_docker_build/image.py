@@ -1424,7 +1424,7 @@ class Image(pulumi.CustomResource):
             __props__.__dict__["digest"] = None
             __props__.__dict__["ref"] = None
         super(Image, __self__).__init__(
-            'dockerbuild:index:Image',
+            'docker-build:index:Image',
             resource_name,
             __props__,
             opts)

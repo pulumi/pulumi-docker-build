@@ -74,7 +74,7 @@ public class Utilities {
     }
 
     static {
-        var resourceName = "com/pulumi/dockerbuild/version.txt";
+        var resourceName = "com/pulumi/docker-build/version.txt";
         var versionFile = Utilities.class.getClassLoader().getResourceAsStream(resourceName);
         if (versionFile == null) {
             throw new IllegalStateException(

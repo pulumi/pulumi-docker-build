@@ -94,7 +94,7 @@ func TestIndexLifecycle(t *testing.T) {
 				t.Skip("missing environment variables")
 			}
 			lc := integration.LifeCycleTest{
-				Resource: "dockerbuild:index:Index",
+				Resource: "docker-build:index:Index",
 				Create:   tt.op(t),
 			}
 			s := newServer(tt.client(t))
@@ -109,7 +109,7 @@ func TestIndexLifecycle(t *testing.T) {
 
 func TestIndexDiff(t *testing.T) {
 	t.Parallel()
-	urn := resource.NewURN("test", "provider", "a", "dockerbuild:index:Index", "test")
+	urn := resource.NewURN("test", "provider", "a", "docker-build:index:Index", "test")
 	baseArgs := IndexArgs{Sources: []string{"docker.io/nginx:latest"}}
 	baseState := IndexState{IndexArgs: baseArgs}
 

@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Dockerbuild.Outputs
+namespace Pulumi.DockerBuild.Outputs
 {
 
     [OutputType]
@@ -24,7 +24,7 @@ namespace Pulumi.Dockerbuild.Outputs
         /// <summary>
         /// The cache mode to use. Defaults to `min`.
         /// </summary>
-        public readonly Pulumi.Dockerbuild.CacheMode? Mode;
+        public readonly Pulumi.DockerBuild.CacheMode? Mode;
         /// <summary>
         /// The name of the cache image.
         /// </summary>
@@ -40,7 +40,7 @@ namespace Pulumi.Dockerbuild.Outputs
 
             bool? ignoreError,
 
-            Pulumi.Dockerbuild.CacheMode? mode,
+            Pulumi.DockerBuild.CacheMode? mode,
 
             string name,
 

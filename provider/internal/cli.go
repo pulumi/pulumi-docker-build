@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:generate go run go.uber.org/mock/mockgen -typed -package internal -source client.go -destination mockcli_test.go --self_package github.com/pulumi/pulumi-dockerbuild/provider/internal
+//go:generate go run go.uber.org/mock/mockgen -typed -package internal -source cli.go -destination mockcli_test.go --self_package github.com/pulumi/pulumi-docker-build/provider/internal
 
 package internal
 

@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Dockerbuild
+namespace Pulumi.DockerBuild
 {
     /// <summary>
     /// A Docker image built using buildx -- Docker's interface to the improved
@@ -491,7 +491,7 @@ namespace Pulumi.Dockerbuild
     /// 
     /// ```
     /// </summary>
-    [DockerbuildResourceType("dockerbuild:index:Image")]
+    [DockerBuildResourceType("docker-build:index:Image")]
     public partial class Image : global::Pulumi.CustomResource
     {
         /// <summary>
@@ -658,7 +658,7 @@ namespace Pulumi.Dockerbuild
         /// Equivalent to Docker's `--network` flag.
         /// </summary>
         [Output("network")]
-        public Output<Pulumi.Dockerbuild.NetworkMode?> Network { get; private set; } = null!;
+        public Output<Pulumi.DockerBuild.NetworkMode?> Network { get; private set; } = null!;
 
         /// <summary>
         /// Do not import cache manifests when building the image.
@@ -674,7 +674,7 @@ namespace Pulumi.Dockerbuild
         /// Equivalent to Docker's `--platform` flag.
         /// </summary>
         [Output("platforms")]
-        public Output<ImmutableArray<Pulumi.Dockerbuild.Platform>> Platforms { get; private set; } = null!;
+        public Output<ImmutableArray<Pulumi.DockerBuild.Platform>> Platforms { get; private set; } = null!;
 
         /// <summary>
         /// Always pull referenced images.
@@ -777,12 +777,12 @@ namespace Pulumi.Dockerbuild
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
         public Image(string name, ImageArgs? args = null, CustomResourceOptions? options = null)
-            : base("dockerbuild:index:Image", name, args ?? new ImageArgs(), MakeResourceOptions(options, ""))
+            : base("docker-build:index:Image", name, args ?? new ImageArgs(), MakeResourceOptions(options, ""))
         {
         }
 
         private Image(string name, Input<string> id, CustomResourceOptions? options = null)
-            : base("dockerbuild:index:Image", name, null, MakeResourceOptions(options, id))
+            : base("docker-build:index:Image", name, null, MakeResourceOptions(options, id))
         {
         }
 
@@ -791,7 +791,7 @@ namespace Pulumi.Dockerbuild
             var defaultOptions = new CustomResourceOptions
             {
                 Version = Utilities.Version,
-                PluginDownloadURL = "github.com/pulumi/pulumi-dockerbuild",
+                PluginDownloadURL = "github.com/pulumi/pulumi-docker-build",
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
             // Override the ID if one was specified for consistency with other language SDKs.
@@ -994,7 +994,7 @@ namespace Pulumi.Dockerbuild
         /// Equivalent to Docker's `--network` flag.
         /// </summary>
         [Input("network")]
-        public Input<Pulumi.Dockerbuild.NetworkMode>? Network { get; set; }
+        public Input<Pulumi.DockerBuild.NetworkMode>? Network { get; set; }
 
         /// <summary>
         /// Do not import cache manifests when building the image.
@@ -1005,16 +1005,16 @@ namespace Pulumi.Dockerbuild
         public Input<bool>? NoCache { get; set; }
 
         [Input("platforms")]
-        private InputList<Pulumi.Dockerbuild.Platform>? _platforms;
+        private InputList<Pulumi.DockerBuild.Platform>? _platforms;
 
         /// <summary>
         /// Set target platform(s) for the build. Defaults to the host's platform.
         /// 
         /// Equivalent to Docker's `--platform` flag.
         /// </summary>
-        public InputList<Pulumi.Dockerbuild.Platform> Platforms
+        public InputList<Pulumi.DockerBuild.Platform> Platforms
         {
-            get => _platforms ?? (_platforms = new InputList<Pulumi.Dockerbuild.Platform>());
+            get => _platforms ?? (_platforms = new InputList<Pulumi.DockerBuild.Platform>());
             set => _platforms = value;
         }
 
@@ -1117,7 +1117,7 @@ namespace Pulumi.Dockerbuild
 
         public ImageArgs()
         {
-            Network = Pulumi.Dockerbuild.NetworkMode.@Default;
+            Network = Pulumi.DockerBuild.NetworkMode.@Default;
         }
         public static new ImageArgs Empty => new ImageArgs();
     }

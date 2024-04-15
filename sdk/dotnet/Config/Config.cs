@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Immutable;
 
-namespace Pulumi.Dockerbuild
+namespace Pulumi.DockerBuild
 {
     public static class Config
     {
@@ -30,7 +30,7 @@ namespace Pulumi.Dockerbuild
             }
         }
 
-        private static readonly global::Pulumi.Config __config = new global::Pulumi.Config("dockerbuild");
+        private static readonly global::Pulumi.Config __config = new global::Pulumi.Config("docker-build");
 
         private static readonly __Value<string?> _host = new __Value<string?>(() => __config.Get("host") ?? Utilities.GetEnv("DOCKER_HOST") ?? "");
         /// <summary>

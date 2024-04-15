@@ -1,5 +1,5 @@
 {
-    "name": "@pulumi/dockerbuild",
+    "name": "@pulumi/docker-build",
     "version": "${VERSION}",
     "keywords": [
         "docker",
@@ -7,7 +7,7 @@
         "buildx"
     ],
     "homepage": "https://pulumi.io",
-    "repository": "https://github.com/pulumi/pulumi-dockerbuild",
+    "repository": "https://github.com/pulumi/pulumi-docker-build",
     "license": "Apache-2.0",
     "scripts": {
         "build": "tsc"
@@ -21,7 +21,7 @@
     },
     "pulumi": {
         "resource": true,
-        "name": "dockerbuild",
-        "server": "github.com/pulumi/pulumi-dockerbuild"
+        "name": "docker-build",
+        "server": "github.com/pulumi/pulumi-docker-build"
     }
 }

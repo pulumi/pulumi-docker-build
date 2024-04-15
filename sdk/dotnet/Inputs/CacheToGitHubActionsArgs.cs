@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Dockerbuild.Inputs
+namespace Pulumi.DockerBuild.Inputs
 {
 
     public sealed class CacheToGitHubActionsArgs : global::Pulumi.ResourceArgs
@@ -22,7 +22,7 @@ namespace Pulumi.Dockerbuild.Inputs
         /// The cache mode to use. Defaults to `min`.
         /// </summary>
         [Input("mode")]
-        public Input<Pulumi.Dockerbuild.CacheMode>? Mode { get; set; }
+        public Input<Pulumi.DockerBuild.CacheMode>? Mode { get; set; }
 
         /// <summary>
         /// The scope to use for cache keys. Defaults to `buildkit`.
@@ -67,7 +67,7 @@ namespace Pulumi.Dockerbuild.Inputs
         public CacheToGitHubActionsArgs()
         {
             IgnoreError = false;
-            Mode = Pulumi.Dockerbuild.CacheMode.Min;
+            Mode = Pulumi.DockerBuild.CacheMode.Min;
             Scope = Utilities.GetEnv("buildkit") ?? "";
             Token = Utilities.GetEnv("ACTIONS_RUNTIME_TOKEN") ?? "";
             Url = Utilities.GetEnv("ACTIONS_RUNTIME_URL") ?? "";

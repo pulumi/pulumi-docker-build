@@ -5,7 +5,7 @@ using System;
 using System.ComponentModel;
 using Pulumi;
 
-namespace Pulumi.Dockerbuild
+namespace Pulumi.DockerBuild
 {
     [EnumType]
     public readonly struct CacheMode : IEquatable<CacheMode>

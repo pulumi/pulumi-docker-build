@@ -4,8 +4,8 @@
 package config
 
 import (
-	dockerbuild "github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
-	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild/internal"
+	dockerbuild "github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
+	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
 )
@@ -14,7 +14,7 @@ var _ = internal.GetEnvOrDefault
 
 // The build daemon's address.
 func GetHost(ctx *pulumi.Context) string {
-	v, err := config.Try(ctx, "dockerbuild:host")
+	v, err := config.Try(ctx, "docker-build:host")
 	if err == nil {
 		return v
 	}
@@ -25,5 +25,5 @@ func GetHost(ctx *pulumi.Context) string {
 	return value
 }
 func GetRegistries(ctx *pulumi.Context) string {
-	return config.Get(ctx, "dockerbuild:registries")
+	return config.Get(ctx, "docker-build:registries")
 }

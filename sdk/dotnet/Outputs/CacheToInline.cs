@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Dockerbuild.Outputs
+namespace Pulumi.DockerBuild.Outputs
 {
 
     /// <summary>

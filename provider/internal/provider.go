@@ -69,22 +69,22 @@ func NewBuildxProvider() provider.Provider {
 	return infer.Provider(
 		infer.Options{
 			Metadata: pschema.Metadata{
-				DisplayName:       "dockerbuild",
+				DisplayName:       "docker-build",
 				Keywords:          []string{"docker", "buildkit", "buildx"},
 				Description:       "A Pulumi provider for Docker buildx",
 				Homepage:          "https://pulumi.io",
 				Publisher:         "pulumi",
 				License:           "Apache-2.0",
-				Repository:        "https://github.com/pulumi/pulumi-dockerbuild",
-				PluginDownloadURL: "github.com/pulumi/pulumi-dockerbuild",
+				Repository:        "https://github.com/pulumi/pulumi-docker-build",
+				PluginDownloadURL: "github.com/pulumi/pulumi-docker-build",
 				LanguageMap: map[string]any{
 					"go": gogen.GoPackageInfo{
 						// GenerateResourceContainerTypes: true,
 						Generics: gogen.GenericsSettingSideBySide,
 						PackageImportAliases: map[string]string{
-							"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild": "dockerbuild",
+							"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild": "dockerbuild",
 						},
-						ImportBasePath: "github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild",
+						ImportBasePath: "github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild",
 					},
 					"csharp": csgen.CSharpPackageInfo{
 						PackageReferences: map[string]string{
@@ -130,7 +130,7 @@ func NewBuildxProvider() provider.Provider {
 // Schema returns our package specification.
 func Schema(ctx context.Context, version string) schema.PackageSpec {
 	p := NewBuildxProvider()
-	spec, err := provider.GetSchema(ctx, "dockerbuild", version, p)
+	spec, err := provider.GetSchema(ctx, "docker-build", version, p)
 	contract.AssertNoErrorf(err, "missing schema")
 	return spec
 }

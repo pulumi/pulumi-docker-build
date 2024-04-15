@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/blang/semver"
-	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild/internal"
+	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -21,9 +21,9 @@ func (m *module) Version() semver.Version {
 
 func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi.Resource, err error) {
 	switch typ {
-	case "dockerbuild:index:Image":
+	case "docker-build:index:Image":
 		r = &Image{}
-	case "dockerbuild:index:Index":
+	case "docker-build:index:Index":
 		r = &Index{}
 	default:
 		return nil, fmt.Errorf("unknown resource type: %s", typ)
@@ -42,7 +42,7 @@ func (p *pkg) Version() semver.Version {
 }
 
 func (p *pkg) ConstructProvider(ctx *pulumi.Context, name, typ, urn string) (pulumi.ProviderResource, error) {
-	if typ != "pulumi:providers:dockerbuild" {
+	if typ != "pulumi:providers:docker-build" {
 		return nil, fmt.Errorf("unknown provider type: %s", typ)
 	}
 
@@ -57,12 +57,12 @@ func init() {
 		version = semver.Version{Major: 1}
 	}
 	pulumi.RegisterResourceModule(
-		"dockerbuild",
+		"docker-build",
 		"index",
 		&module{version},
 	)
 	pulumi.RegisterResourcePackage(
-		"dockerbuild",
+		"docker-build",
 		&pkg{version},
 	)
 }

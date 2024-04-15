@@ -37,20 +37,20 @@ const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
-            case "dockerbuild:index:Image":
+            case "docker-build:index:Image":
                 return new Image(name, <any>undefined, { urn })
-            case "dockerbuild:index:Index":
+            case "docker-build:index:Index":
                 return new Index(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }
     },
 };
-pulumi.runtime.registerResourceModule("dockerbuild", "index", _module)
-pulumi.runtime.registerResourcePackage("dockerbuild", {
+pulumi.runtime.registerResourceModule("docker-build", "index", _module)
+pulumi.runtime.registerResourcePackage("docker-build", {
     version: utilities.getVersion(),
     constructProvider: (name: string, type: string, urn: string): pulumi.ProviderResource => {
-        if (type !== "pulumi:providers:dockerbuild") {
+        if (type !== "pulumi:providers:docker-build") {
             throw new Error(`unknown provider type ${type}`);
         }
         return new Provider(name, <any>undefined, { urn });

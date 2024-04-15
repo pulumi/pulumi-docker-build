@@ -610,7 +610,7 @@ import javax.annotation.Nullable;
  * ```
  * 
  */
-@ResourceType(type="dockerbuild:index:Image")
+@ResourceType(type="docker-build:index:Image")
 public class Image extends com.pulumi.resources.CustomResource {
     /**
      * Custom `host:ip` mappings to use during the build.
@@ -1233,11 +1233,11 @@ public class Image extends com.pulumi.resources.CustomResource {
      * @param options A bag of options that control this resource's behavior.
      */
     public Image(String name, @Nullable ImageArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
-        super("dockerbuild:index:Image", name, args == null ? ImageArgs.Empty : args, makeResourceOptions(options, Codegen.empty()));
+        super("docker-build:index:Image", name, args == null ? ImageArgs.Empty : args, makeResourceOptions(options, Codegen.empty()));
     }
 
     private Image(String name, Output<String> id, @Nullable com.pulumi.resources.CustomResourceOptions options) {
-        super("dockerbuild:index:Image", name, null, makeResourceOptions(options, id));
+        super("docker-build:index:Image", name, null, makeResourceOptions(options, id));
     }
 
     private static com.pulumi.resources.CustomResourceOptions makeResourceOptions(@Nullable com.pulumi.resources.CustomResourceOptions options, @Nullable Output<String> id) {

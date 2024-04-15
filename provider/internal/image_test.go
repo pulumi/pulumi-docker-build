@@ -39,7 +39,7 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
-var _fakeURN = resource.NewURN("test", "provider", "a", "dockerbuild:index:Image", "test")
+var _fakeURN = resource.NewURN("test", "provider", "a", "docker-build:index:Image", "test")
 
 func TestImageLifecycle(t *testing.T) {
 	t.Parallel()
@@ -273,7 +273,7 @@ func TestImageLifecycle(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			lc := integration.LifeCycleTest{
-				Resource: "dockerbuild:index:Image",
+				Resource: "docker-build:index:Image",
 				Create:   tt.op(t),
 			}
 			s := newServer(tt.client(t))

@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Dockerbuild.Inputs
+namespace Pulumi.DockerBuild.Inputs
 {
 
     public sealed class ExportImageArgs : global::Pulumi.ResourceArgs
@@ -28,7 +28,7 @@ namespace Pulumi.Dockerbuild.Inputs
         /// The compression type to use.
         /// </summary>
         [Input("compression")]
-        public Input<Pulumi.Dockerbuild.CompressionType>? Compression { get; set; }
+        public Input<Pulumi.DockerBuild.CompressionType>? Compression { get; set; }
 
         /// <summary>
         /// Compression level from 0 to 22.
@@ -111,7 +111,7 @@ namespace Pulumi.Dockerbuild.Inputs
 
         public ExportImageArgs()
         {
-            Compression = Pulumi.Dockerbuild.CompressionType.Gzip;
+            Compression = Pulumi.DockerBuild.CompressionType.Gzip;
             CompressionLevel = 0;
             ForceCompression = false;
             OciMediaTypes = false;

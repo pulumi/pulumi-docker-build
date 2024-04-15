@@ -27,7 +27,7 @@ func TestDotNetExample(t *testing.T) {
 	test := integration.ProgramTestOptions{
 		Dir: path.Join(cwd, "dotnet"),
 		Dependencies: []string{
-			"Pulumi.Dockerbuild",
+			"Pulumi.DockerBuild",
 		},
 		Secrets: map[string]string{
 			"dockerHubPassword": os.Getenv("DOCKER_HUB_PASSWORD"),

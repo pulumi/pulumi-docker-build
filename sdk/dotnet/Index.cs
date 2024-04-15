@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Dockerbuild
+namespace Pulumi.DockerBuild
 {
     /// <summary>
     /// An index (or manifest list) referencing one or more existing images.
@@ -24,17 +24,17 @@ namespace Pulumi.Dockerbuild
     /// using System.Collections.Generic;
     /// using System.Linq;
     /// using Pulumi;
-    /// using Dockerbuild = Pulumi.Dockerbuild;
+    /// using DockerBuild = Pulumi.DockerBuild;
     /// 
     /// return await Deployment.RunAsync(() =&gt; 
     /// {
-    ///     var amd64 = new Dockerbuild.Image("amd64", new()
+    ///     var amd64 = new DockerBuild.Image("amd64", new()
     ///     {
     ///         CacheFrom = new[]
     ///         {
-    ///             new Dockerbuild.Inputs.CacheFromArgs
+    ///             new DockerBuild.Inputs.CacheFromArgs
     ///             {
-    ///                 Registry = new Dockerbuild.Inputs.CacheFromRegistryArgs
+    ///                 Registry = new DockerBuild.Inputs.CacheFromRegistryArgs
     ///                 {
     ///                     Ref = "docker.io/pulumi/pulumi:cache-amd64",
     ///                 },
@@ -42,22 +42,22 @@ namespace Pulumi.Dockerbuild
     ///         },
     ///         CacheTo = new[]
     ///         {
-    ///             new Dockerbuild.Inputs.CacheToArgs
+    ///             new DockerBuild.Inputs.CacheToArgs
     ///             {
-    ///                 Registry = new Dockerbuild.Inputs.CacheToRegistryArgs
+    ///                 Registry = new DockerBuild.Inputs.CacheToRegistryArgs
     ///                 {
-    ///                     Mode = Dockerbuild.CacheMode.Max,
+    ///                     Mode = DockerBuild.CacheMode.Max,
     ///                     Ref = "docker.io/pulumi/pulumi:cache-amd64",
     ///                 },
     ///             },
     ///         },
-    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
+    ///         Context = new DockerBuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "app",
     ///         },
     ///         Platforms = new[]
     ///         {
-    ///             Dockerbuild.Platform.Linux_amd64,
+    ///             DockerBuild.Platform.Linux_amd64,
     ///         },
     ///         Tags = new[]
     ///         {
@@ -65,13 +65,13 @@ namespace Pulumi.Dockerbuild
     ///         },
     ///     });
     /// 
-    ///     var arm64 = new Dockerbuild.Image("arm64", new()
+    ///     var arm64 = new DockerBuild.Image("arm64", new()
     ///     {
     ///         CacheFrom = new[]
     ///         {
-    ///             new Dockerbuild.Inputs.CacheFromArgs
+    ///             new DockerBuild.Inputs.CacheFromArgs
     ///             {
-    ///                 Registry = new Dockerbuild.Inputs.CacheFromRegistryArgs
+    ///                 Registry = new DockerBuild.Inputs.CacheFromRegistryArgs
     ///                 {
     ///                     Ref = "docker.io/pulumi/pulumi:cache-arm64",
     ///                 },
@@ -79,22 +79,22 @@ namespace Pulumi.Dockerbuild
     ///         },
     ///         CacheTo = new[]
     ///         {
-    ///             new Dockerbuild.Inputs.CacheToArgs
+    ///             new DockerBuild.Inputs.CacheToArgs
     ///             {
-    ///                 Registry = new Dockerbuild.Inputs.CacheToRegistryArgs
+    ///                 Registry = new DockerBuild.Inputs.CacheToRegistryArgs
     ///                 {
-    ///                     Mode = Dockerbuild.CacheMode.Max,
+    ///                     Mode = DockerBuild.CacheMode.Max,
     ///                     Ref = "docker.io/pulumi/pulumi:cache-arm64",
     ///                 },
     ///             },
     ///         },
-    ///         Context = new Dockerbuild.Inputs.BuildContextArgs
+    ///         Context = new DockerBuild.Inputs.BuildContextArgs
     ///         {
     ///             Location = "app",
     ///         },
     ///         Platforms = new[]
     ///         {
-    ///             Dockerbuild.Platform.Linux_arm64,
+    ///             DockerBuild.Platform.Linux_arm64,
     ///         },
     ///         Tags = new[]
     ///         {
@@ -102,7 +102,7 @@ namespace Pulumi.Dockerbuild
     ///         },
     ///     });
     /// 
-    ///     var index = new Dockerbuild.Index("index", new()
+    ///     var index = new DockerBuild.Index("index", new()
     ///     {
     ///         Sources = new[]
     ///         {
@@ -120,7 +120,7 @@ namespace Pulumi.Dockerbuild
     /// 
     /// ```
     /// </summary>
-    [DockerbuildResourceType("dockerbuild:index:Index")]
+    [DockerBuildResourceType("docker-build:index:Index")]
     public partial class Index : global::Pulumi.CustomResource
     {
         /// <summary>
@@ -168,12 +168,12 @@ namespace Pulumi.Dockerbuild
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
         public Index(string name, IndexArgs args, CustomResourceOptions? options = null)
-            : base("dockerbuild:index:Index", name, args ?? new IndexArgs(), MakeResourceOptions(options, ""))
+            : base("docker-build:index:Index", name, args ?? new IndexArgs(), MakeResourceOptions(options, ""))
         {
         }
 
         private Index(string name, Input<string> id, CustomResourceOptions? options = null)
-            : base("dockerbuild:index:Index", name, null, MakeResourceOptions(options, id))
+            : base("docker-build:index:Index", name, null, MakeResourceOptions(options, id))
         {
         }
 
@@ -182,7 +182,7 @@ namespace Pulumi.Dockerbuild
             var defaultOptions = new CustomResourceOptions
             {
                 Version = Utilities.Version,
-                PluginDownloadURL = "github.com/pulumi/pulumi-dockerbuild",
+                PluginDownloadURL = "github.com/pulumi/pulumi-docker-build",
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
             // Override the ID if one was specified for consistency with other language SDKs.

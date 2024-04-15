@@ -7,7 +7,7 @@ import (
 	"context"
 	"reflect"
 
-	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild/internal"
+	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
@@ -33,7 +33,7 @@ func NewProvider(ctx *pulumi.Context,
 	}
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource Provider
-	err := ctx.RegisterResource("pulumi:providers:dockerbuild", name, args, &resource, opts...)
+	err := ctx.RegisterResource("pulumi:providers:docker-build", name, args, &resource, opts...)
 	if err != nil {
 		return nil, err
 	}

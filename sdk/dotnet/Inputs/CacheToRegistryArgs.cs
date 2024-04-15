@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Dockerbuild.Inputs
+namespace Pulumi.DockerBuild.Inputs
 {
 
     public sealed class CacheToRegistryArgs : global::Pulumi.ResourceArgs
@@ -16,7 +16,7 @@ namespace Pulumi.Dockerbuild.Inputs
         /// The compression type to use.
         /// </summary>
         [Input("compression")]
-        public Input<Pulumi.Dockerbuild.CompressionType>? Compression { get; set; }
+        public Input<Pulumi.DockerBuild.CompressionType>? Compression { get; set; }
 
         /// <summary>
         /// Compression level from 0 to 22.
@@ -52,7 +52,7 @@ namespace Pulumi.Dockerbuild.Inputs
         /// The cache mode to use. Defaults to `min`.
         /// </summary>
         [Input("mode")]
-        public Input<Pulumi.Dockerbuild.CacheMode>? Mode { get; set; }
+        public Input<Pulumi.DockerBuild.CacheMode>? Mode { get; set; }
 
         /// <summary>
         /// Whether to use OCI media types in exported manifests. Defaults to
@@ -69,12 +69,12 @@ namespace Pulumi.Dockerbuild.Inputs
 
         public CacheToRegistryArgs()
         {
-            Compression = Pulumi.Dockerbuild.CompressionType.Gzip;
+            Compression = Pulumi.DockerBuild.CompressionType.Gzip;
             CompressionLevel = 0;
             ForceCompression = false;
             IgnoreError = false;
             ImageManifest = false;
-            Mode = Pulumi.Dockerbuild.CacheMode.Min;
+            Mode = Pulumi.DockerBuild.CacheMode.Min;
             OciMediaTypes = true;
         }
         public static new CacheToRegistryArgs Empty => new CacheToRegistryArgs();

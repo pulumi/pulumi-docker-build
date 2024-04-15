@@ -13,7 +13,7 @@ import java.lang.String;
 import java.util.Optional;
 import javax.annotation.Nullable;
 
-@ResourceType(type="pulumi:providers:dockerbuild")
+@ResourceType(type="pulumi:providers:docker-build")
 public class Provider extends com.pulumi.resources.ProviderResource {
     /**
      * The build daemon&#39;s address.
@@ -52,7 +52,7 @@ public class Provider extends com.pulumi.resources.ProviderResource {
      * @param options A bag of options that control this resource's behavior.
      */
     public Provider(String name, @Nullable ProviderArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
-        super("dockerbuild", name, args == null ? ProviderArgs.Empty : args, makeResourceOptions(options, Codegen.empty()));
+        super("docker-build", name, args == null ? ProviderArgs.Empty : args, makeResourceOptions(options, Codegen.empty()));
     }
 
     private static com.pulumi.resources.CustomResourceOptions makeResourceOptions(@Nullable com.pulumi.resources.CustomResourceOptions options, @Nullable Output<String> id) {

@@ -1,10 +1,10 @@
 PROJECT_NAME := Pulumi Docker Build Resource Provider
 
-PACK             := dockerbuild
+PACK             := docker-build
 PACKDIR          := sdk
-PROJECT          := github.com/pulumi/pulumi-dockerbuild
-NODE_MODULE_NAME := @pulumi/dockerbuild
-NUGET_PKG_NAME   := Pulumi.Dockerbuild
+PROJECT          := github.com/pulumi/pulumi-docker-build
+NODE_MODULE_NAME := @pulumi/docker-build
+NUGET_PKG_NAME   := Pulumi.DockerBuild
 
 PROVIDER         := pulumi-resource-${PACK}
 VERSION          ?= $(shell pulumictl get version)
@@ -65,7 +65,7 @@ examples/python: ${PULUMI} bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.y
 
 examples/dotnet: ${PULUMI} bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 	$(call example,dotnet)
-	@git checkout examples/dotnet/provider-dockerbuild.csproj
+	@git checkout examples/dotnet/provider-docker-build.csproj
 
 examples/java: ${PULUMI} bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 	$(call example,java)
@@ -219,9 +219,9 @@ sdk/go: TMPDIR := $(shell mktemp -d)
 sdk/go: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/go
 	$(PULUMI) package gen-sdk bin/$(PROVIDER) --language go -o ${TMPDIR}
-	cp go.mod ${TMPDIR}/go/${PACK}/go.mod
-	cd ${TMPDIR}/go/${PACK} && \
-		go mod edit -module=github.com/pulumi/pulumi-${PACK}/${PACKDIR}/go/${PACK} && \
+	cp go.mod ${TMPDIR}/go/dockerbuild/go.mod
+	cd ${TMPDIR}/go/dockerbuild && \
+		go mod edit -module=github.com/pulumi/pulumi-${PACK}/${PACKDIR}/go/dockerbuild && \
 		go mod tidy
 	mv -f ${TMPDIR}/go ${WORKING_DIR}/sdk/.
 

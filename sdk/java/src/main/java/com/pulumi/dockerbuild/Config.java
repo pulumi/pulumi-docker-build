@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public final class Config {
 
-    private static final com.pulumi.Config config = com.pulumi.Config.of("dockerbuild");
+    private static final com.pulumi.Config config = com.pulumi.Config.of("docker-build");
 /**
  * The build daemon&#39;s address.
  * 

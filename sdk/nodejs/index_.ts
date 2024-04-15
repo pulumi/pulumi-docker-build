@@ -21,9 +21,9 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as dockerbuild from "@pulumi/dockerbuild";
+ * import * as docker_build from "@pulumi/docker-build";
  *
- * const amd64 = new dockerbuild.Image("amd64", {
+ * const amd64 = new docker_build.Image("amd64", {
  *     cacheFrom: [{
  *         registry: {
  *             ref: "docker.io/pulumi/pulumi:cache-amd64",
@@ -31,17 +31,17 @@ import * as utilities from "./utilities";
  *     }],
  *     cacheTo: [{
  *         registry: {
- *             mode: dockerbuild.CacheMode.Max,
+ *             mode: docker_build.CacheMode.Max,
  *             ref: "docker.io/pulumi/pulumi:cache-amd64",
  *         },
  *     }],
  *     context: {
  *         location: "app",
  *     },
- *     platforms: [dockerbuild.Platform.Linux_amd64],
+ *     platforms: [docker_build.Platform.Linux_amd64],
  *     tags: ["docker.io/pulumi/pulumi:3.107.0-amd64"],
  * });
- * const arm64 = new dockerbuild.Image("arm64", {
+ * const arm64 = new docker_build.Image("arm64", {
  *     cacheFrom: [{
  *         registry: {
  *             ref: "docker.io/pulumi/pulumi:cache-arm64",
@@ -49,17 +49,17 @@ import * as utilities from "./utilities";
  *     }],
  *     cacheTo: [{
  *         registry: {
- *             mode: dockerbuild.CacheMode.Max,
+ *             mode: docker_build.CacheMode.Max,
  *             ref: "docker.io/pulumi/pulumi:cache-arm64",
  *         },
  *     }],
  *     context: {
  *         location: "app",
  *     },
- *     platforms: [dockerbuild.Platform.Linux_arm64],
+ *     platforms: [docker_build.Platform.Linux_arm64],
  *     tags: ["docker.io/pulumi/pulumi:3.107.0-arm64"],
  * });
- * const index = new dockerbuild.Index("index", {
+ * const index = new docker_build.Index("index", {
  *     sources: [
  *         amd64.ref,
  *         arm64.ref,
@@ -83,7 +83,7 @@ export class Index extends pulumi.CustomResource {
     }
 
     /** @internal */
-    public static readonly __pulumiType = 'dockerbuild:index:Index';
+    public static readonly __pulumiType = 'docker-build:index:Index';
 
     /**
      * Returns true if the given object is an instance of Index.  This is designed to work even

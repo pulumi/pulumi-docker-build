@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:generate go run ../pkg/docs-gen/examples examples doc
-
 // Package internal contains our clients, validation, and provider
 // implementation for interacting with Docker's buildx APIs.
 //

@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Dockerbuild.Inputs
+namespace Pulumi.DockerBuild.Inputs
 {
 
     public sealed class CacheToS3Args : global::Pulumi.ResourceArgs
@@ -52,7 +52,7 @@ namespace Pulumi.Dockerbuild.Inputs
         /// The cache mode to use. Defaults to `min`.
         /// </summary>
         [Input("mode")]
-        public Input<Pulumi.Dockerbuild.CacheMode>? Mode { get; set; }
+        public Input<Pulumi.DockerBuild.CacheMode>? Mode { get; set; }
 
         /// <summary>
         /// Name of the cache image.
@@ -108,7 +108,7 @@ namespace Pulumi.Dockerbuild.Inputs
         {
             AccessKeyId = Utilities.GetEnv("AWS_ACCESS_KEY_ID") ?? "";
             IgnoreError = false;
-            Mode = Pulumi.Dockerbuild.CacheMode.Min;
+            Mode = Pulumi.DockerBuild.CacheMode.Min;
             Region = Utilities.GetEnv("AWS_REGION") ?? "";
             SecretAccessKey = Utilities.GetEnv("AWS_SECRET_ACCESS_KEY") ?? "";
             SessionToken = Utilities.GetEnv("AWS_SESSION_TOKEN") ?? "";

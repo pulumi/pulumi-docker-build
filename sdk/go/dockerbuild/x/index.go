@@ -8,7 +8,7 @@ import (
 	"reflect"
 
 	"errors"
-	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild/internal"
+	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
 )
@@ -28,7 +28,7 @@ import (
 //
 // import (
 //
-//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+//	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )
@@ -54,7 +54,7 @@ import (
 //				Context: &dockerbuild.BuildContextArgs{
 //					Location: pulumi.String("app"),
 //				},
-//				Platforms: dockerbuild.PlatformArray{
+//				Platforms: docker - build.PlatformArray{
 //					dockerbuild.Platform_Linux_amd64,
 //				},
 //				Tags: pulumi.StringArray{
@@ -83,7 +83,7 @@ import (
 //				Context: &dockerbuild.BuildContextArgs{
 //					Location: pulumi.String("app"),
 //				},
-//				Platforms: dockerbuild.PlatformArray{
+//				Platforms: docker - build.PlatformArray{
 //					dockerbuild.Platform_Linux_arm64,
 //				},
 //				Tags: pulumi.StringArray{
@@ -148,7 +148,7 @@ func NewIndex(ctx *pulumi.Context,
 	}
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource Index
-	err := ctx.RegisterResource("dockerbuild:index:Index", name, args, &resource, opts...)
+	err := ctx.RegisterResource("docker-build:index:Index", name, args, &resource, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -160,7 +160,7 @@ func NewIndex(ctx *pulumi.Context,
 func GetIndex(ctx *pulumi.Context,
 	name string, id pulumi.IDInput, state *IndexState, opts ...pulumi.ResourceOption) (*Index, error) {
 	var resource Index
-	err := ctx.ReadResource("dockerbuild:index:Index", name, id, state, &resource, opts...)
+	err := ctx.ReadResource("docker-build:index:Index", name, id, state, &resource, opts...)
 	if err != nil {
 		return nil, err
 	}

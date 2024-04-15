@@ -116,43 +116,43 @@ class Index(pulumi.CustomResource):
         ### Multi-platform registry caching
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        amd64 = dockerbuild.Image("amd64",
-            cache_from=[dockerbuild.CacheFromArgs(
-                registry=dockerbuild.CacheFromRegistryArgs(
+        amd64 = docker_build.Image("amd64",
+            cache_from=[docker_build.CacheFromArgs(
+                registry=docker_build.CacheFromRegistryArgs(
                     ref="docker.io/pulumi/pulumi:cache-amd64",
                 ),
             )],
-            cache_to=[dockerbuild.CacheToArgs(
-                registry=dockerbuild.CacheToRegistryArgs(
-                    mode=dockerbuild.CacheMode.MAX,
+            cache_to=[docker_build.CacheToArgs(
+                registry=docker_build.CacheToRegistryArgs(
+                    mode=docker_build.CacheMode.MAX,
                     ref="docker.io/pulumi/pulumi:cache-amd64",
                 ),
             )],
-            context=dockerbuild.BuildContextArgs(
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
-            platforms=[dockerbuild.Platform.LINUX_AMD64],
+            platforms=[docker_build.Platform.LINUX_AMD64],
             tags=["docker.io/pulumi/pulumi:3.107.0-amd64"])
-        arm64 = dockerbuild.Image("arm64",
-            cache_from=[dockerbuild.CacheFromArgs(
-                registry=dockerbuild.CacheFromRegistryArgs(
+        arm64 = docker_build.Image("arm64",
+            cache_from=[docker_build.CacheFromArgs(
+                registry=docker_build.CacheFromRegistryArgs(
                     ref="docker.io/pulumi/pulumi:cache-arm64",
                 ),
             )],
-            cache_to=[dockerbuild.CacheToArgs(
-                registry=dockerbuild.CacheToRegistryArgs(
-                    mode=dockerbuild.CacheMode.MAX,
+            cache_to=[docker_build.CacheToArgs(
+                registry=docker_build.CacheToRegistryArgs(
+                    mode=docker_build.CacheMode.MAX,
                     ref="docker.io/pulumi/pulumi:cache-arm64",
                 ),
             )],
-            context=dockerbuild.BuildContextArgs(
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
-            platforms=[dockerbuild.Platform.LINUX_ARM64],
+            platforms=[docker_build.Platform.LINUX_ARM64],
             tags=["docker.io/pulumi/pulumi:3.107.0-arm64"])
-        index = dockerbuild.Index("index",
+        index = docker_build.Index("index",
             sources=[
                 amd64.ref,
                 arm64.ref,
@@ -191,43 +191,43 @@ class Index(pulumi.CustomResource):
         ### Multi-platform registry caching
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        amd64 = dockerbuild.Image("amd64",
-            cache_from=[dockerbuild.CacheFromArgs(
-                registry=dockerbuild.CacheFromRegistryArgs(
+        amd64 = docker_build.Image("amd64",
+            cache_from=[docker_build.CacheFromArgs(
+                registry=docker_build.CacheFromRegistryArgs(
                     ref="docker.io/pulumi/pulumi:cache-amd64",
                 ),
             )],
-            cache_to=[dockerbuild.CacheToArgs(
-                registry=dockerbuild.CacheToRegistryArgs(
-                    mode=dockerbuild.CacheMode.MAX,
+            cache_to=[docker_build.CacheToArgs(
+                registry=docker_build.CacheToRegistryArgs(
+                    mode=docker_build.CacheMode.MAX,
                     ref="docker.io/pulumi/pulumi:cache-amd64",
                 ),
             )],
-            context=dockerbuild.BuildContextArgs(
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
-            platforms=[dockerbuild.Platform.LINUX_AMD64],
+            platforms=[docker_build.Platform.LINUX_AMD64],
             tags=["docker.io/pulumi/pulumi:3.107.0-amd64"])
-        arm64 = dockerbuild.Image("arm64",
-            cache_from=[dockerbuild.CacheFromArgs(
-                registry=dockerbuild.CacheFromRegistryArgs(
+        arm64 = docker_build.Image("arm64",
+            cache_from=[docker_build.CacheFromArgs(
+                registry=docker_build.CacheFromRegistryArgs(
                     ref="docker.io/pulumi/pulumi:cache-arm64",
                 ),
             )],
-            cache_to=[dockerbuild.CacheToArgs(
-                registry=dockerbuild.CacheToRegistryArgs(
-                    mode=dockerbuild.CacheMode.MAX,
+            cache_to=[docker_build.CacheToArgs(
+                registry=docker_build.CacheToRegistryArgs(
+                    mode=docker_build.CacheMode.MAX,
                     ref="docker.io/pulumi/pulumi:cache-arm64",
                 ),
             )],
-            context=dockerbuild.BuildContextArgs(
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
-            platforms=[dockerbuild.Platform.LINUX_ARM64],
+            platforms=[docker_build.Platform.LINUX_ARM64],
             tags=["docker.io/pulumi/pulumi:3.107.0-arm64"])
-        index = dockerbuild.Index("index",
+        index = docker_build.Index("index",
             sources=[
                 amd64.ref,
                 arm64.ref,
@@ -276,7 +276,7 @@ class Index(pulumi.CustomResource):
             __props__.__dict__["tag"] = tag
             __props__.__dict__["ref"] = None
         super(Index, __self__).__init__(
-            'dockerbuild:index:Index',
+            'docker-build:index:Index',
             resource_name,
             __props__,
             opts)

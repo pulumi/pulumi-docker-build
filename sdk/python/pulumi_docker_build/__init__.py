@@ -14,21 +14,21 @@ from . import outputs
 
 # Make subpackages available:
 if typing.TYPE_CHECKING:
-    import pulumi_dockerbuild.config as __config
+    import pulumi_docker_build.config as __config
     config = __config
 else:
-    config = _utilities.lazy_import('pulumi_dockerbuild.config')
+    config = _utilities.lazy_import('pulumi_docker_build.config')
 
 _utilities.register(
     resource_modules="""
 [
  {
-  "pkg": "dockerbuild",
+  "pkg": "docker-build",
   "mod": "index",
-  "fqn": "pulumi_dockerbuild",
+  "fqn": "pulumi_docker_build",
   "classes": {
-   "dockerbuild:index:Image": "Image",
-   "dockerbuild:index:Index": "Index"
+   "docker-build:index:Image": "Image",
+   "docker-build:index:Index": "Index"
   }
  }
 ]
@@ -36,9 +36,9 @@ _utilities.register(
     resource_packages="""
 [
  {
-  "pkg": "dockerbuild",
-  "token": "pulumi:providers:dockerbuild",
-  "fqn": "pulumi_dockerbuild",
+  "pkg": "docker-build",
+  "token": "pulumi:providers:docker-build",
+  "fqn": "pulumi_docker_build",
   "class": "Provider"
  }
 ]

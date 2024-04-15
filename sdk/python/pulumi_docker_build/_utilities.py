@@ -288,4 +288,4 @@ async def _await_output(o: pulumi.Output[typing.Any]) -> typing.Tuple[object, bo
     )
 
 def get_plugin_download_url():
-	return "github.com/pulumi/pulumi-dockerbuild"
+	return "github.com/pulumi/pulumi-docker-build"

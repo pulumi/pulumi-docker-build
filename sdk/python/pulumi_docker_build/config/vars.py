@@ -12,7 +12,7 @@ from .. import outputs as _root_outputs
 
 import types
 
-__config__ = pulumi.Config('dockerbuild')
+__config__ = pulumi.Config('docker-build')
 
 
 class _ExportableConfig(types.ModuleType):

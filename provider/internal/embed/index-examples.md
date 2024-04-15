@@ -5,9 +5,9 @@
 
 ```typescript
 import * as pulumi from "@pulumi/pulumi";
-import * as dockerbuild from "@pulumi/dockerbuild";
+import * as docker_build from "@pulumi/docker-build";
 
-const amd64 = new dockerbuild.Image("amd64", {
+const amd64 = new docker_build.Image("amd64", {
     cacheFrom: [{
         registry: {
             ref: "docker.io/pulumi/pulumi:cache-amd64",
@@ -15,17 +15,17 @@ const amd64 = new dockerbuild.Image("amd64", {
     }],
     cacheTo: [{
         registry: {
-            mode: dockerbuild.CacheMode.Max,
+            mode: docker_build.CacheMode.Max,
             ref: "docker.io/pulumi/pulumi:cache-amd64",
         },
     }],
     context: {
         location: "app",
     },
-    platforms: [dockerbuild.Platform.Linux_amd64],
+    platforms: [docker_build.Platform.Linux_amd64],
     tags: ["docker.io/pulumi/pulumi:3.107.0-amd64"],
 });
-const arm64 = new dockerbuild.Image("arm64", {
+const arm64 = new docker_build.Image("arm64", {
     cacheFrom: [{
         registry: {
             ref: "docker.io/pulumi/pulumi:cache-arm64",
@@ -33,17 +33,17 @@ const arm64 = new dockerbuild.Image("arm64", {
     }],
     cacheTo: [{
         registry: {
-            mode: dockerbuild.CacheMode.Max,
+            mode: docker_build.CacheMode.Max,
             ref: "docker.io/pulumi/pulumi:cache-arm64",
         },
     }],
     context: {
         location: "app",
     },
-    platforms: [dockerbuild.Platform.Linux_arm64],
+    platforms: [docker_build.Platform.Linux_arm64],
     tags: ["docker.io/pulumi/pulumi:3.107.0-arm64"],
 });
-const index = new dockerbuild.Index("index", {
+const index = new docker_build.Index("index", {
     sources: [
         amd64.ref,
         arm64.ref,
@@ -54,43 +54,43 @@ export const ref = index.ref;
 ```
 ```python
 import pulumi
-import pulumi_dockerbuild as dockerbuild
+import pulumi_docker_build as docker_build
 
-amd64 = dockerbuild.Image("amd64",
-    cache_from=[dockerbuild.CacheFromArgs(
-        registry=dockerbuild.CacheFromRegistryArgs(
+amd64 = docker_build.Image("amd64",
+    cache_from=[docker_build.CacheFromArgs(
+        registry=docker_build.CacheFromRegistryArgs(
             ref="docker.io/pulumi/pulumi:cache-amd64",
         ),
     )],
-    cache_to=[dockerbuild.CacheToArgs(
-        registry=dockerbuild.CacheToRegistryArgs(
-            mode=dockerbuild.CacheMode.MAX,
+    cache_to=[docker_build.CacheToArgs(
+        registry=docker_build.CacheToRegistryArgs(
+            mode=docker_build.CacheMode.MAX,
             ref="docker.io/pulumi/pulumi:cache-amd64",
         ),
     )],
-    context=dockerbuild.BuildContextArgs(
+    context=docker_build.BuildContextArgs(
         location="app",
     ),
-    platforms=[dockerbuild.Platform.LINUX_AMD64],
+    platforms=[docker_build.Platform.LINUX_AMD64],
     tags=["docker.io/pulumi/pulumi:3.107.0-amd64"])
-arm64 = dockerbuild.Image("arm64",
-    cache_from=[dockerbuild.CacheFromArgs(
-        registry=dockerbuild.CacheFromRegistryArgs(
+arm64 = docker_build.Image("arm64",
+    cache_from=[docker_build.CacheFromArgs(
+        registry=docker_build.CacheFromRegistryArgs(
             ref="docker.io/pulumi/pulumi:cache-arm64",
         ),
     )],
-    cache_to=[dockerbuild.CacheToArgs(
-        registry=dockerbuild.CacheToRegistryArgs(
-            mode=dockerbuild.CacheMode.MAX,
+    cache_to=[docker_build.CacheToArgs(
+        registry=docker_build.CacheToRegistryArgs(
+            mode=docker_build.CacheMode.MAX,
             ref="docker.io/pulumi/pulumi:cache-arm64",
         ),
     )],
-    context=dockerbuild.BuildContextArgs(
+    context=docker_build.BuildContextArgs(
         location="app",
     ),
-    platforms=[dockerbuild.Platform.LINUX_ARM64],
+    platforms=[docker_build.Platform.LINUX_ARM64],
     tags=["docker.io/pulumi/pulumi:3.107.0-arm64"])
-index = dockerbuild.Index("index",
+index = docker_build.Index("index",
     sources=[
         amd64.ref,
         arm64.ref,
@@ -102,17 +102,17 @@ pulumi.export("ref", index.ref)
 using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
-using Dockerbuild = Pulumi.Dockerbuild;
+using DockerBuild = Pulumi.DockerBuild;
 
 return await Deployment.RunAsync(() => 
 {
-    var amd64 = new Dockerbuild.Image("amd64", new()
+    var amd64 = new DockerBuild.Image("amd64", new()
     {
         CacheFrom = new[]
         {
-            new Dockerbuild.Inputs.CacheFromArgs
+            new DockerBuild.Inputs.CacheFromArgs
             {
-                Registry = new Dockerbuild.Inputs.CacheFromRegistryArgs
+                Registry = new DockerBuild.Inputs.CacheFromRegistryArgs
                 {
                     Ref = "docker.io/pulumi/pulumi:cache-amd64",
                 },
@@ -120,22 +120,22 @@ return await Deployment.RunAsync(() =>
         },
         CacheTo = new[]
         {
-            new Dockerbuild.Inputs.CacheToArgs
+            new DockerBuild.Inputs.CacheToArgs
             {
-                Registry = new Dockerbuild.Inputs.CacheToRegistryArgs
+                Registry = new DockerBuild.Inputs.CacheToRegistryArgs
                 {
-                    Mode = Dockerbuild.CacheMode.Max,
+                    Mode = DockerBuild.CacheMode.Max,
                     Ref = "docker.io/pulumi/pulumi:cache-amd64",
                 },
             },
         },
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "app",
         },
         Platforms = new[]
         {
-            Dockerbuild.Platform.Linux_amd64,
+            DockerBuild.Platform.Linux_amd64,
         },
         Tags = new[]
         {
@@ -143,13 +143,13 @@ return await Deployment.RunAsync(() =>
         },
     });
 
-    var arm64 = new Dockerbuild.Image("arm64", new()
+    var arm64 = new DockerBuild.Image("arm64", new()
     {
         CacheFrom = new[]
         {
-            new Dockerbuild.Inputs.CacheFromArgs
+            new DockerBuild.Inputs.CacheFromArgs
             {
-                Registry = new Dockerbuild.Inputs.CacheFromRegistryArgs
+                Registry = new DockerBuild.Inputs.CacheFromRegistryArgs
                 {
                     Ref = "docker.io/pulumi/pulumi:cache-arm64",
                 },
@@ -157,22 +157,22 @@ return await Deployment.RunAsync(() =>
         },
         CacheTo = new[]
         {
-            new Dockerbuild.Inputs.CacheToArgs
+            new DockerBuild.Inputs.CacheToArgs
             {
-                Registry = new Dockerbuild.Inputs.CacheToRegistryArgs
+                Registry = new DockerBuild.Inputs.CacheToRegistryArgs
                 {
-                    Mode = Dockerbuild.CacheMode.Max,
+                    Mode = DockerBuild.CacheMode.Max,
                     Ref = "docker.io/pulumi/pulumi:cache-arm64",
                 },
             },
         },
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "app",
         },
         Platforms = new[]
         {
-            Dockerbuild.Platform.Linux_arm64,
+            DockerBuild.Platform.Linux_arm64,
         },
         Tags = new[]
         {
@@ -180,7 +180,7 @@ return await Deployment.RunAsync(() =>
         },
     });
 
-    var index = new Dockerbuild.Index("index", new()
+    var index = new DockerBuild.Index("index", new()
     {
         Sources = new[]
         {
@@ -201,7 +201,7 @@ return await Deployment.RunAsync(() =>
 package main
 
 import (
-	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -226,7 +226,7 @@ func main() {
 			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
-			Platforms: dockerbuild.PlatformArray{
+			Platforms: docker - build.PlatformArray{
 				dockerbuild.Platform_Linux_amd64,
 			},
 			Tags: pulumi.StringArray{
@@ -255,7 +255,7 @@ func main() {
 			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
-			Platforms: dockerbuild.PlatformArray{
+			Platforms: docker - build.PlatformArray{
 				dockerbuild.Platform_Linux_arm64,
 			},
 			Tags: pulumi.StringArray{
@@ -301,7 +301,7 @@ resources:
                 - linux/amd64
             tags:
                 - docker.io/pulumi/pulumi:3.107.0-amd64
-        type: dockerbuild:Image
+        type: docker-build:Image
     arm64:
         properties:
             cacheFrom:
@@ -317,14 +317,14 @@ resources:
                 - linux/arm64
             tags:
                 - docker.io/pulumi/pulumi:3.107.0-arm64
-        type: dockerbuild:Image
+        type: docker-build:Image
     index:
         properties:
             sources:
                 - ${amd64.ref}
                 - ${arm64.ref}
             tag: docker.io/pulumi/pulumi:3.107.0
-        type: dockerbuild:Index
+        type: docker-build:Index
 runtime: yaml
 ```
 ```java

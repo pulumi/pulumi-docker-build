@@ -8,7 +8,7 @@ import * as enums from "../types/enums";
 import * as utilities from "../utilities";
 
 declare var exports: any;
-const __config = new pulumi.Config("dockerbuild");
+const __config = new pulumi.Config("docker-build");
 
 /**
  * The build daemon's address.

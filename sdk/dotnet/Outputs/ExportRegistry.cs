@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Dockerbuild.Outputs
+namespace Pulumi.DockerBuild.Outputs
 {
 
     [OutputType]
@@ -20,7 +20,7 @@ namespace Pulumi.Dockerbuild.Outputs
         /// <summary>
         /// The compression type to use.
         /// </summary>
-        public readonly Pulumi.Dockerbuild.CompressionType? Compression;
+        public readonly Pulumi.DockerBuild.CompressionType? Compression;
         /// <summary>
         /// Compression level from 0 to 22.
         /// </summary>
@@ -77,7 +77,7 @@ namespace Pulumi.Dockerbuild.Outputs
         private ExportRegistry(
             ImmutableDictionary<string, string>? annotations,
 
-            Pulumi.Dockerbuild.CompressionType? compression,
+            Pulumi.DockerBuild.CompressionType? compression,
 
             int? compressionLevel,
 

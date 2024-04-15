@@ -1,9 +1,9 @@
 import * as pulumi from "@pulumi/pulumi";
-import * as dockerbuild from "@pulumi/dockerbuild";
+import * as docker_build from "@pulumi/docker-build";
 
 const config = new pulumi.Config();
 const dockerHubPassword = config.require("dockerHubPassword");
-const multiPlatform = new dockerbuild.Image("multiPlatform", {
+const multiPlatform = new docker_build.Image("multiPlatform", {
     dockerfile: {
         location: "./app/Dockerfile.multiPlatform",
     },
@@ -11,11 +11,11 @@ const multiPlatform = new dockerbuild.Image("multiPlatform", {
         location: "./app",
     },
     platforms: [
-        dockerbuild.Platform.Plan9_amd64,
-        dockerbuild.Platform.Plan9_386,
+        docker_build.Platform.Plan9_amd64,
+        docker_build.Platform.Plan9_386,
     ],
 });
-const registryPush = new dockerbuild.Image("registryPush", {
+const registryPush = new docker_build.Image("registryPush", {
     context: {
         location: "./app",
     },
@@ -32,14 +32,14 @@ const registryPush = new dockerbuild.Image("registryPush", {
         password: dockerHubPassword,
     }],
 });
-const cached = new dockerbuild.Image("cached", {
+const cached = new docker_build.Image("cached", {
     context: {
         location: "./app",
     },
     cacheTo: [{
         local: {
             dest: "tmp/cache",
-            mode: dockerbuild.CacheMode.Max,
+            mode: docker_build.CacheMode.Max,
         },
     }],
     cacheFrom: [{
@@ -48,7 +48,7 @@ const cached = new dockerbuild.Image("cached", {
         },
     }],
 });
-const buildArgs = new dockerbuild.Image("buildArgs", {
+const buildArgs = new docker_build.Image("buildArgs", {
     dockerfile: {
         location: "./app/Dockerfile.buildArgs",
     },
@@ -59,7 +59,7 @@ const buildArgs = new dockerbuild.Image("buildArgs", {
         SET_ME_TO_TRUE: "true",
     },
 });
-const extraHosts = new dockerbuild.Image("extraHosts", {
+const extraHosts = new docker_build.Image("extraHosts", {
     dockerfile: {
         location: "./app/Dockerfile.extraHosts",
     },
@@ -68,7 +68,7 @@ const extraHosts = new dockerbuild.Image("extraHosts", {
     },
     addHosts: ["metadata.google.internal:169.254.169.254"],
 });
-const sshMount = new dockerbuild.Image("sshMount", {
+const sshMount = new docker_build.Image("sshMount", {
     dockerfile: {
         location: "./app/Dockerfile.sshMount",
     },
@@ -79,7 +79,7 @@ const sshMount = new dockerbuild.Image("sshMount", {
         id: "default",
     }],
 });
-const secrets = new dockerbuild.Image("secrets", {
+const secrets = new docker_build.Image("secrets", {
     dockerfile: {
         location: "./app/Dockerfile.secrets",
     },
@@ -90,7 +90,7 @@ const secrets = new dockerbuild.Image("secrets", {
         password: "hunter2",
     },
 });
-const labels = new dockerbuild.Image("labels", {
+const labels = new docker_build.Image("labels", {
     context: {
         location: "./app",
     },
@@ -98,7 +98,7 @@ const labels = new dockerbuild.Image("labels", {
         description: "This image will get a descriptive label 👍",
     },
 });
-const target = new dockerbuild.Image("target", {
+const target = new docker_build.Image("target", {
     dockerfile: {
         location: "./app/Dockerfile.target",
     },
@@ -107,7 +107,7 @@ const target = new dockerbuild.Image("target", {
     },
     target: "build-me",
 });
-const namedContexts = new dockerbuild.Image("namedContexts", {
+const namedContexts = new docker_build.Image("namedContexts", {
     dockerfile: {
         location: "./app/Dockerfile.namedContexts",
     },
@@ -120,10 +120,10 @@ const namedContexts = new dockerbuild.Image("namedContexts", {
         },
     },
 });
-const remoteContext = new dockerbuild.Image("remoteContext", {context: {
+const remoteContext = new docker_build.Image("remoteContext", {context: {
     location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
 }});
-const remoteContextWithInline = new dockerbuild.Image("remoteContextWithInline", {
+const remoteContextWithInline = new docker_build.Image("remoteContextWithInline", {
     dockerfile: {
         inline: `FROM busybox
 COPY hello.c ./
@@ -133,7 +133,7 @@ COPY hello.c ./
         location: "https://github.com/docker-library/hello-world.git",
     },
 });
-const inline = new dockerbuild.Image("inline", {
+const inline = new docker_build.Image("inline", {
     dockerfile: {
         inline: `FROM alpine
 RUN echo "This uses an inline Dockerfile! 👍"
@@ -143,7 +143,7 @@ RUN echo "This uses an inline Dockerfile! 👍"
         location: "./app",
     },
 });
-const dockerLoad = new dockerbuild.Image("dockerLoad", {
+const dockerLoad = new docker_build.Image("dockerLoad", {
     context: {
         location: "./app",
     },

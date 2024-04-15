@@ -1,32 +1,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using Pulumi;
-using Dockerbuild = Pulumi.Dockerbuild;
+using DockerBuild = Pulumi.DockerBuild;
 
 return await Deployment.RunAsync(() => 
 {
     var config = new Config();
     var dockerHubPassword = config.Require("dockerHubPassword");
-    var multiPlatform = new Dockerbuild.Image("multiPlatform", new()
+    var multiPlatform = new DockerBuild.Image("multiPlatform", new()
     {
-        Dockerfile = new Dockerbuild.Inputs.DockerfileArgs
+        Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.multiPlatform",
         },
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
         },
         Platforms = new[]
         {
-            Dockerbuild.Platform.Plan9_amd64,
-            Dockerbuild.Platform.Plan9_386,
+            DockerBuild.Platform.Plan9_amd64,
+            DockerBuild.Platform.Plan9_386,
         },
     });
 
-    var registryPush = new Dockerbuild.Image("registryPush", new()
+    var registryPush = new DockerBuild.Image("registryPush", new()
     {
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
         },
@@ -36,9 +36,9 @@ return await Deployment.RunAsync(() =>
         },
         Exports = new[]
         {
-            new Dockerbuild.Inputs.ExportArgs
+            new DockerBuild.Inputs.ExportArgs
             {
-                Registry = new Dockerbuild.Inputs.ExportRegistryArgs
+                Registry = new DockerBuild.Inputs.ExportRegistryArgs
                 {
                     OciMediaTypes = true,
                     Push = false,
@@ -47,7 +47,7 @@ return await Deployment.RunAsync(() =>
         },
         Registries = new[]
         {
-            new Dockerbuild.Inputs.RegistryArgs
+            new DockerBuild.Inputs.RegistryArgs
             {
                 Address = "docker.io",
                 Username = "pulumibot",
@@ -56,28 +56,28 @@ return await Deployment.RunAsync(() =>
         },
     });
 
-    var cached = new Dockerbuild.Image("cached", new()
+    var cached = new DockerBuild.Image("cached", new()
     {
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
         },
         CacheTo = new[]
         {
-            new Dockerbuild.Inputs.CacheToArgs
+            new DockerBuild.Inputs.CacheToArgs
             {
-                Local = new Dockerbuild.Inputs.CacheToLocalArgs
+                Local = new DockerBuild.Inputs.CacheToLocalArgs
                 {
                     Dest = "tmp/cache",
-                    Mode = Dockerbuild.CacheMode.Max,
+                    Mode = DockerBuild.CacheMode.Max,
                 },
             },
         },
         CacheFrom = new[]
         {
-            new Dockerbuild.Inputs.CacheFromArgs
+            new DockerBuild.Inputs.CacheFromArgs
             {
-                Local = new Dockerbuild.Inputs.CacheFromLocalArgs
+                Local = new DockerBuild.Inputs.CacheFromLocalArgs
                 {
                     Src = "tmp/cache",
                 },
@@ -85,13 +85,13 @@ return await Deployment.RunAsync(() =>
         },
     });
 
-    var buildArgs = new Dockerbuild.Image("buildArgs", new()
+    var buildArgs = new DockerBuild.Image("buildArgs", new()
     {
-        Dockerfile = new Dockerbuild.Inputs.DockerfileArgs
+        Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.buildArgs",
         },
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
         },
@@ -101,13 +101,13 @@ return await Deployment.RunAsync(() =>
         },
     });
 
-    var extraHosts = new Dockerbuild.Image("extraHosts", new()
+    var extraHosts = new DockerBuild.Image("extraHosts", new()
     {
-        Dockerfile = new Dockerbuild.Inputs.DockerfileArgs
+        Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.extraHosts",
         },
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
         },
@@ -117,32 +117,32 @@ return await Deployment.RunAsync(() =>
         },
     });
 
-    var sshMount = new Dockerbuild.Image("sshMount", new()
+    var sshMount = new DockerBuild.Image("sshMount", new()
     {
-        Dockerfile = new Dockerbuild.Inputs.DockerfileArgs
+        Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.sshMount",
         },
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
         },
         Ssh = new[]
         {
-            new Dockerbuild.Inputs.SSHArgs
+            new DockerBuild.Inputs.SSHArgs
             {
                 Id = "default",
             },
         },
     });
 
-    var secrets = new Dockerbuild.Image("secrets", new()
+    var secrets = new DockerBuild.Image("secrets", new()
     {
-        Dockerfile = new Dockerbuild.Inputs.DockerfileArgs
+        Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.secrets",
         },
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
         },
@@ -152,9 +152,9 @@ return await Deployment.RunAsync(() =>
         },
     });
 
-    var labels = new Dockerbuild.Image("labels", new()
+    var labels = new DockerBuild.Image("labels", new()
     {
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
         },
@@ -164,31 +164,31 @@ return await Deployment.RunAsync(() =>
         },
     });
 
-    var target = new Dockerbuild.Image("target", new()
+    var target = new DockerBuild.Image("target", new()
     {
-        Dockerfile = new Dockerbuild.Inputs.DockerfileArgs
+        Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.target",
         },
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
         },
         Target = "build-me",
     });
 
-    var namedContexts = new Dockerbuild.Image("namedContexts", new()
+    var namedContexts = new DockerBuild.Image("namedContexts", new()
     {
-        Dockerfile = new Dockerbuild.Inputs.DockerfileArgs
+        Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.namedContexts",
         },
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
             Named = 
             {
-                { "golang:latest", new Dockerbuild.Inputs.ContextArgs
+                { "golang:latest", new DockerBuild.Inputs.ContextArgs
                 {
                     Location = "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
                 } },
@@ -196,53 +196,53 @@ return await Deployment.RunAsync(() =>
         },
     });
 
-    var remoteContext = new Dockerbuild.Image("remoteContext", new()
+    var remoteContext = new DockerBuild.Image("remoteContext", new()
     {
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
         },
     });
 
-    var remoteContextWithInline = new Dockerbuild.Image("remoteContextWithInline", new()
+    var remoteContextWithInline = new DockerBuild.Image("remoteContextWithInline", new()
     {
-        Dockerfile = new Dockerbuild.Inputs.DockerfileArgs
+        Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Inline = @"FROM busybox
 COPY hello.c ./
 ",
         },
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "https://github.com/docker-library/hello-world.git",
         },
     });
 
-    var inline = new Dockerbuild.Image("inline", new()
+    var inline = new DockerBuild.Image("inline", new()
     {
-        Dockerfile = new Dockerbuild.Inputs.DockerfileArgs
+        Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Inline = @"FROM alpine
 RUN echo ""This uses an inline Dockerfile! 👍""
 ",
         },
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
         },
     });
 
-    var dockerLoad = new Dockerbuild.Image("dockerLoad", new()
+    var dockerLoad = new DockerBuild.Image("dockerLoad", new()
     {
-        Context = new Dockerbuild.Inputs.BuildContextArgs
+        Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
         },
         Exports = new[]
         {
-            new Dockerbuild.Inputs.ExportArgs
+            new DockerBuild.Inputs.ExportArgs
             {
-                Docker = new Dockerbuild.Inputs.ExportDockerArgs
+                Docker = new DockerBuild.Inputs.ExportDockerArgs
                 {
                     Tar = true,
                 },

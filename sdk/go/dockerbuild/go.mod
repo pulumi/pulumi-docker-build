@@ -1,4 +1,4 @@
-module github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild
+module github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild
 
 go 1.21.7
 

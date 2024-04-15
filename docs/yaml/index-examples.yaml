@@ -3,7 +3,7 @@ description: Multi-platform registry caching
 runtime: yaml
 resources:
   arm64:
-    type: dockerbuild:Image
+    type: docker-build:Image
     properties:
       context:
         location: "app"
@@ -20,7 +20,7 @@ resources:
             ref: "docker.io/pulumi/pulumi:cache-arm64"
 
   amd64:
-    type: dockerbuild:Image
+    type: docker-build:Image
     properties:
       context:
         location: "app"
@@ -37,7 +37,7 @@ resources:
             ref: "docker.io/pulumi/pulumi:cache-amd64"
 
   index:
-    type: dockerbuild:Index
+    type: docker-build:Index
     properties:
       tag: "docker.io/pulumi/pulumi:3.107.0"
       sources:

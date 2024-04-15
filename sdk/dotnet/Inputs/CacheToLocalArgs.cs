@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Dockerbuild.Inputs
+namespace Pulumi.DockerBuild.Inputs
 {
 
     public sealed class CacheToLocalArgs : global::Pulumi.ResourceArgs
@@ -16,7 +16,7 @@ namespace Pulumi.Dockerbuild.Inputs
         /// The compression type to use.
         /// </summary>
         [Input("compression")]
-        public Input<Pulumi.Dockerbuild.CompressionType>? Compression { get; set; }
+        public Input<Pulumi.DockerBuild.CompressionType>? Compression { get; set; }
 
         /// <summary>
         /// Compression level from 0 to 22.
@@ -46,15 +46,15 @@ namespace Pulumi.Dockerbuild.Inputs
         /// The cache mode to use. Defaults to `min`.
         /// </summary>
         [Input("mode")]
-        public Input<Pulumi.Dockerbuild.CacheMode>? Mode { get; set; }
+        public Input<Pulumi.DockerBuild.CacheMode>? Mode { get; set; }
 
         public CacheToLocalArgs()
         {
-            Compression = Pulumi.Dockerbuild.CompressionType.Gzip;
+            Compression = Pulumi.DockerBuild.CompressionType.Gzip;
             CompressionLevel = 0;
             ForceCompression = false;
             IgnoreError = false;
-            Mode = Pulumi.Dockerbuild.CacheMode.Min;
+            Mode = Pulumi.DockerBuild.CacheMode.Min;
         }
         public static new CacheToLocalArgs Empty => new CacheToLocalArgs();
     }

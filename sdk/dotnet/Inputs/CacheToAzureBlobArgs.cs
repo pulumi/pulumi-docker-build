@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
 
-namespace Pulumi.Dockerbuild.Inputs
+namespace Pulumi.DockerBuild.Inputs
 {
 
     public sealed class CacheToAzureBlobArgs : global::Pulumi.ResourceArgs
@@ -28,7 +28,7 @@ namespace Pulumi.Dockerbuild.Inputs
         /// The cache mode to use. Defaults to `min`.
         /// </summary>
         [Input("mode")]
-        public Input<Pulumi.Dockerbuild.CacheMode>? Mode { get; set; }
+        public Input<Pulumi.DockerBuild.CacheMode>? Mode { get; set; }
 
         /// <summary>
         /// The name of the cache image.
@@ -55,7 +55,7 @@ namespace Pulumi.Dockerbuild.Inputs
         public CacheToAzureBlobArgs()
         {
             IgnoreError = false;
-            Mode = Pulumi.Dockerbuild.CacheMode.Min;
+            Mode = Pulumi.DockerBuild.CacheMode.Min;
         }
         public static new CacheToAzureBlobArgs Empty => new CacheToAzureBlobArgs();
     }

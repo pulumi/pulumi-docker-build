@@ -1,5 +1,5 @@
 {
   "resource": true,
-  "name": "dockerbuild",
-  "server": "github.com/pulumi/pulumi-dockerbuild"
+  "name": "docker-build",
+  "server": "github.com/pulumi/pulumi-docker-build"
 }

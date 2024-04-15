@@ -106,7 +106,7 @@ import javax.annotation.Nullable;
  * ```
  * 
  */
-@ResourceType(type="dockerbuild:index:Index")
+@ResourceType(type="docker-build:index:Index")
 public class Index extends com.pulumi.resources.CustomResource {
     /**
      * If true, push the index to the target registry.
@@ -213,11 +213,11 @@ public class Index extends com.pulumi.resources.CustomResource {
      * @param options A bag of options that control this resource's behavior.
      */
     public Index(String name, IndexArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
-        super("dockerbuild:index:Index", name, args == null ? IndexArgs.Empty : args, makeResourceOptions(options, Codegen.empty()));
+        super("docker-build:index:Index", name, args == null ? IndexArgs.Empty : args, makeResourceOptions(options, Codegen.empty()));
     }
 
     private Index(String name, Output<String> id, @Nullable com.pulumi.resources.CustomResourceOptions options) {
-        super("dockerbuild:index:Index", name, null, makeResourceOptions(options, id));
+        super("docker-build:index:Index", name, null, makeResourceOptions(options, id));
     }
 
     private static com.pulumi.resources.CustomResourceOptions makeResourceOptions(@Nullable com.pulumi.resources.CustomResourceOptions options, @Nullable Output<String> id) {
