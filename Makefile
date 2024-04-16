@@ -122,7 +122,7 @@ only_build:: build
 
 .PHONY: lint
 lint: ${GOGLANGCILINT}
-	${GOGLANGCILINT} run --fix -c .golangci.yml --timeout 10m
+	${GOGLANGCILINT} run --fix -c .golangci.yml
 
 install:: install_nodejs_sdk install_dotnet_sdk
 	cp $(WORKING_DIR)/bin/${PROVIDER} ${GOPATH}/bin
