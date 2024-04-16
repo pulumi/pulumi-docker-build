@@ -35,7 +35,7 @@ import (
 	"github.com/docker/buildx/util/progress"
 	"github.com/docker/cli/cli/command"
 	"github.com/docker/cli/cli/flags"
-	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/image"
 	"github.com/moby/buildkit/client"
 	"github.com/moby/buildkit/session"
 	"github.com/moby/buildkit/session/auth/authprovider"
@@ -338,7 +338,7 @@ func (c *cli) Inspect(ctx context.Context, r string) ([]descriptor.Descriptor, e
 // support the DELETE API yet, so this operation is not guaranteed to work.
 func (c *cli) Delete(ctx context.Context, r string) error {
 	// Attempt to delete the ref locally if it exists.
-	_, _ = c.Client().ImageRemove(ctx, r, types.ImageRemoveOptions{
+	_, _ = c.Client().ImageRemove(ctx, r, image.RemoveOptions{
 		Force: true, // Needed in case the image has multiple tags.
 	})
 

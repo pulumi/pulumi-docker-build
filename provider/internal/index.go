@@ -172,7 +172,7 @@ func (i *Index) Read(
 		return name, input, state, err
 	}
 
-	ctx.Log(diag.Debug, fmt.Sprintf("reading index with tag %s", input.Tag))
+	ctx.Log(diag.Debug, "reading index with tag "+input.Tag)
 
 	digest, err := cli.ManifestInspect(ctx, input.Tag)
 	if err != nil && strings.Contains(err.Error(), "No such manifest:") && input.Push {
