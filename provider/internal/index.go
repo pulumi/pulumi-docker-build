@@ -24,6 +24,7 @@ import (
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 )
 
@@ -138,6 +139,8 @@ func (i *Index) Update(
 		return state, nil
 	}
 
+	ctx.Log(diag.Info, fmt.Sprintf("creating index with tag %s and sources %s", input.Tag, input.Sources))
+
 	err = cli.ManifestCreate(ctx, input.Push, input.Tag, input.Sources...)
 	if err != nil {
 		return state, fmt.Errorf("creating: %w", err)
@@ -160,6 +163,7 @@ func (i *Index) Read(
 	state.Ref = input.Tag
 
 	if !input.Push {
+		ctx.Log(diag.Debug, "skipping read because index was not pushed")
 		return name, input, state, nil // Nothing to read.
 	}
 
@@ -168,6 +172,8 @@ func (i *Index) Read(
 		return name, input, state, err
 	}
 
+	ctx.Log(diag.Debug, fmt.Sprintf("reading index with tag %s", input.Tag))
+
 	digest, err := cli.ManifestInspect(ctx, input.Tag)
 	if err != nil && strings.Contains(err.Error(), "No such manifest:") && input.Push {
 		// A remote tag was expected but isn't there -- delete the resource.
@@ -175,7 +181,7 @@ func (i *Index) Read(
 	}
 	if err != nil && strings.Contains(err.Error(), "No such manifest:") && !input.Push {
 		// Nothing was pushed, so just use the tag without digest..
-		return name, input, state, err
+		return name, input, state, nil
 	}
 	if err != nil {
 		return name, input, state, err
@@ -295,7 +301,7 @@ func (i *Index) Diff(
 // of any host-level credentials.
 func (i *Index) client(
 	ctx provider.Context,
-	state IndexState,
+	_ IndexState,
 	args IndexArgs,
 ) (Client, error) {
 	cfg := infer.GetConfig[Config](ctx)
@@ -308,9 +314,6 @@ func (i *Index) client(
 	// build a slice in reverse order because wrap() will overwrite earlier
 	// entries with later ones.
 	auths := []Registry{}
-	if state.Registry != nil {
-		auths = append(auths, *state.Registry)
-	}
 	auths = append(auths, cfg.Registries...)
 	if args.Registry != nil {
 		auths = append(auths, *args.Registry)

@@ -40,3 +40,21 @@ func TestECR(t *testing.T) {
 
 	integration.ProgramTest(t, &test)
 }
+
+func TestDockerHub(t *testing.T) {
+	if os.Getenv("DOCKER_HUB_PASSWORD") == "" {
+		t.Skip("Missing DockerHub credentials")
+	}
+
+	cwd, err := os.Getwd()
+	require.NoError(t, err)
+
+	test := integration.ProgramTestOptions{
+		Dir: path.Join(cwd, "tests/dockerhub"),
+		Secrets: map[string]string{
+			"dockerHubPassword": os.Getenv("DOCKER_HUB_PASSWORD"),
+		},
+	}
+
+	integration.ProgramTest(t, &test)
+}

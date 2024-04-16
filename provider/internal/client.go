@@ -252,8 +252,6 @@ func (c *cli) BuildKitEnabled() (bool, error) {
 }
 
 func (c *cli) ManifestCreate(ctx provider.Context, push bool, target string, refs ...string) error {
-	// TODO: Create this manifest with regclient or imagetools.
-
 	go c.tail(ctx)
 	defer contract.IgnoreClose(c)
 
@@ -261,6 +259,7 @@ func (c *cli) ManifestCreate(ctx provider.Context, push bool, target string, ref
 		// "buildx",
 		"imagetools",
 		"create",
+		"--progress=plain",
 		"--tag", target,
 	}
 
@@ -273,10 +272,13 @@ func (c *cli) ManifestCreate(ctx provider.Context, push bool, target string, ref
 	cmd := commands.NewRootCmd(os.Args[0], false, c)
 
 	cmd.SetArgs(args)
+
+	ctx.Log(diag.Debug, fmt.Sprint("creating manifest with args", args))
 	return cmd.ExecuteContext(ctx)
 }
 
 func (c *cli) ManifestInspect(ctx provider.Context, target string) (string, error) {
+	ctx.LogStatus(diag.Info, "inspecting manifest")
 	rc := c.rc()
 
 	ref, err := ref.New(target)
@@ -286,7 +288,7 @@ func (c *cli) ManifestInspect(ctx provider.Context, target string) (string, erro
 
 	m, err := rc.ManifestHead(ctx, ref)
 	if err != nil {
-		return "", fmt.Errorf("fetching head: %w", err)
+		return "", fmt.Errorf("fetching %q: %w", ref, err)
 	}
 
 	return string(m.GetDescriptor().Digest), nil

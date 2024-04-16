@@ -79,21 +79,27 @@ func wrap(host *host, registries ...Registry) (*cli, error) {
 
 	auths := map[string]cfgtypes.AuthConfig{}
 	for k, v := range host.auths {
-		auths[k] = v
+		auths[k] = cfgtypes.AuthConfig{
+			ServerAddress: v.ServerAddress,
+			Username:      v.Username,
+			Password:      v.Password,
+		}
 	}
 
 	for _, r := range registries {
-		// Special handling for legacy DockerHub domains. The OCI-compliant
-		// registry is registry-1.docker.io but this is stored in config under the
-		// legacy name.
-		// https://github.com/docker/cli/issues/3793#issuecomment-1269051403
-		key := credentials.ConvertToHostname(r.Address)
-		if key == "registry-1.docker.io" || key == "index.docker.io" || key == "docker.io" {
-			key = "https://index.docker.io/v1/"
+		// HostNewName takes care of DockerHub's special-casing for us.
+		h := config.HostNewName(credentials.ConvertToHostname(r.Address))
+		key := h.CredHost
+		if key == "" {
+			key = h.Hostname
+		}
+		// Add a scheme if it's missing.
+		if !strings.Contains(key, "://") {
+			key = "https://" + key
 		}
 
 		auths[key] = cfgtypes.AuthConfig{
-			ServerAddress: r.Address,
+			ServerAddress: h.Hostname,
 			Username:      r.Username,
 			Password:      r.Password,
 		}

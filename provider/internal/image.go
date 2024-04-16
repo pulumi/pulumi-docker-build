@@ -287,7 +287,8 @@ func (ia *ImageArgs) Annotate(a infer.Annotator) {
 		"docker-buildx" binary.
 	`))
 
-	a.SetDefault(&ia.Network, Default)
+	d := Default
+	a.SetDefault(&ia.Network, &d)
 }
 
 // ImageState is serialized to the program's state file.
@@ -350,7 +351,7 @@ func (i *Image) client(pctx provider.Context, state ImageState, args ImageArgs) 
 	// We prefer auth from args, the provider, and state in that order. We
 	// build a slice in reverse order because wrap() will overwrite earlier
 	// entries with later ones.
-	auths := state.Registries
+	auths := []Registry{}
 	auths = append(auths, cfg.Registries...)
 	auths = append(auths, args.Registries...)
 

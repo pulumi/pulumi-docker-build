@@ -347,7 +347,8 @@ type CacheWithMode struct {
 
 // Annotate sets docstrings and defaults on CacheWithMode.
 func (c *CacheWithMode) Annotate(a infer.Annotator) {
-	a.SetDefault(&c.Mode, Min)
+	m := Min
+	a.SetDefault(&c.Mode, &m)
 	a.Describe(&c.Mode, dedent(`
 		The cache mode to use. Defaults to "min".
 	`))
@@ -559,7 +560,8 @@ type CacheWithCompression struct {
 
 // Annotate sets docstrings and defaults on CacheWithCompression.
 func (c *CacheWithCompression) Annotate(a infer.Annotator) {
-	a.SetDefault(&c.Compression, Gzip)
+	gz := Gzip
+	a.SetDefault(&c.Compression, &gz)
 	a.SetDefault(&c.CompressionLevel, 0)
 	a.SetDefault(&c.ForceCompression, false)
 

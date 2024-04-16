@@ -1,5 +1,10 @@
 name: ecr
 description: Push to AWS ECR with caching
+runtime: yaml
+plugins:
+  providers:
+    - name: docker-build
+      path: ../../../bin
 outputs:
   ref: ${my-image.ref}
 resources:
@@ -8,10 +13,10 @@ resources:
     properties:
       forceDelete: true
   my-image:
-    type: dockerbuild:Image
+    type: docker-build:Image
     properties:
       tags:
-        - ${ecr-repository.repositoryUrl}:tag-name
+        - ${ecr-repository.repositoryUrl}:latest
       push: true
       context:
         location: .
@@ -29,7 +34,6 @@ resources:
         - username: ${auth-token.userName}
           password: ${auth-token.password}
           address: ${ecr-repository.repositoryUrl}
-runtime: yaml
 variables:
   auth-token:
     fn::aws:ecr:getAuthorizationToken:

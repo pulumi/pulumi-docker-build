@@ -393,7 +393,8 @@ type ExportWithCompression struct {
 
 // Annotate sets docstrings and defaults on ExportWithCompression.
 func (e *ExportWithCompression) Annotate(a infer.Annotator) {
-	a.SetDefault(&e.Compression, Gzip)
+	gzip := Gzip
+	a.SetDefault(&e.Compression, &gzip)
 	a.SetDefault(&e.CompressionLevel, 0)
 	a.SetDefault(&e.ForceCompression, false)
 
