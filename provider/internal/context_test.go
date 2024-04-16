@@ -96,7 +96,8 @@ func TestValidateContext(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			d, err := tt.c.validate(tt.preview, tt.givenD)
+			bc := &BuildContext{Context: tt.c}
+			d, _, err := bc.validate(tt.preview, &tt.givenD)
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)

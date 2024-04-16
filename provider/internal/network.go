@@ -44,3 +44,10 @@ func (NetworkMode) Values() []infer.EnumValue[NetworkMode] {
 		},
 	}
 }
+
+func (n *NetworkMode) String() string {
+	if n == nil {
+		return string(Default)
+	}
+	return string(*n)
+}

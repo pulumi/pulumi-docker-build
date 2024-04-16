@@ -138,7 +138,7 @@ func TestIndexDiff(t *testing.T) {
 		{
 			name: "no diff if registry password changes",
 			olds: func(_ *testing.T, s IndexState) IndexState {
-				s.Registry = Registry{
+				s.Registry = &Registry{
 					Address:  "foo",
 					Username: "foo",
 					Password: "foo",
@@ -146,7 +146,7 @@ func TestIndexDiff(t *testing.T) {
 				return s
 			},
 			news: func(_ *testing.T, a IndexArgs) IndexArgs {
-				a.Registry = Registry{
+				a.Registry = &Registry{
 					Address:  "foo",
 					Username: "foo",
 					Password: "DIFFERENT PASSWORD",
@@ -159,7 +159,7 @@ func TestIndexDiff(t *testing.T) {
 			name: "diff if registry added",
 			olds: func(*testing.T, IndexState) IndexState { return baseState },
 			news: func(_ *testing.T, a IndexArgs) IndexArgs {
-				a.Registry = Registry{Address: "foo.com", Username: "foo", Password: "foo"}
+				a.Registry = &Registry{Address: "foo.com", Username: "foo", Password: "foo"}
 				return a
 			},
 			wantChanges: true,
@@ -167,7 +167,7 @@ func TestIndexDiff(t *testing.T) {
 		{
 			name: "diff if registry user changes",
 			olds: func(_ *testing.T, s IndexState) IndexState {
-				s.Registry = Registry{
+				s.Registry = &Registry{
 					Address:  "foo",
 					Username: "foo",
 					Password: "foo",
@@ -175,7 +175,7 @@ func TestIndexDiff(t *testing.T) {
 				return s
 			},
 			news: func(_ *testing.T, a IndexArgs) IndexArgs {
-				a.Registry = Registry{
+				a.Registry = &Registry{
 					Address:  "DIFFERENT USER",
 					Username: "foo",
 					Password: "foo",

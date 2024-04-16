@@ -54,7 +54,7 @@ func (d *Dockerfile) Annotate(a infer.Annotator) {
     `))
 }
 
-func (d *Dockerfile) validate(preview bool, c Context) error {
+func (d *Dockerfile) validate(preview bool, c *Context) error {
 	if d.Location != "" && d.Inline != "" {
 		return newCheckFailure(
 			errors.New(`only specify "file" or "inline", not both`),
@@ -88,7 +88,7 @@ func (d *Dockerfile) validate(preview bool, c Context) error {
 		return nil
 	}
 
-	if !preview && !buildx.IsRemoteURL(c.Location) {
+	if !preview && c != nil && !buildx.IsRemoteURL(c.Location) {
 		return newCheckFailure(errors.New("missing 'location' or 'inline'"), "dockerfile")
 	}
 

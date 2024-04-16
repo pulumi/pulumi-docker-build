@@ -365,12 +365,13 @@ func TestRead(t *testing.T) {
 func TestImageDiff(t *testing.T) {
 	t.Parallel()
 	emptyDir := t.TempDir()
+	host := Host
 
 	hash, err := hashBuildContext(emptyDir, "", nil)
 	require.NoError(t, err)
 	baseArgs := ImageArgs{
-		Context:    BuildContext{Context: Context{Location: emptyDir}},
-		Dockerfile: Dockerfile{Location: "testdata/noop"},
+		Context:    &BuildContext{Context: Context{Location: emptyDir}},
+		Dockerfile: &Dockerfile{Location: "testdata/noop"},
 		Tags:       []string{},
 	}
 	baseState := ImageState{
@@ -414,6 +415,7 @@ func TestImageDiff(t *testing.T) {
 		{
 			name: "no diff if pull=true but no exports",
 			olds: func(_ *testing.T, is ImageState) ImageState {
+				fmt.Println("WHOA NELLY")
 				is.Pull = true
 				return is
 			},
@@ -566,7 +568,7 @@ func TestImageDiff(t *testing.T) {
 			name: "diff if context changes",
 			olds: func(*testing.T, ImageState) ImageState { return baseState },
 			news: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Context.Location = "testdata/ignores"
+				a.Context = &BuildContext{Context: Context{Location: "testdata/ignores"}}
 				return a
 			},
 			wantChanges: true,
@@ -575,7 +577,7 @@ func TestImageDiff(t *testing.T) {
 			name: "diff if named context changes",
 			olds: func(*testing.T, ImageState) ImageState { return baseState },
 			news: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Context.Named = NamedContexts{"foo": Context{Location: "bar"}}
+				a.Context = &BuildContext{Named: NamedContexts{"foo": Context{Location: "bar"}}}
 				return a
 			},
 			wantChanges: true,
@@ -584,7 +586,7 @@ func TestImageDiff(t *testing.T) {
 			name: "diff if network changes",
 			olds: func(*testing.T, ImageState) ImageState { return baseState },
 			news: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Network = Host
+				a.Network = &host
 				return a
 			},
 			wantChanges: true,
@@ -593,7 +595,7 @@ func TestImageDiff(t *testing.T) {
 			name: "diff if dockerfile location changes",
 			olds: func(*testing.T, ImageState) ImageState { return baseState },
 			news: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Dockerfile.Location = "testdata/ignores/basedir/Dockerfile"
+				a.Dockerfile = &Dockerfile{Location: "testdata/ignores/basedir/Dockerfile"}
 				return a
 			},
 			wantChanges: true,
@@ -602,7 +604,7 @@ func TestImageDiff(t *testing.T) {
 			name: "diff if dockerfile inline changes",
 			olds: func(*testing.T, ImageState) ImageState { return baseState },
 			news: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Dockerfile.Inline = "FROM scratch"
+				a.Dockerfile = &Dockerfile{Inline: "FROM scratch"}
 				return a
 			},
 			wantChanges: true,
@@ -629,7 +631,7 @@ func TestImageDiff(t *testing.T) {
 			name: "diff if builder changes",
 			olds: func(*testing.T, ImageState) ImageState { return baseState },
 			news: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Builder.Name = "foo"
+				a.Builder = &BuilderConfig{Name: "foo"}
 				return a
 			},
 			wantChanges: true,
@@ -709,6 +711,8 @@ func TestImageDiff(t *testing.T) {
 
 	for _, tt := range tests {
 		tt := tt
+		baseState := baseState
+		baseArgs := baseArgs
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			resp, err := s.Diff(provider.DiffRequest{
@@ -729,7 +733,7 @@ func TestValidateImageArgs(t *testing.T) {
 		args := ImageArgs{
 			Tags:      []string{"a/bad:tag:format"},
 			Exports:   []Export{{Raw: "badexport,-"}},
-			Context:   BuildContext{Context: Context{Location: "./testdata"}},
+			Context:   &BuildContext{Context: Context{Location: "./testdata"}},
 			Platforms: []Platform{","},
 			CacheFrom: []CacheFrom{{Raw: "=badcachefrom"}},
 			CacheTo:   []CacheTo{{Raw: "=badcacheto"}},
@@ -747,7 +751,7 @@ func TestValidateImageArgs(t *testing.T) {
 	t.Run("buildOnPreview", func(t *testing.T) {
 		t.Parallel()
 		args := ImageArgs{
-			Context: BuildContext{Context: Context{Location: "testdata/noop"}},
+			Context: &BuildContext{Context: Context{Location: "testdata/noop"}},
 			Tags:    []string{"my-tag"},
 			Exports: []Export{{Registry: &ExportRegistry{ExportImage{Push: pulumi.BoolRef(true)}}}},
 		}
@@ -775,12 +779,12 @@ func TestValidateImageArgs(t *testing.T) {
 				"known": "value",
 				"":      "",
 			},
-			Builder:    BuilderConfig{},
+			Builder:    nil,
 			CacheFrom:  []CacheFrom{{GHA: &CacheFromGitHubActions{}}, {Raw: ""}},
 			CacheTo:    []CacheTo{{GHA: &CacheToGitHubActions{}}, {Raw: ""}},
-			Context:    BuildContext{},
+			Context:    nil,
 			Exports:    []Export{{Raw: ""}},
-			Dockerfile: Dockerfile{},
+			Dockerfile: nil,
 			Platforms:  []Platform{"linux/amd64", ""},
 			Registries: []Registry{
 				{
@@ -803,7 +807,7 @@ func TestValidateImageArgs(t *testing.T) {
 	t.Run("disabled caches", func(t *testing.T) {
 		t.Parallel()
 		args := ImageArgs{
-			Context:   BuildContext{Context: Context{Location: "testdata/noop"}},
+			Context:   &BuildContext{Context: Context{Location: "testdata/noop"}},
 			CacheFrom: []CacheFrom{{Raw: "type=registry", Disabled: true}},
 			CacheTo:   []CacheTo{{Raw: "type=registry", Disabled: true}},
 			Exports:   []Export{{Raw: "type=registry", Disabled: true}},
@@ -853,7 +857,8 @@ func TestValidateImageArgs(t *testing.T) {
 		for _, d := range []Dockerfile{
 			{Location: path}, {Inline: string(data)},
 		} {
-			args := ImageArgs{Dockerfile: d}
+			d := d
+			args := ImageArgs{Dockerfile: &d}
 			_, err := args.validate(false)
 			assert.ErrorContains(t, err, "unknown instruction: RUNN (did you mean RUN?)")
 		}
@@ -943,13 +948,14 @@ func TestToBuild(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	pctx := NewMockProviderContext(ctrl)
 	pctx.EXPECT().Log(gomock.Any(), gomock.Any()).AnyTimes()
+	max := Max
 
 	ia := ImageArgs{
 		Tags:      []string{"foo", "bar"},
 		Platforms: []Platform{"linux/amd64"},
-		Context:   BuildContext{Context: Context{Location: "testdata/noop"}},
+		Context:   &BuildContext{Context: Context{Location: "testdata/noop"}},
 		CacheTo: []CacheTo{
-			{GHA: &CacheToGitHubActions{CacheWithMode: CacheWithMode{Max}}},
+			{GHA: &CacheToGitHubActions{CacheWithMode: CacheWithMode{&max}}},
 			{
 				Registry: &CacheToRegistry{
 					CacheFromRegistry: CacheFromRegistry{Ref: "docker.io/foo/bar"},

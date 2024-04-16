@@ -26,6 +26,7 @@ import (
 
 func TestCacheString(t *testing.T) {
 	t.Parallel()
+	gzip := Gzip
 
 	tests := []struct {
 		name  string
@@ -81,12 +82,12 @@ func TestCacheString(t *testing.T) {
 			given: CacheTo{Local: &CacheToLocal{
 				Dest: "/foo",
 				CacheWithCompression: CacheWithCompression{
-					Compression:      "gz2",
+					Compression:      &gzip,
 					CompressionLevel: 100,
 					ForceCompression: pulumi.BoolRef(true),
 				},
 			}},
-			want: "type=local,dest=/foo,compression=gz2,compression-level=22,force-compression=true",
+			want: "type=local,dest=/foo,compression=gzip,compression-level=22,force-compression=true",
 		},
 		{
 			name: "ignore-error",

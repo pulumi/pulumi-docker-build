@@ -54,6 +54,13 @@ type BuildContext struct {
 	Named NamedContexts `pulumi:"named,optional"`
 }
 
+func (bc *BuildContext) namedMap() map[string]string {
+	if bc == nil {
+		return nil
+	}
+	return bc.Named.Map()
+}
+
 // NamedContexts correspond to Docker's `--build-context name=path` options.
 // The path can be local or a remote URL.
 type NamedContexts map[string]Context
@@ -84,23 +91,31 @@ func (c *Context) Annotate(a infer.Annotator) {
 // validate returns a non-nil CheckError if the Context is invalid. The
 // returned Dockerfile may have defaults set to match Docker's default
 // handling. The returned Dockerfile should be validated separately.
-func (c *Context) validate(preview bool, d Dockerfile) (Dockerfile, error) {
+func (bc *BuildContext) validate(preview bool, d *Dockerfile) (*Dockerfile, *Context, error) {
+	if d == nil {
+		d = &Dockerfile{}
+	}
+	c := &Context{}
+	if bc != nil {
+		c = &bc.Context
+	}
+
 	if c.Location == "" && preview {
 		// The field is required so we normally wouldn't need to check if it
 		// exists, but during previews it can still be empty if the value is
 		// unknown. This isn't an error, but it does prevent us from performing
 		// a build later.
-		return d, nil
+		return d, c, nil
 	}
 
 	if buildx.IsRemoteURL(c.Location) {
 		// We assume remote URLs are always valid.
-		return d, nil
+		return d, c, nil
 	}
 
 	abs, err := filepath.Abs(c.Location)
 	if err != nil {
-		return d, newCheckFailure(err, "context.location")
+		return d, c, newCheckFailure(err, "context.location")
 	}
 
 	if d.Location == "" && d.Inline == "" {
@@ -111,17 +126,17 @@ func (c *Context) validate(preview bool, d Dockerfile) (Dockerfile, error) {
 
 	if isLocalDir(afero.NewOsFs(), abs) {
 		// Our context exists -- nothing else to check.
-		return d, nil
+		return d, c, nil
 	}
 
 	if c.Location != "-" {
-		return d, newCheckFailure(
+		return d, c, newCheckFailure(
 			fmt.Errorf("%q: not a valid directory or URL", c.Location),
 			"context.location",
 		)
 	}
 
-	return d, nil
+	return d, c, nil
 }
 
 // Annotate sets docstrings on BuildContext.

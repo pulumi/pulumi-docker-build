@@ -96,8 +96,8 @@ func (k mapKeeper) keep(m map[string]string) map[string]string {
 
 type contextKeeper struct{ preview bool }
 
-func (k contextKeeper) keep(bc BuildContext) BuildContext {
-	if !k.preview || len(bc.Named) == 0 {
+func (k contextKeeper) keep(bc *BuildContext) *BuildContext {
+	if !k.preview || bc == nil || len(bc.Named) == 0 {
 		return bc
 	}
 
@@ -110,7 +110,7 @@ func (k contextKeeper) keep(bc BuildContext) BuildContext {
 		named[k] = v
 	}
 
-	return BuildContext{
+	return &BuildContext{
 		Context: Context{bc.Location},
 		Named:   named,
 	}

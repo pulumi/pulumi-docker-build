@@ -93,6 +93,7 @@ func TestValidateExport(t *testing.T) {
 
 func TestExportString(t *testing.T) {
 	t.Parallel()
+	gzip := Gzip
 	tests := []struct {
 		name  string
 		given Export
@@ -113,13 +114,13 @@ func TestExportString(t *testing.T) {
 			given: Export{Registry: &ExportRegistry{
 				ExportImage: ExportImage{
 					ExportWithCompression: ExportWithCompression{
-						Compression:      "gz2",
+						Compression:      &gzip,
 						CompressionLevel: 100,
 						ForceCompression: pulumi.BoolRef(true),
 					},
 				},
 			}},
-			want: "type=registry,compression=gz2,compression-level=22,force-compression=true",
+			want: "type=registry,compression=gzip,compression-level=22,force-compression=true",
 		},
 		{
 			name: "registry-without-push",

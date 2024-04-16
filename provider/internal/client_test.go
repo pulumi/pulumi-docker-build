@@ -90,8 +90,9 @@ func TestBuild(t *testing.T) {
 	pctx.EXPECT().Deadline().Return(ctx.Deadline()).AnyTimes()
 
 	tmpdir := t.TempDir()
+	max := Max
 
-	exampleContext := BuildContext{Context: Context{Location: "../../examples/app"}}
+	exampleContext := &BuildContext{Context: Context{Location: "../../examples/app"}}
 
 	tests := []struct {
 		name string
@@ -104,7 +105,7 @@ func TestBuild(t *testing.T) {
 			name: "multiPlatform",
 			args: ImageArgs{
 				Context: exampleContext,
-				Dockerfile: Dockerfile{
+				Dockerfile: &Dockerfile{
 					Location: "../../examples/app/Dockerfile.multiPlatform",
 				},
 				Platforms: []Platform{"plan9/amd64", "plan9/arm64"},
@@ -131,7 +132,7 @@ func TestBuild(t *testing.T) {
 				Tags:    []string{"cached"},
 				CacheTo: []CacheTo{{Local: &CacheToLocal{
 					Dest:          filepath.Join(tmpdir, "cache"),
-					CacheWithMode: CacheWithMode{Mode: "max"},
+					CacheWithMode: CacheWithMode{Mode: &max},
 				}}},
 				CacheFrom: []CacheFrom{{Local: &CacheFromLocal{
 					Src: filepath.Join(tmpdir, "cache"),
@@ -142,7 +143,7 @@ func TestBuild(t *testing.T) {
 			name: "buildArgs",
 			args: ImageArgs{
 				Context: exampleContext,
-				Dockerfile: Dockerfile{
+				Dockerfile: &Dockerfile{
 					Location: "../../examples/app/Dockerfile.buildArgs",
 				},
 				BuildArgs: map[string]string{
@@ -154,7 +155,7 @@ func TestBuild(t *testing.T) {
 			name: "extraHosts",
 			args: ImageArgs{
 				Context: exampleContext,
-				Dockerfile: Dockerfile{
+				Dockerfile: &Dockerfile{
 					Location: "../../examples/app/Dockerfile.extraHosts",
 				},
 				AddHosts: []string{
@@ -167,7 +168,7 @@ func TestBuild(t *testing.T) {
 			skip: os.Getenv("SSH_AUTH_SOCK") == "",
 			args: ImageArgs{
 				Context: exampleContext,
-				Dockerfile: Dockerfile{
+				Dockerfile: &Dockerfile{
 					Location: "../../examples/app/Dockerfile.sshMount",
 				},
 				SSH: []SSH{{ID: "default"}},
@@ -177,7 +178,7 @@ func TestBuild(t *testing.T) {
 			name: "secrets",
 			args: ImageArgs{
 				Context: exampleContext,
-				Dockerfile: Dockerfile{
+				Dockerfile: &Dockerfile{
 					Location: "../../examples/app/Dockerfile.secrets",
 				},
 				Secrets: map[string]string{
@@ -199,7 +200,7 @@ func TestBuild(t *testing.T) {
 			name: "target",
 			args: ImageArgs{
 				Context: exampleContext,
-				Dockerfile: Dockerfile{
+				Dockerfile: &Dockerfile{
 					Location: "../../examples/app/Dockerfile.target",
 				},
 				Target: "build-me",
@@ -208,7 +209,7 @@ func TestBuild(t *testing.T) {
 		{
 			name: "namedContext",
 			args: ImageArgs{
-				Context: BuildContext{
+				Context: &BuildContext{
 					Context: Context{
 						Location: "../../examples/app",
 					},
@@ -218,7 +219,7 @@ func TestBuild(t *testing.T) {
 						},
 					},
 				},
-				Dockerfile: Dockerfile{
+				Dockerfile: &Dockerfile{
 					Location: "../../examples/app/Dockerfile.namedContexts",
 				},
 			},
@@ -226,7 +227,7 @@ func TestBuild(t *testing.T) {
 		{
 			name: "remoteContext",
 			args: ImageArgs{
-				Context: BuildContext{
+				Context: &BuildContext{
 					Context: Context{
 						Location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
 					},
@@ -236,12 +237,12 @@ func TestBuild(t *testing.T) {
 		{
 			name: "remoteContextWithInline",
 			args: ImageArgs{
-				Context: BuildContext{
+				Context: &BuildContext{
 					Context: Context{
 						Location: "https://github.com/docker-library/hello-world.git",
 					},
 				},
-				Dockerfile: Dockerfile{
+				Dockerfile: &Dockerfile{
 					Inline: dedent(`
 					FROM busybox
 					COPY hello.c ./
@@ -253,7 +254,7 @@ func TestBuild(t *testing.T) {
 			name: "inline",
 			args: ImageArgs{
 				Context: exampleContext,
-				Dockerfile: Dockerfile{
+				Dockerfile: &Dockerfile{
 					Inline: dedent(`
 					FROM alpine
 					RUN echo 👍

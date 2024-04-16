@@ -90,7 +90,7 @@ func TestValidateDockerfile(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			err := tt.d.validate(tt.preview, tt.givenC)
+			err := tt.d.validate(tt.preview, &tt.givenC)
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)

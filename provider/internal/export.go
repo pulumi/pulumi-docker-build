@@ -386,9 +386,9 @@ func (c ExportWithOCI) String() string {
 // ExportWithCompression is an export with options to configure compression
 // settings.
 type ExportWithCompression struct {
-	Compression      CompressionType `pulumi:"compression,optional"`
-	CompressionLevel int             `pulumi:"compressionLevel,optional"`
-	ForceCompression *bool           `pulumi:"forceCompression,optional"`
+	Compression      *CompressionType `pulumi:"compression,optional"`
+	CompressionLevel int              `pulumi:"compressionLevel,optional"`
+	ForceCompression *bool            `pulumi:"forceCompression,optional"`
 }
 
 // Annotate sets docstrings and defaults on ExportWithCompression.
@@ -407,8 +407,8 @@ func (e ExportWithCompression) String() string {
 		return ""
 	}
 	parts := []string{}
-	if e.Compression != "" {
-		parts = append(parts, fmt.Sprintf("compression=%s", e.Compression))
+	if e.Compression != nil {
+		parts = append(parts, fmt.Sprintf("compression=%s", *e.Compression))
 	}
 	if e.CompressionLevel > 0 {
 		cl := e.CompressionLevel

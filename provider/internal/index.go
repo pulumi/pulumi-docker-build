@@ -47,10 +47,10 @@ type Index struct{}
 
 // IndexArgs instantiate an Index.
 type IndexArgs struct {
-	Tag      string   `pulumi:"tag"`
-	Sources  []string `pulumi:"sources"`
-	Push     bool     `pulumi:"push,optional"`
-	Registry Registry `pulumi:"registry,optional"`
+	Tag      string    `pulumi:"tag"`
+	Sources  []string  `pulumi:"sources"`
+	Push     bool      `pulumi:"push,optional"`
+	Registry *Registry `pulumi:"registry,optional"`
 }
 
 // IndexState captures the state of an Index.
@@ -268,14 +268,20 @@ func (i *Index) Diff(
 	if !reflect.DeepEqual(olds.Sources, news.Sources) {
 		diff["sources"] = update
 	}
-	if olds.Registry.Address != news.Registry.Address {
-		diff["registry.address"] = update
-		if olds.Registry.Address != "" {
-			diff["registry.address"] = replace
+	if olds.Registry != nil && news.Registry != nil {
+		if olds.Registry.Address != news.Registry.Address {
+			diff["registry.address"] = update
+			if olds.Registry.Address != "" {
+				diff["registry.address"] = replace
+			}
+		}
+		if olds.Registry.Username != news.Registry.Username {
+			diff["registry.username"] = update
 		}
 	}
-	if olds.Registry.Username != news.Registry.Username {
-		diff["registry.username"] = update
+	if (olds.Registry == nil && news.Registry != nil) ||
+		(olds.Registry != nil && news.Registry == nil) {
+		diff["registry"] = update
 	}
 	// Intentionally ignore changes to registry.password
 
@@ -301,9 +307,14 @@ func (i *Index) client(
 	// We prefer auth from args, the provider, and state in that order. We
 	// build a slice in reverse order because wrap() will overwrite earlier
 	// entries with later ones.
-	auths := []Registry{state.Registry}
+	auths := []Registry{}
+	if state.Registry != nil {
+		auths = append(auths, *state.Registry)
+	}
 	auths = append(auths, cfg.Registries...)
-	auths = append(auths, args.Registry)
+	if args.Registry != nil {
+		auths = append(auths, *args.Registry)
+	}
 
 	return wrap(cfg.host, auths...)
 }

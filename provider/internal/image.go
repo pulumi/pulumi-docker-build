@@ -93,15 +93,15 @@ type ImageArgs struct {
 	AddHosts       []string          `pulumi:"addHosts,optional"`
 	BuildArgs      map[string]string `pulumi:"buildArgs,optional"`
 	BuildOnPreview *bool             `pulumi:"buildOnPreview,optional"`
-	Builder        BuilderConfig     `pulumi:"builder,optional"`
+	Builder        *BuilderConfig    `pulumi:"builder,optional"`
 	CacheFrom      []CacheFrom       `pulumi:"cacheFrom,optional"`
 	CacheTo        []CacheTo         `pulumi:"cacheTo,optional"`
-	Context        BuildContext      `pulumi:"context,optional"`
-	Dockerfile     Dockerfile        `pulumi:"dockerfile,optional"`
+	Context        *BuildContext     `pulumi:"context,optional"`
+	Dockerfile     *Dockerfile       `pulumi:"dockerfile,optional"`
 	Exports        []Export          `pulumi:"exports,optional"`
 	Labels         map[string]string `pulumi:"labels,optional"`
 	Load           bool              `pulumi:"load,optional"`
-	Network        NetworkMode       `pulumi:"network,optional"`
+	Network        *NetworkMode      `pulumi:"network,optional"`
 	NoCache        bool              `pulumi:"noCache,optional"`
 	Platforms      []Platform        `pulumi:"platforms,optional"`
 	Pull           bool              `pulumi:"pull,optional"`
@@ -555,13 +555,13 @@ func (ia *ImageArgs) validate(preview bool) (controllerapi.BuildOptions, error) 
 		)
 	}
 
-	dockerfile, err := ia.Context.validate(preview, ia.Dockerfile)
+	dockerfile, context, err := ia.Context.validate(preview, ia.Dockerfile)
 	if err != nil {
 		multierr = errors.Join(multierr, err)
 	}
 	ia.Dockerfile = dockerfile
 
-	if err := ia.Dockerfile.validate(preview, ia.Context.Context); err != nil {
+	if err := ia.Dockerfile.validate(preview, context); err != nil {
 		multierr = errors.Join(multierr, err)
 	}
 
@@ -644,19 +644,24 @@ func (ia *ImageArgs) validate(preview bool) (controllerapi.BuildOptions, error) 
 		})
 	}
 
+	builder := BuilderConfig{}
+	if normalized.Builder != nil {
+		builder = *normalized.Builder
+	}
+
 	opts := controllerapi.BuildOptions{
 		BuildArgs:      normalized.BuildArgs,
-		Builder:        normalized.Builder.Name,
+		Builder:        builder.Name,
 		CacheFrom:      cacheFrom,
 		CacheTo:        cacheTo,
-		ContextPath:    normalized.Context.Location,
+		ContextPath:    context.Location,
 		DockerfileName: dockerfile.Location,
 		Exports:        exports,
 		ExtraHosts:     normalized.AddHosts,
 		Labels:         normalized.Labels,
-		NetworkMode:    string(normalized.Network),
+		NetworkMode:    normalized.Network.String(),
 		NoCache:        normalized.NoCache,
-		NamedContexts:  normalized.Context.Named.Map(),
+		NamedContexts:  normalized.Context.namedMap(),
 		Platforms:      platforms,
 		Pull:           normalized.Pull,
 		Secrets:        secrets,
@@ -926,7 +931,7 @@ func (*Image) Diff(
 	if olds.Load != news.Load {
 		diff["load"] = update
 	}
-	if olds.Network != news.Network {
+	if !reflect.DeepEqual(olds.Network, news.Network) {
 		diff["network"] = update
 	}
 	if !reflect.DeepEqual(olds.NoCache, news.NoCache) {

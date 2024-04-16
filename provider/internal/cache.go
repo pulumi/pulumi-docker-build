@@ -342,7 +342,7 @@ func (c *CacheFromS3) String() string {
 
 // CacheWithMode is a cache that can configure its mode.
 type CacheWithMode struct {
-	Mode CacheMode `pulumi:"mode,optional"`
+	Mode *CacheMode `pulumi:"mode,optional"`
 }
 
 // Annotate sets docstrings and defaults on CacheWithMode.
@@ -354,10 +354,10 @@ func (c *CacheWithMode) Annotate(a infer.Annotator) {
 }
 
 func (c CacheWithMode) String() string {
-	if c.Mode == "" {
+	if c.Mode == nil {
 		return ""
 	}
-	return fmt.Sprintf("mode=%s", c.Mode)
+	return fmt.Sprintf("mode=%s", *c.Mode)
 }
 
 // CacheWithIgnoreError exposes an option to ignore errors during caching.
@@ -552,9 +552,9 @@ func (c *CacheToRegistry) String() string {
 // CacheWithCompression is a cache with options to configure compression
 // settings.
 type CacheWithCompression struct {
-	Compression      CompressionType `pulumi:"compression,optional"`
-	CompressionLevel int             `pulumi:"compressionLevel,optional"`
-	ForceCompression *bool           `pulumi:"forceCompression,optional"`
+	Compression      *CompressionType `pulumi:"compression,optional"`
+	CompressionLevel int              `pulumi:"compressionLevel,optional"`
+	ForceCompression *bool            `pulumi:"forceCompression,optional"`
 }
 
 // Annotate sets docstrings and defaults on CacheWithCompression.
@@ -575,8 +575,8 @@ func (c CacheWithCompression) String() string {
 		return ""
 	}
 	parts := []string{}
-	if c.Compression != "" {
-		parts = append(parts, fmt.Sprintf("compression=%s", c.Compression))
+	if c.Compression != nil {
+		parts = append(parts, fmt.Sprintf("compression=%s", *c.Compression))
 	}
 	if c.CompressionLevel > 0 {
 		cl := c.CompressionLevel
