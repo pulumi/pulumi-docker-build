@@ -21,7 +21,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -44,7 +43,6 @@ import (
 	"github.com/regclient/regclient/types/errs"
 	"github.com/regclient/regclient/types/manifest"
 	"github.com/regclient/regclient/types/ref"
-	"github.com/sirupsen/logrus"
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
@@ -93,9 +91,6 @@ func newDockerCLI(config *Config) (*command.DockerCli, error) {
 
 	// TODO: Log some version information for debugging.
 
-	// Disable the CLI's tendency to log randomly to stdout.
-	logrus.SetOutput(io.Discard)
-
 	return cli, nil
 }
 
@@ -130,6 +125,18 @@ func (c *cli) Build(
 	if err != nil {
 		return nil, fmt.Errorf("creating printer: %w", err)
 	}
+	defer func() {
+		// Log any warnings when we're done.
+		_ = printer.Wait()
+		for _, w := range printer.Warnings() {
+			b := &bytes.Buffer{}
+			fmt.Fprint(b, w.Short)
+			for _, d := range w.Detail {
+				fmt.Fprintf(b, "\n%s", d)
+			}
+			pctx.Log(diag.Warning, b.String())
+		}
+	}()
 
 	cacheFrom := []client.CacheOptionsEntry{}
 	for _, c := range opts.CacheFrom {
@@ -228,19 +235,8 @@ func (c *cli) Build(
 		printer,
 	)
 	if err != nil {
+		c.dumplogs = true
 		return nil, err
-	}
-
-	if printErr := printer.Wait(); printErr != nil {
-		return results[target], printErr
-	}
-	for _, w := range printer.Warnings() {
-		b := &bytes.Buffer{}
-		fmt.Fprintf(b, "%s", w.Short)
-		for _, d := range w.Detail {
-			fmt.Fprintf(b, "\n%s", d)
-		}
-		pctx.Log(diag.Warning, b.String())
 	}
 
 	return results[target], err
@@ -272,13 +268,14 @@ func (c *cli) ManifestCreate(ctx provider.Context, push bool, target string, ref
 	cmd := commands.NewRootCmd(os.Args[0], false, c)
 
 	cmd.SetArgs(args)
+	cmd.SetErr(c.Err())
+	cmd.SetOut(c.Out())
 
 	ctx.Log(diag.Debug, fmt.Sprint("creating manifest with args", args))
 	return cmd.ExecuteContext(ctx)
 }
 
 func (c *cli) ManifestInspect(ctx provider.Context, target string) (string, error) {
-	ctx.LogStatus(diag.Info, "inspecting manifest")
 	rc := c.rc()
 
 	ref, err := ref.New(target)

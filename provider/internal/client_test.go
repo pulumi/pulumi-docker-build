@@ -15,6 +15,7 @@
 package internal
 
 import (
+	"bytes"
 	"context"
 	"os"
 	"path/filepath"
@@ -24,6 +25,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
+
+	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
 )
 
 func TestAuth(t *testing.T) {
@@ -328,7 +331,7 @@ func TestInspect(t *testing.T) {
 	)
 }
 
-func TestNormalizatReference(t *testing.T) {
+func TestNormalizeReference(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		ref     string
@@ -360,6 +363,94 @@ func TestNormalizatReference(t *testing.T) {
 				assert.Equal(t, ref.String(), tt.want)
 			}
 		})
+	}
+}
+
+func TestBuildError(t *testing.T) {
+	t.Parallel()
+	ctrl, ctx := gomock.WithContext(context.Background(), t)
+
+	exampleContext := &BuildContext{Context: Context{Location: "../../examples/app"}}
+
+	args := ImageArgs{
+		Context: exampleContext,
+		Dockerfile: &Dockerfile{
+			Inline: "FROM alpine\nRUN echo hello\nRUN badcmd",
+		},
+	}
+	logged := bytes.Buffer{}
+
+	pctx := NewMockProviderContext(ctrl)
+	pctx.EXPECT().Done().Return(ctx.Done()).AnyTimes()
+	pctx.EXPECT().
+		Value(gomock.Any()).
+		DoAndReturn(func(key any) any { return ctx.Value(key) }).
+		AnyTimes()
+	pctx.EXPECT().Err().Return(ctx.Err()).AnyTimes()
+	pctx.EXPECT().Deadline().Return(ctx.Deadline()).AnyTimes()
+
+	pctx.EXPECT().LogStatus(gomock.Any(), gomock.Any()).AnyTimes()
+	pctx.EXPECT().Log(gomock.Any(), gomock.Any()).DoAndReturn(func(_ diag.Severity, msg string) {
+		logged.WriteString(msg)
+	}).AnyTimes()
+
+	cli := testcli(t, true)
+
+	build, err := args.toBuild(pctx, false)
+	require.NoError(t, err)
+
+	_, err = cli.Build(pctx, build)
+	assert.Error(t, err)
+
+	want := []string{
+		`RUN echo hello`,
+		`/bin/sh: badcmd: not found`,
+		`process "/bin/sh -c badcmd" did not complete successfully: exit code: 127`,
+	}
+
+	for _, want := range want {
+		assert.Contains(t, logged.String(), want)
+	}
+}
+
+func TestBuildExecError(t *testing.T) {
+	t.Parallel()
+	ctrl, _ := gomock.WithContext(context.Background(), t)
+
+	exampleContext := &BuildContext{Context: Context{Location: "../../examples/app"}}
+
+	args := ImageArgs{
+		Context: exampleContext,
+		Dockerfile: &Dockerfile{
+			Inline: "FROM alpine\nRUN echo hello\nRUN badcmd",
+		},
+		Exec: true,
+	}
+
+	pctx := NewMockProviderContext(ctrl)
+	pctx.EXPECT().Log(
+		diag.Warning,
+		"No exports were specified so the build will only remain in the local build cache. "+
+			"Use `push` to upload the image to a registry, or silence this warning with a `cacheonly` export.",
+	)
+	pctx.EXPECT().LogStatus(gomock.Any(), gomock.Any()).AnyTimes()
+
+	cli := testcli(t, true)
+
+	build, err := args.toBuild(pctx, false)
+	require.NoError(t, err)
+
+	_, err = cli.Build(pctx, build)
+	assert.Error(t, err)
+
+	want := []string{
+		`RUN echo hello`,
+		`/bin/sh: badcmd: not found`,
+		`process "/bin/sh -c badcmd" did not complete successfully: exit code: 127`,
+	}
+
+	for _, want := range want {
+		assert.Contains(t, cli.err.String(), want)
 	}
 }
 

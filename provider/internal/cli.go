@@ -37,6 +37,7 @@ import (
 	cp "github.com/otiai10/copy"
 	"github.com/regclient/regclient"
 	"github.com/regclient/regclient/config"
+	"github.com/sirupsen/logrus"
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
@@ -55,10 +56,11 @@ type cli struct {
 	auths map[string]cfgtypes.AuthConfig
 	host  *host
 
-	in   string        // stdin
-	r, w *os.File      // stdout
-	err  bytes.Buffer  // stderr
-	done chan struct{} // signaled when all logs have been forwarded to the engine.
+	in       string        // stdin
+	r, w     *os.File      // stdout
+	err      bytes.Buffer  // stderr
+	dumplogs bool          // if true then tail() will re-log status messages
+	done     chan struct{} // signaled when all logs have been forwarded to the engine.
 }
 
 // Cli wraps the Docker interface for mock generation.
@@ -165,17 +167,26 @@ func (c *cli) tail(ctx provider.Context) {
 		}
 	}()
 
+	b := bytes.Buffer{}
+
 	s := bufio.NewScanner(c.r)
 	for s.Scan() {
-		ctx.LogStatus(diag.Info, s.Text())
+		text := s.Text()
+		ctx.LogStatus(diag.Info, text)
+		_, _ = b.WriteString(text + "\n")
 	}
 	ctx.LogStatus(diag.Info, "") // clear confusing "DONE" statements.
+
+	if c.dumplogs {
+		// Persist the full Docker output on error for easier debugging.
+		ctx.Log(diag.Info, b.String())
+		ctx.Log(diag.Error, c.err.String())
+	}
 }
 
 // close flushes any outstanding logs and cleans up resources.
 func (c *cli) Close() error {
-	err := c.w.Close()
-	err = errors.Join(err, c.r.Close())
+	err := errors.Join(c.w.Close(), c.r.Close())
 	if c.done != nil {
 		<-c.done
 	}
@@ -382,7 +393,7 @@ func (c *cli) exec(args, extraEnv []string) error {
 		return err
 	}
 	cmd.Args = append([]string{cmd.Args[0]}, args...)
-	cmd.Stderr = c.Err() // TODO: This is build output...
+	cmd.Stderr = c.Err()
 	cmd.Stdout = c.Out()
 	cmd.Stdin = c.In()
 
@@ -398,4 +409,9 @@ func attrcsv(typ string, m map[string]string) string {
 		s = append(s, fmt.Sprintf("%s=%s", k, v))
 	}
 	return strings.Join(s, ",")
+}
+
+func init() {
+	// Disable the CLI's tendency to log randomly to stdout.
+	logrus.SetOutput(io.Discard)
 }

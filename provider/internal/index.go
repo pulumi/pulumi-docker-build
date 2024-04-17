@@ -139,7 +139,7 @@ func (i *Index) Update(
 		return state, nil
 	}
 
-	ctx.Log(diag.Info, fmt.Sprintf("creating index with tag %s and sources %s", input.Tag, input.Sources))
+	ctx.Log(diag.Debug, fmt.Sprintf("creating index with tag %s and sources %s", input.Tag, input.Sources))
 
 	err = cli.ManifestCreate(ctx, input.Push, input.Tag, input.Sources...)
 	if err != nil {
