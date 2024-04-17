@@ -3,6 +3,8 @@ package examples
 import (
 	"crypto/rand"
 	"crypto/rsa"
+	"errors"
+	"io/fs"
 	"net"
 	"os"
 	"path/filepath"
@@ -24,7 +26,10 @@ func sshagent() string {
 	sock := filepath.Join(dir, "test.sock")
 
 	// In case it already exists.
-	_ = os.Remove(sock)
+	err := os.Remove(sock)
+	if err != nil && !errors.Is(err, fs.ErrNotExist) {
+		panic(err)
+	}
 
 	l, err := net.Listen("unix", sock)
 	if err != nil {
@@ -32,11 +37,14 @@ func sshagent() string {
 	}
 
 	a := agent.NewKeyring()
-	key, err := rsa.GenerateKey(rand.Reader, 2048)
+	key, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
 		panic(err)
 	}
-	_ = a.Add(agent.AddedKey{PrivateKey: key})
+	err = a.Add(agent.AddedKey{PrivateKey: key})
+	if err != nil {
+		panic(err)
+	}
 
 	go func() {
 		conn, err := l.Accept()

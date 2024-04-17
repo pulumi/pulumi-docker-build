@@ -415,7 +415,6 @@ func TestImageDiff(t *testing.T) {
 		{
 			name: "no diff if pull=true but no exports",
 			olds: func(_ *testing.T, is ImageState) ImageState {
-				fmt.Println("WHOA NELLY")
 				is.Pull = true
 				return is
 			},
