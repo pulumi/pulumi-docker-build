@@ -405,12 +405,14 @@ func TestBuildError(t *testing.T) {
 	want := []string{
 		`RUN echo hello`,
 		`/bin/sh: badcmd: not found`,
-		`process "/bin/sh -c badcmd" did not complete successfully: exit code: 127`,
 	}
 
 	for _, want := range want {
 		assert.Contains(t, logged.String(), want)
 	}
+	assert.ErrorContains(t, err,
+		`process "/bin/sh -c badcmd" did not complete successfully: exit code: 127`,
+	)
 }
 
 func TestBuildExecError(t *testing.T) {
