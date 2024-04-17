@@ -34,7 +34,7 @@ provider_debug::
 	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -gcflags="all=-N -l" -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
 
 test_provider:: # Required by CI
-	go test -short -v -coverprofile="coverage.txt" -coverpkg=./provider/... -timeout 2h -parallel ${TESTPARALLELISM} ./provider/...
+	go test -race -short -v -coverprofile="coverage.txt" -coverpkg=./provider/... -timeout 2h -parallel ${TESTPARALLELISM} ./provider/...
 
 test_examples: install_nodejs_sdk install_dotnet_sdk
 	go test -short -v -cover -tags=all -timeout 2h -parallel ${TESTPARALLELISM} ./examples/...
@@ -215,9 +215,10 @@ sdk/nodejs: $(PULUMI) bin/${PROVIDER}
 	mv -f ${TMPDIR}/nodejs ${WORKING_DIR}/sdk/.
 
 sdk/go: TMPDIR := $(shell mktemp -d)
+sdk/go: PATH := "$(WORKING_DIR)/bin:$(PATH)"
 sdk/go: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/go
-	$(PULUMI) package gen-sdk bin/$(PROVIDER) --language go -o ${TMPDIR}
+	PATH=$(PATH) $(PULUMI) package gen-sdk bin/$(PROVIDER) --language go -o ${TMPDIR}
 	cp go.mod ${TMPDIR}/go/dockerbuild/go.mod
 	cd ${TMPDIR}/go/dockerbuild && \
 		go mod edit -module=github.com/pulumi/pulumi-${PACK}/${PACKDIR}/go/dockerbuild && \
