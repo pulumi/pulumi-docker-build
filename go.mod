@@ -18,6 +18,7 @@ require (
 	github.com/pulumi/pulumi-go-provider/integration v0.10.1-0.20240314105842-9fbffb634faf
 	github.com/pulumi/pulumi-java/pkg v0.10.0
 	github.com/pulumi/pulumi/pkg/v3 v3.113.0
+	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20240415162817-44c8de53d5d2
 	github.com/pulumi/pulumi/sdk/v3 v3.113.0
 	github.com/regclient/regclient v0.0.0-20240308005156-a7434cff9c6b
 	github.com/sirupsen/logrus v1.9.3
