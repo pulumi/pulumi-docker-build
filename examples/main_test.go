@@ -2,6 +2,8 @@ package examples
 
 import (
 	"crypto/rsa"
+	"errors"
+	"io"
 	"math/rand"
 	"net"
 	"os"
@@ -44,12 +46,14 @@ func sshagent() string {
 	}
 
 	go func() {
-		conn, err := l.Accept()
-		if err != nil {
-			panic(err)
-		}
-		if err := agent.ServeAgent(a, conn); err != nil {
-			panic(err)
+		for {
+			conn, err := l.Accept()
+			if err != nil {
+				panic(err)
+			}
+			if err := agent.ServeAgent(a, conn); err != nil && !errors.Is(err, io.EOF) {
+				panic(err)
+			}
 		}
 	}()
 
