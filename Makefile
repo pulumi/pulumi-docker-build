@@ -223,7 +223,7 @@ sdk/go: $(PULUMI) bin/${PROVIDER}
 	cd ${TMPDIR}/go/dockerbuild && \
 		go mod edit -module=github.com/pulumi/pulumi-${PACK}/${PACKDIR}/go/dockerbuild && \
 		go mod tidy
-	mv -f ${TMPDIR}/go ${WORKING_DIR}/sdk/.
+	mv -f ${TMPDIR}/go ${WORKING_DIR}/sdk/go
 
 sdk/dotnet: DOTNET_VERSION  := $(shell pulumictl get version --language dotnet)
 sdk/dotnet: TMPDIR := $(shell mktemp -d)

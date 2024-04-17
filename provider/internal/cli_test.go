@@ -41,6 +41,7 @@ func TestExec(t *testing.T) {
 }
 
 func TestWrappedAuth(t *testing.T) {
+	t.Parallel()
 	ecr := "https://1234.dkr.ecr.us-west-2.amazonaws.com"
 	h := &host{
 		auths: map[string]types.AuthConfig{
