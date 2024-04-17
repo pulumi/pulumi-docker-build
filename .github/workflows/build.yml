@@ -16,7 +16,7 @@ on:
   workflow_dispatch: {}
 env:
   GITHUB_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
-  PROVIDER: dockerbuild
+  PROVIDER: docker-build
   PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
   PULUMI_LOCAL_NUGET: ${{ github.workspace }}/nuget
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -33,7 +33,7 @@ env:
   SIGNING_KEY: ${{ secrets.JAVA_SIGNING_KEY }}
   SIGNING_PASSWORD: ${{ secrets.JAVA_SIGNING_PASSWORD }}
   GOVERSION: 1.21.x
-  NODEVERSION: 16.x
+  NODEVERSION: 20.x
   PYTHONVERSION: "3.11"
   DOTNETVERSION: |
     6.0.x
