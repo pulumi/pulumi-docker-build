@@ -1,10 +1,8 @@
 package examples
 
 import (
-	"crypto/rand"
 	"crypto/rsa"
-	"errors"
-	"io/fs"
+	"math/rand"
 	"net"
 	"os"
 	"path/filepath"
@@ -22,14 +20,12 @@ func TestMain(m *testing.M) {
 
 // sshagent crates an in-memory SSH agent with one identity.
 func sshagent() string {
-	dir := os.TempDir()
-	sock := filepath.Join(dir, "test.sock")
-
-	// In case it already exists.
-	err := os.Remove(sock)
-	if err != nil && !errors.Is(err, fs.ErrNotExist) {
+	dir, err := os.MkdirTemp(os.TempDir(), "docker-test-*")
+	if err != nil {
 		panic(err)
 	}
+
+	sock := filepath.Join(dir, "test.sock")
 
 	l, err := net.Listen("unix", sock)
 	if err != nil {
@@ -37,7 +33,8 @@ func sshagent() string {
 	}
 
 	a := agent.NewKeyring()
-	key, err := rsa.GenerateKey(rand.Reader, 4096)
+	//nolint:gosec
+	key, err := rsa.GenerateKey(rand.New(rand.NewSource(42)), 2048)
 	if err != nil {
 		panic(err)
 	}
@@ -51,7 +48,9 @@ func sshagent() string {
 		if err != nil {
 			panic(err)
 		}
-		agent.ServeAgent(a, conn)
+		if err := agent.ServeAgent(a, conn); err != nil {
+			panic(err)
+		}
 	}()
 
 	return sock
