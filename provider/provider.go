@@ -27,7 +27,7 @@ import (
 )
 
 // Version is initialized by the Go linker to contain the semver of this build.
-var Version string
+var Version = "0.0.1"
 
 // Name needs to match $PACK in Makefile.
 const Name string = "docker-build"
@@ -62,7 +62,7 @@ func (p configurableProvider) Configure(
 	ctx context.Context,
 	request *rpc.ConfigureRequest,
 ) (*rpc.ConfigureResponse, error) {
-	schema := internal.Schema(ctx, "")
+	schema := internal.Schema(ctx, Version)
 	ce := deprecated.New(schema.Config)
 	buildxReq := request
 	if props, err := ce.UnmarshalProperties(request.Args); err == nil {

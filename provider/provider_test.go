@@ -18,8 +18,10 @@ import (
 	"context"
 	"testing"
 
+	"github.com/blang/semver"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/structpb"
 
 	pulumirpc "github.com/pulumi/pulumi/sdk/v3/proto/go"
@@ -47,4 +49,20 @@ func TestConfigure(t *testing.T) {
 	})
 
 	assert.NoError(t, err)
+}
+
+func TestVersion(t *testing.T) {
+	t.Parallel()
+
+	_, err := semver.Parse(Version)
+	assert.NoError(t, err)
+
+	p, err := New(nil)
+	require.NoError(t, err)
+
+	info, err := p.GetPluginInfo(context.Background(), &emptypb.Empty{})
+	assert.NoError(t, err)
+
+	require.NotEqual(t, "", Version)
+	assert.Equal(t, Version, info.Version)
 }
