@@ -726,28 +726,28 @@ class Image(pulumi.CustomResource):
         ```python
         import pulumi
         import pulumi_aws as aws
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
         ecr_repository = aws.ecr.Repository("ecr-repository")
         auth_token = aws.ecr.get_authorization_token_output(registry_id=ecr_repository.registry_id)
-        my_image = dockerbuild.Image("my-image",
-            cache_from=[dockerbuild.CacheFromArgs(
-                registry=dockerbuild.CacheFromRegistryArgs(
+        my_image = docker_build.Image("my-image",
+            cache_from=[docker_build.CacheFromArgs(
+                registry=docker_build.CacheFromRegistryArgs(
                     ref=ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
                 ),
             )],
-            cache_to=[dockerbuild.CacheToArgs(
-                registry=dockerbuild.CacheToRegistryArgs(
+            cache_to=[docker_build.CacheToArgs(
+                registry=docker_build.CacheToRegistryArgs(
                     image_manifest=True,
                     oci_media_types=True,
                     ref=ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
                 ),
             )],
-            context=dockerbuild.BuildContextArgs(
+            context=docker_build.BuildContextArgs(
                 location="./app",
             ),
             push=True,
-            registries=[dockerbuild.RegistryArgs(
+            registries=[docker_build.RegistryArgs(
                 address=ecr_repository.repository_url,
                 password=auth_token.password,
                 username=auth_token.user_name,
@@ -758,28 +758,28 @@ class Image(pulumi.CustomResource):
         ### Multi-platform image
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
             platforms=[
-                dockerbuild.Platform.PLAN9_AMD64,
-                dockerbuild.Platform.PLAN9_386,
+                docker_build.Platform.PLAN9_AMD64,
+                docker_build.Platform.PLAN9_386,
             ])
         ```
         ### Registry export
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
             push=True,
-            registries=[dockerbuild.RegistryArgs(
+            registries=[docker_build.RegistryArgs(
                 address="docker.io",
                 password=docker_hub_password,
                 username="pulumibot",
@@ -790,34 +790,34 @@ class Image(pulumi.CustomResource):
         ### Caching
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            cache_from=[dockerbuild.CacheFromArgs(
-                local=dockerbuild.CacheFromLocalArgs(
+        image = docker_build.Image("image",
+            cache_from=[docker_build.CacheFromArgs(
+                local=docker_build.CacheFromLocalArgs(
                     src="tmp/cache",
                 ),
             )],
-            cache_to=[dockerbuild.CacheToArgs(
-                local=dockerbuild.CacheToLocalArgs(
+            cache_to=[docker_build.CacheToArgs(
+                local=docker_build.CacheToLocalArgs(
                     dest="tmp/cache",
-                    mode=dockerbuild.CacheMode.MAX,
+                    mode=docker_build.CacheMode.MAX,
                 ),
             )],
-            context=dockerbuild.BuildContextArgs(
+            context=docker_build.BuildContextArgs(
                 location="app",
             ))
         ```
         ### Docker Build Cloud
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            builder=dockerbuild.BuilderConfigArgs(
+        image = docker_build.Image("image",
+            builder=docker_build.BuilderConfigArgs(
                 name="cloud-builder-name",
             ),
-            context=dockerbuild.BuildContextArgs(
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
             exec_=True)
@@ -825,23 +825,23 @@ class Image(pulumi.CustomResource):
         ### Build arguments
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
+        image = docker_build.Image("image",
             build_args={
                 "SET_ME_TO_TRUE": "true",
             },
-            context=dockerbuild.BuildContextArgs(
+            context=docker_build.BuildContextArgs(
                 location="app",
             ))
         ```
         ### Build target
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
             target="build-me")
@@ -849,12 +849,12 @@ class Image(pulumi.CustomResource):
         ### Named contexts
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image", context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image", context=docker_build.BuildContextArgs(
             location="app",
             named={
-                "golang:latest": dockerbuild.ContextArgs(
+                "golang:latest": docker_build.ContextArgs(
                     location="docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
                 ),
             },
@@ -863,22 +863,22 @@ class Image(pulumi.CustomResource):
         ### Remote context
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image", context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image", context=docker_build.BuildContextArgs(
             location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
         ))
         ```
         ### Inline Dockerfile
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
-            dockerfile=dockerbuild.DockerfileArgs(
+            dockerfile=docker_build.DockerfileArgs(
                 inline=\"\"\"FROM busybox
         COPY hello.c ./
         \"\"\",
@@ -887,27 +887,27 @@ class Image(pulumi.CustomResource):
         ### Remote context
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
                 location="https://github.com/docker-library/hello-world.git",
             ),
-            dockerfile=dockerbuild.DockerfileArgs(
+            dockerfile=docker_build.DockerfileArgs(
                 location="app/Dockerfile",
             ))
         ```
         ### Local export
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
-            exports=[dockerbuild.ExportArgs(
-                docker=dockerbuild.ExportDockerArgs(
+            exports=[docker_build.ExportArgs(
+                docker=docker_build.ExportDockerArgs(
                     tar=True,
                 ),
             )])
@@ -1163,28 +1163,28 @@ class Image(pulumi.CustomResource):
         ```python
         import pulumi
         import pulumi_aws as aws
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
         ecr_repository = aws.ecr.Repository("ecr-repository")
         auth_token = aws.ecr.get_authorization_token_output(registry_id=ecr_repository.registry_id)
-        my_image = dockerbuild.Image("my-image",
-            cache_from=[dockerbuild.CacheFromArgs(
-                registry=dockerbuild.CacheFromRegistryArgs(
+        my_image = docker_build.Image("my-image",
+            cache_from=[docker_build.CacheFromArgs(
+                registry=docker_build.CacheFromRegistryArgs(
                     ref=ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
                 ),
             )],
-            cache_to=[dockerbuild.CacheToArgs(
-                registry=dockerbuild.CacheToRegistryArgs(
+            cache_to=[docker_build.CacheToArgs(
+                registry=docker_build.CacheToRegistryArgs(
                     image_manifest=True,
                     oci_media_types=True,
                     ref=ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
                 ),
             )],
-            context=dockerbuild.BuildContextArgs(
+            context=docker_build.BuildContextArgs(
                 location="./app",
             ),
             push=True,
-            registries=[dockerbuild.RegistryArgs(
+            registries=[docker_build.RegistryArgs(
                 address=ecr_repository.repository_url,
                 password=auth_token.password,
                 username=auth_token.user_name,
@@ -1195,28 +1195,28 @@ class Image(pulumi.CustomResource):
         ### Multi-platform image
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
             platforms=[
-                dockerbuild.Platform.PLAN9_AMD64,
-                dockerbuild.Platform.PLAN9_386,
+                docker_build.Platform.PLAN9_AMD64,
+                docker_build.Platform.PLAN9_386,
             ])
         ```
         ### Registry export
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
             push=True,
-            registries=[dockerbuild.RegistryArgs(
+            registries=[docker_build.RegistryArgs(
                 address="docker.io",
                 password=docker_hub_password,
                 username="pulumibot",
@@ -1227,34 +1227,34 @@ class Image(pulumi.CustomResource):
         ### Caching
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            cache_from=[dockerbuild.CacheFromArgs(
-                local=dockerbuild.CacheFromLocalArgs(
+        image = docker_build.Image("image",
+            cache_from=[docker_build.CacheFromArgs(
+                local=docker_build.CacheFromLocalArgs(
                     src="tmp/cache",
                 ),
             )],
-            cache_to=[dockerbuild.CacheToArgs(
-                local=dockerbuild.CacheToLocalArgs(
+            cache_to=[docker_build.CacheToArgs(
+                local=docker_build.CacheToLocalArgs(
                     dest="tmp/cache",
-                    mode=dockerbuild.CacheMode.MAX,
+                    mode=docker_build.CacheMode.MAX,
                 ),
             )],
-            context=dockerbuild.BuildContextArgs(
+            context=docker_build.BuildContextArgs(
                 location="app",
             ))
         ```
         ### Docker Build Cloud
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            builder=dockerbuild.BuilderConfigArgs(
+        image = docker_build.Image("image",
+            builder=docker_build.BuilderConfigArgs(
                 name="cloud-builder-name",
             ),
-            context=dockerbuild.BuildContextArgs(
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
             exec_=True)
@@ -1262,23 +1262,23 @@ class Image(pulumi.CustomResource):
         ### Build arguments
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
+        image = docker_build.Image("image",
             build_args={
                 "SET_ME_TO_TRUE": "true",
             },
-            context=dockerbuild.BuildContextArgs(
+            context=docker_build.BuildContextArgs(
                 location="app",
             ))
         ```
         ### Build target
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
             target="build-me")
@@ -1286,12 +1286,12 @@ class Image(pulumi.CustomResource):
         ### Named contexts
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image", context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image", context=docker_build.BuildContextArgs(
             location="app",
             named={
-                "golang:latest": dockerbuild.ContextArgs(
+                "golang:latest": docker_build.ContextArgs(
                     location="docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
                 ),
             },
@@ -1300,22 +1300,22 @@ class Image(pulumi.CustomResource):
         ### Remote context
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image", context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image", context=docker_build.BuildContextArgs(
             location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
         ))
         ```
         ### Inline Dockerfile
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
-            dockerfile=dockerbuild.DockerfileArgs(
+            dockerfile=docker_build.DockerfileArgs(
                 inline=\"\"\"FROM busybox
         COPY hello.c ./
         \"\"\",
@@ -1324,27 +1324,27 @@ class Image(pulumi.CustomResource):
         ### Remote context
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
                 location="https://github.com/docker-library/hello-world.git",
             ),
-            dockerfile=dockerbuild.DockerfileArgs(
+            dockerfile=docker_build.DockerfileArgs(
                 location="app/Dockerfile",
             ))
         ```
         ### Local export
         ```python
         import pulumi
-        import pulumi_dockerbuild as dockerbuild
+        import pulumi_docker_build as docker_build
 
-        image = dockerbuild.Image("image",
-            context=dockerbuild.BuildContextArgs(
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
                 location="app",
             ),
-            exports=[dockerbuild.ExportArgs(
-                docker=dockerbuild.ExportDockerArgs(
+            exports=[docker_build.ExportArgs(
+                docker=docker_build.ExportDockerArgs(
                     tar=True,
                 ),
             )])

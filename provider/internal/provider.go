@@ -69,14 +69,13 @@ func NewBuildxProvider() provider.Provider {
 	return infer.Provider(
 		infer.Options{
 			Metadata: pschema.Metadata{
-				DisplayName:       "docker-build",
-				Keywords:          []string{"docker", "buildkit", "buildx"},
-				Description:       "A Pulumi provider for Docker buildx",
-				Homepage:          "https://pulumi.io",
-				Publisher:         "pulumi",
-				License:           "Apache-2.0",
-				Repository:        "https://github.com/pulumi/pulumi-docker-build",
-				PluginDownloadURL: "github.com/pulumi/pulumi-docker-build",
+				DisplayName: "docker-build",
+				Keywords:    []string{"docker", "buildkit", "buildx", "kind/native"},
+				Description: "A Pulumi provider for Docker buildx",
+				Homepage:    "https://pulumi.com",
+				Publisher:   "pulumi",
+				License:     "Apache-2.0",
+				Repository:  "https://github.com/pulumi/pulumi-docker-build",
 				LanguageMap: map[string]any{
 					"go": gogen.GoPackageInfo{
 						// GenerateResourceContainerTypes: true,

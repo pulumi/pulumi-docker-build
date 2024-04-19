@@ -132,7 +132,7 @@ import (
 //	"fmt"
 //
 //	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ecr"
-//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+//	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )
@@ -203,7 +203,7 @@ import (
 //
 // import (
 //
-//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+//	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )
@@ -214,7 +214,7 @@ import (
 //				Context: &dockerbuild.BuildContextArgs{
 //					Location: pulumi.String("app"),
 //				},
-//				Platforms: dockerbuild.PlatformArray{
+//				Platforms: docker - build.PlatformArray{
 //					dockerbuild.Platform_Plan9_amd64,
 //					dockerbuild.Platform_Plan9_386,
 //				},
@@ -233,7 +233,7 @@ import (
 //
 // import (
 //
-//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+//	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )
@@ -271,7 +271,7 @@ import (
 //
 // import (
 //
-//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+//	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )
@@ -312,7 +312,7 @@ import (
 //
 // import (
 //
-//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+//	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )
@@ -342,7 +342,7 @@ import (
 //
 // import (
 //
-//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+//	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )
@@ -371,7 +371,7 @@ import (
 //
 // import (
 //
-//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+//	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )
@@ -398,7 +398,7 @@ import (
 //
 // import (
 //
-//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+//	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )
@@ -429,7 +429,7 @@ import (
 //
 // import (
 //
-//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+//	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )
@@ -455,7 +455,7 @@ import (
 //
 // import (
 //
-//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+//	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )
@@ -484,7 +484,7 @@ import (
 //
 // import (
 //
-//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+//	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )
@@ -513,7 +513,7 @@ import (
 //
 // import (
 //
-//	"github.com/pulumi/pulumi-dockerbuild/sdk/go/dockerbuild"
+//	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 //	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 //
 // )

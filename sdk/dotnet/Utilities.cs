@@ -53,7 +53,6 @@ namespace Pulumi.DockerBuild
         {
             var dst = src ?? new global::Pulumi.InvokeOptions{};
             dst.Version = src?.Version ?? Version;
-            dst.PluginDownloadURL = src?.PluginDownloadURL ?? "github.com/pulumi/pulumi-docker-build";
             return dst;
         }
 

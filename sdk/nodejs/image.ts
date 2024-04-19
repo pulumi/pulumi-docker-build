@@ -253,13 +253,13 @@ import * as utilities from "./utilities";
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
  * import * as aws from "@pulumi/aws";
- * import * as dockerbuild from "@pulumi/dockerbuild";
+ * import * as docker_build from "@pulumi/docker-build";
  *
  * const ecrRepository = new aws.ecr.Repository("ecr-repository", {});
  * const authToken = aws.ecr.getAuthorizationTokenOutput({
  *     registryId: ecrRepository.registryId,
  * });
- * const myImage = new dockerbuild.Image("my-image", {
+ * const myImage = new docker_build.Image("my-image", {
  *     cacheFrom: [{
  *         registry: {
  *             ref: pulumi.interpolate`${ecrRepository.repositoryUrl}:cache`,
@@ -289,15 +289,15 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as dockerbuild from "@pulumi/dockerbuild";
+ * import * as docker_build from "@pulumi/docker-build";
  *
- * const image = new dockerbuild.Image("image", {
+ * const image = new docker_build.Image("image", {
  *     context: {
  *         location: "app",
  *     },
  *     platforms: [
- *         dockerbuild.Platform.Plan9_amd64,
- *         dockerbuild.Platform.Plan9_386,
+ *         docker_build.Platform.Plan9_amd64,
+ *         docker_build.Platform.Plan9_386,
  *     ],
  * });
  * ```
@@ -305,9 +305,9 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as dockerbuild from "@pulumi/dockerbuild";
+ * import * as docker_build from "@pulumi/docker-build";
  *
- * const image = new dockerbuild.Image("image", {
+ * const image = new docker_build.Image("image", {
  *     context: {
  *         location: "app",
  *     },
@@ -325,9 +325,9 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as dockerbuild from "@pulumi/dockerbuild";
+ * import * as docker_build from "@pulumi/docker-build";
  *
- * const image = new dockerbuild.Image("image", {
+ * const image = new docker_build.Image("image", {
  *     cacheFrom: [{
  *         local: {
  *             src: "tmp/cache",
@@ -336,7 +336,7 @@ import * as utilities from "./utilities";
  *     cacheTo: [{
  *         local: {
  *             dest: "tmp/cache",
- *             mode: dockerbuild.CacheMode.Max,
+ *             mode: docker_build.CacheMode.Max,
  *         },
  *     }],
  *     context: {
@@ -348,9 +348,9 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as dockerbuild from "@pulumi/dockerbuild";
+ * import * as docker_build from "@pulumi/docker-build";
  *
- * const image = new dockerbuild.Image("image", {
+ * const image = new docker_build.Image("image", {
  *     builder: {
  *         name: "cloud-builder-name",
  *     },
@@ -364,9 +364,9 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as dockerbuild from "@pulumi/dockerbuild";
+ * import * as docker_build from "@pulumi/docker-build";
  *
- * const image = new dockerbuild.Image("image", {
+ * const image = new docker_build.Image("image", {
  *     buildArgs: {
  *         SET_ME_TO_TRUE: "true",
  *     },
@@ -379,9 +379,9 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as dockerbuild from "@pulumi/dockerbuild";
+ * import * as docker_build from "@pulumi/docker-build";
  *
- * const image = new dockerbuild.Image("image", {
+ * const image = new docker_build.Image("image", {
  *     context: {
  *         location: "app",
  *     },
@@ -392,9 +392,9 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as dockerbuild from "@pulumi/dockerbuild";
+ * import * as docker_build from "@pulumi/docker-build";
  *
- * const image = new dockerbuild.Image("image", {context: {
+ * const image = new docker_build.Image("image", {context: {
  *     location: "app",
  *     named: {
  *         "golang:latest": {
@@ -407,9 +407,9 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as dockerbuild from "@pulumi/dockerbuild";
+ * import * as docker_build from "@pulumi/docker-build";
  *
- * const image = new dockerbuild.Image("image", {context: {
+ * const image = new docker_build.Image("image", {context: {
  *     location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
  * }});
  * ```
@@ -417,9 +417,9 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as dockerbuild from "@pulumi/dockerbuild";
+ * import * as docker_build from "@pulumi/docker-build";
  *
- * const image = new dockerbuild.Image("image", {
+ * const image = new docker_build.Image("image", {
  *     context: {
  *         location: "app",
  *     },
@@ -434,9 +434,9 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as dockerbuild from "@pulumi/dockerbuild";
+ * import * as docker_build from "@pulumi/docker-build";
  *
- * const image = new dockerbuild.Image("image", {
+ * const image = new docker_build.Image("image", {
  *     context: {
  *         location: "https://github.com/docker-library/hello-world.git",
  *     },
@@ -449,9 +449,9 @@ import * as utilities from "./utilities";
  *
  * ```typescript
  * import * as pulumi from "@pulumi/pulumi";
- * import * as dockerbuild from "@pulumi/dockerbuild";
+ * import * as docker_build from "@pulumi/docker-build";
  *
- * const image = new dockerbuild.Image("image", {
+ * const image = new docker_build.Image("image", {
  *     context: {
  *         location: "app",
  *     },

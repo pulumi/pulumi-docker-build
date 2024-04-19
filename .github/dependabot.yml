@@ -8,8 +8,6 @@ updates:
       pulumi:
         patterns:
           - "github.com/pulumi/*"
-        exclude-patterns:
-          - "k8s.io/utils"
     labels:
       - dependencies
       - impact/no-changelog-required

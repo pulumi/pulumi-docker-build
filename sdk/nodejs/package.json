@@ -4,9 +4,10 @@
     "keywords": [
         "docker",
         "buildkit",
-        "buildx"
+        "buildx",
+        "kind/native"
     ],
-    "homepage": "https://pulumi.io",
+    "homepage": "https://pulumi.com",
     "repository": "https://github.com/pulumi/pulumi-docker-build",
     "license": "Apache-2.0",
     "scripts": {
@@ -21,7 +22,6 @@
     },
     "pulumi": {
         "resource": true,
-        "name": "docker-build",
-        "server": "github.com/pulumi/pulumi-docker-build"
+        "name": "docker-build"
     }
 }

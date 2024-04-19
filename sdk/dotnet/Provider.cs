@@ -36,7 +36,6 @@ namespace Pulumi.DockerBuild
             var defaultOptions = new CustomResourceOptions
             {
                 Version = Utilities.Version,
-                PluginDownloadURL = "github.com/pulumi/pulumi-docker-build",
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
             // Override the ID if one was specified for consistency with other language SDKs.
