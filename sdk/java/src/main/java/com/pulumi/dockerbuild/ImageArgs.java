@@ -80,40 +80,34 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
-     * By default, preview behavior depends on the execution environment. If
-     * Pulumi detects the operation is running on a CI system (GitHub Actions,
-     * Travis CI, Azure Pipelines, etc.) then it will build images during
-     * previews as a safeguard. Otherwise, if not running on CI, previews will
-     * not build images.
-     * 
-     * Setting this to `false` forces previews to never perform builds, and
-     * setting it to `true` will always build the image during previews.
+     * Setting this to `false` will always skip image builds during previews,
+     * and setting it to `true` will always build images during previews.
      * 
      * Images built during previews are never exported to registries, however
      * cache manifests are still exported.
      * 
      * On-disk Dockerfiles are always validated for syntactic correctness
      * regardless of this setting.
+     * 
+     * Defaults to `true` as a safeguard against broken images merging as part
+     * of CI pipelines.
      * 
      */
     @Import(name="buildOnPreview")
     private @Nullable Output<Boolean> buildOnPreview;
 
     /**
-     * @return By default, preview behavior depends on the execution environment. If
-     * Pulumi detects the operation is running on a CI system (GitHub Actions,
-     * Travis CI, Azure Pipelines, etc.) then it will build images during
-     * previews as a safeguard. Otherwise, if not running on CI, previews will
-     * not build images.
-     * 
-     * Setting this to `false` forces previews to never perform builds, and
-     * setting it to `true` will always build the image during previews.
+     * @return Setting this to `false` will always skip image builds during previews,
+     * and setting it to `true` will always build images during previews.
      * 
      * Images built during previews are never exported to registries, however
      * cache manifests are still exported.
      * 
      * On-disk Dockerfiles are always validated for syntactic correctness
      * regardless of this setting.
+     * 
+     * Defaults to `true` as a safeguard against broken images merging as part
+     * of CI pipelines.
      * 
      */
     public Optional<Output<Boolean>> buildOnPreview() {
@@ -685,20 +679,17 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param buildOnPreview By default, preview behavior depends on the execution environment. If
-         * Pulumi detects the operation is running on a CI system (GitHub Actions,
-         * Travis CI, Azure Pipelines, etc.) then it will build images during
-         * previews as a safeguard. Otherwise, if not running on CI, previews will
-         * not build images.
-         * 
-         * Setting this to `false` forces previews to never perform builds, and
-         * setting it to `true` will always build the image during previews.
+         * @param buildOnPreview Setting this to `false` will always skip image builds during previews,
+         * and setting it to `true` will always build images during previews.
          * 
          * Images built during previews are never exported to registries, however
          * cache manifests are still exported.
          * 
          * On-disk Dockerfiles are always validated for syntactic correctness
          * regardless of this setting.
+         * 
+         * Defaults to `true` as a safeguard against broken images merging as part
+         * of CI pipelines.
          * 
          * @return builder
          * 
@@ -709,20 +700,17 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param buildOnPreview By default, preview behavior depends on the execution environment. If
-         * Pulumi detects the operation is running on a CI system (GitHub Actions,
-         * Travis CI, Azure Pipelines, etc.) then it will build images during
-         * previews as a safeguard. Otherwise, if not running on CI, previews will
-         * not build images.
-         * 
-         * Setting this to `false` forces previews to never perform builds, and
-         * setting it to `true` will always build the image during previews.
+         * @param buildOnPreview Setting this to `false` will always skip image builds during previews,
+         * and setting it to `true` will always build images during previews.
          * 
          * Images built during previews are never exported to registries, however
          * cache manifests are still exported.
          * 
          * On-disk Dockerfiles are always validated for syntactic correctness
          * regardless of this setting.
+         * 
+         * Defaults to `true` as a safeguard against broken images merging as part
+         * of CI pipelines.
          * 
          * @return builder
          * 
@@ -1388,6 +1376,7 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         public ImageArgs build() {
+            $.buildOnPreview = Codegen.booleanProp("buildOnPreview").output().arg($.buildOnPreview).def(true).getNullable();
             $.network = Codegen.objectProp("network", NetworkMode.class).output().arg($.network).def(NetworkMode.Default_).getNullable();
             return $;
         }

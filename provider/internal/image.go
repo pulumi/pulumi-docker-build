@@ -40,7 +40,7 @@ import (
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/util/ciutil"
+	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
 var (
@@ -127,21 +127,19 @@ func (ia *ImageArgs) Annotate(a infer.Annotator) {
 		Equivalent to Docker's "--build-arg" flag.
 	`))
 	a.Describe(&ia.BuildOnPreview, dedent(`
-		By default, preview behavior depends on the execution environment. If
-		Pulumi detects the operation is running on a CI system (GitHub Actions,
-		Travis CI, Azure Pipelines, etc.) then it will build images during
-		previews as a safeguard. Otherwise, if not running on CI, previews will
-		not build images.
-
-		Setting this to "false" forces previews to never perform builds, and
-		setting it to "true" will always build the image during previews.
+		Setting this to "false" will always skip image builds during previews,
+		and setting it to "true" will always build images during previews.
 
 		Images built during previews are never exported to registries, however
 		cache manifests are still exported.
 
 		On-disk Dockerfiles are always validated for syntactic correctness
 		regardless of this setting.
+
+		Defaults to "true" as a safeguard against broken images merging as part
+		of CI pipelines.
 	`))
+	a.SetDefault(&ia.BuildOnPreview, pulumi.Bool(true))
 	a.Describe(&ia.Builder, dedent(`
 		Builder configuration.
 	`))
@@ -457,13 +455,12 @@ func (ia *ImageArgs) isExported() bool {
 }
 
 // shouldBuildOnPreview returns true if we should build this image during
-// previews. In CI environments we default to building during previews, but we
-// always respect buildOnPreview if it was specified.
+// previews.
 func (ia *ImageArgs) shouldBuildOnPreview() bool {
 	if ia.BuildOnPreview != nil {
 		return *ia.BuildOnPreview
 	}
-	return ciutil.IsCI()
+	return true
 }
 
 type build struct {

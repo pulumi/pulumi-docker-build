@@ -511,20 +511,17 @@ namespace Pulumi.DockerBuild
         public Output<ImmutableDictionary<string, string>?> BuildArgs { get; private set; } = null!;
 
         /// <summary>
-        /// By default, preview behavior depends on the execution environment. If
-        /// Pulumi detects the operation is running on a CI system (GitHub Actions,
-        /// Travis CI, Azure Pipelines, etc.) then it will build images during
-        /// previews as a safeguard. Otherwise, if not running on CI, previews will
-        /// not build images.
-        /// 
-        /// Setting this to `false` forces previews to never perform builds, and
-        /// setting it to `true` will always build the image during previews.
+        /// Setting this to `false` will always skip image builds during previews,
+        /// and setting it to `true` will always build images during previews.
         /// 
         /// Images built during previews are never exported to registries, however
         /// cache manifests are still exported.
         /// 
         /// On-disk Dockerfiles are always validated for syntactic correctness
         /// regardless of this setting.
+        /// 
+        /// Defaults to `true` as a safeguard against broken images merging as part
+        /// of CI pipelines.
         /// </summary>
         [Output("buildOnPreview")]
         public Output<bool?> BuildOnPreview { get; private set; } = null!;
@@ -842,20 +839,17 @@ namespace Pulumi.DockerBuild
         }
 
         /// <summary>
-        /// By default, preview behavior depends on the execution environment. If
-        /// Pulumi detects the operation is running on a CI system (GitHub Actions,
-        /// Travis CI, Azure Pipelines, etc.) then it will build images during
-        /// previews as a safeguard. Otherwise, if not running on CI, previews will
-        /// not build images.
-        /// 
-        /// Setting this to `false` forces previews to never perform builds, and
-        /// setting it to `true` will always build the image during previews.
+        /// Setting this to `false` will always skip image builds during previews,
+        /// and setting it to `true` will always build images during previews.
         /// 
         /// Images built during previews are never exported to registries, however
         /// cache manifests are still exported.
         /// 
         /// On-disk Dockerfiles are always validated for syntactic correctness
         /// regardless of this setting.
+        /// 
+        /// Defaults to `true` as a safeguard against broken images merging as part
+        /// of CI pipelines.
         /// </summary>
         [Input("buildOnPreview")]
         public Input<bool>? BuildOnPreview { get; set; }
@@ -1110,6 +1104,7 @@ namespace Pulumi.DockerBuild
 
         public ImageArgs()
         {
+            BuildOnPreview = true;
             Network = Pulumi.DockerBuild.NetworkMode.@Default;
         }
         public static new ImageArgs Empty => new ImageArgs();

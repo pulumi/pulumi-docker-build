@@ -53,20 +53,17 @@ class ImageArgs:
                if these arguments are sensitive.
                
                Equivalent to Docker's `--build-arg` flag.
-        :param pulumi.Input[bool] build_on_preview: By default, preview behavior depends on the execution environment. If
-               Pulumi detects the operation is running on a CI system (GitHub Actions,
-               Travis CI, Azure Pipelines, etc.) then it will build images during
-               previews as a safeguard. Otherwise, if not running on CI, previews will
-               not build images.
-               
-               Setting this to `false` forces previews to never perform builds, and
-               setting it to `true` will always build the image during previews.
+        :param pulumi.Input[bool] build_on_preview: Setting this to `false` will always skip image builds during previews,
+               and setting it to `true` will always build images during previews.
                
                Images built during previews are never exported to registries, however
                cache manifests are still exported.
                
                On-disk Dockerfiles are always validated for syntactic correctness
                regardless of this setting.
+               
+               Defaults to `true` as a safeguard against broken images merging as part
+               of CI pipelines.
         :param pulumi.Input['BuilderConfigArgs'] builder: Builder configuration.
         :param pulumi.Input[Sequence[pulumi.Input['CacheFromArgs']]] cache_from: Cache export configuration.
                
@@ -171,6 +168,8 @@ class ImageArgs:
             pulumi.set(__self__, "add_hosts", add_hosts)
         if build_args is not None:
             pulumi.set(__self__, "build_args", build_args)
+        if build_on_preview is None:
+            build_on_preview = True
         if build_on_preview is not None:
             pulumi.set(__self__, "build_on_preview", build_on_preview)
         if builder is not None:
@@ -252,20 +251,17 @@ class ImageArgs:
     @pulumi.getter(name="buildOnPreview")
     def build_on_preview(self) -> Optional[pulumi.Input[bool]]:
         """
-        By default, preview behavior depends on the execution environment. If
-        Pulumi detects the operation is running on a CI system (GitHub Actions,
-        Travis CI, Azure Pipelines, etc.) then it will build images during
-        previews as a safeguard. Otherwise, if not running on CI, previews will
-        not build images.
-
-        Setting this to `false` forces previews to never perform builds, and
-        setting it to `true` will always build the image during previews.
+        Setting this to `false` will always skip image builds during previews,
+        and setting it to `true` will always build images during previews.
 
         Images built during previews are never exported to registries, however
         cache manifests are still exported.
 
         On-disk Dockerfiles are always validated for syntactic correctness
         regardless of this setting.
+
+        Defaults to `true` as a safeguard against broken images merging as part
+        of CI pipelines.
         """
         return pulumi.get(self, "build_on_preview")
 
@@ -921,20 +917,17 @@ class Image(pulumi.CustomResource):
                if these arguments are sensitive.
                
                Equivalent to Docker's `--build-arg` flag.
-        :param pulumi.Input[bool] build_on_preview: By default, preview behavior depends on the execution environment. If
-               Pulumi detects the operation is running on a CI system (GitHub Actions,
-               Travis CI, Azure Pipelines, etc.) then it will build images during
-               previews as a safeguard. Otherwise, if not running on CI, previews will
-               not build images.
-               
-               Setting this to `false` forces previews to never perform builds, and
-               setting it to `true` will always build the image during previews.
+        :param pulumi.Input[bool] build_on_preview: Setting this to `false` will always skip image builds during previews,
+               and setting it to `true` will always build images during previews.
                
                Images built during previews are never exported to registries, however
                cache manifests are still exported.
                
                On-disk Dockerfiles are always validated for syntactic correctness
                regardless of this setting.
+               
+               Defaults to `true` as a safeguard against broken images merging as part
+               of CI pipelines.
         :param pulumi.Input[pulumi.InputType['BuilderConfigArgs']] builder: Builder configuration.
         :param pulumi.Input[Sequence[pulumi.Input[pulumi.InputType['CacheFromArgs']]]] cache_from: Cache export configuration.
                
@@ -1386,6 +1379,8 @@ class Image(pulumi.CustomResource):
 
             __props__.__dict__["add_hosts"] = add_hosts
             __props__.__dict__["build_args"] = build_args
+            if build_on_preview is None:
+                build_on_preview = True
             __props__.__dict__["build_on_preview"] = build_on_preview
             __props__.__dict__["builder"] = builder
             __props__.__dict__["cache_from"] = cache_from
@@ -1490,20 +1485,17 @@ class Image(pulumi.CustomResource):
     @pulumi.getter(name="buildOnPreview")
     def build_on_preview(self) -> pulumi.Output[Optional[bool]]:
         """
-        By default, preview behavior depends on the execution environment. If
-        Pulumi detects the operation is running on a CI system (GitHub Actions,
-        Travis CI, Azure Pipelines, etc.) then it will build images during
-        previews as a safeguard. Otherwise, if not running on CI, previews will
-        not build images.
-
-        Setting this to `false` forces previews to never perform builds, and
-        setting it to `true` will always build the image during previews.
+        Setting this to `false` will always skip image builds during previews,
+        and setting it to `true` will always build images during previews.
 
         Images built during previews are never exported to registries, however
         cache manifests are still exported.
 
         On-disk Dockerfiles are always validated for syntactic correctness
         regardless of this setting.
+
+        Defaults to `true` as a safeguard against broken images merging as part
+        of CI pipelines.
         """
         return pulumi.get(self, "build_on_preview")
 

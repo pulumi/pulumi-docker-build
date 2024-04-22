@@ -503,20 +503,17 @@ export class Image extends pulumi.CustomResource {
      */
     public readonly buildArgs!: pulumi.Output<{[key: string]: string} | undefined>;
     /**
-     * By default, preview behavior depends on the execution environment. If
-     * Pulumi detects the operation is running on a CI system (GitHub Actions,
-     * Travis CI, Azure Pipelines, etc.) then it will build images during
-     * previews as a safeguard. Otherwise, if not running on CI, previews will
-     * not build images.
-     *
-     * Setting this to `false` forces previews to never perform builds, and
-     * setting it to `true` will always build the image during previews.
+     * Setting this to `false` will always skip image builds during previews,
+     * and setting it to `true` will always build images during previews.
      *
      * Images built during previews are never exported to registries, however
      * cache manifests are still exported.
      *
      * On-disk Dockerfiles are always validated for syntactic correctness
      * regardless of this setting.
+     *
+     * Defaults to `true` as a safeguard against broken images merging as part
+     * of CI pipelines.
      */
     public readonly buildOnPreview!: pulumi.Output<boolean | undefined>;
     /**
@@ -722,7 +719,7 @@ export class Image extends pulumi.CustomResource {
         if (!opts.id) {
             resourceInputs["addHosts"] = args ? args.addHosts : undefined;
             resourceInputs["buildArgs"] = args ? args.buildArgs : undefined;
-            resourceInputs["buildOnPreview"] = args ? args.buildOnPreview : undefined;
+            resourceInputs["buildOnPreview"] = (args ? args.buildOnPreview : undefined) ?? true;
             resourceInputs["builder"] = args ? args.builder : undefined;
             resourceInputs["cacheFrom"] = args ? args.cacheFrom : undefined;
             resourceInputs["cacheTo"] = args ? args.cacheTo : undefined;
@@ -800,20 +797,17 @@ export interface ImageArgs {
      */
     buildArgs?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
     /**
-     * By default, preview behavior depends on the execution environment. If
-     * Pulumi detects the operation is running on a CI system (GitHub Actions,
-     * Travis CI, Azure Pipelines, etc.) then it will build images during
-     * previews as a safeguard. Otherwise, if not running on CI, previews will
-     * not build images.
-     *
-     * Setting this to `false` forces previews to never perform builds, and
-     * setting it to `true` will always build the image during previews.
+     * Setting this to `false` will always skip image builds during previews,
+     * and setting it to `true` will always build images during previews.
      *
      * Images built during previews are never exported to registries, however
      * cache manifests are still exported.
      *
      * On-disk Dockerfiles are always validated for syntactic correctness
      * regardless of this setting.
+     *
+     * Defaults to `true` as a safeguard against broken images merging as part
+     * of CI pipelines.
      */
     buildOnPreview?: pulumi.Input<boolean>;
     /**
