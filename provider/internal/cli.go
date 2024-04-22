@@ -81,6 +81,9 @@ func wrap(host *host, registries ...Registry) (*cli, error) {
 
 	auths := map[string]cfgtypes.AuthConfig{}
 	for k, v := range host.auths {
+		if k != config.DockerRegistryAuth {
+			k = credentials.ConvertToHostname(k)
+		}
 		auths[k] = cfgtypes.AuthConfig{
 			ServerAddress: v.ServerAddress,
 			Username:      v.Username,
@@ -94,10 +97,6 @@ func wrap(host *host, registries ...Registry) (*cli, error) {
 		key := h.CredHost
 		if key == "" {
 			key = h.Hostname
-		}
-		// Add a scheme if it's missing.
-		if !strings.Contains(key, "://") {
-			key = "https://" + key
 		}
 
 		auths[key] = cfgtypes.AuthConfig{

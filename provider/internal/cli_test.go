@@ -90,7 +90,7 @@ func TestWrappedAuth(t *testing.T) {
 		config.DockerRegistryAuth: {
 			Username:      "resource-dockerhub-user",
 			Password:      "resource-dockerhub-password",
-			ServerAddress: config.DockerRegistryAuth,
+			ServerAddress: config.DockerRegistryDNS,
 		},
 		"misc": {
 			Username:      "host-misc-user",
@@ -99,9 +99,9 @@ func TestWrappedAuth(t *testing.T) {
 		},
 	}
 	assert.Equal(t, expected, cli.auths)
-	assert.Len(t, h.auths, 2) // Host auth is unchanged.
+	assert.Len(t, h.auths, 2) // In-memory host auth is unchanged.
 
-	// Assert that our host's auth is untouched.
+	// Assert that our on-disk host's auth is untouched.
 	realhostRefreshed, err := newHost(nil)
 	require.NoError(t, err)
 	assert.Equal(t, realhost.auths, realhostRefreshed.auths)
