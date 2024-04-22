@@ -17,13 +17,25 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 /**
- * An index (or manifest list) referencing one or more existing images.
+ * A wrapper around `docker buildx imagetools create` to create an index
+ * (or manifest list) referencing one or more existing images.
  * 
- * Useful for crafting a multi-platform image from several
- * platform-specific images.
+ * In most cases you do not need an `Index` to build a multi-platform
+ * image -- specifying multiple platforms on the `Image` will handle this
+ * for you automatically.
  * 
- * This creates an OCI image index or a Docker manifest list depending on
- * the media types of the source images.
+ * However, as of April 2024, building multi-platform images _with
+ * caching_ will only export a cache for one platform at a time (see [this
+ * discussion](https://github.com/docker/buildx/discussions/1382) for more
+ * details).
+ * 
+ * Therefore this resource can be helpful if you are building
+ * multi-platform images with caching: each platform can be built and
+ * cached separately, and an `Index` can join them all together. An
+ * example of this is shown below.
+ * 
+ * This resource creates an OCI image index or a Docker manifest list
+ * depending on the media types of the source images.
  * 
  * ## Example Usage
  * ### Multi-platform registry caching

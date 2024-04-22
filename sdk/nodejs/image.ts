@@ -13,16 +13,10 @@ import * as utilities from "./utilities";
  *
  * ## Stability
  *
- * **This resource is experimental and subject to change.**
+ * **This resource is pre-1.0 and in public preview.**
  *
- * API types are unstable. Subsequent releases _may_ require manual edits
- * to your state file(s) in order to adopt API changes.
- *
- * `retainOnDelete: true` is recommended with this resource until it is
- * stable. This enables future API changes to be adopted more easily by renaming
- * resources.
- *
- * Only use this resource if you understand and accept the risks.
+ * We will strive to keep APIs and behavior as stable as possible, but we
+ * cannot guarantee stability until version 1.0.
  *
  * ## Migrating v3 and v4 Image resources
  *
