@@ -58,3 +58,14 @@ func TestDockerHub(t *testing.T) {
 
 	integration.ProgramTest(t, &test)
 }
+
+func TestDockerHubUnauthenticated(t *testing.T) {
+	cwd, err := os.Getwd()
+	require.NoError(t, err)
+
+	test := integration.ProgramTestOptions{
+		Dir: path.Join(cwd, "tests/unauthenticated"),
+	}
+
+	integration.ProgramTest(t, &test)
+}

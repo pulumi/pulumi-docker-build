@@ -1,0 +1,18 @@
+name: dockerhub-unauthenticated
+description: Pull an image from Dockerhub without credentials
+runtime: yaml
+plugins:
+  providers:
+    - name: docker-build
+      path: ../../../bin
+resources:
+  my-image:
+    type: docker-build:Image
+    properties:
+      tags:
+        - alpine-local
+      load: true
+      context:
+        location: .
+      dockerfile:
+        inline: FROM alpine
