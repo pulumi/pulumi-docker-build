@@ -146,7 +146,7 @@ const v3Migrated = new dockerbuild.Image("v3-to-buildx", {
     context: {
         location: "../app",
     },
-    targets: ["mytarget"],
+    target: "mytarget",
     buildArgs: {
         MY_BUILD_ARG: "foo",
     },
@@ -205,7 +205,7 @@ const v4Migrated = new dockerbuild.Image("v4-to-buildx", {
     context: {
         location: "../app",
     },
-    targets: ["mytarget"],
+    target: "mytarget",
     buildArgs: {
         MY_BUILD_ARG: "foo",
     },

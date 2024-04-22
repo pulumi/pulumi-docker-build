@@ -71,7 +71,7 @@ func NewBuildxProvider() provider.Provider {
 			Metadata: pschema.Metadata{
 				DisplayName: "docker-build",
 				Keywords:    []string{"docker", "buildkit", "buildx", "kind/native"},
-				Description: "A Pulumi provider for Docker buildx",
+				Description: "A Pulumi provider for building modern Docker images with buildx and BuildKit.",
 				Homepage:    "https://pulumi.com",
 				Publisher:   "pulumi",
 				License:     "Apache-2.0",

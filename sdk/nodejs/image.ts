@@ -170,7 +170,7 @@ import * as utilities from "./utilities";
  *     context: {
  *         location: "../app",
  *     },
- *     targets: ["mytarget"],
+ *     target: "mytarget",
  *     buildArgs: {
  *         MY_BUILD_ARG: "foo",
  *     },
@@ -229,7 +229,7 @@ import * as utilities from "./utilities";
  *     context: {
  *         location: "../app",
  *     },
- *     targets: ["mytarget"],
+ *     target: "mytarget",
  *     buildArgs: {
  *         MY_BUILD_ARG: "foo",
  *     },
