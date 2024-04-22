@@ -518,10 +518,20 @@ func TestImageDiff(t *testing.T) {
 			wantChanges: true,
 		},
 		{
-			name: "diff if buildOnPreview changes",
+			name: "diff if buildOnPreview doesn't change",
 			olds: func(*testing.T, ImageState) ImageState { return baseState },
 			news: func(t *testing.T, ia ImageArgs) ImageArgs {
 				val := true
+				ia.BuildOnPreview = &val
+				return ia
+			},
+			wantChanges: true,
+		},
+		{
+			name: "diff if buildOnPreview changes",
+			olds: func(*testing.T, ImageState) ImageState { return baseState },
+			news: func(t *testing.T, ia ImageArgs) ImageArgs {
+				val := false
 				ia.BuildOnPreview = &val
 				return ia
 			},

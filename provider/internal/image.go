@@ -889,7 +889,7 @@ func (*Image) Diff(
 	if !reflect.DeepEqual(olds.BuildArgs, news.BuildArgs) {
 		diff["buildArgs"] = update
 	}
-	if olds.BuildOnPreview != news.BuildOnPreview {
+	if !reflect.DeepEqual(olds.BuildOnPreview, news.BuildOnPreview) {
 		diff["buildOnPreview"] = update
 	}
 	if !reflect.DeepEqual(olds.Builder, news.Builder) {
