@@ -179,8 +179,12 @@ func (c *cli) tail(ctx provider.Context) {
 
 	if c.dumplogs {
 		// Persist the full Docker output on error for easier debugging.
-		ctx.Log(diag.Info, b.String())
-		ctx.Log(diag.Error, c.err.String())
+		if b.Len() > 0 {
+			ctx.Log(diag.Info, b.String())
+		}
+		if c.err.Len() > 0 {
+			ctx.Log(diag.Error, c.err.String())
+		}
 	}
 }
 
