@@ -43,6 +43,10 @@ func TestExec(t *testing.T) {
 func TestWrappedAuth(t *testing.T) {
 	t.Parallel()
 	ecr := "https://1234.dkr.ecr.us-west-2.amazonaws.com"
+
+	realhost, err := newHost(nil)
+	require.NoError(t, err)
+
 	h := &host{
 		auths: map[string]types.AuthConfig{
 			ecr: {
@@ -50,7 +54,7 @@ func TestWrappedAuth(t *testing.T) {
 				Password:      "host-aws-password",
 				ServerAddress: ecr,
 			},
-			"misc": {
+			"https://misc": { // Legacy config includes http/https scheme.
 				Username:      "host-misc-user",
 				Password:      "host-misc-password",
 				ServerAddress: "misc",
@@ -71,25 +75,34 @@ func TestWrappedAuth(t *testing.T) {
 		},
 	}
 
+	_, err = wrap(h, registries...)
+	require.NoError(t, err)
+
 	cli, err := wrap(h, registries...)
 	require.NoError(t, err)
 
-	require.Contains(t, cli.auths, ecr)
-	aws := cli.auths[ecr]
-	assert.Equal(t, "resource-aws-user", aws.Username)
-	assert.Equal(t, "resource-aws-password", aws.Password)
-	assert.Equal(t, "1234.dkr.ecr.us-west-2.amazonaws.com", aws.ServerAddress)
+	expected := map[string]types.AuthConfig{
+		"1234.dkr.ecr.us-west-2.amazonaws.com": {
+			Username:      "resource-aws-user",
+			Password:      "resource-aws-password",
+			ServerAddress: "1234.dkr.ecr.us-west-2.amazonaws.com",
+		},
+		config.DockerRegistryAuth: {
+			Username:      "resource-dockerhub-user",
+			Password:      "resource-dockerhub-password",
+			ServerAddress: config.DockerRegistryAuth,
+		},
+		"misc": {
+			Username:      "host-misc-user",
+			Password:      "host-misc-password",
+			ServerAddress: "misc",
+		},
+	}
+	assert.Equal(t, expected, cli.auths)
+	assert.Len(t, h.auths, 2) // Host auth is unchanged.
 
-	require.Contains(t, cli.auths, config.DockerRegistryAuth)
-	dockerhub := cli.auths[config.DockerRegistryAuth]
-	assert.Equal(t, "resource-dockerhub-user", dockerhub.Username)
-	assert.Equal(t, "resource-dockerhub-password", dockerhub.Password)
-	assert.Equal(t, config.DockerRegistryDNS, dockerhub.ServerAddress)
-
-	// Auths derived from the host should be untouched, e.g. no scheme added, etc.
-	require.Contains(t, cli.auths, "misc")
-	misc := cli.auths["misc"]
-	assert.Equal(t, "host-misc-user", misc.Username)
-	assert.Equal(t, "host-misc-password", misc.Password)
-	assert.Equal(t, "misc", misc.ServerAddress)
+	// Assert that our host's auth is untouched.
+	realhostRefreshed, err := newHost(nil)
+	require.NoError(t, err)
+	assert.Equal(t, realhost.auths, realhostRefreshed.auths)
 }

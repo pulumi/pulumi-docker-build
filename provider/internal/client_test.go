@@ -323,7 +323,7 @@ func TestInspect(t *testing.T) {
 	t.Parallel()
 	cli := testcli(t, false)
 	descriptors, err := cli.Inspect(context.Background(), "pulumibot/myapp:buildx")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(
 		t,
 		"application/vnd.docker.distribution.manifest.v2+json",
