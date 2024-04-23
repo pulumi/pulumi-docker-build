@@ -18,9 +18,9 @@ import * as utilities from "./utilities";
  * We will strive to keep APIs and behavior as stable as possible, but we
  * cannot guarantee stability until version 1.0.
  *
- * ## Migrating v3 and v4 Image resources
+ * ## Migrating Pulumi Docker v3 and v4 Image resources
  *
- * The `Image` resource provides a superset of functionality over the `Image` resources available in versions 3 and 4 of the Pulumi Docker provider.
+ * This provider's `Image` resource provides a superset of functionality over the `Image` resources available in versions 3 and 4 of the Pulumi Docker provider.
  * Existing `Image` resources can be converted to the docker-build `Image` resources with minor modifications.
  *
  * ### Behavioral differences
@@ -34,19 +34,17 @@ import * as utilities from "./utilities";
  *
  * Version `4.x` changed build-on-preview behavior to be opt-in.
  * By default, `v4.x` `Image` resources do _not_ build during previews, but this behavior can be toggled with the `buildOnPreview` option.
- * Some users felt this made previews in CI less helpful because they no longer detected bad images by default.
+ * Several users reported outages due to the default behavior allowing bad images to accidentally sneak through CI.
  *
- * The default behavior of the `Image` resource has been changed to strike a better balance between CI use cases and manual updates.
- * By default, Pulumi will now only build `Image` resources during previews when it detects a CI environment like GitHub Actions.
- * Previews run in non-CI environments will not build images.
- * This behavior is still configurable with `buildOnPreview`.
+ * The default behavior of this provider's `Image` resource is similar to `3.x` and will build images during previews.
+ * This behavior can be changed by specifying `buildOnPreview`.
  *
  * #### Push behavior
  *
  * Versions `3.x` and `4.x` of the Pulumi Docker provider attempt to push images to remote registries by default.
  * They expose a `skipPush: true` option to disable pushing.
  *
- * The `Image` resource matches the Docker CLI's behavior and does not push images anywhere by default.
+ * This provider's `Image` resource matches the Docker CLI's behavior and does not push images anywhere by default.
  *
  * To push images to a registry you can include `push: true` (equivalent to Docker's `--push` flag) or configure an `export` of type `registry` (equivalent to Docker's `--output type=registry`).
  * Like Docker, if an image is configured without exports you will see a warning with instructions for how to enable pushing, but the build will still proceed normally.

@@ -243,6 +243,6 @@ sdk/java: $(PULUMI) bin/${PROVIDER}
 	cd ${TMPDIR}/java/ && gradle --console=plain build
 	mv -f ${TMPDIR}/java ${WORKING_DIR}/sdk/.
 
-docs: $(shell find docs/yaml -type f) $(shell find ./provider/internal/embed -name '*.md')
+docs: $(shell find docs/yaml -type f) $(shell find ./provider/internal/embed -name '*.md') ${SCHEMA_PATH}
 	go generate docs/generate.go
 	@touch docs
