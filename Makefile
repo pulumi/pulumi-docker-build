@@ -25,7 +25,8 @@ GOGLANGCILINT    := bin/golangci-lint
 ensure:: tidy lint test_provider examples
 
 .PHONY: tidy
-tidy: go.sum
+tidy:
+	go mod tidy
 
 .PHONY: provider
 provider: bin/${PROVIDER} bin/pulumi-gen-${PACK} # Required by CI
@@ -179,7 +180,6 @@ bin/pulumi-gen-${PACK}: # Required by CI
 
 go.mod: $(shell find . -name '*.go')
 go.sum: go.mod
-	go mod tidy
 
 sdk: $(shell mkdir -p sdk)
 sdk: sdk/python sdk/nodejs sdk/java sdk/python sdk/go sdk/dotnet
