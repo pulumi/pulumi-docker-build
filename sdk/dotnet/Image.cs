@@ -201,6 +201,7 @@ namespace Pulumi.DockerBuild
     ///             DockerBuild.Platform.Plan9_amd64,
     ///             DockerBuild.Platform.Plan9_386,
     ///         },
+    ///         Push = false,
     ///     });
     /// 
     /// });
@@ -280,6 +281,7 @@ namespace Pulumi.DockerBuild
     ///         {
     ///             Location = "app",
     ///         },
+    ///         Push = false,
     ///     });
     /// 
     /// });
@@ -305,6 +307,7 @@ namespace Pulumi.DockerBuild
     ///             Location = "app",
     ///         },
     ///         Exec = true,
+    ///         Push = false,
     ///     });
     /// 
     /// });
@@ -329,6 +332,7 @@ namespace Pulumi.DockerBuild
     ///         {
     ///             Location = "app",
     ///         },
+    ///         Push = false,
     ///     });
     /// 
     /// });
@@ -349,6 +353,7 @@ namespace Pulumi.DockerBuild
     ///         {
     ///             Location = "app",
     ///         },
+    ///         Push = false,
     ///         Target = "build-me",
     ///     });
     /// 
@@ -377,6 +382,7 @@ namespace Pulumi.DockerBuild
     ///                 } },
     ///             },
     ///         },
+    ///         Push = false,
     ///     });
     /// 
     /// });
@@ -397,6 +403,7 @@ namespace Pulumi.DockerBuild
     ///         {
     ///             Location = "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
     ///         },
+    ///         Push = false,
     ///     });
     /// 
     /// });
@@ -423,6 +430,7 @@ namespace Pulumi.DockerBuild
     /// COPY hello.c ./
     /// ",
     ///         },
+    ///         Push = false,
     ///     });
     /// 
     /// });
@@ -447,6 +455,7 @@ namespace Pulumi.DockerBuild
     ///         {
     ///             Location = "app/Dockerfile",
     ///         },
+    ///         Push = false,
     ///     });
     /// 
     /// });
@@ -477,6 +486,7 @@ namespace Pulumi.DockerBuild
     ///                 },
     ///             },
     ///         },
+    ///         Push = false,
     ///     });
     /// 
     /// });

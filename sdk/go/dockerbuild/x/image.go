@@ -211,6 +211,7 @@ import (
 //					dockerbuild.Platform_Plan9_amd64,
 //					dockerbuild.Platform_Plan9_386,
 //				},
+//				Push: pulumi.Bool(false),
 //			})
 //			if err != nil {
 //				return err
@@ -290,6 +291,7 @@ import (
 //				Context: &dockerbuild.BuildContextArgs{
 //					Location: pulumi.String("app"),
 //				},
+//				Push: pulumi.Bool(false),
 //			})
 //			if err != nil {
 //				return err
@@ -320,6 +322,7 @@ import (
 //					Location: pulumi.String("app"),
 //				},
 //				Exec: pulumi.Bool(true),
+//				Push: pulumi.Bool(false),
 //			})
 //			if err != nil {
 //				return err
@@ -349,6 +352,7 @@ import (
 //				Context: &dockerbuild.BuildContextArgs{
 //					Location: pulumi.String("app"),
 //				},
+//				Push: pulumi.Bool(false),
 //			})
 //			if err != nil {
 //				return err
@@ -375,6 +379,7 @@ import (
 //				Context: &dockerbuild.BuildContextArgs{
 //					Location: pulumi.String("app"),
 //				},
+//				Push:   pulumi.Bool(false),
 //				Target: pulumi.String("build-me"),
 //			})
 //			if err != nil {
@@ -407,6 +412,7 @@ import (
 //						},
 //					},
 //				},
+//				Push: pulumi.Bool(false),
 //			})
 //			if err != nil {
 //				return err
@@ -433,6 +439,7 @@ import (
 //				Context: &dockerbuild.BuildContextArgs{
 //					Location: pulumi.String("https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile"),
 //				},
+//				Push: pulumi.Bool(false),
 //			})
 //			if err != nil {
 //				return err
@@ -462,6 +469,7 @@ import (
 //				Dockerfile: &dockerbuild.DockerfileArgs{
 //					Inline: pulumi.String("FROM busybox\nCOPY hello.c ./\n"),
 //				},
+//				Push: pulumi.Bool(false),
 //			})
 //			if err != nil {
 //				return err
@@ -491,6 +499,7 @@ import (
 //				Dockerfile: &dockerbuild.DockerfileArgs{
 //					Location: pulumi.String("app/Dockerfile"),
 //				},
+//				Push: pulumi.Bool(false),
 //			})
 //			if err != nil {
 //				return err
@@ -524,6 +533,7 @@ import (
 //						},
 //					},
 //				},
+//				Push: pulumi.Bool(false),
 //			})
 //			if err != nil {
 //				return err

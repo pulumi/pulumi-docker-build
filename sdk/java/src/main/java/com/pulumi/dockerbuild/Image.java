@@ -225,6 +225,7 @@ import javax.annotation.Nullable;
  *             .platforms(            
  *                 &#34;plan9/amd64&#34;,
  *                 &#34;plan9/386&#34;)
+ *             .push(false)
  *             .build());
  * 
  *     }
@@ -313,6 +314,7 @@ import javax.annotation.Nullable;
  *             .context(BuildContextArgs.builder()
  *                 .location(&#34;app&#34;)
  *                 .build())
+ *             .push(false)
  *             .build());
  * 
  *     }
@@ -350,6 +352,7 @@ import javax.annotation.Nullable;
  *                 .location(&#34;app&#34;)
  *                 .build())
  *             .exec(true)
+ *             .push(false)
  *             .build());
  * 
  *     }
@@ -383,6 +386,7 @@ import javax.annotation.Nullable;
  *             .context(BuildContextArgs.builder()
  *                 .location(&#34;app&#34;)
  *                 .build())
+ *             .push(false)
  *             .build());
  * 
  *     }
@@ -415,6 +419,7 @@ import javax.annotation.Nullable;
  *             .context(BuildContextArgs.builder()
  *                 .location(&#34;app&#34;)
  *                 .build())
+ *             .push(false)
  *             .target(&#34;build-me&#34;)
  *             .build());
  * 
@@ -449,6 +454,7 @@ import javax.annotation.Nullable;
  *                 .location(&#34;app&#34;)
  *                 .named(Map.of(&#34;golang:latest&#34;, Map.of(&#34;location&#34;, &#34;docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984&#34;)))
  *                 .build())
+ *             .push(false)
  *             .build());
  * 
  *     }
@@ -481,6 +487,7 @@ import javax.annotation.Nullable;
  *             .context(BuildContextArgs.builder()
  *                 .location(&#34;https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile&#34;)
  *                 .build())
+ *             .push(false)
  *             .build());
  * 
  *     }
@@ -520,6 +527,7 @@ import javax.annotation.Nullable;
  * COPY hello.c ./
  *                 &#34;&#34;&#34;)
  *                 .build())
+ *             .push(false)
  *             .build());
  * 
  *     }
@@ -556,6 +564,7 @@ import javax.annotation.Nullable;
  *             .dockerfile(DockerfileArgs.builder()
  *                 .location(&#34;app/Dockerfile&#34;)
  *                 .build())
+ *             .push(false)
  *             .build());
  * 
  *     }
@@ -595,6 +604,7 @@ import javax.annotation.Nullable;
  *                     .tar(true)
  *                     .build())
  *                 .build())
+ *             .push(false)
  *             .build());
  * 
  *     }

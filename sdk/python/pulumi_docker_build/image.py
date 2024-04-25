@@ -754,7 +754,8 @@ class Image(pulumi.CustomResource):
             platforms=[
                 docker_build.Platform.PLAN9_AMD64,
                 docker_build.Platform.PLAN9_386,
-            ])
+            ],
+            push=False)
         ```
         ### Registry export
         ```python
@@ -793,7 +794,8 @@ class Image(pulumi.CustomResource):
             )],
             context=docker_build.BuildContextArgs(
                 location="app",
-            ))
+            ),
+            push=False)
         ```
         ### Docker Build Cloud
         ```python
@@ -807,7 +809,8 @@ class Image(pulumi.CustomResource):
             context=docker_build.BuildContextArgs(
                 location="app",
             ),
-            exec_=True)
+            exec_=True,
+            push=False)
         ```
         ### Build arguments
         ```python
@@ -820,7 +823,8 @@ class Image(pulumi.CustomResource):
             },
             context=docker_build.BuildContextArgs(
                 location="app",
-            ))
+            ),
+            push=False)
         ```
         ### Build target
         ```python
@@ -831,6 +835,7 @@ class Image(pulumi.CustomResource):
             context=docker_build.BuildContextArgs(
                 location="app",
             ),
+            push=False,
             target="build-me")
         ```
         ### Named contexts
@@ -838,23 +843,27 @@ class Image(pulumi.CustomResource):
         import pulumi
         import pulumi_docker_build as docker_build
 
-        image = docker_build.Image("image", context=docker_build.BuildContextArgs(
-            location="app",
-            named={
-                "golang:latest": docker_build.ContextArgs(
-                    location="docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
-                ),
-            },
-        ))
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
+                location="app",
+                named={
+                    "golang:latest": docker_build.ContextArgs(
+                        location="docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
+                    ),
+                },
+            ),
+            push=False)
         ```
         ### Remote context
         ```python
         import pulumi
         import pulumi_docker_build as docker_build
 
-        image = docker_build.Image("image", context=docker_build.BuildContextArgs(
-            location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
-        ))
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
+                location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
+            ),
+            push=False)
         ```
         ### Inline Dockerfile
         ```python
@@ -869,7 +878,8 @@ class Image(pulumi.CustomResource):
                 inline=\"\"\"FROM busybox
         COPY hello.c ./
         \"\"\",
-            ))
+            ),
+            push=False)
         ```
         ### Remote context
         ```python
@@ -882,7 +892,8 @@ class Image(pulumi.CustomResource):
             ),
             dockerfile=docker_build.DockerfileArgs(
                 location="app/Dockerfile",
-            ))
+            ),
+            push=False)
         ```
         ### Local export
         ```python
@@ -897,7 +908,8 @@ class Image(pulumi.CustomResource):
                 docker=docker_build.ExportDockerArgs(
                     tar=True,
                 ),
-            )])
+            )],
+            push=False)
         ```
 
         :param str resource_name: The name of the resource.
@@ -1180,7 +1192,8 @@ class Image(pulumi.CustomResource):
             platforms=[
                 docker_build.Platform.PLAN9_AMD64,
                 docker_build.Platform.PLAN9_386,
-            ])
+            ],
+            push=False)
         ```
         ### Registry export
         ```python
@@ -1219,7 +1232,8 @@ class Image(pulumi.CustomResource):
             )],
             context=docker_build.BuildContextArgs(
                 location="app",
-            ))
+            ),
+            push=False)
         ```
         ### Docker Build Cloud
         ```python
@@ -1233,7 +1247,8 @@ class Image(pulumi.CustomResource):
             context=docker_build.BuildContextArgs(
                 location="app",
             ),
-            exec_=True)
+            exec_=True,
+            push=False)
         ```
         ### Build arguments
         ```python
@@ -1246,7 +1261,8 @@ class Image(pulumi.CustomResource):
             },
             context=docker_build.BuildContextArgs(
                 location="app",
-            ))
+            ),
+            push=False)
         ```
         ### Build target
         ```python
@@ -1257,6 +1273,7 @@ class Image(pulumi.CustomResource):
             context=docker_build.BuildContextArgs(
                 location="app",
             ),
+            push=False,
             target="build-me")
         ```
         ### Named contexts
@@ -1264,23 +1281,27 @@ class Image(pulumi.CustomResource):
         import pulumi
         import pulumi_docker_build as docker_build
 
-        image = docker_build.Image("image", context=docker_build.BuildContextArgs(
-            location="app",
-            named={
-                "golang:latest": docker_build.ContextArgs(
-                    location="docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
-                ),
-            },
-        ))
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
+                location="app",
+                named={
+                    "golang:latest": docker_build.ContextArgs(
+                        location="docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
+                    ),
+                },
+            ),
+            push=False)
         ```
         ### Remote context
         ```python
         import pulumi
         import pulumi_docker_build as docker_build
 
-        image = docker_build.Image("image", context=docker_build.BuildContextArgs(
-            location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
-        ))
+        image = docker_build.Image("image",
+            context=docker_build.BuildContextArgs(
+                location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
+            ),
+            push=False)
         ```
         ### Inline Dockerfile
         ```python
@@ -1295,7 +1316,8 @@ class Image(pulumi.CustomResource):
                 inline=\"\"\"FROM busybox
         COPY hello.c ./
         \"\"\",
-            ))
+            ),
+            push=False)
         ```
         ### Remote context
         ```python
@@ -1308,7 +1330,8 @@ class Image(pulumi.CustomResource):
             ),
             dockerfile=docker_build.DockerfileArgs(
                 location="app/Dockerfile",
-            ))
+            ),
+            push=False)
         ```
         ### Local export
         ```python
@@ -1323,7 +1346,8 @@ class Image(pulumi.CustomResource):
                 docker=docker_build.ExportDockerArgs(
                     tar=True,
                 ),
-            )])
+            )],
+            push=False)
         ```
 
         :param str resource_name: The name of the resource.

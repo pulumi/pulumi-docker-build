@@ -291,6 +291,7 @@ import * as utilities from "./utilities";
  *         docker_build.Platform.Plan9_amd64,
  *         docker_build.Platform.Plan9_386,
  *     ],
+ *     push: false,
  * });
  * ```
  * ### Registry export
@@ -334,6 +335,7 @@ import * as utilities from "./utilities";
  *     context: {
  *         location: "app",
  *     },
+ *     push: false,
  * });
  * ```
  * ### Docker Build Cloud
@@ -350,6 +352,7 @@ import * as utilities from "./utilities";
  *         location: "app",
  *     },
  *     exec: true,
+ *     push: false,
  * });
  * ```
  * ### Build arguments
@@ -365,6 +368,7 @@ import * as utilities from "./utilities";
  *     context: {
  *         location: "app",
  *     },
+ *     push: false,
  * });
  * ```
  * ### Build target
@@ -377,6 +381,7 @@ import * as utilities from "./utilities";
  *     context: {
  *         location: "app",
  *     },
+ *     push: false,
  *     target: "build-me",
  * });
  * ```
@@ -386,14 +391,17 @@ import * as utilities from "./utilities";
  * import * as pulumi from "@pulumi/pulumi";
  * import * as docker_build from "@pulumi/docker-build";
  *
- * const image = new docker_build.Image("image", {context: {
- *     location: "app",
- *     named: {
- *         "golang:latest": {
- *             location: "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
+ * const image = new docker_build.Image("image", {
+ *     context: {
+ *         location: "app",
+ *         named: {
+ *             "golang:latest": {
+ *                 location: "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
+ *             },
  *         },
  *     },
- * }});
+ *     push: false,
+ * });
  * ```
  * ### Remote context
  *
@@ -401,9 +409,12 @@ import * as utilities from "./utilities";
  * import * as pulumi from "@pulumi/pulumi";
  * import * as docker_build from "@pulumi/docker-build";
  *
- * const image = new docker_build.Image("image", {context: {
- *     location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
- * }});
+ * const image = new docker_build.Image("image", {
+ *     context: {
+ *         location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
+ *     },
+ *     push: false,
+ * });
  * ```
  * ### Inline Dockerfile
  *
@@ -420,6 +431,7 @@ import * as utilities from "./utilities";
  * COPY hello.c ./
  * `,
  *     },
+ *     push: false,
  * });
  * ```
  * ### Remote context
@@ -435,6 +447,7 @@ import * as utilities from "./utilities";
  *     dockerfile: {
  *         location: "app/Dockerfile",
  *     },
+ *     push: false,
  * });
  * ```
  * ### Local export
@@ -452,6 +465,7 @@ import * as utilities from "./utilities";
  *             tar: true,
  *         },
  *     }],
+ *     push: false,
  * });
  * ```
  */
