@@ -7,6 +7,7 @@ import (
 	"context"
 	"reflect"
 
+	"errors"
 	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
@@ -655,7 +656,7 @@ type Image struct {
 	// Defaults to `false`.
 	//
 	// Equivalent to Docker's `--push` flag.
-	Push pulumi.BoolPtrOutput `pulumi:"push"`
+	Push pulumi.BoolOutput `pulumi:"push"`
 	// If the image was pushed to any registries then this will contain a
 	// single fully-qualified tag including the build's digest.
 	//
@@ -712,9 +713,12 @@ type Image struct {
 func NewImage(ctx *pulumi.Context,
 	name string, args *ImageArgs, opts ...pulumi.ResourceOption) (*Image, error) {
 	if args == nil {
-		args = &ImageArgs{}
+		return nil, errors.New("missing one or more required arguments")
 	}
 
+	if args.Push == nil {
+		return nil, errors.New("invalid value for required argument 'Push'")
+	}
 	if args.BuildOnPreview == nil {
 		args.BuildOnPreview = pulumi.BoolPtr(true)
 	}
@@ -862,7 +866,7 @@ type imageArgs struct {
 	// Defaults to `false`.
 	//
 	// Equivalent to Docker's `--push` flag.
-	Push *bool `pulumi:"push"`
+	Push bool `pulumi:"push"`
 	// Registry credentials. Required if reading or exporting to private
 	// repositories.
 	//
@@ -1010,7 +1014,7 @@ type ImageArgs struct {
 	// Defaults to `false`.
 	//
 	// Equivalent to Docker's `--push` flag.
-	Push pulumi.BoolPtrInput
+	Push pulumi.BoolInput
 	// Registry credentials. Required if reading or exporting to private
 	// repositories.
 	//
@@ -1271,8 +1275,8 @@ func (o ImageOutput) Pull() pulumi.BoolPtrOutput {
 // Defaults to `false`.
 //
 // Equivalent to Docker's `--push` flag.
-func (o ImageOutput) Push() pulumi.BoolPtrOutput {
-	return o.ApplyT(func(v *Image) pulumi.BoolPtrOutput { return v.Push }).(pulumi.BoolPtrOutput)
+func (o ImageOutput) Push() pulumi.BoolOutput {
+	return o.ApplyT(func(v *Image) pulumi.BoolOutput { return v.Push }).(pulumi.BoolOutput)
 }
 
 // If the image was pushed to any registries then this will contain a

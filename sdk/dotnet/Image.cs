@@ -681,7 +681,7 @@ namespace Pulumi.DockerBuild
         /// Equivalent to Docker's `--push` flag.
         /// </summary>
         [Output("push")]
-        public Output<bool?> Push { get; private set; } = null!;
+        public Output<bool> Push { get; private set; } = null!;
 
         /// <summary>
         /// If the image was pushed to any registries then this will contain a
@@ -765,7 +765,7 @@ namespace Pulumi.DockerBuild
         /// <param name="name">The unique name of the resource</param>
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
-        public Image(string name, ImageArgs? args = null, CustomResourceOptions? options = null)
+        public Image(string name, ImageArgs args, CustomResourceOptions? options = null)
             : base("docker-build:index:Image", name, args ?? new ImageArgs(), MakeResourceOptions(options, ""))
         {
         }
@@ -1018,8 +1018,8 @@ namespace Pulumi.DockerBuild
         /// 
         /// Equivalent to Docker's `--push` flag.
         /// </summary>
-        [Input("push")]
-        public Input<bool>? Push { get; set; }
+        [Input("push", required: true)]
+        public Input<bool> Push { get; set; } = null!;
 
         [Input("registries")]
         private InputList<Inputs.RegistryArgs>? _registries;

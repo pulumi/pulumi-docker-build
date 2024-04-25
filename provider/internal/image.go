@@ -99,7 +99,7 @@ type ImageArgs struct {
 	NoCache        bool              `pulumi:"noCache,optional"`
 	Platforms      []Platform        `pulumi:"platforms,optional"`
 	Pull           bool              `pulumi:"pull,optional"`
-	Push           bool              `pulumi:"push,optional"`
+	Push           bool              `pulumi:"push"`
 	Registries     []Registry        `pulumi:"registries,optional"`
 	Secrets        map[string]string `pulumi:"secrets,optional"`
 	SSH            []SSH             `pulumi:"ssh,optional"`
@@ -907,11 +907,9 @@ func (*Image) Diff(
 	if !reflect.DeepEqual(olds.Context.Named, news.Context.Named) {
 		diff["context.named"] = update
 	}
-	if olds.Dockerfile.Location != news.Dockerfile.Location {
-		diff["dockerfile.location"] = update
-	}
-	if olds.Dockerfile.Inline != news.Dockerfile.Inline {
-		diff["dockerfile.inline"] = update
+	dockerfile, _, _ := news.Context.validate(true, news.Dockerfile)
+	if !reflect.DeepEqual(olds.Dockerfile, dockerfile) {
+		diff["dockerfile"] = update
 	}
 	// Use string comparison to ignore any manifests attached to the export.
 	if fmt.Sprint(olds.Exports) != fmt.Sprint(news.Exports) {
@@ -932,10 +930,10 @@ func (*Image) Diff(
 	if !reflect.DeepEqual(olds.Platforms, news.Platforms) {
 		diff["platforms"] = update
 	}
-	if olds.Pull != news.Pull {
+	if !reflect.DeepEqual(olds.Pull, news.Pull) {
 		diff["pull"] = update
 	}
-	if olds.Push != news.Push {
+	if !reflect.DeepEqual(olds.Push, news.Push) {
 		diff["push"] = update
 	}
 	if !reflect.DeepEqual(olds.Secrets, news.Secrets) {
@@ -960,7 +958,7 @@ func (*Image) Diff(
 	// Check if anything has changed in our build context.
 	hash, err := hashBuildContext(
 		news.Context.Location,
-		news.Dockerfile.Location,
+		dockerfile.Location,
 		news.Context.Named.Map(),
 	)
 	if err != nil {

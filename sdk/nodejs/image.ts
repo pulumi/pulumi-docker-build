@@ -640,7 +640,7 @@ export class Image extends pulumi.CustomResource {
      *
      * Equivalent to Docker's `--push` flag.
      */
-    public readonly push!: pulumi.Output<boolean | undefined>;
+    public readonly push!: pulumi.Output<boolean>;
     /**
      * If the image was pushed to any registries then this will contain a
      * single fully-qualified tag including the build's digest.
@@ -711,10 +711,13 @@ export class Image extends pulumi.CustomResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: ImageArgs, opts?: pulumi.CustomResourceOptions) {
+    constructor(name: string, args: ImageArgs, opts?: pulumi.CustomResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
+            if ((!args || args.push === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'push'");
+            }
             resourceInputs["addHosts"] = args ? args.addHosts : undefined;
             resourceInputs["buildArgs"] = args ? args.buildArgs : undefined;
             resourceInputs["buildOnPreview"] = (args ? args.buildOnPreview : undefined) ?? true;
@@ -918,7 +921,7 @@ export interface ImageArgs {
      *
      * Equivalent to Docker's `--push` flag.
      */
-    push?: pulumi.Input<boolean>;
+    push: pulumi.Input<boolean>;
     /**
      * Registry credentials. Required if reading or exporting to private
      * repositories.

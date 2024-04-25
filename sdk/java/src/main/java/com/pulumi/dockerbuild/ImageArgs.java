@@ -16,6 +16,7 @@ import com.pulumi.dockerbuild.inputs.DockerfileArgs;
 import com.pulumi.dockerbuild.inputs.ExportArgs;
 import com.pulumi.dockerbuild.inputs.RegistryArgs;
 import com.pulumi.dockerbuild.inputs.SSHArgs;
+import com.pulumi.exceptions.MissingRequiredPropertyException;
 import java.lang.Boolean;
 import java.lang.String;
 import java.util.List;
@@ -419,8 +420,8 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
      * Equivalent to Docker&#39;s `--push` flag.
      * 
      */
-    @Import(name="push")
-    private @Nullable Output<Boolean> push;
+    @Import(name="push", required=true)
+    private Output<Boolean> push;
 
     /**
      * @return When `true` the build will automatically include a `registry` export.
@@ -430,8 +431,8 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
      * Equivalent to Docker&#39;s `--push` flag.
      * 
      */
-    public Optional<Output<Boolean>> push() {
-        return Optional.ofNullable(this.push);
+    public Output<Boolean> push() {
+        return this.push;
     }
 
     /**
@@ -1158,7 +1159,7 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
          * @return builder
          * 
          */
-        public Builder push(@Nullable Output<Boolean> push) {
+        public Builder push(Output<Boolean> push) {
             $.push = push;
             return this;
         }
@@ -1378,6 +1379,9 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
         public ImageArgs build() {
             $.buildOnPreview = Codegen.booleanProp("buildOnPreview").output().arg($.buildOnPreview).def(true).getNullable();
             $.network = Codegen.objectProp("network", NetworkMode.class).output().arg($.network).def(NetworkMode.Default_).getNullable();
+            if ($.push == null) {
+                throw new MissingRequiredPropertyException("ImageArgs", "push");
+            }
             return $;
         }
     }

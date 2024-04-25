@@ -1023,7 +1023,7 @@ public class Image extends com.pulumi.resources.CustomResource {
      * 
      */
     @Export(name="push", refs={Boolean.class}, tree="[0]")
-    private Output</* @Nullable */ Boolean> push;
+    private Output<Boolean> push;
 
     /**
      * @return When `true` the build will automatically include a `registry` export.
@@ -1033,8 +1033,8 @@ public class Image extends com.pulumi.resources.CustomResource {
      * Equivalent to Docker&#39;s `--push` flag.
      * 
      */
-    public Output<Optional<Boolean>> push() {
-        return Codegen.optional(this.push);
+    public Output<Boolean> push() {
+        return this.push;
     }
     /**
      * If the image was pushed to any registries then this will contain a
@@ -1209,7 +1209,7 @@ public class Image extends com.pulumi.resources.CustomResource {
      * @param name The _unique_ name of the resulting resource.
      * @param args The arguments to use to populate this resource's properties.
      */
-    public Image(String name, @Nullable ImageArgs args) {
+    public Image(String name, ImageArgs args) {
         this(name, args, null);
     }
     /**
@@ -1218,7 +1218,7 @@ public class Image extends com.pulumi.resources.CustomResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param options A bag of options that control this resource's behavior.
      */
-    public Image(String name, @Nullable ImageArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
+    public Image(String name, ImageArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
         super("docker-build:index:Image", name, args == null ? ImageArgs.Empty : args, makeResourceOptions(options, Codegen.empty()));
     }
 

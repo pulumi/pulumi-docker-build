@@ -17,6 +17,7 @@ __all__ = ['ImageArgs', 'Image']
 @pulumi.input_type
 class ImageArgs:
     def __init__(__self__, *,
+                 push: pulumi.Input[bool],
                  add_hosts: Optional[pulumi.Input[Sequence[pulumi.Input[str]]]] = None,
                  build_args: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
                  build_on_preview: Optional[pulumi.Input[bool]] = None,
@@ -33,7 +34,6 @@ class ImageArgs:
                  no_cache: Optional[pulumi.Input[bool]] = None,
                  platforms: Optional[pulumi.Input[Sequence[pulumi.Input['Platform']]]] = None,
                  pull: Optional[pulumi.Input[bool]] = None,
-                 push: Optional[pulumi.Input[bool]] = None,
                  registries: Optional[pulumi.Input[Sequence[pulumi.Input['RegistryArgs']]]] = None,
                  secrets: Optional[pulumi.Input[Mapping[str, pulumi.Input[str]]]] = None,
                  ssh: Optional[pulumi.Input[Sequence[pulumi.Input['SSHArgs']]]] = None,
@@ -41,6 +41,11 @@ class ImageArgs:
                  target: Optional[pulumi.Input[str]] = None):
         """
         The set of arguments for constructing a Image resource.
+        :param pulumi.Input[bool] push: When `true` the build will automatically include a `registry` export.
+               
+               Defaults to `false`.
+               
+               Equivalent to Docker's `--push` flag.
         :param pulumi.Input[Sequence[pulumi.Input[str]]] add_hosts: Custom `host:ip` mappings to use during the build.
                
                Equivalent to Docker's `--add-host` flag.
@@ -128,11 +133,6 @@ class ImageArgs:
         :param pulumi.Input[bool] pull: Always pull referenced images.
                
                Equivalent to Docker's `--pull` flag.
-        :param pulumi.Input[bool] push: When `true` the build will automatically include a `registry` export.
-               
-               Defaults to `false`.
-               
-               Equivalent to Docker's `--push` flag.
         :param pulumi.Input[Sequence[pulumi.Input['RegistryArgs']]] registries: Registry credentials. Required if reading or exporting to private
                repositories.
                
@@ -164,6 +164,7 @@ class ImageArgs:
                
                Equivalent to Docker's `--target` flag.
         """
+        pulumi.set(__self__, "push", push)
         if add_hosts is not None:
             pulumi.set(__self__, "add_hosts", add_hosts)
         if build_args is not None:
@@ -200,8 +201,6 @@ class ImageArgs:
             pulumi.set(__self__, "platforms", platforms)
         if pull is not None:
             pulumi.set(__self__, "pull", pull)
-        if push is not None:
-            pulumi.set(__self__, "push", push)
         if registries is not None:
             pulumi.set(__self__, "registries", registries)
         if secrets is not None:
@@ -212,6 +211,22 @@ class ImageArgs:
             pulumi.set(__self__, "tags", tags)
         if target is not None:
             pulumi.set(__self__, "target", target)
+
+    @property
+    @pulumi.getter
+    def push(self) -> pulumi.Input[bool]:
+        """
+        When `true` the build will automatically include a `registry` export.
+
+        Defaults to `false`.
+
+        Equivalent to Docker's `--push` flag.
+        """
+        return pulumi.get(self, "push")
+
+    @push.setter
+    def push(self, value: pulumi.Input[bool]):
+        pulumi.set(self, "push", value)
 
     @property
     @pulumi.getter(name="addHosts")
@@ -475,22 +490,6 @@ class ImageArgs:
     @pull.setter
     def pull(self, value: Optional[pulumi.Input[bool]]):
         pulumi.set(self, "pull", value)
-
-    @property
-    @pulumi.getter
-    def push(self) -> Optional[pulumi.Input[bool]]:
-        """
-        When `true` the build will automatically include a `registry` export.
-
-        Defaults to `false`.
-
-        Equivalent to Docker's `--push` flag.
-        """
-        return pulumi.get(self, "push")
-
-    @push.setter
-    def push(self, value: Optional[pulumi.Input[bool]]):
-        pulumi.set(self, "push", value)
 
     @property
     @pulumi.getter
@@ -1030,7 +1029,7 @@ class Image(pulumi.CustomResource):
     @overload
     def __init__(__self__,
                  resource_name: str,
-                 args: Optional[ImageArgs] = None,
+                 args: ImageArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
         A Docker image built using buildx -- Docker's interface to the improved
@@ -1393,6 +1392,8 @@ class Image(pulumi.CustomResource):
             __props__.__dict__["no_cache"] = no_cache
             __props__.__dict__["platforms"] = platforms
             __props__.__dict__["pull"] = pull
+            if push is None and not opts.urn:
+                raise TypeError("Missing required property 'push'")
             __props__.__dict__["push"] = push
             __props__.__dict__["registries"] = registries
             __props__.__dict__["secrets"] = secrets
@@ -1676,7 +1677,7 @@ class Image(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def push(self) -> pulumi.Output[Optional[bool]]:
+    def push(self) -> pulumi.Output[bool]:
         """
         When `true` the build will automatically include a `registry` export.
 

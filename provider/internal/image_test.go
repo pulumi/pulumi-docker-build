@@ -82,6 +82,7 @@ func TestImageLifecycle(t *testing.T) {
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: resource.PropertyMap{
+						"push": resource.NewBoolProperty(false),
 						"tags": resource.NewArrayProperty(
 							[]resource.PropertyValue{
 								resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e"),
@@ -129,6 +130,7 @@ func TestImageLifecycle(t *testing.T) {
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: resource.PropertyMap{
+						"push": resource.NewBoolProperty(false),
 						"tags": resource.NewArrayProperty([]resource.PropertyValue{}),
 						"context": resource.NewObjectProperty(resource.PropertyMap{
 							"location": resource.NewStringProperty("testdata/noop"),
@@ -157,6 +159,7 @@ func TestImageLifecycle(t *testing.T) {
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: resource.PropertyMap{
+						"push": resource.NewBoolProperty(false),
 						"tags": resource.NewArrayProperty(
 							[]resource.PropertyValue{resource.NewStringProperty("invalid-exports")},
 						),
@@ -189,6 +192,7 @@ func TestImageLifecycle(t *testing.T) {
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: resource.PropertyMap{
+						"push": resource.NewBoolProperty(false),
 						"tags": resource.NewArrayProperty(
 							[]resource.PropertyValue{resource.NewStringProperty("foo")},
 						),
@@ -215,6 +219,7 @@ func TestImageLifecycle(t *testing.T) {
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: resource.PropertyMap{
+						"push": resource.NewBoolProperty(false),
 						"tags": resource.NewArrayProperty(
 							[]resource.PropertyValue{resource.NewStringProperty("foo")},
 						),
@@ -246,6 +251,7 @@ func TestImageLifecycle(t *testing.T) {
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: resource.PropertyMap{
+						"push": resource.NewBoolProperty(false),
 						"tags": resource.NewArrayProperty(
 							[]resource.PropertyValue{
 								resource.NewStringProperty("default-dockerfile"),

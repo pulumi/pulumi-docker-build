@@ -7,6 +7,7 @@ import (
 	"context"
 	"reflect"
 
+	"errors"
 	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumix"
@@ -655,7 +656,7 @@ type Image struct {
 	// Defaults to `false`.
 	//
 	// Equivalent to Docker's `--push` flag.
-	Push pulumix.Output[*bool] `pulumi:"push"`
+	Push pulumix.Output[bool] `pulumi:"push"`
 	// If the image was pushed to any registries then this will contain a
 	// single fully-qualified tag including the build's digest.
 	//
@@ -712,9 +713,12 @@ type Image struct {
 func NewImage(ctx *pulumi.Context,
 	name string, args *ImageArgs, opts ...pulumi.ResourceOption) (*Image, error) {
 	if args == nil {
-		args = &ImageArgs{}
+		return nil, errors.New("missing one or more required arguments")
 	}
 
+	if args.Push == nil {
+		return nil, errors.New("invalid value for required argument 'Push'")
+	}
 	if args.BuildOnPreview == nil {
 		args.BuildOnPreview = pulumix.Ptr(true)
 	}
@@ -862,7 +866,7 @@ type imageArgs struct {
 	// Defaults to `false`.
 	//
 	// Equivalent to Docker's `--push` flag.
-	Push *bool `pulumi:"push"`
+	Push bool `pulumi:"push"`
 	// Registry credentials. Required if reading or exporting to private
 	// repositories.
 	//
@@ -1010,7 +1014,7 @@ type ImageArgs struct {
 	// Defaults to `false`.
 	//
 	// Equivalent to Docker's `--push` flag.
-	Push pulumix.Input[*bool]
+	Push pulumix.Input[bool]
 	// Registry credentials. Required if reading or exporting to private
 	// repositories.
 	//
@@ -1274,9 +1278,9 @@ func (o ImageOutput) Pull() pulumix.Output[*bool] {
 // Defaults to `false`.
 //
 // Equivalent to Docker's `--push` flag.
-func (o ImageOutput) Push() pulumix.Output[*bool] {
-	value := pulumix.Apply[Image](o, func(v Image) pulumix.Output[*bool] { return v.Push })
-	return pulumix.Flatten[*bool, pulumix.Output[*bool]](value)
+func (o ImageOutput) Push() pulumix.Output[bool] {
+	value := pulumix.Apply[Image](o, func(v Image) pulumix.Output[bool] { return v.Push })
+	return pulumix.Flatten[bool, pulumix.Output[bool]](value)
 }
 
 // If the image was pushed to any registries then this will contain a
