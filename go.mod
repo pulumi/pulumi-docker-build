@@ -14,6 +14,7 @@ require (
 	github.com/moby/patternmatcher v0.6.0
 	github.com/muesli/reflow v0.3.0
 	github.com/otiai10/copy v1.14.0
+	github.com/pulumi/providertest v0.0.12
 	github.com/pulumi/pulumi-go-provider v0.16.0
 	github.com/pulumi/pulumi-go-provider/integration v0.10.1-0.20240314105842-9fbffb634faf
 	github.com/pulumi/pulumi-java/pkg v0.10.0
@@ -350,7 +351,6 @@ require (
 	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
 	github.com/pulumi/esc v0.6.2 // indirect
-	github.com/pulumi/providertest v0.0.12 // indirect
 	github.com/pulumi/pulumi-yaml v1.6.0 // indirect
 	github.com/quasilyte/go-ruleguard v0.4.2 // indirect
 	github.com/quasilyte/gogrep v0.5.0 // indirect
@@ -455,7 +455,7 @@ require (
 	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20240314144324-c7f7c6466f7f // indirect
 	golang.org/x/mod v0.16.0 // indirect
-	golang.org/x/net v0.22.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
 	golang.org/x/oauth2 v0.18.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
