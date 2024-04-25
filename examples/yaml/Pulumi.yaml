@@ -10,6 +10,7 @@ resources:
   multiPlatform:
     type: docker-build:Image
     properties:
+      push: false
       dockerfile:
         location: "./app/Dockerfile.multiPlatform"
       context:
@@ -22,6 +23,7 @@ resources:
   registryPush:
     type: docker-build:Image
     properties:
+      push: false
       context:
         location: "./app"
       tags: ["docker.io/pulumibot/buildkit-e2e:example"]
@@ -38,6 +40,7 @@ resources:
   cached:
     type: docker-build:Image
     properties:
+      push: false
       context:
         location: "./app"
       cacheTo:
@@ -52,6 +55,7 @@ resources:
   buildArgs:
     type: docker-build:Image
     properties:
+      push: false
       dockerfile:
         location: "./app/Dockerfile.buildArgs"
       context:
@@ -63,6 +67,7 @@ resources:
   extraHosts:
     type: docker-build:Image
     properties:
+      push: false
       dockerfile:
         location: "./app/Dockerfile.extraHosts"
       context:
@@ -74,6 +79,7 @@ resources:
   sshMount:
     type: docker-build:Image
     properties:
+      push: false
       dockerfile:
         location: "./app/Dockerfile.sshMount"
       context:
@@ -85,6 +91,7 @@ resources:
   secrets:
     type: docker-build:Image
     properties:
+      push: false
       dockerfile:
         location: "./app/Dockerfile.secrets"
       context:
@@ -96,6 +103,7 @@ resources:
   labels:
     type: docker-build:Image
     properties:
+      push: false
       context:
         location: "./app"
       labels:
@@ -105,6 +113,7 @@ resources:
   target:
     type: docker-build:Image
     properties:
+      push: false
       dockerfile:
         location: "./app/Dockerfile.target"
       context:
@@ -116,6 +125,7 @@ resources:
   namedContexts:
     type: docker-build:Image
     properties:
+      push: false
       dockerfile:
         location: "./app/Dockerfile.namedContexts"
       context:
@@ -128,6 +138,7 @@ resources:
   remoteContext:
     type: docker-build:Image
     properties:
+      push: false
       context:
         location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile"
 
@@ -138,6 +149,7 @@ resources:
   remoteContextWithInline:
     type: docker-build:Image
     properties:
+      push: false
       dockerfile:
         inline: |
           FROM busybox
@@ -149,6 +161,7 @@ resources:
   inline:
     type: docker-build:Image
     properties:
+      push: false
       dockerfile:
         inline: |
           FROM alpine
@@ -160,6 +173,7 @@ resources:
   dockerLoad:
     type: docker-build:Image
     properties:
+      push: false
       context:
         location: "./app"
       exports:

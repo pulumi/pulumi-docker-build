@@ -4,6 +4,7 @@ import pulumi_docker_build as docker_build
 config = pulumi.Config()
 docker_hub_password = config.require("dockerHubPassword")
 multi_platform = docker_build.Image("multiPlatform",
+    push=False,
     dockerfile=docker_build.DockerfileArgs(
         location="./app/Dockerfile.multiPlatform",
     ),
@@ -15,6 +16,7 @@ multi_platform = docker_build.Image("multiPlatform",
         docker_build.Platform.PLAN9_386,
     ])
 registry_push = docker_build.Image("registryPush",
+    push=False,
     context=docker_build.BuildContextArgs(
         location="./app",
     ),
@@ -31,6 +33,7 @@ registry_push = docker_build.Image("registryPush",
         password=docker_hub_password,
     )])
 cached = docker_build.Image("cached",
+    push=False,
     context=docker_build.BuildContextArgs(
         location="./app",
     ),
@@ -46,6 +49,7 @@ cached = docker_build.Image("cached",
         ),
     )])
 build_args = docker_build.Image("buildArgs",
+    push=False,
     dockerfile=docker_build.DockerfileArgs(
         location="./app/Dockerfile.buildArgs",
     ),
@@ -56,6 +60,7 @@ build_args = docker_build.Image("buildArgs",
         "SET_ME_TO_TRUE": "true",
     })
 extra_hosts = docker_build.Image("extraHosts",
+    push=False,
     dockerfile=docker_build.DockerfileArgs(
         location="./app/Dockerfile.extraHosts",
     ),
@@ -64,6 +69,7 @@ extra_hosts = docker_build.Image("extraHosts",
     ),
     add_hosts=["metadata.google.internal:169.254.169.254"])
 ssh_mount = docker_build.Image("sshMount",
+    push=False,
     dockerfile=docker_build.DockerfileArgs(
         location="./app/Dockerfile.sshMount",
     ),
@@ -74,6 +80,7 @@ ssh_mount = docker_build.Image("sshMount",
         id="default",
     )])
 secrets = docker_build.Image("secrets",
+    push=False,
     dockerfile=docker_build.DockerfileArgs(
         location="./app/Dockerfile.secrets",
     ),
@@ -84,6 +91,7 @@ secrets = docker_build.Image("secrets",
         "password": "hunter2",
     })
 labels = docker_build.Image("labels",
+    push=False,
     context=docker_build.BuildContextArgs(
         location="./app",
     ),
@@ -91,6 +99,7 @@ labels = docker_build.Image("labels",
         "description": "This image will get a descriptive label 👍",
     })
 target = docker_build.Image("target",
+    push=False,
     dockerfile=docker_build.DockerfileArgs(
         location="./app/Dockerfile.target",
     ),
@@ -99,6 +108,7 @@ target = docker_build.Image("target",
     ),
     target="build-me")
 named_contexts = docker_build.Image("namedContexts",
+    push=False,
     dockerfile=docker_build.DockerfileArgs(
         location="./app/Dockerfile.namedContexts",
     ),
@@ -110,10 +120,13 @@ named_contexts = docker_build.Image("namedContexts",
             ),
         },
     ))
-remote_context = docker_build.Image("remoteContext", context=docker_build.BuildContextArgs(
-    location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
-))
+remote_context = docker_build.Image("remoteContext",
+    push=False,
+    context=docker_build.BuildContextArgs(
+        location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
+    ))
 remote_context_with_inline = docker_build.Image("remoteContextWithInline",
+    push=False,
     dockerfile=docker_build.DockerfileArgs(
         inline="""FROM busybox
 COPY hello.c ./
@@ -123,6 +136,7 @@ COPY hello.c ./
         location="https://github.com/docker-library/hello-world.git",
     ))
 inline = docker_build.Image("inline",
+    push=False,
     dockerfile=docker_build.DockerfileArgs(
         inline="""FROM alpine
 RUN echo "This uses an inline Dockerfile! 👍"
@@ -132,6 +146,7 @@ RUN echo "This uses an inline Dockerfile! 👍"
         location="./app",
     ))
 docker_load = docker_build.Image("dockerLoad",
+    push=False,
     context=docker_build.BuildContextArgs(
         location="./app",
     ),

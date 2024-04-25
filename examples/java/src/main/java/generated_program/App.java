@@ -32,6 +32,7 @@ public class App {
         final var config = ctx.config();
         final var dockerHubPassword = config.get("dockerHubPassword");
         var multiPlatform = new Image("multiPlatform", ImageArgs.builder()        
+            .push(false)
             .dockerfile(DockerfileArgs.builder()
                 .location("./app/Dockerfile.multiPlatform")
                 .build())
@@ -44,6 +45,7 @@ public class App {
             .build());
 
         var registryPush = new Image("registryPush", ImageArgs.builder()        
+            .push(false)
             .context(BuildContextArgs.builder()
                 .location("./app")
                 .build())
@@ -62,6 +64,7 @@ public class App {
             .build());
 
         var cached = new Image("cached", ImageArgs.builder()        
+            .push(false)
             .context(BuildContextArgs.builder()
                 .location("./app")
                 .build())
@@ -79,6 +82,7 @@ public class App {
             .build());
 
         var buildArgs = new Image("buildArgs", ImageArgs.builder()        
+            .push(false)
             .dockerfile(DockerfileArgs.builder()
                 .location("./app/Dockerfile.buildArgs")
                 .build())
@@ -89,6 +93,7 @@ public class App {
             .build());
 
         var extraHosts = new Image("extraHosts", ImageArgs.builder()        
+            .push(false)
             .dockerfile(DockerfileArgs.builder()
                 .location("./app/Dockerfile.extraHosts")
                 .build())
@@ -99,6 +104,7 @@ public class App {
             .build());
 
         var sshMount = new Image("sshMount", ImageArgs.builder()        
+            .push(false)
             .dockerfile(DockerfileArgs.builder()
                 .location("./app/Dockerfile.sshMount")
                 .build())
@@ -111,6 +117,7 @@ public class App {
             .build());
 
         var secrets = new Image("secrets", ImageArgs.builder()        
+            .push(false)
             .dockerfile(DockerfileArgs.builder()
                 .location("./app/Dockerfile.secrets")
                 .build())
@@ -121,6 +128,7 @@ public class App {
             .build());
 
         var labels = new Image("labels", ImageArgs.builder()        
+            .push(false)
             .context(BuildContextArgs.builder()
                 .location("./app")
                 .build())
@@ -128,6 +136,7 @@ public class App {
             .build());
 
         var target = new Image("target", ImageArgs.builder()        
+            .push(false)
             .dockerfile(DockerfileArgs.builder()
                 .location("./app/Dockerfile.target")
                 .build())
@@ -138,6 +147,7 @@ public class App {
             .build());
 
         var namedContexts = new Image("namedContexts", ImageArgs.builder()        
+            .push(false)
             .dockerfile(DockerfileArgs.builder()
                 .location("./app/Dockerfile.namedContexts")
                 .build())
@@ -148,12 +158,14 @@ public class App {
             .build());
 
         var remoteContext = new Image("remoteContext", ImageArgs.builder()        
+            .push(false)
             .context(BuildContextArgs.builder()
                 .location("https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile")
                 .build())
             .build());
 
         var remoteContextWithInline = new Image("remoteContextWithInline", ImageArgs.builder()        
+            .push(false)
             .dockerfile(DockerfileArgs.builder()
                 .inline("""
 FROM busybox
@@ -166,6 +178,7 @@ COPY hello.c ./
             .build());
 
         var inline = new Image("inline", ImageArgs.builder()        
+            .push(false)
             .dockerfile(DockerfileArgs.builder()
                 .inline("""
 FROM alpine
@@ -178,6 +191,7 @@ RUN echo "This uses an inline Dockerfile! 👍"
             .build());
 
         var dockerLoad = new Image("dockerLoad", ImageArgs.builder()        
+            .push(false)
             .context(BuildContextArgs.builder()
                 .location("./app")
                 .build())

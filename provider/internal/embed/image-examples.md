@@ -322,6 +322,7 @@ const image = new docker_build.Image("image", {
         docker_build.Platform.Plan9_amd64,
         docker_build.Platform.Plan9_386,
     ],
+    push: false,
 });
 ```
 ```python
@@ -335,7 +336,8 @@ image = docker_build.Image("image",
     platforms=[
         docker_build.Platform.PLAN9_AMD64,
         docker_build.Platform.PLAN9_386,
-    ])
+    ],
+    push=False)
 ```
 ```csharp
 using System.Collections.Generic;
@@ -356,6 +358,7 @@ return await Deployment.RunAsync(() =>
             DockerBuild.Platform.Plan9_amd64,
             DockerBuild.Platform.Plan9_386,
         },
+        Push = false,
     });
 
 });
@@ -379,6 +382,7 @@ func main() {
 				dockerbuild.Platform_Plan9_amd64,
 				dockerbuild.Platform_Plan9_386,
 			},
+			Push: pulumi.Bool(false),
 		})
 		if err != nil {
 			return err
@@ -398,6 +402,7 @@ resources:
             platforms:
                 - plan9/amd64
                 - plan9/386
+            push: false
         type: docker-build:Image
 runtime: yaml
 ```
@@ -430,6 +435,7 @@ public class App {
             .platforms(            
                 "plan9/amd64",
                 "plan9/386")
+            .push(false)
             .build());
 
     }
@@ -628,6 +634,7 @@ const image = new docker_build.Image("image", {
     context: {
         location: "app",
     },
+    push: false,
 });
 ```
 ```python
@@ -648,7 +655,8 @@ image = docker_build.Image("image",
     )],
     context=docker_build.BuildContextArgs(
         location="app",
-    ))
+    ),
+    push=False)
 ```
 ```csharp
 using System.Collections.Generic;
@@ -685,6 +693,7 @@ return await Deployment.RunAsync(() =>
         {
             Location = "app",
         },
+        Push = false,
     });
 
 });
@@ -719,6 +728,7 @@ func main() {
 			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
+			Push: pulumi.Bool(false),
 		})
 		if err != nil {
 			return err
@@ -742,6 +752,7 @@ resources:
                     mode: max
             context:
                 location: app
+            push: false
         type: docker-build:Image
 runtime: yaml
 ```
@@ -786,6 +797,7 @@ public class App {
             .context(BuildContextArgs.builder()
                 .location("app")
                 .build())
+            .push(false)
             .build());
 
     }
@@ -807,6 +819,7 @@ const image = new docker_build.Image("image", {
         location: "app",
     },
     exec: true,
+    push: false,
 });
 ```
 ```python
@@ -820,7 +833,8 @@ image = docker_build.Image("image",
     context=docker_build.BuildContextArgs(
         location="app",
     ),
-    exec_=True)
+    exec_=True,
+    push=False)
 ```
 ```csharp
 using System.Collections.Generic;
@@ -841,6 +855,7 @@ return await Deployment.RunAsync(() =>
             Location = "app",
         },
         Exec = true,
+        Push = false,
     });
 
 });
@@ -864,6 +879,7 @@ func main() {
 				Location: pulumi.String("app"),
 			},
 			Exec: pulumi.Bool(true),
+			Push: pulumi.Bool(false),
 		})
 		if err != nil {
 			return err
@@ -883,6 +899,7 @@ resources:
             context:
                 location: app
             exec: true
+            push: false
         type: docker-build:Image
 runtime: yaml
 ```
@@ -917,6 +934,7 @@ public class App {
                 .location("app")
                 .build())
             .exec(true)
+            .push(false)
             .build());
 
     }
@@ -937,6 +955,7 @@ const image = new docker_build.Image("image", {
     context: {
         location: "app",
     },
+    push: false,
 });
 ```
 ```python
@@ -949,7 +968,8 @@ image = docker_build.Image("image",
     },
     context=docker_build.BuildContextArgs(
         location="app",
-    ))
+    ),
+    push=False)
 ```
 ```csharp
 using System.Collections.Generic;
@@ -969,6 +989,7 @@ return await Deployment.RunAsync(() =>
         {
             Location = "app",
         },
+        Push = false,
     });
 
 });
@@ -991,6 +1012,7 @@ func main() {
 			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
+			Push: pulumi.Bool(false),
 		})
 		if err != nil {
 			return err
@@ -1009,6 +1031,7 @@ resources:
                 SET_ME_TO_TRUE: "true"
             context:
                 location: app
+            push: false
         type: docker-build:Image
 runtime: yaml
 ```
@@ -1039,6 +1062,7 @@ public class App {
             .context(BuildContextArgs.builder()
                 .location("app")
                 .build())
+            .push(false)
             .build());
 
     }
@@ -1056,6 +1080,7 @@ const image = new docker_build.Image("image", {
     context: {
         location: "app",
     },
+    push: false,
     target: "build-me",
 });
 ```
@@ -1067,6 +1092,7 @@ image = docker_build.Image("image",
     context=docker_build.BuildContextArgs(
         location="app",
     ),
+    push=False,
     target="build-me")
 ```
 ```csharp
@@ -1083,6 +1109,7 @@ return await Deployment.RunAsync(() =>
         {
             Location = "app",
         },
+        Push = false,
         Target = "build-me",
     });
 
@@ -1103,6 +1130,7 @@ func main() {
 			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
+			Push:   pulumi.Bool(false),
 			Target: pulumi.String("build-me"),
 		})
 		if err != nil {
@@ -1120,6 +1148,7 @@ resources:
         properties:
             context:
                 location: app
+            push: false
             target: build-me
         type: docker-build:Image
 runtime: yaml
@@ -1150,6 +1179,7 @@ public class App {
             .context(BuildContextArgs.builder()
                 .location("app")
                 .build())
+            .push(false)
             .target("build-me")
             .build());
 
@@ -1164,27 +1194,32 @@ public class App {
 import * as pulumi from "@pulumi/pulumi";
 import * as docker_build from "@pulumi/docker-build";
 
-const image = new docker_build.Image("image", {context: {
-    location: "app",
-    named: {
-        "golang:latest": {
-            location: "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
+const image = new docker_build.Image("image", {
+    context: {
+        location: "app",
+        named: {
+            "golang:latest": {
+                location: "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
+            },
         },
     },
-}});
+    push: false,
+});
 ```
 ```python
 import pulumi
 import pulumi_docker_build as docker_build
 
-image = docker_build.Image("image", context=docker_build.BuildContextArgs(
-    location="app",
-    named={
-        "golang:latest": docker_build.ContextArgs(
-            location="docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
-        ),
-    },
-))
+image = docker_build.Image("image",
+    context=docker_build.BuildContextArgs(
+        location="app",
+        named={
+            "golang:latest": docker_build.ContextArgs(
+                location="docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
+            ),
+        },
+    ),
+    push=False)
 ```
 ```csharp
 using System.Collections.Generic;
@@ -1207,6 +1242,7 @@ return await Deployment.RunAsync(() =>
                 } },
             },
         },
+        Push = false,
     });
 
 });
@@ -1231,6 +1267,7 @@ func main() {
 					},
 				},
 			},
+			Push: pulumi.Bool(false),
 		})
 		if err != nil {
 			return err
@@ -1250,6 +1287,7 @@ resources:
                 named:
                     golang:latest:
                         location: docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984
+            push: false
         type: docker-build:Image
 runtime: yaml
 ```
@@ -1280,6 +1318,7 @@ public class App {
                 .location("app")
                 .named(Map.of("golang:latest", Map.of("location", "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984")))
                 .build())
+            .push(false)
             .build());
 
     }
@@ -1293,17 +1332,22 @@ public class App {
 import * as pulumi from "@pulumi/pulumi";
 import * as docker_build from "@pulumi/docker-build";
 
-const image = new docker_build.Image("image", {context: {
-    location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
-}});
+const image = new docker_build.Image("image", {
+    context: {
+        location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
+    },
+    push: false,
+});
 ```
 ```python
 import pulumi
 import pulumi_docker_build as docker_build
 
-image = docker_build.Image("image", context=docker_build.BuildContextArgs(
-    location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
-))
+image = docker_build.Image("image",
+    context=docker_build.BuildContextArgs(
+        location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
+    ),
+    push=False)
 ```
 ```csharp
 using System.Collections.Generic;
@@ -1319,6 +1363,7 @@ return await Deployment.RunAsync(() =>
         {
             Location = "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
         },
+        Push = false,
     });
 
 });
@@ -1338,6 +1383,7 @@ func main() {
 			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile"),
 			},
+			Push: pulumi.Bool(false),
 		})
 		if err != nil {
 			return err
@@ -1354,6 +1400,7 @@ resources:
         properties:
             context:
                 location: https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile
+            push: false
         type: docker-build:Image
 runtime: yaml
 ```
@@ -1383,6 +1430,7 @@ public class App {
             .context(BuildContextArgs.builder()
                 .location("https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile")
                 .build())
+            .push(false)
             .build());
 
     }
@@ -1405,6 +1453,7 @@ const image = new docker_build.Image("image", {
 COPY hello.c ./
 `,
     },
+    push: false,
 });
 ```
 ```python
@@ -1419,7 +1468,8 @@ image = docker_build.Image("image",
         inline="""FROM busybox
 COPY hello.c ./
 """,
-    ))
+    ),
+    push=False)
 ```
 ```csharp
 using System.Collections.Generic;
@@ -1441,6 +1491,7 @@ return await Deployment.RunAsync(() =>
 COPY hello.c ./
 ",
         },
+        Push = false,
     });
 
 });
@@ -1463,6 +1514,7 @@ func main() {
 			Dockerfile: &dockerbuild.DockerfileArgs{
 				Inline: pulumi.String("FROM busybox\nCOPY hello.c ./\n"),
 			},
+			Push: pulumi.Bool(false),
 		})
 		if err != nil {
 			return err
@@ -1483,6 +1535,7 @@ resources:
                 inline: |
                     FROM busybox
                     COPY hello.c ./
+            push: false
         type: docker-build:Image
 runtime: yaml
 ```
@@ -1519,6 +1572,7 @@ FROM busybox
 COPY hello.c ./
                 """)
                 .build())
+            .push(false)
             .build());
 
     }
@@ -1539,6 +1593,7 @@ const image = new docker_build.Image("image", {
     dockerfile: {
         location: "app/Dockerfile",
     },
+    push: false,
 });
 ```
 ```python
@@ -1551,7 +1606,8 @@ image = docker_build.Image("image",
     ),
     dockerfile=docker_build.DockerfileArgs(
         location="app/Dockerfile",
-    ))
+    ),
+    push=False)
 ```
 ```csharp
 using System.Collections.Generic;
@@ -1571,6 +1627,7 @@ return await Deployment.RunAsync(() =>
         {
             Location = "app/Dockerfile",
         },
+        Push = false,
     });
 
 });
@@ -1593,6 +1650,7 @@ func main() {
 			Dockerfile: &dockerbuild.DockerfileArgs{
 				Location: pulumi.String("app/Dockerfile"),
 			},
+			Push: pulumi.Bool(false),
 		})
 		if err != nil {
 			return err
@@ -1611,6 +1669,7 @@ resources:
                 location: https://github.com/docker-library/hello-world.git
             dockerfile:
                 location: app/Dockerfile
+            push: false
         type: docker-build:Image
 runtime: yaml
 ```
@@ -1644,6 +1703,7 @@ public class App {
             .dockerfile(DockerfileArgs.builder()
                 .location("app/Dockerfile")
                 .build())
+            .push(false)
             .build());
 
     }
@@ -1666,6 +1726,7 @@ const image = new docker_build.Image("image", {
             tar: true,
         },
     }],
+    push: false,
 });
 ```
 ```python
@@ -1680,7 +1741,8 @@ image = docker_build.Image("image",
         docker=docker_build.ExportDockerArgs(
             tar=True,
         ),
-    )])
+    )],
+    push=False)
 ```
 ```csharp
 using System.Collections.Generic;
@@ -1706,6 +1768,7 @@ return await Deployment.RunAsync(() =>
                 },
             },
         },
+        Push = false,
     });
 
 });
@@ -1732,6 +1795,7 @@ func main() {
 					},
 				},
 			},
+			Push: pulumi.Bool(false),
 		})
 		if err != nil {
 			return err
@@ -1751,6 +1815,7 @@ resources:
             exports:
                 - docker:
                     tar: true
+            push: false
         type: docker-build:Image
 runtime: yaml
 ```
@@ -1787,6 +1852,7 @@ public class App {
                     .tar(true)
                     .build())
                 .build())
+            .push(false)
             .build());
 
     }

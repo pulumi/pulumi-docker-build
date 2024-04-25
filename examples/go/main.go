@@ -11,6 +11,7 @@ func main() {
 		cfg := config.New(ctx, "")
 		dockerHubPassword := cfg.Require("dockerHubPassword")
 		multiPlatform, err := dockerbuild.NewImage(ctx, "multiPlatform", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Dockerfile: &dockerbuild.DockerfileArgs{
 				Location: pulumi.String("./app/Dockerfile.multiPlatform"),
 			},
@@ -26,6 +27,7 @@ func main() {
 			return err
 		}
 		_, err = dockerbuild.NewImage(ctx, "registryPush", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("./app"),
 			},
@@ -52,6 +54,7 @@ func main() {
 			return err
 		}
 		_, err = dockerbuild.NewImage(ctx, "cached", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("./app"),
 			},
@@ -75,6 +78,7 @@ func main() {
 			return err
 		}
 		_, err = dockerbuild.NewImage(ctx, "buildArgs", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Dockerfile: &dockerbuild.DockerfileArgs{
 				Location: pulumi.String("./app/Dockerfile.buildArgs"),
 			},
@@ -89,6 +93,7 @@ func main() {
 			return err
 		}
 		_, err = dockerbuild.NewImage(ctx, "extraHosts", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Dockerfile: &dockerbuild.DockerfileArgs{
 				Location: pulumi.String("./app/Dockerfile.extraHosts"),
 			},
@@ -103,6 +108,7 @@ func main() {
 			return err
 		}
 		_, err = dockerbuild.NewImage(ctx, "sshMount", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Dockerfile: &dockerbuild.DockerfileArgs{
 				Location: pulumi.String("./app/Dockerfile.sshMount"),
 			},
@@ -119,6 +125,7 @@ func main() {
 			return err
 		}
 		_, err = dockerbuild.NewImage(ctx, "secrets", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Dockerfile: &dockerbuild.DockerfileArgs{
 				Location: pulumi.String("./app/Dockerfile.secrets"),
 			},
@@ -133,6 +140,7 @@ func main() {
 			return err
 		}
 		_, err = dockerbuild.NewImage(ctx, "labels", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("./app"),
 			},
@@ -144,6 +152,7 @@ func main() {
 			return err
 		}
 		_, err = dockerbuild.NewImage(ctx, "target", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Dockerfile: &dockerbuild.DockerfileArgs{
 				Location: pulumi.String("./app/Dockerfile.target"),
 			},
@@ -156,6 +165,7 @@ func main() {
 			return err
 		}
 		_, err = dockerbuild.NewImage(ctx, "namedContexts", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Dockerfile: &dockerbuild.DockerfileArgs{
 				Location: pulumi.String("./app/Dockerfile.namedContexts"),
 			},
@@ -172,6 +182,7 @@ func main() {
 			return err
 		}
 		_, err = dockerbuild.NewImage(ctx, "remoteContext", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile"),
 			},
@@ -180,6 +191,7 @@ func main() {
 			return err
 		}
 		_, err = dockerbuild.NewImage(ctx, "remoteContextWithInline", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Dockerfile: &dockerbuild.DockerfileArgs{
 				Inline: pulumi.String("FROM busybox\nCOPY hello.c ./\n"),
 			},
@@ -191,6 +203,7 @@ func main() {
 			return err
 		}
 		_, err = dockerbuild.NewImage(ctx, "inline", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Dockerfile: &dockerbuild.DockerfileArgs{
 				Inline: pulumi.String("FROM alpine\nRUN echo \"This uses an inline Dockerfile! 👍\"\n"),
 			},
@@ -202,6 +215,7 @@ func main() {
 			return err
 		}
 		_, err = dockerbuild.NewImage(ctx, "dockerLoad", &dockerbuild.ImageArgs{
+			Push: pulumi.Bool(false),
 			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("./app"),
 			},

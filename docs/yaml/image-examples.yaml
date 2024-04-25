@@ -43,6 +43,7 @@ resources:
       platforms:
         - plan9/amd64
         - plan9/386
+      push: false
 ---
 name: registry
 runtime: yaml
@@ -79,6 +80,7 @@ resources:
       cacheFrom:
         - local:
             src: tmp/cache
+      push: false
 ---
 name: dbc
 runtime: yaml
@@ -92,6 +94,7 @@ resources:
       exec: true
       builder:
         name: cloud-builder-name
+      push: false
 ---
 name: build-args
 runtime: yaml
@@ -104,6 +107,7 @@ resources:
         location: "app"
       buildArgs:
         SET_ME_TO_TRUE: "true"
+      push: false
 ---
 name: build-target
 runtime: yaml
@@ -115,6 +119,7 @@ resources:
       context:
         location: "app"
       target: "build-me"
+      push: false
 ---
 name: named-contexts
 runtime: yaml
@@ -128,6 +133,7 @@ resources:
         named:
           "golang:latest":
             location: "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984"
+      push: false
 ---
 name: remote-context
 runtime: yaml
@@ -138,6 +144,7 @@ resources:
     properties:
       context:
         location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile"
+      push: false
 
 ---
 name: inline
@@ -153,6 +160,7 @@ resources:
           COPY hello.c ./
       context:
         location: "app"
+      push: false
 ---
 name: remote-context
 runtime: yaml
@@ -165,6 +173,7 @@ resources:
         location: app/Dockerfile
       context:
         location: "https://github.com/docker-library/hello-world.git"
+      push: false
 ---
 name: docker-load
 runtime: yaml
@@ -178,3 +187,4 @@ resources:
       exports:
         - docker:
             tar: true
+      push: false

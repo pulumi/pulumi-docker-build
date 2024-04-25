@@ -9,6 +9,7 @@ return await Deployment.RunAsync(() =>
     var dockerHubPassword = config.Require("dockerHubPassword");
     var multiPlatform = new DockerBuild.Image("multiPlatform", new()
     {
+        Push = false,
         Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.multiPlatform",
@@ -26,6 +27,7 @@ return await Deployment.RunAsync(() =>
 
     var registryPush = new DockerBuild.Image("registryPush", new()
     {
+        Push = false,
         Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
@@ -58,6 +60,7 @@ return await Deployment.RunAsync(() =>
 
     var cached = new DockerBuild.Image("cached", new()
     {
+        Push = false,
         Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
@@ -87,6 +90,7 @@ return await Deployment.RunAsync(() =>
 
     var buildArgs = new DockerBuild.Image("buildArgs", new()
     {
+        Push = false,
         Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.buildArgs",
@@ -103,6 +107,7 @@ return await Deployment.RunAsync(() =>
 
     var extraHosts = new DockerBuild.Image("extraHosts", new()
     {
+        Push = false,
         Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.extraHosts",
@@ -119,6 +124,7 @@ return await Deployment.RunAsync(() =>
 
     var sshMount = new DockerBuild.Image("sshMount", new()
     {
+        Push = false,
         Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.sshMount",
@@ -138,6 +144,7 @@ return await Deployment.RunAsync(() =>
 
     var secrets = new DockerBuild.Image("secrets", new()
     {
+        Push = false,
         Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.secrets",
@@ -154,6 +161,7 @@ return await Deployment.RunAsync(() =>
 
     var labels = new DockerBuild.Image("labels", new()
     {
+        Push = false,
         Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",
@@ -166,6 +174,7 @@ return await Deployment.RunAsync(() =>
 
     var target = new DockerBuild.Image("target", new()
     {
+        Push = false,
         Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.target",
@@ -179,6 +188,7 @@ return await Deployment.RunAsync(() =>
 
     var namedContexts = new DockerBuild.Image("namedContexts", new()
     {
+        Push = false,
         Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Location = "./app/Dockerfile.namedContexts",
@@ -198,6 +208,7 @@ return await Deployment.RunAsync(() =>
 
     var remoteContext = new DockerBuild.Image("remoteContext", new()
     {
+        Push = false,
         Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
@@ -206,6 +217,7 @@ return await Deployment.RunAsync(() =>
 
     var remoteContextWithInline = new DockerBuild.Image("remoteContextWithInline", new()
     {
+        Push = false,
         Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Inline = @"FROM busybox
@@ -220,6 +232,7 @@ COPY hello.c ./
 
     var inline = new DockerBuild.Image("inline", new()
     {
+        Push = false,
         Dockerfile = new DockerBuild.Inputs.DockerfileArgs
         {
             Inline = @"FROM alpine
@@ -234,6 +247,7 @@ RUN echo ""This uses an inline Dockerfile! 👍""
 
     var dockerLoad = new DockerBuild.Image("dockerLoad", new()
     {
+        Push = false,
         Context = new DockerBuild.Inputs.BuildContextArgs
         {
             Location = "./app",

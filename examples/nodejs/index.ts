@@ -4,6 +4,7 @@ import * as docker_build from "@pulumi/docker-build";
 const config = new pulumi.Config();
 const dockerHubPassword = config.require("dockerHubPassword");
 const multiPlatform = new docker_build.Image("multiPlatform", {
+    push: false,
     dockerfile: {
         location: "./app/Dockerfile.multiPlatform",
     },
@@ -16,6 +17,7 @@ const multiPlatform = new docker_build.Image("multiPlatform", {
     ],
 });
 const registryPush = new docker_build.Image("registryPush", {
+    push: false,
     context: {
         location: "./app",
     },
@@ -33,6 +35,7 @@ const registryPush = new docker_build.Image("registryPush", {
     }],
 });
 const cached = new docker_build.Image("cached", {
+    push: false,
     context: {
         location: "./app",
     },
@@ -49,6 +52,7 @@ const cached = new docker_build.Image("cached", {
     }],
 });
 const buildArgs = new docker_build.Image("buildArgs", {
+    push: false,
     dockerfile: {
         location: "./app/Dockerfile.buildArgs",
     },
@@ -60,6 +64,7 @@ const buildArgs = new docker_build.Image("buildArgs", {
     },
 });
 const extraHosts = new docker_build.Image("extraHosts", {
+    push: false,
     dockerfile: {
         location: "./app/Dockerfile.extraHosts",
     },
@@ -69,6 +74,7 @@ const extraHosts = new docker_build.Image("extraHosts", {
     addHosts: ["metadata.google.internal:169.254.169.254"],
 });
 const sshMount = new docker_build.Image("sshMount", {
+    push: false,
     dockerfile: {
         location: "./app/Dockerfile.sshMount",
     },
@@ -80,6 +86,7 @@ const sshMount = new docker_build.Image("sshMount", {
     }],
 });
 const secrets = new docker_build.Image("secrets", {
+    push: false,
     dockerfile: {
         location: "./app/Dockerfile.secrets",
     },
@@ -91,6 +98,7 @@ const secrets = new docker_build.Image("secrets", {
     },
 });
 const labels = new docker_build.Image("labels", {
+    push: false,
     context: {
         location: "./app",
     },
@@ -99,6 +107,7 @@ const labels = new docker_build.Image("labels", {
     },
 });
 const target = new docker_build.Image("target", {
+    push: false,
     dockerfile: {
         location: "./app/Dockerfile.target",
     },
@@ -108,6 +117,7 @@ const target = new docker_build.Image("target", {
     target: "build-me",
 });
 const namedContexts = new docker_build.Image("namedContexts", {
+    push: false,
     dockerfile: {
         location: "./app/Dockerfile.namedContexts",
     },
@@ -120,10 +130,14 @@ const namedContexts = new docker_build.Image("namedContexts", {
         },
     },
 });
-const remoteContext = new docker_build.Image("remoteContext", {context: {
-    location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
-}});
+const remoteContext = new docker_build.Image("remoteContext", {
+    push: false,
+    context: {
+        location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
+    },
+});
 const remoteContextWithInline = new docker_build.Image("remoteContextWithInline", {
+    push: false,
     dockerfile: {
         inline: `FROM busybox
 COPY hello.c ./
@@ -134,6 +148,7 @@ COPY hello.c ./
     },
 });
 const inline = new docker_build.Image("inline", {
+    push: false,
     dockerfile: {
         inline: `FROM alpine
 RUN echo "This uses an inline Dockerfile! 👍"
@@ -144,6 +159,7 @@ RUN echo "This uses an inline Dockerfile! 👍"
     },
 });
 const dockerLoad = new docker_build.Image("dockerLoad", {
+    push: false,
     context: {
         location: "./app",
     },
