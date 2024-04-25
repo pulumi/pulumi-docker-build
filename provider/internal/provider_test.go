@@ -73,8 +73,8 @@ func newServer(client Client) integration.Server {
 
 	// Inject a mock client if provided.
 	if client != nil {
-		p = mwcontext.Wrap(p, func(ctx provider.Context) provider.Context {
-			return provider.CtxWithValue(ctx, _mockClientKey, client)
+		p = mwcontext.Wrap(p, func(ctx context.Context) context.Context {
+			return context.WithValue(ctx, _mockClientKey, client)
 		})
 	}
 

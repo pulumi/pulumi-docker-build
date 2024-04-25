@@ -44,21 +44,20 @@ import (
 	"github.com/regclient/regclient/types/manifest"
 	"github.com/regclient/regclient/types/ref"
 
-	provider "github.com/pulumi/pulumi-go-provider"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
+	goprovider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/contract"
 )
 
 // Client handles all our Docker API calls.
 type Client interface {
-	Build(ctx provider.Context, b Build) (*client.SolveResponse, error)
+	Build(ctx context.Context, b Build) (*client.SolveResponse, error)
 	BuildKitEnabled() (bool, error)
 	Inspect(ctx context.Context, id string) ([]descriptor.Descriptor, error)
 	Delete(ctx context.Context, id string) error
 
-	ManifestCreate(ctx provider.Context, push bool, target string, refs ...string) error
-	ManifestInspect(ctx provider.Context, target string) (string, error)
-	ManifestDelete(ctx provider.Context, target string) error
+	ManifestCreate(ctx context.Context, push bool, target string, refs ...string) error
+	ManifestInspect(ctx context.Context, target string) (string, error)
+	ManifestDelete(ctx context.Context, target string) error
 }
 
 // Build encapsulates all of the user-provider build parameters and options.
@@ -98,13 +97,12 @@ func newDockerCLI(config *Config) (*command.DockerCli, error) {
 // "default", if no targets were specified) to SolveResponses, which capture
 // the build's digest and tags (if any).
 func (c *cli) Build(
-	pctx provider.Context,
+	ctx context.Context,
 	build Build,
 ) (*client.SolveResponse, error) {
-	ctx := context.Context(pctx)
 	opts := build.BuildOptions()
 
-	go c.tail(pctx)
+	go c.tail(ctx)
 	defer contract.IgnoreClose(c)
 
 	if build.ShouldExec() {
@@ -134,7 +132,7 @@ func (c *cli) Build(
 			for _, d := range w.Detail {
 				fmt.Fprintf(b, "\n%s", d)
 			}
-			pctx.Log(diag.Warning, b.String())
+			goprovider.GetLogger(ctx).Warning(b.String())
 		}
 	}()
 
@@ -247,7 +245,7 @@ func (c *cli) BuildKitEnabled() (bool, error) {
 	return c.Cli.BuildKitEnabled()
 }
 
-func (c *cli) ManifestCreate(ctx provider.Context, push bool, target string, refs ...string) error {
+func (c *cli) ManifestCreate(ctx context.Context, push bool, target string, refs ...string) error {
 	go c.tail(ctx)
 	defer contract.IgnoreClose(c)
 
@@ -271,11 +269,11 @@ func (c *cli) ManifestCreate(ctx provider.Context, push bool, target string, ref
 	cmd.SetErr(c.Err())
 	cmd.SetOut(c.Out())
 
-	ctx.Log(diag.Debug, fmt.Sprint("creating manifest with args", args))
+	goprovider.GetLogger(ctx).Debug(fmt.Sprint("creating manifest with args", args))
 	return cmd.ExecuteContext(ctx)
 }
 
-func (c *cli) ManifestInspect(ctx provider.Context, target string) (string, error) {
+func (c *cli) ManifestInspect(ctx context.Context, target string) (string, error) {
 	rc := c.rc()
 
 	ref, err := ref.New(target)
@@ -291,7 +289,7 @@ func (c *cli) ManifestInspect(ctx provider.Context, target string) (string, erro
 	return string(m.GetDescriptor().Digest), nil
 }
 
-func (c *cli) ManifestDelete(ctx provider.Context, target string) error {
+func (c *cli) ManifestDelete(ctx context.Context, target string) error {
 	rc := c.rc()
 
 	ref, err := ref.New(target)
@@ -299,9 +297,9 @@ func (c *cli) ManifestDelete(ctx provider.Context, target string) error {
 		return err
 	}
 
-	err = rc.ManifestDelete(context.Context(ctx), ref)
+	err = rc.ManifestDelete(ctx, ref)
 	if errors.Is(err, errs.ErrHTTPStatus) {
-		ctx.Log(diag.Warning, "this registry does not support deletions")
+		goprovider.GetLogger(ctx).Warning("this registry does not support deletions")
 		return nil
 	}
 	if err != nil {

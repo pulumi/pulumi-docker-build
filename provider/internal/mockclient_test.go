@@ -15,7 +15,6 @@ import (
 	pb "github.com/docker/buildx/controller/pb"
 	client "github.com/moby/buildkit/client"
 	session "github.com/moby/buildkit/session"
-	provider "github.com/pulumi/pulumi-go-provider"
 	descriptor "github.com/regclient/regclient/types/descriptor"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -44,7 +43,7 @@ func (m *MockClient) EXPECT() *MockClientMockRecorder {
 }
 
 // Build mocks base method.
-func (m *MockClient) Build(ctx provider.Context, b Build) (*client.SolveResponse, error) {
+func (m *MockClient) Build(ctx context.Context, b Build) (*client.SolveResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Build", ctx, b)
 	ret0, _ := ret[0].(*client.SolveResponse)
@@ -71,13 +70,13 @@ func (c *ClientBuildCall) Return(arg0 *client.SolveResponse, arg1 error) *Client
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *ClientBuildCall) Do(f func(provider.Context, Build) (*client.SolveResponse, error)) *ClientBuildCall {
+func (c *ClientBuildCall) Do(f func(context.Context, Build) (*client.SolveResponse, error)) *ClientBuildCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *ClientBuildCall) DoAndReturn(f func(provider.Context, Build) (*client.SolveResponse, error)) *ClientBuildCall {
+func (c *ClientBuildCall) DoAndReturn(f func(context.Context, Build) (*client.SolveResponse, error)) *ClientBuildCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -199,7 +198,7 @@ func (c *ClientInspectCall) DoAndReturn(f func(context.Context, string) ([]descr
 }
 
 // ManifestCreate mocks base method.
-func (m *MockClient) ManifestCreate(ctx provider.Context, push bool, target string, refs ...string) error {
+func (m *MockClient) ManifestCreate(ctx context.Context, push bool, target string, refs ...string) error {
 	m.ctrl.T.Helper()
 	varargs := []any{ctx, push, target}
 	for _, a := range refs {
@@ -230,19 +229,19 @@ func (c *ClientManifestCreateCall) Return(arg0 error) *ClientManifestCreateCall 
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *ClientManifestCreateCall) Do(f func(provider.Context, bool, string, ...string) error) *ClientManifestCreateCall {
+func (c *ClientManifestCreateCall) Do(f func(context.Context, bool, string, ...string) error) *ClientManifestCreateCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *ClientManifestCreateCall) DoAndReturn(f func(provider.Context, bool, string, ...string) error) *ClientManifestCreateCall {
+func (c *ClientManifestCreateCall) DoAndReturn(f func(context.Context, bool, string, ...string) error) *ClientManifestCreateCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
 
 // ManifestDelete mocks base method.
-func (m *MockClient) ManifestDelete(ctx provider.Context, target string) error {
+func (m *MockClient) ManifestDelete(ctx context.Context, target string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ManifestDelete", ctx, target)
 	ret0, _ := ret[0].(error)
@@ -268,19 +267,19 @@ func (c *ClientManifestDeleteCall) Return(arg0 error) *ClientManifestDeleteCall 
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *ClientManifestDeleteCall) Do(f func(provider.Context, string) error) *ClientManifestDeleteCall {
+func (c *ClientManifestDeleteCall) Do(f func(context.Context, string) error) *ClientManifestDeleteCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *ClientManifestDeleteCall) DoAndReturn(f func(provider.Context, string) error) *ClientManifestDeleteCall {
+func (c *ClientManifestDeleteCall) DoAndReturn(f func(context.Context, string) error) *ClientManifestDeleteCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
 
 // ManifestInspect mocks base method.
-func (m *MockClient) ManifestInspect(ctx provider.Context, target string) (string, error) {
+func (m *MockClient) ManifestInspect(ctx context.Context, target string) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ManifestInspect", ctx, target)
 	ret0, _ := ret[0].(string)
@@ -307,13 +306,13 @@ func (c *ClientManifestInspectCall) Return(arg0 string, arg1 error) *ClientManif
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *ClientManifestInspectCall) Do(f func(provider.Context, string) (string, error)) *ClientManifestInspectCall {
+func (c *ClientManifestInspectCall) Do(f func(context.Context, string) (string, error)) *ClientManifestInspectCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *ClientManifestInspectCall) DoAndReturn(f func(provider.Context, string) (string, error)) *ClientManifestInspectCall {
+func (c *ClientManifestInspectCall) DoAndReturn(f func(context.Context, string) (string, error)) *ClientManifestInspectCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

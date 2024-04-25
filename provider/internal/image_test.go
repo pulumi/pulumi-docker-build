@@ -15,6 +15,7 @@
 package internal
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -64,7 +65,7 @@ func TestImageLifecycle(t *testing.T) {
 				c := NewMockClient(ctrl)
 				c.EXPECT().BuildKitEnabled().Return(true, nil).AnyTimes()
 				c.EXPECT().Build(gomock.Any(), gomock.AssignableToTypeOf(build{})).DoAndReturn(
-					func(_ provider.Context, b Build) (*client.SolveResponse, error) {
+					func(_ context.Context, b Build) (*client.SolveResponse, error) {
 						assert.Equal(t, "testdata/noop/Dockerfile", b.BuildOptions().DockerfileName)
 						return &client.SolveResponse{
 							ExporterResponse: map[string]string{
@@ -238,7 +239,7 @@ func TestImageLifecycle(t *testing.T) {
 				c := NewMockClient(ctrl)
 				c.EXPECT().BuildKitEnabled().Return(true, nil).AnyTimes()
 				c.EXPECT().Build(gomock.Any(), gomock.AssignableToTypeOf(build{})).DoAndReturn(
-					func(_ provider.Context, b Build) (*client.SolveResponse, error) {
+					func(_ context.Context, b Build) (*client.SolveResponse, error) {
 						assert.Equal(t, "testdata/noop/Dockerfile", b.BuildOptions().DockerfileName)
 						return &client.SolveResponse{
 							ExporterResponse: map[string]string{"image.name": "test:latest"},
@@ -960,9 +961,6 @@ func TestBuildable(t *testing.T) {
 
 func TestToBuild(t *testing.T) {
 	t.Parallel()
-	ctrl := gomock.NewController(t)
-	pctx := NewMockProviderContext(ctrl)
-	pctx.EXPECT().Log(gomock.Any(), gomock.Any()).AnyTimes()
 	max := Max
 
 	ia := ImageArgs{
@@ -989,6 +987,6 @@ func TestToBuild(t *testing.T) {
 		},
 	}
 
-	_, err := ia.toBuild(pctx, false)
+	_, err := ia.toBuild(context.Background(), false)
 	assert.NoError(t, err)
 }

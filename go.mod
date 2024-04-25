@@ -15,8 +15,7 @@ require (
 	github.com/muesli/reflow v0.3.0
 	github.com/otiai10/copy v1.14.0
 	github.com/pulumi/providertest v0.0.12
-	github.com/pulumi/pulumi-go-provider v0.16.0
-	github.com/pulumi/pulumi-go-provider/integration v0.10.1-0.20240314105842-9fbffb634faf
+	github.com/pulumi/pulumi-go-provider v0.16.1-0.20240426163030-72606b1e6fb7
 	github.com/pulumi/pulumi-java/pkg v0.10.0
 	github.com/pulumi/pulumi/pkg/v3 v3.113.3
 	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20240415162817-44c8de53d5d2
@@ -455,7 +454,7 @@ require (
 	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20240314144324-c7f7c6466f7f // indirect
 	golang.org/x/mod v0.16.0 // indirect
-	golang.org/x/net v0.22.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
 	golang.org/x/oauth2 v0.18.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect

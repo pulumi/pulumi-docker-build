@@ -19,6 +19,7 @@ package internal
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -39,8 +40,7 @@ import (
 	"github.com/regclient/regclient/config"
 	"github.com/sirupsen/logrus"
 
-	provider "github.com/pulumi/pulumi-go-provider"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
+	goprovider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/contract"
 )
@@ -157,7 +157,7 @@ func (c *cli) rc() *regclient.RegClient {
 
 // tail is meant to be called as a goroutine and will pipe output from the CLI
 // back to the Pulumi engine. Requires a corresponding call to close.
-func (c *cli) tail(ctx provider.Context) {
+func (c *cli) tail(ctx context.Context) {
 	c.done = make(chan struct{}, 1)
 	defer func() {
 		c.done <- struct{}{}
@@ -171,18 +171,18 @@ func (c *cli) tail(ctx provider.Context) {
 	s := bufio.NewScanner(c.r)
 	for s.Scan() {
 		text := s.Text()
-		ctx.LogStatus(diag.Info, text)
+		goprovider.GetLogger(ctx).InfoStatus(text)
 		_, _ = b.WriteString(text + "\n")
 	}
-	ctx.LogStatus(diag.Info, "") // clear confusing "DONE" statements.
+	goprovider.GetLogger(ctx).InfoStatus("") // clear confusing "DONE" statements.
 
 	if c.dumplogs {
 		// Persist the full Docker output on error for easier debugging.
 		if b.Len() > 0 {
-			ctx.Log(diag.Info, b.String())
+			goprovider.GetLogger(ctx).Info(b.String())
 		}
 		if c.err.Len() > 0 {
-			ctx.Log(diag.Error, c.err.String())
+			goprovider.GetLogger(ctx).Error(c.err.String())
 		}
 	}
 }
