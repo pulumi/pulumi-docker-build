@@ -1,6 +1,10 @@
-name: provider-dockerbuild
+name: provider-docker-build
 runtime: go
+config:
+  dockerHubPassword:
+    type: string
+    secret: true
 plugins:
   providers:
-    - name: dockerbuild
+    - name: docker-build
       path: ../../bin

@@ -1,14 +1,16 @@
 [project]
-  name = "pulumi_dockerbuild"
-  description = "Description"
+  name = "pulumi_docker_build"
+  description = "A Pulumi provider for building modern Docker images with buildx and BuildKit."
   dependencies = ["parver>=0.2.1", "pulumi>=3.0.0,<4.0.0", "semver>=2.8.1"]
-  keywords = ["keywords"]
+  keywords = ["docker", "buildkit", "buildx", "kind/native"]
   readme = "README.md"
   requires-python = ">=3.8"
   version = "0.0.0"
+  [project.license]
+    text = "Apache-2.0"
   [project.urls]
-    Homepage = "pulumi.com"
-    Repository = "https://github.com/pulumi/pulumi-dockerbuild"
+    Homepage = "https://pulumi.com"
+    Repository = "https://github.com/pulumi/pulumi-docker-build"
 
 [build-system]
   requires = ["setuptools>=61.0"]
@@ -17,4 +19,4 @@
 [tool]
   [tool.setuptools]
     [tool.setuptools.package-data]
-      pulumi_dockerbuild = ["py.typed", "pulumi-plugin.json"]
+      pulumi_docker_build = ["py.typed", "pulumi-plugin.json"]

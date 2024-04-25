@@ -1,4 +1,4 @@
-module provider-dockerbuild
+module provider-docker-build
 
 go 1.20
 

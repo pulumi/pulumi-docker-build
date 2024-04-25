@@ -1,0 +1,856 @@
+{
+    "version": 3,
+    "deployment": {
+        "manifest": {
+            "time": "2024-04-25T08:48:01.267863-07:00",
+            "magic": "",
+            "version": ""
+        },
+        "secrets_providers": {
+            "type": "passphrase",
+            "state": {
+                "salt": "v1:VL+kccbv65M=:v1:rRAfrl2TUFiFVdMv:sqpTiKP4J8mt05CfZp3bhu9Zqp4UsA=="
+            }
+        },
+        "resources": [
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "custom": false,
+                "type": "pulumi:pulumi:Stack",
+                "outputs": {
+                    "platforms": [
+                        "plan9/amd64",
+                        "plan9/386"
+                    ]
+                },
+                "created": "2024-04-25T15:47:59.523578Z",
+                "modified": "2024-04-25T15:47:59.523578Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default",
+                "custom": true,
+                "id": "1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "type": "pulumi:providers:docker-build",
+                "inputs": {
+                    "host": ""
+                },
+                "outputs": {
+                    "host": ""
+                },
+                "created": "2024-04-25T15:47:59.664483Z",
+                "modified": "2024-04-25T15:47:59.664483Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::remoteContext",
+                "custom": true,
+                "id": "remoteContext",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "context": {
+                        "location": "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile"
+                    },
+                    "dockerfile": {
+                        "inline": "",
+                        "location": ""
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "target": ""
+                },
+                "outputs": {
+                    "context": {
+                        "location": "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile"
+                    },
+                    "contextHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                    "digest": "",
+                    "dockerfile": {
+                        "inline": "",
+                        "location": ""
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ref": "",
+                    "target": ""
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "context": []
+                },
+                "created": "2024-04-25T15:48:00.520476Z",
+                "modified": "2024-04-25T15:48:00.520476Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::inline",
+                "custom": true,
+                "id": "inline",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "dockerfile": {
+                        "inline": "FROM alpine\nRUN echo \"This uses an inline Dockerfile! 👍\"\n",
+                        "location": ""
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "target": ""
+                },
+                "outputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "contextHash": "36c67969e6700e87bde75fcf604a7db1fa9593194718fc0ae1c498df43228aec",
+                    "digest": "",
+                    "dockerfile": {
+                        "inline": "FROM alpine\nRUN echo \"This uses an inline Dockerfile! 👍\"\n",
+                        "location": ""
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ref": "",
+                    "target": ""
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "context": [],
+                    "dockerfile": []
+                },
+                "created": "2024-04-25T15:48:00.542164Z",
+                "modified": "2024-04-25T15:48:00.542164Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::target",
+                "custom": true,
+                "id": "target",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.target"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "target": "build-me"
+                },
+                "outputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "contextHash": "fefadf795b6b4b119e97a87067a25f52a16cc3375223acad7b3f642fdcd413fc",
+                    "digest": "",
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.target"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ref": "",
+                    "target": "build-me"
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "context": [],
+                    "dockerfile": [],
+                    "target": []
+                },
+                "created": "2024-04-25T15:48:00.568397Z",
+                "modified": "2024-04-25T15:48:00.568397Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::secrets",
+                "custom": true,
+                "id": "secrets",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.secrets"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "secrets": {
+                        "password": "hunter2"
+                    },
+                    "target": ""
+                },
+                "outputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "contextHash": "5c1561571a60aa3b5a234a9c26f69e2ba5d9a18624f426109d36a1d729b23a21",
+                    "digest": "",
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.secrets"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ref": "",
+                    "secrets": {
+                        "password": "hunter2"
+                    },
+                    "target": ""
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "context": [],
+                    "dockerfile": [],
+                    "secrets": []
+                },
+                "created": "2024-04-25T15:48:00.578273Z",
+                "modified": "2024-04-25T15:48:00.578273Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::sshMount",
+                "custom": true,
+                "id": "sshMount",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.sshMount"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ssh": [
+                        {
+                            "id": "default"
+                        }
+                    ],
+                    "target": ""
+                },
+                "outputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "contextHash": "71d21b382ab9ee0324ad820ce57a0a4318342a0a244931f51fc46b791f1b37e9",
+                    "digest": "",
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.sshMount"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ref": "",
+                    "ssh": [
+                        {
+                            "id": "default"
+                        }
+                    ],
+                    "target": ""
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "context": [],
+                    "dockerfile": [],
+                    "ssh": []
+                },
+                "created": "2024-04-25T15:48:00.590119Z",
+                "modified": "2024-04-25T15:48:00.590119Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::registryPush",
+                "custom": true,
+                "id": "sha256:daf363fb4e814674f8e3e542e3dc1dbb9f7fb21f83c1956ddc948f20c1f9553e",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "app/Dockerfile"
+                    },
+                    "exec": false,
+                    "exports": [
+                        {
+                            "disabled": false,
+                            "raw": "",
+                            "registry": {
+                                "compressionLevel": 0,
+                                "danglingNamePrefix": "",
+                                "ociMediaTypes": true,
+                                "push": false
+                            }
+                        }
+                    ],
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "tags": [
+                        "docker.io/pulumibot/buildkit-e2e:example"
+                    ],
+                    "target": ""
+                },
+                "outputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "contextHash": "e569495ad1cfde07d0e769ab9b5ed56b889508f299d2e7a90400caf9e12795d5",
+                    "digest": "sha256:daf363fb4e814674f8e3e542e3dc1dbb9f7fb21f83c1956ddc948f20c1f9553e",
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "app/Dockerfile"
+                    },
+                    "exec": false,
+                    "exports": [
+                        {
+                            "disabled": false,
+                            "raw": "",
+                            "registry": {
+                                "compressionLevel": 0,
+                                "danglingNamePrefix": "",
+                                "ociMediaTypes": true,
+                                "push": false
+                            }
+                        }
+                    ],
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ref": "docker.io/pulumibot/buildkit-e2e:example@sha256:daf363fb4e814674f8e3e542e3dc1dbb9f7fb21f83c1956ddc948f20c1f9553e",
+                    "tags": [
+                        "docker.io/pulumibot/buildkit-e2e:example"
+                    ],
+                    "target": ""
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "context": [],
+                    "exports": [],
+                    "tags": []
+                },
+                "created": "2024-04-25T15:48:00.59945Z",
+                "modified": "2024-04-25T15:48:00.59945Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::cached",
+                "custom": true,
+                "id": "cached",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "cacheFrom": [
+                        {
+                            "disabled": false,
+                            "local": {
+                                "digest": "",
+                                "src": "tmp/cache"
+                            },
+                            "raw": ""
+                        }
+                    ],
+                    "cacheTo": [
+                        {
+                            "disabled": false,
+                            "local": {
+                                "compressionLevel": 0,
+                                "dest": "tmp/cache",
+                                "mode": "max"
+                            },
+                            "raw": ""
+                        }
+                    ],
+                    "context": {
+                        "location": "./app"
+                    },
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "app/Dockerfile"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "target": ""
+                },
+                "outputs": {
+                    "cacheFrom": [
+                        {
+                            "disabled": false,
+                            "local": {
+                                "digest": "",
+                                "src": "tmp/cache"
+                            },
+                            "raw": ""
+                        }
+                    ],
+                    "cacheTo": [
+                        {
+                            "disabled": false,
+                            "local": {
+                                "compressionLevel": 0,
+                                "dest": "tmp/cache",
+                                "mode": "max"
+                            },
+                            "raw": ""
+                        }
+                    ],
+                    "context": {
+                        "location": "./app"
+                    },
+                    "contextHash": "e569495ad1cfde07d0e769ab9b5ed56b889508f299d2e7a90400caf9e12795d5",
+                    "digest": "",
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "app/Dockerfile"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ref": "",
+                    "target": ""
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "cacheFrom": [],
+                    "cacheTo": [],
+                    "context": []
+                },
+                "created": "2024-04-25T15:48:00.616567Z",
+                "modified": "2024-04-25T15:48:00.616567Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::dockerLoad",
+                "custom": true,
+                "id": "sha256:af0f1b830122444f250e8f6d50ceea71b6f485cfc0f7a9cc828390c2f0647040",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "app/Dockerfile"
+                    },
+                    "exec": false,
+                    "exports": [
+                        {
+                            "disabled": false,
+                            "docker": {
+                                "compressionLevel": 0,
+                                "dest": "",
+                                "tar": true
+                            },
+                            "raw": ""
+                        }
+                    ],
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "target": ""
+                },
+                "outputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "contextHash": "e569495ad1cfde07d0e769ab9b5ed56b889508f299d2e7a90400caf9e12795d5",
+                    "digest": "sha256:af0f1b830122444f250e8f6d50ceea71b6f485cfc0f7a9cc828390c2f0647040",
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "app/Dockerfile"
+                    },
+                    "exec": false,
+                    "exports": [
+                        {
+                            "disabled": false,
+                            "docker": {
+                                "compressionLevel": 0,
+                                "dest": "",
+                                "tar": true
+                            },
+                            "raw": ""
+                        }
+                    ],
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ref": "",
+                    "target": ""
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "context": [],
+                    "exports": []
+                },
+                "created": "2024-04-25T15:48:00.629463Z",
+                "modified": "2024-04-25T15:48:00.629463Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::extraHosts",
+                "custom": true,
+                "id": "extraHosts",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "addHosts": [
+                        "metadata.google.internal:169.254.169.254"
+                    ],
+                    "context": {
+                        "location": "./app"
+                    },
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.extraHosts"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "target": ""
+                },
+                "outputs": {
+                    "addHosts": [
+                        "metadata.google.internal:169.254.169.254"
+                    ],
+                    "context": {
+                        "location": "./app"
+                    },
+                    "contextHash": "e5d510d9ce39d91260e3aa7f8c81d7517a76165eb35e7134cae2f3e4e9fcb712",
+                    "digest": "",
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.extraHosts"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ref": "",
+                    "target": ""
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "addHosts": [],
+                    "context": [],
+                    "dockerfile": []
+                },
+                "created": "2024-04-25T15:48:00.639744Z",
+                "modified": "2024-04-25T15:48:00.639744Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::labels",
+                "custom": true,
+                "id": "labels",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "app/Dockerfile"
+                    },
+                    "exec": false,
+                    "labels": {
+                        "description": "This image will get a descriptive label 👍"
+                    },
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "target": ""
+                },
+                "outputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "contextHash": "e569495ad1cfde07d0e769ab9b5ed56b889508f299d2e7a90400caf9e12795d5",
+                    "digest": "",
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "app/Dockerfile"
+                    },
+                    "exec": false,
+                    "labels": {
+                        "description": "This image will get a descriptive label 👍"
+                    },
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ref": "",
+                    "target": ""
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "context": [],
+                    "labels": []
+                },
+                "created": "2024-04-25T15:48:00.707146Z",
+                "modified": "2024-04-25T15:48:00.707146Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::buildArgs",
+                "custom": true,
+                "id": "buildArgs",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "buildArgs": {
+                        "SET_ME_TO_TRUE": "true"
+                    },
+                    "context": {
+                        "location": "./app"
+                    },
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.buildArgs"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "target": ""
+                },
+                "outputs": {
+                    "buildArgs": {
+                        "SET_ME_TO_TRUE": "true"
+                    },
+                    "context": {
+                        "location": "./app"
+                    },
+                    "contextHash": "55695ddcfb4d08a0d78d1a74c7b0141dada73ed05bc4b056ba29a51e42c83381",
+                    "digest": "",
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.buildArgs"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ref": "",
+                    "target": ""
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "buildArgs": [],
+                    "context": [],
+                    "dockerfile": []
+                },
+                "created": "2024-04-25T15:48:00.713219Z",
+                "modified": "2024-04-25T15:48:00.713219Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::multiPlatform",
+                "custom": true,
+                "id": "multiPlatform",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.multiPlatform"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "platforms": [
+                        "plan9/amd64",
+                        "plan9/386"
+                    ],
+                    "pull": false,
+                    "push": false,
+                    "target": ""
+                },
+                "outputs": {
+                    "context": {
+                        "location": "./app"
+                    },
+                    "contextHash": "c7ecf546ed2402de04f2dfa56ca4adb6fd490eed4219d7f1b2e559cd475f1755",
+                    "digest": "",
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.multiPlatform"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "platforms": [
+                        "plan9/amd64",
+                        "plan9/386"
+                    ],
+                    "pull": false,
+                    "push": false,
+                    "ref": "",
+                    "target": ""
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "context": [],
+                    "dockerfile": [],
+                    "platforms": []
+                },
+                "created": "2024-04-25T15:48:00.802952Z",
+                "modified": "2024-04-25T15:48:00.802952Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::namedContexts",
+                "custom": true,
+                "id": "namedContexts",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "context": {
+                        "location": "./app",
+                        "named": {
+                            "golang:latest": {
+                                "location": "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984"
+                            }
+                        }
+                    },
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.namedContexts"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "target": ""
+                },
+                "outputs": {
+                    "context": {
+                        "location": "./app",
+                        "named": {
+                            "golang:latest": {
+                                "location": "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984"
+                            }
+                        }
+                    },
+                    "contextHash": "3adfaaf17fbb548f06310e76d2826bccb223b49463504d0cc4fe86b0eef5d47d",
+                    "digest": "",
+                    "dockerfile": {
+                        "inline": "",
+                        "location": "./app/Dockerfile.namedContexts"
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ref": "",
+                    "target": ""
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "context": [],
+                    "dockerfile": []
+                },
+                "created": "2024-04-25T15:48:00.82495Z",
+                "modified": "2024-04-25T15:48:00.82495Z"
+            },
+            {
+                "urn": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::docker-build:index:Image::remoteContextWithInline",
+                "custom": true,
+                "id": "remoteContextWithInline",
+                "type": "docker-build:index:Image",
+                "inputs": {
+                    "context": {
+                        "location": "https://github.com/docker-library/hello-world.git"
+                    },
+                    "dockerfile": {
+                        "inline": "FROM busybox\nCOPY hello.c ./\n",
+                        "location": ""
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "target": ""
+                },
+                "outputs": {
+                    "context": {
+                        "location": "https://github.com/docker-library/hello-world.git"
+                    },
+                    "contextHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                    "digest": "",
+                    "dockerfile": {
+                        "inline": "FROM busybox\nCOPY hello.c ./\n",
+                        "location": ""
+                    },
+                    "exec": false,
+                    "load": false,
+                    "noCache": false,
+                    "pull": false,
+                    "push": false,
+                    "ref": "",
+                    "target": ""
+                },
+                "parent": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-p-it-bryces-wor-upgrade-e061461f",
+                "provider": "urn:pulumi:p-it-bryces-wor-upgrade-e061461f::provider-docker-build::pulumi:providers:docker-build::default::1262d75a-1f92-4f7b-8b32-6b5246d188f0",
+                "propertyDependencies": {
+                    "context": [],
+                    "dockerfile": []
+                },
+                "created": "2024-04-25T15:48:01.263124Z",
+                "modified": "2024-04-25T15:48:01.263124Z"
+            }
+        ]
+    }
+}

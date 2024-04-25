@@ -10,5 +10,5 @@ pluginManagement {
   }
 }
 
-rootProject.name = "com.pulumi.dockerbuild"
+rootProject.name = "com.pulumi.docker-build"
 include("lib")

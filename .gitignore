@@ -5,6 +5,7 @@
 **/.vs
 **/.idea
 **/.ionide
+**/.vscode
 *.swp
 Pulumi.*.yaml
 yarn.lock
