@@ -12,6 +12,7 @@ resources:
       tags:
         - alpine-local
       load: true
+      push: false
       context:
         location: .
       dockerfile:
