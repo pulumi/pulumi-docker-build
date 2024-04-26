@@ -21,7 +21,7 @@ require (
 	github.com/pulumi/pulumi/pkg/v3 v3.113.3
 	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20240415162817-44c8de53d5d2
 	github.com/pulumi/pulumi/sdk/v3 v3.113.3
-	github.com/regclient/regclient v0.0.0-20240308005156-a7434cff9c6b
+	github.com/regclient/regclient v0.6.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.11.0
 	github.com/stretchr/testify v1.9.0
