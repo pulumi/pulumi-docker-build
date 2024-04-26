@@ -31,6 +31,9 @@ tidy:
 .PHONY: provider
 provider: bin/${PROVIDER} bin/pulumi-gen-${PACK} # Required by CI
 
+.PHONY: local_generate
+local_generate: sdk # Required by CI
+
 provider_debug::
 	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -gcflags="all=-N -l" -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
 
