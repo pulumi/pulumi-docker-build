@@ -40,7 +40,7 @@ import (
 	"github.com/regclient/regclient/config"
 	"github.com/sirupsen/logrus"
 
-	goprovider "github.com/pulumi/pulumi-go-provider"
+	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/contract"
 )
@@ -171,18 +171,18 @@ func (c *cli) tail(ctx context.Context) {
 	s := bufio.NewScanner(c.r)
 	for s.Scan() {
 		text := s.Text()
-		goprovider.GetLogger(ctx).InfoStatus(text)
+		provider.GetLogger(ctx).InfoStatus(text)
 		_, _ = b.WriteString(text + "\n")
 	}
-	goprovider.GetLogger(ctx).InfoStatus("") // clear confusing "DONE" statements.
+	provider.GetLogger(ctx).InfoStatus("") // clear confusing "DONE" statements.
 
 	if c.dumplogs {
 		// Persist the full Docker output on error for easier debugging.
 		if b.Len() > 0 {
-			goprovider.GetLogger(ctx).Info(b.String())
+			provider.GetLogger(ctx).Info(b.String())
 		}
 		if c.err.Len() > 0 {
-			goprovider.GetLogger(ctx).Error(c.err.String())
+			provider.GetLogger(ctx).Error(c.err.String())
 		}
 	}
 }

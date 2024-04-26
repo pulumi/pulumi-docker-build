@@ -44,7 +44,7 @@ import (
 	"github.com/regclient/regclient/types/manifest"
 	"github.com/regclient/regclient/types/ref"
 
-	goprovider "github.com/pulumi/pulumi-go-provider"
+	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/contract"
 )
 
@@ -132,7 +132,7 @@ func (c *cli) Build(
 			for _, d := range w.Detail {
 				fmt.Fprintf(b, "\n%s", d)
 			}
-			goprovider.GetLogger(ctx).Warning(b.String())
+			provider.GetLogger(ctx).Warning(b.String())
 		}
 	}()
 
@@ -269,7 +269,7 @@ func (c *cli) ManifestCreate(ctx context.Context, push bool, target string, refs
 	cmd.SetErr(c.Err())
 	cmd.SetOut(c.Out())
 
-	goprovider.GetLogger(ctx).Debug(fmt.Sprint("creating manifest with args", args))
+	provider.GetLogger(ctx).Debug(fmt.Sprint("creating manifest with args", args))
 	return cmd.ExecuteContext(ctx)
 }
 
@@ -299,7 +299,7 @@ func (c *cli) ManifestDelete(ctx context.Context, target string) error {
 
 	err = rc.ManifestDelete(ctx, ref)
 	if errors.Is(err, errs.ErrHTTPStatus) {
-		goprovider.GetLogger(ctx).Warning("this registry does not support deletions")
+		provider.GetLogger(ctx).Warning("this registry does not support deletions")
 		return nil
 	}
 	if err != nil {
