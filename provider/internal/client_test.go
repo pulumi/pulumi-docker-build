@@ -17,6 +17,8 @@ package internal
 import (
 	"bytes"
 	"context"
+	"io"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"testing"
@@ -352,12 +354,22 @@ func TestNormalizeReference(t *testing.T) {
 	}
 }
 
+//nolint:paralleltest // Overrides default logger.
 func TestBuildError(t *testing.T) {
-	t.Parallel()
-
 	if os.Getenv("CI") != "" {
 		t.Skip("flaky on CI for some reason")
 	}
+
+	l := slog.Default()
+	defer slog.SetDefault(l)
+
+	// Override go-provider's default logger to capture and tee to stdout.
+	logger := &bytes.Buffer{}
+	slog.SetDefault(
+		slog.New(
+			slog.NewTextHandler(io.MultiWriter(logger, os.Stdout), nil),
+		),
+	)
 
 	exampleContext := &BuildContext{Context: Context{Location: "../../examples/app"}}
 
@@ -367,7 +379,6 @@ func TestBuildError(t *testing.T) {
 			Inline: "FROM alpine\nRUN echo hello\nRUN badcmd",
 		},
 	}
-	logged := bytes.Buffer{}
 
 	ctx := context.Background()
 	cli := testcli(t, true)
@@ -384,7 +395,7 @@ func TestBuildError(t *testing.T) {
 	}
 
 	for _, want := range want {
-		assert.Contains(t, logged.String(), want)
+		assert.Contains(t, logger.String(), want)
 	}
 	assert.ErrorContains(t, err,
 		`process "/bin/sh -c badcmd" did not complete successfully: exit code: 127`,

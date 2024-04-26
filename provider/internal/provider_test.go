@@ -59,7 +59,10 @@ func TestAnnotate(t *testing.T) {
 func TestSchema(t *testing.T) {
 	t.Parallel()
 
-	Schema(context.Background(), "v4")
+	s := newServer(nil)
+
+	_, err := s.GetSchema(provider.GetSchemaRequest{Version: 0})
+	assert.NoError(t, err)
 }
 
 type annotator struct{}
@@ -78,5 +81,5 @@ func newServer(client Client) integration.Server {
 		})
 	}
 
-	return integration.NewServer("docker", semver.Version{Major: 4}, p)
+	return integration.NewServer("docker-build", semver.Version{Major: 0}, p)
 }
