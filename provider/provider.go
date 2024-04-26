@@ -16,11 +16,13 @@ package provider
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/pulumi/pulumi-docker-build/provider/internal"
 	"github.com/pulumi/pulumi-docker-build/provider/internal/deprecated"
 	gp "github.com/pulumi/pulumi-go-provider"
+	"github.com/pulumi/pulumi/pkg/v3/codegen/schema"
 	"github.com/pulumi/pulumi/pkg/v3/resource/provider"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource/plugin"
 	rpc "github.com/pulumi/pulumi/sdk/v3/proto/go"
@@ -62,8 +64,17 @@ func (p configurableProvider) Configure(
 	ctx context.Context,
 	request *rpc.ConfigureRequest,
 ) (*rpc.ConfigureResponse, error) {
-	schema := internal.Schema(ctx, Version)
-	ce := deprecated.New(schema.Config)
+	r, err := p.GetSchema(ctx, &rpc.GetSchemaRequest{Version: 0})
+	if err != nil {
+		return nil, err
+	}
+	spec := schema.PackageSpec{}
+	err = json.Unmarshal([]byte(r.Schema), &spec)
+	if err != nil {
+		return nil, err
+	}
+
+	ce := deprecated.New(spec.Config)
 	buildxReq := request
 	if props, err := ce.UnmarshalProperties(request.Args); err == nil {
 		args, _ := plugin.MarshalProperties(props, plugin.MarshalOptions{
