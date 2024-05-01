@@ -7,7 +7,6 @@ NODE_MODULE_NAME := @pulumi/docker-build
 NUGET_PKG_NAME   := Pulumi.DockerBuild
 
 PROVIDER         := pulumi-resource-${PACK}
-VERSION          ?= $(shell pulumictl get version)
 PROVIDER_PATH    := provider
 VERSION_PATH     := ${PROVIDER_PATH}.Version
 SCHEMA_PATH      := ${PROVIDER_PATH}/cmd/pulumi-resource-${PACK}/schema.json
@@ -20,6 +19,12 @@ TESTPARALLELISM  := 4
 
 PULUMI           := bin/pulumi
 GOGLANGCILINT    := bin/golangci-lint
+
+# Override during CI using `make [TARGET] PROVIDER_VERSION=""` or by setting a PROVIDER_VERSION environment variable
+# Local & branch builds will just used this fixed default version unless specified
+PROVIDER_VERSION ?= 1.0.0-alpha.0+dev
+# Use this normalised version everywhere rather than the raw input to ensure consistency.
+VERSION_GENERIC = $(shell pulumictl convert-version --language generic --version "$(PROVIDER_VERSION)")
 
 .PHONY: ensure
 ensure:: tidy lint test_provider examples
@@ -35,7 +40,7 @@ provider: bin/${PROVIDER} bin/pulumi-gen-${PACK} # Required by CI
 local_generate: sdk # Required by CI
 
 provider_debug::
-	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -gcflags="all=-N -l" -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
+	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -gcflags="all=-N -l" -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION_GENERIC}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
 
 test_provider:: # Required by CI
 	go test -short -v -coverprofile="coverage.txt" -coverpkg=./provider/... -timeout 2h -parallel ${TESTPARALLELISM} ./provider/...
@@ -176,7 +181,7 @@ ${SCHEMA_PATH}: bin/${PROVIDER}
 	pulumi package get-schema bin/${PROVIDER} > $(SCHEMA_PATH)
 
 bin/${PROVIDER}: $(shell find ./provider -name '*.go') go.mod
-	(cd provider && go build -o ../bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
+	(cd provider && go build -o ../bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION_GENERIC}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
 
 bin/pulumi-gen-${PACK}: # Required by CI
 	touch bin/pulumi-gen-${PACK}
@@ -187,7 +192,7 @@ go.sum: go.mod
 sdk: $(shell mkdir -p sdk)
 sdk: sdk/python sdk/nodejs sdk/java sdk/python sdk/go sdk/dotnet
 
-sdk/python: PYPI_VERSION := $(shell pulumictl get version --language python)
+sdk/python: PYPI_VERSION := $(shell pulumictl convert-version --language python -v "$(VERSION_GENERIC)")
 sdk/python: TMPDIR := $(shell mktemp -d)
 sdk/python: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/python
@@ -203,7 +208,7 @@ sdk/python: $(PULUMI) bin/${PROVIDER}
 		../venv/bin/python -m build .
 	mv -f ${TMPDIR}/python ${WORKING_DIR}/sdk/.
 
-sdk/nodejs: NODE_VERSION := $(shell pulumictl get version --language javascript)
+sdk/nodejs: NODE_VERSION := $(shell pulumictl convert-version --language javascript -v "$(VERSION_GENERIC)")
 sdk/nodejs: TMPDIR := $(shell mktemp -d)
 sdk/nodejs: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/nodejs
@@ -228,7 +233,7 @@ sdk/go: $(PULUMI) bin/${PROVIDER}
 		go mod tidy
 	mv -f ${TMPDIR}/go ${WORKING_DIR}/sdk/go
 
-sdk/dotnet: DOTNET_VERSION  := $(shell pulumictl get version --language dotnet)
+sdk/dotnet: DOTNET_VERSION  := $(shell pulumictl convert-version --language dotnet -v "$(VERSION_GENERIC)")
 sdk/dotnet: TMPDIR := $(shell mktemp -d)
 sdk/dotnet: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/dotnet
@@ -238,7 +243,7 @@ sdk/dotnet: $(PULUMI) bin/${PROVIDER}
 		dotnet build /p:Version=${DOTNET_VERSION}
 	mv -f ${TMPDIR}/dotnet ${WORKING_DIR}/sdk/.
 
-sdk/java: PACKAGE_VERSION := $(shell pulumictl get version --language generic)
+sdk/java: PACKAGE_VERSION := $(shell pulumictl convert-version --language generic -v "$(VERSION_GENERIC)")
 sdk/java: TMPDIR := $(shell mktemp -d)
 sdk/java: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/java
