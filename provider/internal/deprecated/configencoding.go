@@ -17,9 +17,6 @@ package deprecated
 import (
 	"encoding/json"
 	"fmt"
-	"sort"
-
-	"google.golang.org/protobuf/types/known/structpb"
 
 	"github.com/pulumi/pulumi/pkg/v3/codegen/schema"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
@@ -120,14 +117,9 @@ func (enc *ConfigEncoding) unmarshalOpts() plugin.MarshalOptions {
 
 // Like plugin.UnmarshalPropertyValue but overrides string parsing with convertStringToPropertyValue.
 func (enc *ConfigEncoding) unmarshalPropertyValue(key resource.PropertyKey,
-	v *structpb.Value,
-) (*resource.PropertyValue, error) {
+	pv resource.PropertyValue,
+) (resource.PropertyValue, error) {
 	opts := enc.unmarshalOpts()
-
-	pv, err := plugin.UnmarshalPropertyValue(key, v, enc.unmarshalOpts())
-	if err != nil {
-		return nil, fmt.Errorf("error unmarshalling property %q: %w", key, err)
-	}
 
 	prop, ok := enc.schema.Variables[string(key)]
 
@@ -136,8 +128,10 @@ func (enc *ConfigEncoding) unmarshalPropertyValue(key resource.PropertyKey,
 		return pv, nil
 	}
 
-	var jsonString string
-	var jsonStringDetected, jsonStringSecret bool
+	var (
+		jsonString                           string
+		jsonStringDetected, jsonStringSecret bool
+	)
 
 	if pv.IsString() {
 		jsonString = pv.StringValue()
@@ -153,22 +147,21 @@ func (enc *ConfigEncoding) unmarshalPropertyValue(key resource.PropertyKey,
 	if jsonStringDetected {
 		v, err := enc.convertStringToPropertyValue(jsonString, prop)
 		if err != nil {
-			return nil, fmt.Errorf("error unmarshalling property %q: %w", key, err)
+			return resource.PropertyValue{}, fmt.Errorf("error unmarshalling property %q: %w", key, err)
 		}
 		if jsonStringSecret {
-			s := resource.MakeSecret(v)
-			return &s, nil
+			return resource.MakeSecret(v), nil
 		}
-		return &v, nil
+		return v, nil
 	}
 
-	// Computed sentinels are coming in as always having an empty string, but the encoding coerses them to a zero
+	// Computed sentinels are coming in as always having an empty string, but the encoding coerces them to a zero
 	// value of the appropriate type.
 	if pv.IsComputed() {
 		el := pv.V.(resource.Computed).Element
 		if el.IsString() && el.StringValue() == "" {
 			res := resource.MakeComputed(enc.zeroValue(prop.Type))
-			return &res, nil
+			return res, nil
 		}
 	}
 
@@ -177,36 +170,21 @@ func (enc *ConfigEncoding) unmarshalPropertyValue(key resource.PropertyKey,
 
 // UnmarshalProperties is copied from plugin.UnmarshalProperties substituting plugin.UnmarshalPropertyValue.
 func (enc *ConfigEncoding) UnmarshalProperties(
-	props *structpb.Struct,
+	props resource.PropertyMap,
 ) (resource.PropertyMap, error) {
-	opts := enc.unmarshalOpts()
-
 	result := make(resource.PropertyMap)
 
 	// First sort the keys so we enumerate them in order (in case errors happen, we want determinism).
-	var keys []string
-	if props != nil {
-		for k := range props.Fields {
-			keys = append(keys, k)
-		}
-		sort.Strings(keys)
-	}
+	keys := props.StableKeys()
 
 	// And now unmarshal every field it into the map.
 	for _, key := range keys {
 		pk := resource.PropertyKey(key)
-		v, err := enc.unmarshalPropertyValue(pk, props.Fields[key])
+		v, err := enc.unmarshalPropertyValue(pk, props[key])
 		if err != nil {
 			return nil, err
-		} else if v != nil {
-			if opts.SkipNulls && v.IsNull() {
-				continue
-			}
-			if opts.SkipInternalKeys && resource.IsInternalPropertyKey(pk) {
-				continue
-			}
-			result[pk] = *v
 		}
+		result[pk] = v
 	}
 
 	return result, nil
