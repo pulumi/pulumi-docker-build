@@ -19,20 +19,19 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	structpb "google.golang.org/protobuf/types/known/structpb"
+	"github.com/stretchr/testify/require"
 
 	"github.com/pulumi/pulumi/pkg/v3/codegen/schema"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/resource/plugin"
 )
 
 func TestConfigEncoding(t *testing.T) {
 	t.Parallel()
 
 	type testCase struct {
-		ty schema.TypeSpec
-		v  *structpb.Value
-		pv resource.PropertyValue
+		ty    schema.TypeSpec
+		given resource.PropertyValue
+		want  resource.PropertyValue
 	}
 
 	knownKey := "mykey"
@@ -49,18 +48,17 @@ func TestConfigEncoding(t *testing.T) {
 		)
 	}
 
-	makeValue := func(x any) *structpb.Value {
-		vv, err := structpb.NewValue(x)
-		assert.NoErrorf(t, err, "structpb.NewValue failed")
-		return vv
+	makeValue := func(x any) resource.PropertyValue {
+		return resource.NewPropertyValue(x)
 	}
 
 	checkUnmarshal := func(t *testing.T, tc testCase) {
 		enc := makeEnc(tc.ty)
-		pv, err := enc.unmarshalPropertyValue(resource.PropertyKey(knownKey), tc.v)
-		assert.NoError(t, err)
-		assert.NotNil(t, pv)
-		assert.Equal(t, tc.pv, *pv)
+		key := resource.PropertyKey(knownKey)
+
+		actual, err := enc.unmarshalPropertyValue(key, tc.given)
+		require.NoError(t, err)
+		assert.Equal(t, tc.want, actual)
 	}
 
 	turnaroundTestCases := []testCase{
@@ -96,12 +94,12 @@ func TestConfigEncoding(t *testing.T) {
 		},
 		{
 			schema.TypeSpec{Type: "string"},
-			structpb.NewStringValue(""),
+			resource.NewStringProperty(""),
 			resource.NewStringProperty(""),
 		},
 		{
 			schema.TypeSpec{Type: "string"},
-			structpb.NewStringValue("hello"),
+			resource.NewStringProperty("hello"),
 			resource.NewStringProperty("hello"),
 		},
 		{
@@ -135,7 +133,7 @@ func TestConfigEncoding(t *testing.T) {
 		for i, tc := range turnaroundTestCases {
 			tc := tc
 
-			t.Run(fmt.Sprintf("UnmarshalPropertyValue/%d", i), func(t *testing.T) {
+			t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
 				t.Parallel()
 				checkUnmarshal(t, tc)
 			})
@@ -187,18 +185,18 @@ func TestConfigEncoding(t *testing.T) {
 	})
 
 	t.Run("computed", func(t *testing.T) {
-		unk := makeValue(plugin.UnknownStringValue)
+		unk := resource.MakeComputed(resource.NewStringProperty(""))
 
 		for i, tc := range turnaroundTestCases {
 			tc := tc
 
-			t.Run(fmt.Sprintf("UnmarshalPropertyValue/%d", i), func(t *testing.T) {
+			t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
 				t.Parallel()
 				// Unknown sentinel unmarshals to a Computed with a type-appropriate zero value.
 				checkUnmarshal(t, testCase{
-					tc.ty,
-					unk,
-					resource.MakeComputed(makeEnc(tc.ty).zeroValue(tc.ty.Type)),
+					ty:    tc.ty,
+					given: unk,
+					want:  resource.MakeComputed(makeEnc(tc.ty).zeroValue(tc.ty.Type)),
 				})
 			})
 		}
@@ -215,46 +213,30 @@ func TestConfigEncoding(t *testing.T) {
 
 		var secretCases []testCase
 
-		pbSecret := func(v *structpb.Value) *structpb.Value {
-			return structpb.NewStructValue(&structpb.Struct{Fields: map[string]*structpb.Value{
-				"4dabf18193072939515e22adb298388d": makeValue("1b47061264138c4ac30d75fd1eb44270"),
-				"value":                            v,
-			}})
-		}
-
 		for _, tc := range turnaroundTestCases {
 			secretCases = append(secretCases, testCase{
-				tc.ty,
-				pbSecret(tc.v),
-				resource.MakeSecret(tc.pv),
+				ty:    tc.ty,
+				given: resource.MakeSecret(tc.given),
+				want:  resource.MakeSecret(tc.want),
 			})
 		}
 
 		for i, tc := range secretCases {
 			tc := tc
 
-			t.Run(fmt.Sprintf("secret/UnmarshalPropertyValue/%d", i), func(t *testing.T) {
+			t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
 				t.Parallel()
-
-				// Unmarshallin will remove secrts, so the expected value needs to be modified.
-				tc.pv = tc.pv.SecretValue().Element
 				checkUnmarshal(t, tc)
 			})
 		}
 
-		t.Run("tolerate secrets in Configure", func(t *testing.T) {
-			// This is a bit of a histirocal quirk: the engine may send secrets to Configure before
-			// receiving the response from Configure indicating that the provider does not want to receive
-			// secrets. These are simply ignored. The engine does not currently send secrets to CheckConfig.
-			// The engine does take care of making sure the secrets are stored as such in the statefile.
-			//
-			// Check here that unmarshalilng such values removes the secrets.
+		t.Run("nested secrets", func(t *testing.T) {
 			checkUnmarshal(t, testCase{
 				schema.TypeSpec{Type: "object"},
-				pbSecret(makeValue(`{"key":"val"}`)),
-				resource.NewObjectProperty(resource.PropertyMap{
+				resource.MakeSecret(makeValue(`{"key":"val"}`)),
+				resource.MakeSecret(resource.NewObjectProperty(resource.PropertyMap{
 					"key": resource.NewStringProperty("val"),
-				}),
+				})),
 			})
 		})
 	})
@@ -276,7 +258,7 @@ func TestConfigEncoding(t *testing.T) {
 			resource.NewArrayProperty([]resource.PropertyValue{
 				resource.NewObjectProperty(resource.PropertyMap{
 					"address":  resource.NewStringProperty("somewhere.org"),
-					"password": resource.NewStringProperty("some-password"),
+					"password": resource.MakeSecret(resource.NewStringProperty("some-password")),
 					"username": resource.NewStringProperty("some-user"),
 				}),
 			}),
@@ -286,7 +268,7 @@ func TestConfigEncoding(t *testing.T) {
 	t.Run("regress-unmarshal", func(t *testing.T) {
 		for i, tc := range regressUnmarshalTestCases {
 			tc := tc
-			t.Run(fmt.Sprintf("UnmarshalPropertyValue/%d", i), func(t *testing.T) {
+			t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
 				t.Parallel()
 				checkUnmarshal(t, tc)
 			})

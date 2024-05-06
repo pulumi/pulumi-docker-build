@@ -110,6 +110,7 @@ func (enc *ConfigEncoding) unmarshalOpts() plugin.MarshalOptions {
 	return plugin.MarshalOptions{
 		Label:        "config",
 		KeepUnknowns: true,
+		KeepSecrets:  true,
 		SkipNulls:    true,
 		RejectAssets: true,
 	}
@@ -179,12 +180,11 @@ func (enc *ConfigEncoding) UnmarshalProperties(
 
 	// And now unmarshal every field it into the map.
 	for _, key := range keys {
-		pk := resource.PropertyKey(key)
-		v, err := enc.unmarshalPropertyValue(pk, props[key])
+		v, err := enc.unmarshalPropertyValue(key, props[key])
 		if err != nil {
-			return nil, err
+			return resource.PropertyMap{}, err
 		}
-		result[pk] = v
+		result[key] = v
 	}
 
 	return result, nil

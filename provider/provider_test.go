@@ -24,10 +24,10 @@ import (
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/structpb"
 
+	"github.com/pulumi/pulumi-docker-build/provider/internal"
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/integration"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource/plugin"
-	rpc "github.com/pulumi/pulumi/sdk/v3/proto/go"
 )
 
 // TestConfigure checks backwards-compatibility with SDKs that still send
@@ -37,35 +37,19 @@ import (
 func TestConfigure(t *testing.T) {
 	t.Parallel()
 
-	p, err := New(nil)
-	require.NoError(t, err)
+	p := configurableProvider(internal.NewBuildxProvider())
 
 	args, err := structpb.NewStruct(map[string]any{
 		"registries": `[{"address": "docker.io"}]`,
 	})
 	require.NoError(t, err)
-
-	// Ideally we would just call p.Configure directly, but we need the
-	// integration server to inject runtime info for us.
 	argsMap, err := plugin.UnmarshalProperties(args, plugin.MarshalOptions{})
 	require.NoError(t, err)
-	s := integration.NewServer("docker-build", semver.Version{Major: 0}, provider.Provider{
-		// Roundabout way to get the integration server to invoke our outermost
-		// Configure RPC endpoint.
-		Configure: func(ctx context.Context, req provider.ConfigureRequest) error {
-			args, err := plugin.MarshalProperties(req.Args, plugin.MarshalOptions{})
-			require.NoError(t, err)
-			_, err = p.Configure(ctx, &rpc.ConfigureRequest{
-				Variables: req.Variables,
-				Args:      args,
-			})
-			return err
-		},
-	})
+
+	s := integration.NewServer("docker-build", semver.Version{Major: 0}, p)
 	err = s.Configure(provider.ConfigureRequest{
 		Args: argsMap,
 	})
-
 	assert.NoError(t, err)
 }
 
