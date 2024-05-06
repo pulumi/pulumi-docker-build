@@ -151,7 +151,7 @@ func (i *Index) Update(
 		return state, nil
 	}
 
-	provider.GetLogger(ctx).Debug(fmt.Sprintf("creating index with tag %s and sources %s", input.Tag, input.Sources))
+	provider.GetLogger(ctx).Debugf("creating index with tag %s and sources %s", input.Tag, input.Sources)
 
 	err = cli.ManifestCreate(ctx, input.Push, input.Tag, input.Sources...)
 	if err != nil {
