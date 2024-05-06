@@ -16,6 +16,7 @@ package deprecated
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -48,10 +49,6 @@ func TestConfigEncoding(t *testing.T) {
 		)
 	}
 
-	makeValue := func(x any) resource.PropertyValue {
-		return resource.NewPropertyValue(x)
-	}
-
 	checkUnmarshal := func(t *testing.T, tc testCase) {
 		enc := makeEnc(tc.ty)
 		key := resource.PropertyKey(knownKey)
@@ -64,32 +61,32 @@ func TestConfigEncoding(t *testing.T) {
 	turnaroundTestCases := []testCase{
 		{
 			schema.TypeSpec{Type: "boolean"},
-			makeValue(`true`),
+			resource.NewPropertyValue(`true`),
 			resource.NewBoolProperty(true),
 		},
 		{
 			schema.TypeSpec{Type: "boolean"},
-			makeValue(`false`),
+			resource.NewPropertyValue(`false`),
 			resource.NewBoolProperty(false),
 		},
 		{
 			schema.TypeSpec{Type: "integer"},
-			makeValue(`0`),
+			resource.NewPropertyValue(`0`),
 			resource.NewNumberProperty(0),
 		},
 		{
 			schema.TypeSpec{Type: "integer"},
-			makeValue(`42`),
+			resource.NewPropertyValue(`42`),
 			resource.NewNumberProperty(42),
 		},
 		{
 			schema.TypeSpec{Type: "number"},
-			makeValue(`0`),
+			resource.NewPropertyValue(`0`),
 			resource.NewNumberProperty(0.0),
 		},
 		{
 			schema.TypeSpec{Type: "number"},
-			makeValue(`42.5`),
+			resource.NewPropertyValue(`42.5`),
 			resource.NewNumberProperty(42.5),
 		},
 		{
@@ -104,12 +101,12 @@ func TestConfigEncoding(t *testing.T) {
 		},
 		{
 			schema.TypeSpec{Type: "array"},
-			makeValue(`[]`),
+			resource.NewPropertyValue(`[]`),
 			resource.NewArrayProperty([]resource.PropertyValue{}),
 		},
 		{
 			schema.TypeSpec{Type: "array"},
-			makeValue(`["hello","there"]`),
+			resource.NewPropertyValue(`["hello","there"]`),
 			resource.NewArrayProperty([]resource.PropertyValue{
 				resource.NewStringProperty("hello"),
 				resource.NewStringProperty("there"),
@@ -117,12 +114,12 @@ func TestConfigEncoding(t *testing.T) {
 		},
 		{
 			schema.TypeSpec{Type: "object"},
-			makeValue(`{}`),
+			resource.NewPropertyValue(`{}`),
 			resource.NewObjectProperty(resource.PropertyMap{}),
 		},
 		{
 			schema.TypeSpec{Type: "object"},
-			makeValue(`{"key":"value"}`),
+			resource.NewPropertyValue(`{"key":"value"}`),
 			resource.NewObjectProperty(resource.PropertyMap{
 				"key": resource.NewStringProperty("value"),
 			}),
@@ -133,7 +130,7 @@ func TestConfigEncoding(t *testing.T) {
 		for i, tc := range turnaroundTestCases {
 			tc := tc
 
-			t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			t.Run(strconv.Itoa(i), func(t *testing.T) {
 				t.Parallel()
 				checkUnmarshal(t, tc)
 			})
@@ -145,32 +142,32 @@ func TestConfigEncoding(t *testing.T) {
 		cases := []testCase{
 			{
 				schema.TypeSpec{Type: "boolean"},
-				makeValue(""),
+				resource.NewPropertyValue(""),
 				resource.NewBoolProperty(false),
 			},
 			{
 				schema.TypeSpec{Type: "number"},
-				makeValue(""),
+				resource.NewPropertyValue(""),
 				resource.NewNumberProperty(0.),
 			},
 			{
 				schema.TypeSpec{Type: "integer"},
-				makeValue(""),
+				resource.NewPropertyValue(""),
 				resource.NewNumberProperty(0),
 			},
 			{
 				schema.TypeSpec{Type: "string"},
-				makeValue(""),
+				resource.NewPropertyValue(""),
 				resource.NewStringProperty(""),
 			},
 			{
 				schema.TypeSpec{Type: "object"},
-				makeValue(""),
+				resource.NewPropertyValue(""),
 				resource.NewObjectProperty(make(resource.PropertyMap)),
 			},
 			{
 				schema.TypeSpec{Type: "array"},
-				makeValue(""),
+				resource.NewPropertyValue(""),
 				resource.NewArrayProperty([]resource.PropertyValue{}),
 			},
 		}
@@ -190,7 +187,7 @@ func TestConfigEncoding(t *testing.T) {
 		for i, tc := range turnaroundTestCases {
 			tc := tc
 
-			t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			t.Run(strconv.Itoa(i), func(t *testing.T) {
 				t.Parallel()
 				// Unknown sentinel unmarshals to a Computed with a type-appropriate zero value.
 				checkUnmarshal(t, testCase{
@@ -224,7 +221,7 @@ func TestConfigEncoding(t *testing.T) {
 		for i, tc := range secretCases {
 			tc := tc
 
-			t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			t.Run(strconv.Itoa(i), func(t *testing.T) {
 				t.Parallel()
 				checkUnmarshal(t, tc)
 			})
@@ -233,7 +230,7 @@ func TestConfigEncoding(t *testing.T) {
 		t.Run("nested secrets", func(t *testing.T) {
 			checkUnmarshal(t, testCase{
 				schema.TypeSpec{Type: "object"},
-				resource.MakeSecret(makeValue(`{"key":"val"}`)),
+				resource.MakeSecret(resource.NewPropertyValue(`{"key":"val"}`)),
 				resource.MakeSecret(resource.NewObjectProperty(resource.PropertyMap{
 					"key": resource.NewStringProperty("val"),
 				})),
@@ -244,7 +241,7 @@ func TestConfigEncoding(t *testing.T) {
 	regressUnmarshalTestCases := []testCase{
 		{
 			schema.TypeSpec{Type: "array"},
-			makeValue(`
+			resource.NewPropertyValue(`
 			[
 			  {
 			    "address": "somewhere.org",
@@ -268,7 +265,7 @@ func TestConfigEncoding(t *testing.T) {
 	t.Run("regress-unmarshal", func(t *testing.T) {
 		for i, tc := range regressUnmarshalTestCases {
 			tc := tc
-			t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			t.Run(strconv.Itoa(i), func(t *testing.T) {
 				t.Parallel()
 				checkUnmarshal(t, tc)
 			})
