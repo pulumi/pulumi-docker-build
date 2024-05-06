@@ -80,7 +80,7 @@ func TestBuild(t *testing.T) {
 	t.Parallel()
 
 	tmpdir := t.TempDir()
-	max := Max
+	Max := Max
 
 	exampleContext := &BuildContext{Context: Context{Location: "../../examples/app"}}
 
@@ -122,7 +122,7 @@ func TestBuild(t *testing.T) {
 				Tags:    []string{"cached"},
 				CacheTo: []CacheTo{{Local: &CacheToLocal{
 					Dest:          filepath.Join(tmpdir, "cache"),
-					CacheWithMode: CacheWithMode{Mode: &max},
+					CacheWithMode: CacheWithMode{Mode: &Max},
 				}}},
 				CacheFrom: []CacheFrom{{Local: &CacheFromLocal{
 					Src: filepath.Join(tmpdir, "cache"),

@@ -961,14 +961,14 @@ func TestBuildable(t *testing.T) {
 
 func TestToBuild(t *testing.T) {
 	t.Parallel()
-	max := Max
+	Max := Max
 
 	ia := ImageArgs{
 		Tags:      []string{"foo", "bar"},
 		Platforms: []Platform{"linux/amd64"},
 		Context:   &BuildContext{Context: Context{Location: "testdata/noop"}},
 		CacheTo: []CacheTo{
-			{GHA: &CacheToGitHubActions{CacheWithMode: CacheWithMode{&max}}},
+			{GHA: &CacheToGitHubActions{CacheWithMode: CacheWithMode{&Max}}},
 			{
 				Registry: &CacheToRegistry{
 					CacheFromRegistry: CacheFromRegistry{Ref: "docker.io/foo/bar"},
