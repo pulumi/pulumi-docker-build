@@ -309,8 +309,8 @@ func (i *Index) Diff(
 	}, nil
 }
 
-// client produces a CLI client with scoped to this resource and layered on top
-// of any host-level credentials.
+// client produces a CLI client scoped to this resource and layered on top of
+// any host-level credentials.
 func (i *Index) client(
 	ctx context.Context,
 	_ IndexState,

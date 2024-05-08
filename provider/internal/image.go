@@ -328,8 +328,8 @@ func (is *ImageState) Annotate(a infer.Annotator) {
 	`))
 }
 
-// client produces a CLI client with scoped to this resource and layered on top
-// of any host-level credentials.
+// client produces a CLI client scoped to this resource and layered on top of
+// any host-level credentials.
 func (i *Image) client(ctx context.Context, state ImageState, args ImageArgs) (Client, error) {
 	cfg := infer.GetConfig[Config](ctx)
 
