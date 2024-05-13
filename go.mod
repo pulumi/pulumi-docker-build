@@ -10,7 +10,7 @@ require (
 	github.com/docker/distribution v2.8.2+incompatible
 	github.com/docker/docker v26.0.0-rc1+incompatible
 	github.com/golangci/golangci-lint v1.57.1
-	github.com/moby/buildkit v0.13.0
+	github.com/moby/buildkit v0.13.2
 	github.com/moby/patternmatcher v0.6.0
 	github.com/muesli/reflow v0.3.0
 	github.com/otiai10/copy v1.14.0
@@ -25,7 +25,7 @@ require (
 	github.com/spf13/afero v1.11.0
 	github.com/stretchr/testify v1.9.0
 	github.com/theupdateframework/notary v0.7.0
-	github.com/tonistiigi/fsutil v0.0.0-20240301111122-7525a1af2bb5
+	github.com/tonistiigi/fsutil v0.0.0-20240424095704-91a3fc46842c
 	go.uber.org/mock v0.3.0
 	golang.org/x/crypto v0.21.0
 	google.golang.org/protobuf v1.33.0
