@@ -59,7 +59,10 @@ func TestAnnotate(t *testing.T) {
 func TestSchema(t *testing.T) {
 	t.Parallel()
 
-	Schema(context.Background(), "v4")
+	s := newServer(nil)
+
+	_, err := s.GetSchema(provider.GetSchemaRequest{Version: 0})
+	assert.NoError(t, err)
 }
 
 type annotator struct{}
@@ -73,10 +76,10 @@ func newServer(client Client) integration.Server {
 
 	// Inject a mock client if provided.
 	if client != nil {
-		p = mwcontext.Wrap(p, func(ctx provider.Context) provider.Context {
-			return provider.CtxWithValue(ctx, _mockClientKey, client)
+		p = mwcontext.Wrap(p, func(ctx context.Context) context.Context {
+			return context.WithValue(ctx, _mockClientKey, client)
 		})
 	}
 
-	return integration.NewServer("docker", semver.Version{Major: 4}, p)
+	return integration.NewServer("docker-build", semver.Version{Major: 0}, p)
 }

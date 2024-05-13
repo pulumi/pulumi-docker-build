@@ -38,7 +38,6 @@ import (
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
@@ -329,12 +328,10 @@ func (is *ImageState) Annotate(a infer.Annotator) {
 	`))
 }
 
-// client produces a CLI client with scoped to this resource and layered on top
-// of any host-level credentials.
-func (i *Image) client(pctx provider.Context, state ImageState, args ImageArgs) (Client, error) {
-	ctx := context.Context(pctx)
-
-	cfg := infer.GetConfig[Config](pctx)
+// client produces a CLI client scoped to this resource and layered on top of
+// any host-level credentials.
+func (i *Image) client(ctx context.Context, state ImageState, args ImageArgs) (Client, error) {
+	cfg := infer.GetConfig[Config](ctx)
 
 	if cli, ok := ctx.Value(_mockClientKey).(Client); ok {
 		return cli, nil
@@ -353,7 +350,7 @@ func (i *Image) client(pctx provider.Context, state ImageState, args ImageArgs) 
 // Check validates ImageArgs, sets defaults, and ensures our client is
 // authenticated.
 func (i *Image) Check(
-	_ provider.Context,
+	_ context.Context,
 	_ string,
 	_ resource.PropertyMap,
 	news resource.PropertyMap,
@@ -491,7 +488,7 @@ func (b build) ShouldExec() bool {
 }
 
 func (ia ImageArgs) toBuild(
-	ctx provider.Context,
+	ctx context.Context,
 	preview bool,
 ) (Build, error) {
 	opts, err := ia.validate(preview)
@@ -500,18 +497,15 @@ func (ia ImageArgs) toBuild(
 	}
 
 	if len(ia.Exports) == 0 && !ia.Push && !ia.Load {
-		ctx.Log(diag.Warning,
-			"No exports were specified so the build will only remain in the local build cache. "+
-				"Use `push` to upload the image to a registry, or silence this warning with a `cacheonly` export.",
-		)
+		provider.GetLogger(ctx).Warning(
+			"No exports were specified so the build will only remain in the local build cache. " +
+				"Use `push` to upload the image to a registry, or silence this warning with a `cacheonly` export.")
 	}
 
 	if len(opts.Platforms) > 1 && len(opts.CacheTo) > 0 {
-		ctx.Log(
-			diag.Warning,
-			"Caching doesn't work reliably with multi-platform builds (https://github.com/docker/buildx/discussions/1382). "+
-				"Instead, perform one cached build per platform and create an Index to join them all together.",
-		)
+		provider.GetLogger(ctx).Warning(
+			"Caching doesn't work reliably with multi-platform builds (https://github.com/docker/buildx/discussions/1382). " +
+				"Instead, perform one cached build per platform and create an Index to join them all together.")
 	}
 
 	return build{
@@ -667,7 +661,7 @@ func (ia *ImageArgs) validate(preview bool) (controllerapi.BuildOptions, error) 
 
 // Create builds an image using buildkit.
 func (i *Image) Create(
-	ctx provider.Context,
+	ctx context.Context,
 	name string,
 	input ImageArgs,
 	preview bool,
@@ -716,7 +710,7 @@ func (i *Image) Create(
 		return id, state, nil
 	}
 	if preview && !input.buildable() {
-		ctx.Log(diag.Warning, "Skipping preview build because some inputs are unknown.")
+		provider.GetLogger(ctx).Warning("Skipping preview build because some inputs are unknown.")
 		return id, state, nil
 	}
 
@@ -754,7 +748,7 @@ func (i *Image) Create(
 // images built locally there is nothing to delete. We treat those cases as
 // updates and simply re-build the image without deleting anything.
 func (i *Image) Update(
-	ctx provider.Context,
+	ctx context.Context,
 	name string,
 	_ ImageState,
 	input ImageArgs,
@@ -767,7 +761,7 @@ func (i *Image) Update(
 // Read attempts to read manifests from an image's exports. An image without
 // exports will have no manifests.
 func (i *Image) Read(
-	ctx provider.Context,
+	ctx context.Context,
 	name string,
 	input ImageArgs,
 	state ImageState,
@@ -801,7 +795,7 @@ func (i *Image) Read(
 		// Does a tag with this digest exist?
 		descriptors, err := cli.Inspect(ctx, ref)
 		if err != nil {
-			ctx.Log(diag.Warning, err.Error())
+			provider.GetLogger(ctx).Warning(err.Error())
 			continue
 		}
 
@@ -830,7 +824,7 @@ func (i *Image) Read(
 // Delete deletes an Image. If the Image was already deleted out-of-band it is
 // treated as a success.
 func (i *Image) Delete(
-	ctx provider.Context,
+	ctx context.Context,
 	_ string,
 	state ImageState,
 ) error {
@@ -861,9 +855,9 @@ func (i *Image) Delete(
 
 	var multierr error
 	for _, digested := range digests {
-		err = cli.Delete(context.Context(ctx), digested)
+		err = cli.Delete(ctx, digested)
 		if errdefs.IsNotFound(err) {
-			ctx.Log(diag.Warning, digested+" not found")
+			provider.GetLogger(ctx).Warning(digested + " not found")
 			continue // Nothing to do.
 		}
 		multierr = errors.Join(multierr, err)
@@ -875,7 +869,7 @@ func (i *Image) Delete(
 // Diff re-implements most of the default diff behavior, with the exception of
 // ignoring "password" changes on registry inputs.
 func (*Image) Diff(
-	_ provider.Context,
+	_ context.Context,
 	_ string,
 	olds ImageState,
 	news ImageArgs,

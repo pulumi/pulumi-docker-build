@@ -17,6 +17,8 @@ package internal
 import (
 	"bytes"
 	"context"
+	"io"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"testing"
@@ -24,9 +26,6 @@ import (
 	"github.com/docker/docker/api/types/registry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.uber.org/mock/gomock"
-
-	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
 )
 
 func TestAuth(t *testing.T) {
@@ -79,21 +78,9 @@ func TestCustomHost(t *testing.T) {
 
 func TestBuild(t *testing.T) {
 	t.Parallel()
-	// Workaround for https://github.com/pulumi/pulumi-go-provider/issues/159
-	ctrl, ctx := gomock.WithContext(context.Background(), t)
-	pctx := NewMockProviderContext(ctrl)
-	pctx.EXPECT().Log(gomock.Any(), gomock.Any()).AnyTimes()
-	pctx.EXPECT().LogStatus(gomock.Any(), gomock.Any()).AnyTimes()
-	pctx.EXPECT().Done().Return(ctx.Done()).AnyTimes()
-	pctx.EXPECT().
-		Value(gomock.Any()).
-		DoAndReturn(func(key any) any { return ctx.Value(key) }).
-		AnyTimes()
-	pctx.EXPECT().Err().Return(ctx.Err()).AnyTimes()
-	pctx.EXPECT().Deadline().Return(ctx.Deadline()).AnyTimes()
 
 	tmpdir := t.TempDir()
-	max := Max
+	Max := Max
 
 	exampleContext := &BuildContext{Context: Context{Location: "../../examples/app"}}
 
@@ -135,7 +122,7 @@ func TestBuild(t *testing.T) {
 				Tags:    []string{"cached"},
 				CacheTo: []CacheTo{{Local: &CacheToLocal{
 					Dest:          filepath.Join(tmpdir, "cache"),
-					CacheWithMode: CacheWithMode{Mode: &max},
+					CacheWithMode: CacheWithMode{Mode: &Max},
 				}}},
 				CacheFrom: []CacheFrom{{Local: &CacheFromLocal{
 					Src: filepath.Join(tmpdir, "cache"),
@@ -300,12 +287,13 @@ func TestBuild(t *testing.T) {
 			if tt.skip {
 				t.Skip()
 			}
+			ctx := context.Background()
 			cli := testcli(t, true, tt.auths...)
 
-			build, err := tt.args.toBuild(pctx, false)
+			build, err := tt.args.toBuild(ctx, false)
 			require.NoError(t, err)
 
-			_, err = cli.Build(pctx, build)
+			_, err = cli.Build(ctx, build)
 			assert.NoError(t, err, cli.err.String())
 		})
 	}
@@ -366,14 +354,22 @@ func TestNormalizeReference(t *testing.T) {
 	}
 }
 
+//nolint:paralleltest // Overrides default logger.
 func TestBuildError(t *testing.T) {
-	t.Parallel()
-
 	if os.Getenv("CI") != "" {
 		t.Skip("flaky on CI for some reason")
 	}
 
-	ctrl, ctx := gomock.WithContext(context.Background(), t)
+	l := slog.Default()
+	defer slog.SetDefault(l)
+
+	// Override go-provider's default logger to capture and tee to stdout.
+	logger := &bytes.Buffer{}
+	slog.SetDefault(
+		slog.New(
+			slog.NewTextHandler(io.MultiWriter(logger, os.Stdout), nil),
+		),
+	)
 
 	exampleContext := &BuildContext{Context: Context{Location: "../../examples/app"}}
 
@@ -383,28 +379,14 @@ func TestBuildError(t *testing.T) {
 			Inline: "FROM alpine\nRUN echo hello\nRUN badcmd",
 		},
 	}
-	logged := bytes.Buffer{}
 
-	pctx := NewMockProviderContext(ctrl)
-	pctx.EXPECT().Done().Return(ctx.Done()).AnyTimes()
-	pctx.EXPECT().
-		Value(gomock.Any()).
-		DoAndReturn(func(key any) any { return ctx.Value(key) }).
-		AnyTimes()
-	pctx.EXPECT().Err().Return(ctx.Err()).AnyTimes()
-	pctx.EXPECT().Deadline().Return(ctx.Deadline()).AnyTimes()
-
-	pctx.EXPECT().LogStatus(gomock.Any(), gomock.Any()).AnyTimes()
-	pctx.EXPECT().Log(gomock.Any(), gomock.Any()).DoAndReturn(func(_ diag.Severity, msg string) {
-		logged.WriteString(msg)
-	}).AnyTimes()
-
+	ctx := context.Background()
 	cli := testcli(t, true)
 
-	build, err := args.toBuild(pctx, false)
+	build, err := args.toBuild(ctx, false)
 	require.NoError(t, err)
 
-	_, err = cli.Build(pctx, build)
+	_, err = cli.Build(ctx, build)
 	assert.Error(t, err)
 
 	want := []string{
@@ -413,7 +395,7 @@ func TestBuildError(t *testing.T) {
 	}
 
 	for _, want := range want {
-		assert.Contains(t, logged.String(), want)
+		assert.Contains(t, logger.String(), want)
 	}
 	assert.ErrorContains(t, err,
 		`process "/bin/sh -c badcmd" did not complete successfully: exit code: 127`,
@@ -422,7 +404,6 @@ func TestBuildError(t *testing.T) {
 
 func TestBuildExecError(t *testing.T) {
 	t.Parallel()
-	ctrl, _ := gomock.WithContext(context.Background(), t)
 
 	exampleContext := &BuildContext{Context: Context{Location: "../../examples/app"}}
 
@@ -434,20 +415,13 @@ func TestBuildExecError(t *testing.T) {
 		Exec: true,
 	}
 
-	pctx := NewMockProviderContext(ctrl)
-	pctx.EXPECT().Log(
-		diag.Warning,
-		"No exports were specified so the build will only remain in the local build cache. "+
-			"Use `push` to upload the image to a registry, or silence this warning with a `cacheonly` export.",
-	)
-	pctx.EXPECT().LogStatus(gomock.Any(), gomock.Any()).AnyTimes()
-
+	ctx := context.Background()
 	cli := testcli(t, true)
 
-	build, err := args.toBuild(pctx, false)
+	build, err := args.toBuild(ctx, false)
 	require.NoError(t, err)
 
-	_, err = cli.Build(pctx, build)
+	_, err = cli.Build(ctx, build)
 	assert.Error(t, err)
 
 	want := []string{

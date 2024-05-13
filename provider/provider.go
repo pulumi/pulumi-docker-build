@@ -16,13 +16,13 @@ package provider
 
 import (
 	"context"
-	"fmt"
+	"encoding/json"
 
 	"github.com/pulumi/pulumi-docker-build/provider/internal"
 	"github.com/pulumi/pulumi-docker-build/provider/internal/deprecated"
 	gp "github.com/pulumi/pulumi-go-provider"
+	"github.com/pulumi/pulumi/pkg/v3/codegen/schema"
 	"github.com/pulumi/pulumi/pkg/v3/resource/provider"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/resource/plugin"
 	rpc "github.com/pulumi/pulumi/sdk/v3/proto/go"
 )
 
@@ -39,11 +39,7 @@ func Serve() error {
 
 // New creates a new provider.
 func New(host *provider.HostClient) (rpc.ResourceProviderServer, error) {
-	server, err := gp.RawServer(Name, Version, internal.NewBuildxProvider())(host)
-	if err != nil {
-		return nil, fmt.Errorf("building raw server: %w", err)
-	}
-	return &configurableProvider{ResourceProviderServer: server}, nil
+	return gp.RawServer(Name, Version, configurableProvider(internal.NewBuildxProvider()))(host)
 }
 
 // configurableProvider is a workaround for
@@ -54,26 +50,26 @@ func New(host *provider.HostClient) (rpc.ResourceProviderServer, error) {
 //
 // If you find yourself in a position where you need to copy this -- STOP!
 // https://github.com/pulumi/pulumi/pull/15032 should be merged with this fix.
-type configurableProvider struct {
-	rpc.ResourceProviderServer
-}
+func configurableProvider(p gp.Provider) gp.Provider {
+	configure := p.Configure
 
-func (p configurableProvider) Configure(
-	ctx context.Context,
-	request *rpc.ConfigureRequest,
-) (*rpc.ConfigureResponse, error) {
-	schema := internal.Schema(ctx, Version)
-	ce := deprecated.New(schema.Config)
-	buildxReq := request
-	if props, err := ce.UnmarshalProperties(request.Args); err == nil {
-		args, _ := plugin.MarshalProperties(props, plugin.MarshalOptions{
-			Label:        "config",
-			KeepUnknowns: true,
-			SkipNulls:    true,
-			KeepSecrets:  true,
-			RejectAssets: true,
-		})
-		buildxReq.Args = args
+	p.Configure = func(ctx context.Context, req gp.ConfigureRequest) error {
+		r, err := p.GetSchema(ctx, gp.GetSchemaRequest{Version: 0})
+		if err != nil {
+			return err
+		}
+		spec := schema.PackageSpec{}
+		err = json.Unmarshal([]byte(r.Schema), &spec)
+		if err != nil {
+			return err
+		}
+
+		ce := deprecated.New(spec.Config)
+		if props, err := ce.UnmarshalProperties(req.Args); err == nil {
+			req.Args = props
+		}
+		return configure(ctx, req)
 	}
-	return p.ResourceProviderServer.Configure(ctx, buildxReq)
+
+	return p
 }

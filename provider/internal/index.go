@@ -15,6 +15,7 @@
 package internal
 
 import (
+	"context"
 	"fmt"
 	"reflect"
 	"strings"
@@ -24,7 +25,6 @@ import (
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 )
 
@@ -121,7 +121,7 @@ func (i *IndexState) Annotate(a infer.Annotator) {
 
 // Create is a passthrough to Update.
 func (i *Index) Create(
-	ctx provider.Context,
+	ctx context.Context,
 	name string,
 	input IndexArgs,
 	preview bool,
@@ -133,7 +133,7 @@ func (i *Index) Create(
 // Update performs `buildx imagetools create` to create a new OCI index /
 // manifest list.
 func (i *Index) Update(
-	ctx provider.Context,
+	ctx context.Context,
 	name string,
 	state IndexState,
 	input IndexArgs,
@@ -151,7 +151,7 @@ func (i *Index) Update(
 		return state, nil
 	}
 
-	ctx.Log(diag.Debug, fmt.Sprintf("creating index with tag %s and sources %s", input.Tag, input.Sources))
+	provider.GetLogger(ctx).Debugf("creating index with tag %s and sources %s", input.Tag, input.Sources)
 
 	err = cli.ManifestCreate(ctx, input.Push, input.Tag, input.Sources...)
 	if err != nil {
@@ -166,7 +166,7 @@ func (i *Index) Update(
 }
 
 func (i *Index) Read(
-	ctx provider.Context,
+	ctx context.Context,
 	name string,
 	input IndexArgs,
 	state IndexState,
@@ -175,7 +175,7 @@ func (i *Index) Read(
 	state.Ref = input.Tag
 
 	if !input.Push {
-		ctx.Log(diag.Debug, "skipping read because index was not pushed")
+		provider.GetLogger(ctx).Debug("skipping read because index was not pushed")
 		return name, input, state, nil // Nothing to read.
 	}
 
@@ -184,7 +184,7 @@ func (i *Index) Read(
 		return name, input, state, err
 	}
 
-	ctx.Log(diag.Debug, "reading index with tag "+input.Tag)
+	provider.GetLogger(ctx).Debug("reading index with tag " + input.Tag)
 
 	digest, err := cli.ManifestInspect(ctx, input.Tag)
 	if err != nil && strings.Contains(err.Error(), "No such manifest:") && input.Push {
@@ -211,7 +211,7 @@ func (i *Index) Read(
 // exist on the same registry. This is sufficient to handle the most common
 // cases for now.
 func (i *Index) Check(
-	_ provider.Context,
+	_ context.Context,
 	_ string,
 	_ resource.PropertyMap,
 	news resource.PropertyMap,
@@ -247,7 +247,7 @@ func (i *Index) Check(
 }
 
 // Delete attempts to delete the remote manifest.
-func (i *Index) Delete(ctx provider.Context, _ string, state IndexState) error {
+func (i *Index) Delete(ctx context.Context, _ string, state IndexState) error {
 	if !state.Push {
 		return nil // Nothing to delete.
 	}
@@ -271,7 +271,7 @@ func (i *Index) Delete(ctx provider.Context, _ string, state IndexState) error {
 // force `ignoreChanges`-style behavior on our registry password (which can
 // change all the time due to short-lived AWS credentials).
 func (i *Index) Diff(
-	_ provider.Context,
+	_ context.Context,
 	_ string,
 	olds IndexState,
 	news IndexArgs,
@@ -309,10 +309,10 @@ func (i *Index) Diff(
 	}, nil
 }
 
-// client produces a CLI client with scoped to this resource and layered on top
-// of any host-level credentials.
+// client produces a CLI client scoped to this resource and layered on top of
+// any host-level credentials.
 func (i *Index) client(
-	ctx provider.Context,
+	ctx context.Context,
 	_ IndexState,
 	args IndexArgs,
 ) (Client, error) {
