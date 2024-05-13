@@ -26,7 +26,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	github.com/theupdateframework/notary v0.7.0
 	github.com/tonistiigi/fsutil v0.0.0-20240301111122-7525a1af2bb5
-	go.uber.org/mock v0.3.0
+	go.uber.org/mock v0.4.0
 	golang.org/x/crypto v0.21.0
 	google.golang.org/protobuf v1.33.0
 	gopkg.in/yaml.v3 v3.0.1
