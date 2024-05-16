@@ -1,7 +1,7 @@
 {
   "name": "docker-build",
   "displayName": "docker-build",
-  "version": "0.0.2-alpha.1714063884+13fb5b61",
+  "version": "1.0.0-alpha.0+dev",
   "description": "A Pulumi provider for building modern Docker images with buildx and BuildKit.",
   "keywords": [
     "docker",
@@ -20,13 +20,15 @@
     "csharp": {
       "packageReferences": {
         "Pulumi": "3.*"
-      }
+      },
+      "respectSchemaVersion": true
     },
     "go": {
       "importBasePath": "github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild",
       "packageImportAliases": {
         "github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild": "dockerbuild"
       },
+      "respectSchemaVersion": true,
       "generics": "side-by-side"
     },
     "java": {
@@ -43,12 +45,14 @@
     "nodejs": {
       "dependencies": {
         "@pulumi/pulumi": "^3.0.0"
-      }
+      },
+      "respectSchemaVersion": true
     },
     "python": {
       "requires": {
         "pulumi": "\u003e=3.0.0,\u003c4.0.0"
       },
+      "respectSchemaVersion": true,
       "pyproject": {
         "enabled": true
       }
