@@ -194,7 +194,6 @@ go.sum: go.mod
 sdk: $(shell mkdir -p sdk)
 sdk: sdk/python sdk/nodejs sdk/java sdk/python sdk/go sdk/dotnet
 
-sdk/python: PYPI_VERSION := $(shell pulumictl convert-version --language python -v "$(VERSION_GENERIC)")
 sdk/python: TMPDIR := $(shell mktemp -d)
 sdk/python: .pulumi/bin/pulumi bin/${PROVIDER}
 	rm -rf sdk/python
@@ -202,15 +201,12 @@ sdk/python: .pulumi/bin/pulumi bin/${PROVIDER}
 	cp README.md ${TMPDIR}/python/
 	cd ${TMPDIR}/python/ && \
 		rm -rf ./bin/ ../python.bin/ && cp -R . ../python.bin && mv ../python.bin ./bin && \
-		sed -i.bak -e 's/^  version = .*/  version = "$(PYPI_VERSION)"/g' ./bin/pyproject.toml && \
-		rm ./bin/pyproject.toml.bak && \
 		python3 -m venv venv && \
 		./venv/bin/python -m pip install build && \
 		cd ./bin && \
 		../venv/bin/python -m build .
 	mv -f ${TMPDIR}/python ${WORKING_DIR}/sdk/.
 
-sdk/nodejs: NODE_VERSION := $(shell pulumictl convert-version --language javascript -v "$(VERSION_GENERIC)")
 sdk/nodejs: TMPDIR := $(shell mktemp -d)
 sdk/nodejs: .pulumi/bin/pulumi bin/${PROVIDER}
 	rm -rf sdk/nodejs
@@ -219,9 +215,7 @@ sdk/nodejs: .pulumi/bin/pulumi bin/${PROVIDER}
 	cd ${TMPDIR}/nodejs/ && \
 		yarn install && \
 		yarn run tsc && \
-		cp README.md LICENSE package.json yarn.lock bin/ && \
-		sed -i.bak 's/$${VERSION}/$(NODE_VERSION)/g' bin/package.json && \
-		rm ./bin/package.json.bak
+		cp README.md LICENSE package.json yarn.lock bin/
 	mv -f ${TMPDIR}/nodejs ${WORKING_DIR}/sdk/.
 
 sdk/go: TMPDIR := $(shell mktemp -d)
@@ -235,14 +229,13 @@ sdk/go: .pulumi/bin/pulumi bin/${PROVIDER}
 		go mod tidy
 	mv -f ${TMPDIR}/go ${WORKING_DIR}/sdk/go
 
-sdk/dotnet: DOTNET_VERSION  := $(shell pulumictl convert-version --language dotnet -v "$(VERSION_GENERIC)")
 sdk/dotnet: TMPDIR := $(shell mktemp -d)
 sdk/dotnet: .pulumi/bin/pulumi bin/${PROVIDER}
 	rm -rf sdk/dotnet
 	.pulumi/bin/pulumi package gen-sdk bin/${PROVIDER} --language dotnet -o ${TMPDIR}
 	cd ${TMPDIR}/dotnet/ && \
-		echo "$(DOTNET_VERSION)" > version.txt && \
-		dotnet build /p:Version=${DOTNET_VERSION}
+		echo "$(VERSION_GENERIC)" > version.txt && \
+		dotnet build
 	mv -f ${TMPDIR}/dotnet ${WORKING_DIR}/sdk/.
 
 sdk/java: PACKAGE_VERSION := $(shell pulumictl convert-version --language generic -v "$(VERSION_GENERIC)")
