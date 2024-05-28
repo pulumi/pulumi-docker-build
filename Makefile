@@ -17,6 +17,7 @@ WORKING_DIR      := $(shell pwd)
 EXAMPLES_DIR     := ${WORKING_DIR}/examples/yaml
 TESTPARALLELISM  := 4
 
+PULUMI           := bin/pulumi
 GOGLANGCILINT    := bin/golangci-lint
 
 # Override during CI using `make [TARGET] PROVIDER_VERSION=""` or by setting a PROVIDER_VERSION environment variable
@@ -61,30 +62,32 @@ examples/yaml:
 	rm -rf ${WORKING_DIR}/examples/yaml/app
 	cp -r ${WORKING_DIR}/examples/app ${WORKING_DIR}/examples/yaml/app
 
-examples/go: .pulumi/bin/pulumi bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
+examples/go: ${PULUMI} bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 	$(call example,go)
 	@git checkout examples/go/go.mod
 
-examples/nodejs: .pulumi/bin/pulumi bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
+examples/nodejs: ${PULUMI} bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 	$(call example,nodejs)
 	@git checkout examples/nodejs/package.json
 
-examples/python: .pulumi/bin/pulumi bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
+examples/python: ${PULUMI} bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 	$(call example,python)
 	@git checkout examples/python/requirements.txt
 
-examples/dotnet: .pulumi/bin/pulumi bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
+examples/dotnet: ${PULUMI} bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 	$(call example,dotnet)
 	@git checkout examples/dotnet/provider-docker-build.csproj
 
-examples/java: .pulumi/bin/pulumi bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
+examples/java: ${PULUMI} bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 	$(call example,java)
 	@git checkout examples/java/pom.xml
 
-.pulumi/bin/pulumi: PULUMI_VERSION := $(shell cat .pulumi.version)
-.pulumi/bin/pulumi: HOME := $(WORKING_DIR)
-.pulumi/bin/pulumi: .pulumi.version
-	curl -fsSL https://get.pulumi.com | sh -s -- --version "$(PULUMI_VERSION)"
+${PULUMI}: go.sum
+	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/pkg/v3/cmd/pulumi
+	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3
+	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3
+	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3
+	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi-java/pkg/cmd/pulumi-language-java
 
 ${GOGLANGCILINT}: go.sum
 	GOBIN=${WORKING_DIR}/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint
@@ -96,7 +99,7 @@ endef
 
 define example
 	rm -rf ${WORKING_DIR}/examples/$(1)
-	.pulumi/bin/pulumi convert \
+	$(PULUMI) convert \
 		--cwd ${WORKING_DIR}/examples/yaml \
 		--logtostderr \
 		--generate-only \
@@ -195,9 +198,9 @@ sdk: $(shell mkdir -p sdk)
 sdk: sdk/python sdk/nodejs sdk/java sdk/python sdk/go sdk/dotnet
 
 sdk/python: TMPDIR := $(shell mktemp -d)
-sdk/python: .pulumi/bin/pulumi bin/${PROVIDER}
+sdk/python: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/python
-	.pulumi/bin/pulumi package gen-sdk bin/$(PROVIDER) --language python -o ${TMPDIR}
+	$(PULUMI) package gen-sdk bin/$(PROVIDER) --language python -o ${TMPDIR}
 	cp README.md ${TMPDIR}/python/
 	cd ${TMPDIR}/python/ && \
 		rm -rf ./bin/ ../python.bin/ && cp -R . ../python.bin && mv ../python.bin ./bin && \
@@ -208,9 +211,9 @@ sdk/python: .pulumi/bin/pulumi bin/${PROVIDER}
 	mv -f ${TMPDIR}/python ${WORKING_DIR}/sdk/.
 
 sdk/nodejs: TMPDIR := $(shell mktemp -d)
-sdk/nodejs: .pulumi/bin/pulumi bin/${PROVIDER}
+sdk/nodejs: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/nodejs
-	.pulumi/bin/pulumi package gen-sdk bin/$(PROVIDER) --language nodejs -o ${TMPDIR}
+	$(PULUMI) package gen-sdk bin/$(PROVIDER) --language nodejs -o ${TMPDIR}
 	cp README.md LICENSE ${TMPDIR}/nodejs
 	cd ${TMPDIR}/nodejs/ && \
 		yarn install && \
@@ -220,9 +223,9 @@ sdk/nodejs: .pulumi/bin/pulumi bin/${PROVIDER}
 
 sdk/go: TMPDIR := $(shell mktemp -d)
 sdk/go: PATH := "$(WORKING_DIR)/bin:$(PATH)"
-sdk/go: .pulumi/bin/pulumi bin/${PROVIDER}
+sdk/go: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/go
-	PATH=$(PATH) .pulumi/bin/pulumi package gen-sdk bin/$(PROVIDER) --language go -o ${TMPDIR}
+	PATH=$(PATH) $(PULUMI) package gen-sdk bin/$(PROVIDER) --language go -o ${TMPDIR}
 	cp go.mod ${TMPDIR}/go/dockerbuild/go.mod
 	cd ${TMPDIR}/go/dockerbuild && \
 		go mod edit -module=github.com/pulumi/pulumi-${PACK}/${PACKDIR}/go/dockerbuild && \
@@ -230,9 +233,9 @@ sdk/go: .pulumi/bin/pulumi bin/${PROVIDER}
 	mv -f ${TMPDIR}/go ${WORKING_DIR}/sdk/go
 
 sdk/dotnet: TMPDIR := $(shell mktemp -d)
-sdk/dotnet: .pulumi/bin/pulumi bin/${PROVIDER}
+sdk/dotnet: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/dotnet
-	.pulumi/bin/pulumi package gen-sdk bin/${PROVIDER} --language dotnet -o ${TMPDIR}
+	$(PULUMI) package gen-sdk bin/${PROVIDER} --language dotnet -o ${TMPDIR}
 	cd ${TMPDIR}/dotnet/ && \
 		echo "$(VERSION_GENERIC)" > version.txt && \
 		dotnet build
@@ -240,9 +243,9 @@ sdk/dotnet: .pulumi/bin/pulumi bin/${PROVIDER}
 
 sdk/java: PACKAGE_VERSION := $(shell pulumictl convert-version --language generic -v "$(VERSION_GENERIC)")
 sdk/java: TMPDIR := $(shell mktemp -d)
-sdk/java: .pulumi/bin/pulumi bin/${PROVIDER}
+sdk/java: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/java
-	.pulumi/bin/pulumi package gen-sdk --language java bin/${PROVIDER} -o ${TMPDIR}
+	$(PULUMI) package gen-sdk --language java bin/${PROVIDER} -o ${TMPDIR}
 	cd ${TMPDIR}/java/ && gradle --console=plain build
 	mv -f ${TMPDIR}/java ${WORKING_DIR}/sdk/.
 
