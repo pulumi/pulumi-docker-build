@@ -124,7 +124,7 @@ export interface CacheFromGitHubActions {
     /**
      * The cache server URL to use for artifacts.
      *
-     * Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+     * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
      * `crazy-max/ghaction-github-runtime` is recommended to expose this
      * environment variable to your jobs.
      */
@@ -138,7 +138,7 @@ export function cacheFromGitHubActionsProvideDefaults(val: CacheFromGitHubAction
         ...val,
         scope: (val.scope) ?? (utilities.getEnv("buildkit") || ""),
         token: (val.token) ?? (utilities.getEnv("ACTIONS_RUNTIME_TOKEN") || ""),
-        url: (val.url) ?? (utilities.getEnv("ACTIONS_RUNTIME_URL") || ""),
+        url: (val.url) ?? (utilities.getEnv("ACTIONS_CACHE_URL") || ""),
     };
 }
 
@@ -331,7 +331,7 @@ export interface CacheToGitHubActions {
     /**
      * The cache server URL to use for artifacts.
      *
-     * Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+     * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
      * `crazy-max/ghaction-github-runtime` is recommended to expose this
      * environment variable to your jobs.
      */
@@ -347,7 +347,7 @@ export function cacheToGitHubActionsProvideDefaults(val: CacheToGitHubActions): 
         mode: (val.mode) ?? "min",
         scope: (val.scope) ?? (utilities.getEnv("buildkit") || ""),
         token: (val.token) ?? (utilities.getEnv("ACTIONS_RUNTIME_TOKEN") || ""),
-        url: (val.url) ?? (utilities.getEnv("ACTIONS_RUNTIME_URL") || ""),
+        url: (val.url) ?? (utilities.getEnv("ACTIONS_CACHE_URL") || ""),
     };
 }
 

@@ -57,7 +57,7 @@ namespace Pulumi.DockerBuild.Inputs
         /// <summary>
         /// The cache server URL to use for artifacts.
         /// 
-        /// Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+        /// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
         /// `crazy-max/ghaction-github-runtime` is recommended to expose this
         /// environment variable to your jobs.
         /// </summary>
@@ -70,7 +70,7 @@ namespace Pulumi.DockerBuild.Inputs
             Mode = Pulumi.DockerBuild.CacheMode.Min;
             Scope = Utilities.GetEnv("buildkit") ?? "";
             Token = Utilities.GetEnv("ACTIONS_RUNTIME_TOKEN") ?? "";
-            Url = Utilities.GetEnv("ACTIONS_RUNTIME_URL") ?? "";
+            Url = Utilities.GetEnv("ACTIONS_CACHE_URL") ?? "";
         }
         public static new CacheToGitHubActionsArgs Empty => new CacheToGitHubActionsArgs();
     }

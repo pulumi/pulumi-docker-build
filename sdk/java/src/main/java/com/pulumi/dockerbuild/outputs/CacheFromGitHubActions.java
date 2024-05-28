@@ -32,7 +32,7 @@ public final class CacheFromGitHubActions {
     /**
      * @return The cache server URL to use for artifacts.
      * 
-     * Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+     * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
      * `crazy-max/ghaction-github-runtime` is recommended to expose this
      * environment variable to your jobs.
      * 
@@ -65,7 +65,7 @@ public final class CacheFromGitHubActions {
     /**
      * @return The cache server URL to use for artifacts.
      * 
-     * Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+     * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
      * `crazy-max/ghaction-github-runtime` is recommended to expose this
      * environment variable to your jobs.
      * 

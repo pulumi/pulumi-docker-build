@@ -208,7 +208,7 @@ class CacheFromGitHubActionsArgs:
                environment variable to your jobs.
         :param pulumi.Input[str] url: The cache server URL to use for artifacts.
                
-               Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+               Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
                `crazy-max/ghaction-github-runtime` is recommended to expose this
                environment variable to your jobs.
         """
@@ -221,7 +221,7 @@ class CacheFromGitHubActionsArgs:
         if token is not None:
             pulumi.set(__self__, "token", token)
         if url is None:
-            url = (_utilities.get_env('ACTIONS_RUNTIME_URL') or '')
+            url = (_utilities.get_env('ACTIONS_CACHE_URL') or '')
         if url is not None:
             pulumi.set(__self__, "url", url)
 
@@ -263,7 +263,7 @@ class CacheFromGitHubActionsArgs:
         """
         The cache server URL to use for artifacts.
 
-        Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+        Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
         `crazy-max/ghaction-github-runtime` is recommended to expose this
         environment variable to your jobs.
         """
@@ -749,7 +749,7 @@ class CacheToGitHubActionsArgs:
                environment variable to your jobs.
         :param pulumi.Input[str] url: The cache server URL to use for artifacts.
                
-               Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+               Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
                `crazy-max/ghaction-github-runtime` is recommended to expose this
                environment variable to your jobs.
         """
@@ -770,7 +770,7 @@ class CacheToGitHubActionsArgs:
         if token is not None:
             pulumi.set(__self__, "token", token)
         if url is None:
-            url = (_utilities.get_env('ACTIONS_RUNTIME_URL') or '')
+            url = (_utilities.get_env('ACTIONS_CACHE_URL') or '')
         if url is not None:
             pulumi.set(__self__, "url", url)
 
@@ -836,7 +836,7 @@ class CacheToGitHubActionsArgs:
         """
         The cache server URL to use for artifacts.
 
-        Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+        Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
         `crazy-max/ghaction-github-runtime` is recommended to expose this
         environment variable to your jobs.
         """
