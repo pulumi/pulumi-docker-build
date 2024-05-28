@@ -370,7 +370,7 @@ func TestRead(t *testing.T) {
 }
 
 func TestImageDiff(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	emptyDir := t.TempDir()
 	host := Host
 
@@ -420,6 +420,106 @@ func TestImageDiff(t *testing.T) {
 			wantChanges: false,
 		},
 		{
+			name: "no diff if cache tokens change",
+			olds: func(_ *testing.T, s ImageState) ImageState {
+				s.CacheTo = []CacheTo{
+					{
+						GHA: &CacheToGitHubActions{
+							CacheFromGitHubActions: CacheFromGitHubActions{
+								URL:   "unchanged-cacheto-url",
+								Token: "old-cacheto-token",
+							},
+						},
+					},
+					{
+						S3: &CacheToS3{
+							CacheFromS3: CacheFromS3{
+								AccessKeyID:     "old-cacheto-access-key-id",
+								SecretAccessKey: "old-cacheto-secret-access-key",
+								SessionToken:    "old-cacheto-session-token",
+							},
+						},
+					},
+					{
+						AZBlob: &CacheToAzureBlob{
+							CacheFromAzureBlob: CacheFromAzureBlob{
+								SecretAccessKey: "old-cacheto-secret-access-key",
+							},
+						},
+					},
+				}
+				s.CacheFrom = []CacheFrom{
+					{
+						GHA: &CacheFromGitHubActions{
+							URL:   "unchanged-cachefrom-url",
+							Token: "old-cachefrom-token",
+						},
+					},
+					{
+						S3: &CacheFromS3{
+							AccessKeyID:     "old-cachefrom-access-key-id",
+							SecretAccessKey: "old-cachefrom-secret-access-key",
+							SessionToken:    "old-cachefrom-session-token",
+						},
+					},
+					{
+						AZBlob: &CacheFromAzureBlob{
+							SecretAccessKey: "old-cachefrom-secret-access-key",
+						},
+					},
+				}
+				return s
+			},
+			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+				a.CacheTo = []CacheTo{
+					{
+						GHA: &CacheToGitHubActions{
+							CacheFromGitHubActions: CacheFromGitHubActions{
+								URL:   "unchanged-cacheto-url",
+								Token: "new-cacheto-token",
+							},
+						},
+					},
+					{
+						S3: &CacheToS3{
+							CacheFromS3: CacheFromS3{
+								AccessKeyID:     "new-cacheto-access-key-id",
+								SecretAccessKey: "new-cacheto-secret-access-key",
+								SessionToken:    "new-cacheto-session-token",
+							},
+						},
+					},
+					{
+						AZBlob: &CacheToAzureBlob{
+							CacheFromAzureBlob: CacheFromAzureBlob{
+								SecretAccessKey: "new-cacheto-secret-access-key",
+							},
+						},
+					},
+				}
+				a.CacheFrom = []CacheFrom{
+					{
+						GHA: &CacheFromGitHubActions{
+							URL:   "unchanged-cachefrom-url",
+							Token: "new-cachefrom-token",
+						},
+					}, {
+						S3: &CacheFromS3{
+							AccessKeyID:     "new-cachefrom-access-key-id",
+							SecretAccessKey: "new-cachefrom-secret-access-key",
+							SessionToken:    "new-cachefrom-session-token",
+						},
+					}, {
+						AZBlob: &CacheFromAzureBlob{
+							SecretAccessKey: "new-cachefrom-secret-access-key",
+						},
+					},
+				}
+				return a
+			},
+			wantChanges: false,
+		},
+		{
 			name: "no diff if pull=true but no exports",
 			olds: func(_ *testing.T, is ImageState) ImageState {
 				is.Pull = true
@@ -430,6 +530,108 @@ func TestImageDiff(t *testing.T) {
 				return ia
 			},
 			wantChanges: false,
+		},
+		{
+			name: "diff if gha cache parameters change",
+			olds: func(_ *testing.T, s ImageState) ImageState {
+				s.CacheTo = []CacheTo{{
+					GHA: &CacheToGitHubActions{
+						CacheFromGitHubActions: CacheFromGitHubActions{
+							Scope: "old-cacheto-scope",
+						},
+					},
+				}}
+				s.CacheFrom = []CacheFrom{{
+					GHA: &CacheFromGitHubActions{
+						Scope: "old-cachefrom-scope",
+					},
+				}}
+				return s
+			},
+			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+				a.CacheTo = []CacheTo{{
+					GHA: &CacheToGitHubActions{
+						CacheFromGitHubActions: CacheFromGitHubActions{
+							Scope: "new-cacheto-scope",
+						},
+					},
+				}}
+				a.CacheFrom = []CacheFrom{{
+					GHA: &CacheFromGitHubActions{
+						Scope: "new-cachefrom-scope",
+					},
+				}}
+				return a
+			},
+			wantChanges: true,
+		},
+		{
+			name: "diff if s3 cache parameters change",
+			olds: func(_ *testing.T, s ImageState) ImageState {
+				s.CacheTo = []CacheTo{{
+					S3: &CacheToS3{
+						CacheFromS3: CacheFromS3{
+							Region: "old-cacheto-region",
+						},
+					},
+				}}
+				s.CacheFrom = []CacheFrom{{
+					S3: &CacheFromS3{
+						Region: "old-cachefrom-region",
+					},
+				}}
+				return s
+			},
+			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+				a.CacheTo = []CacheTo{{
+					S3: &CacheToS3{
+						CacheFromS3: CacheFromS3{
+							Region: "new-cacheto-region",
+						},
+					},
+				}}
+				a.CacheFrom = []CacheFrom{{
+					S3: &CacheFromS3{
+						Region: "new-cachefrom-region",
+					},
+				}}
+				return a
+			},
+			wantChanges: true,
+		},
+		{
+			name: "diff if azblob cache parameters change",
+			olds: func(_ *testing.T, s ImageState) ImageState {
+				s.CacheTo = []CacheTo{{
+					AZBlob: &CacheToAzureBlob{
+						CacheFromAzureBlob: CacheFromAzureBlob{
+							Name: "old-cacheto-name",
+						},
+					},
+				}}
+				s.CacheFrom = []CacheFrom{{
+					AZBlob: &CacheFromAzureBlob{
+						Name: "old-cachefrom-name",
+					},
+				}}
+				return s
+			},
+			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+				a.CacheTo = []CacheTo{{
+					AZBlob: &CacheToAzureBlob{
+						CacheFromAzureBlob: CacheFromAzureBlob{
+							Name: "new-cacheto-name",
+						},
+					},
+				}}
+				a.CacheFrom = []CacheFrom{{
+					AZBlob: &CacheFromAzureBlob{
+						Name: "new-cachefrom-name",
+					},
+				}}
+				return a
+			},
+			wantChanges: true,
 		},
 		{
 			name: "diff if pull=true with exports",

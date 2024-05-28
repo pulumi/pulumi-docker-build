@@ -889,12 +889,6 @@ func (*Image) Diff(
 	if !reflect.DeepEqual(olds.Builder, news.Builder) {
 		diff["builder"] = update
 	}
-	if !reflect.DeepEqual(olds.CacheFrom, news.CacheFrom) {
-		diff["cacheFrom"] = update
-	}
-	if !reflect.DeepEqual(olds.CacheTo, news.CacheTo) {
-		diff["cacheTo"] = update
-	}
 	if olds.Context.Location != news.Context.Location {
 		diff["context.location"] = update
 	}
@@ -972,6 +966,31 @@ func (*Image) Diff(
 				continue
 			}
 			diff[fmt.Sprintf("registries[%d]", idx)] = update
+			break
+		}
+	}
+	// The GHA cache needs similar handling to ignore changes to the token.
+	if len(olds.CacheFrom) != len(news.CacheFrom) {
+		diff["cacheFrom"] = update
+	} else {
+		for idx, oldc := range olds.CacheFrom {
+			newc := news.CacheFrom[idx]
+			if newc.Diff(oldc) {
+				continue
+			}
+			diff[fmt.Sprintf("cacheFrom[%d]", idx)] = update
+			break
+		}
+	}
+	if len(olds.CacheTo) != len(news.CacheTo) {
+		diff["cacheTo"] = update
+	} else {
+		for idx, oldc := range olds.CacheTo {
+			newc := news.CacheTo[idx]
+			if !newc.Diff(oldc) {
+				continue
+			}
+			diff[fmt.Sprintf("cacheTo[%d]", idx)] = update
 			break
 		}
 	}

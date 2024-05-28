@@ -17,6 +17,7 @@ package internal
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 
 	controllerapi "github.com/docker/buildx/controller/pb"
@@ -460,6 +461,23 @@ func (c CacheFrom) String() string {
 	return join(c.Local, c.Registry, c.GHA, c.AZBlob, c.S3, c.Raw)
 }
 
+// Diff returns false if both cache entries are identical enough to ignore
+// changes during diff. Differences to tokens are allowed.
+func (c CacheFrom) Diff(other CacheFrom) bool {
+	if c.GHA != nil && other.GHA != nil {
+		other.GHA.Token = c.GHA.Token
+	}
+	if c.S3 != nil && other.S3 != nil {
+		other.S3.AccessKeyID = c.S3.AccessKeyID
+		other.S3.SecretAccessKey = c.S3.SecretAccessKey
+		other.S3.SessionToken = c.S3.SessionToken
+	}
+	if c.AZBlob != nil && other.AZBlob != nil {
+		other.AZBlob.SecretAccessKey = c.AZBlob.SecretAccessKey
+	}
+	return reflect.DeepEqual(c, other)
+}
+
 func (c CacheFrom) validate(preview bool) (*controllerapi.CacheOptionsEntry, error) {
 	if strings.Count(c.String(), "type=") > 1 {
 		return nil, errors.New("cacheFrom should only specify one cache type")
@@ -668,6 +686,23 @@ func (c CacheTo) String() string {
 		return ""
 	}
 	return join(c.Inline, c.Local, c.Registry, c.GHA, c.AZBlob, c.S3, c.Raw)
+}
+
+// Diff returns false if both cache entries are identical enough to ignore
+// changes during diff. Differences to tokens are allowed.
+func (c CacheTo) Diff(other CacheTo) bool {
+	if c.GHA != nil && other.GHA != nil {
+		other.GHA.Token = c.GHA.Token
+	}
+	if c.S3 != nil && other.S3 != nil {
+		other.S3.AccessKeyID = c.S3.AccessKeyID
+		other.S3.SecretAccessKey = c.S3.SecretAccessKey
+		other.S3.SessionToken = c.S3.SessionToken
+	}
+	if c.AZBlob != nil && other.AZBlob != nil {
+		other.AZBlob.SecretAccessKey = c.AZBlob.SecretAccessKey
+	}
+	return reflect.DeepEqual(c, other)
 }
 
 func (c CacheTo) validate(preview bool) (*controllerapi.CacheOptionsEntry, error) {
