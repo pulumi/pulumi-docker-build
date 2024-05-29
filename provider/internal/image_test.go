@@ -273,6 +273,48 @@ func TestImageLifecycle(t *testing.T) {
 				}
 			},
 		},
+		{
+			name: "context defaults to current directory (pulumi-docker-build#78)",
+			client: func(t *testing.T) Client {
+				ctrl := gomock.NewController(t)
+				c := NewMockClient(ctrl)
+				c.EXPECT().BuildKitEnabled().Return(true, nil).AnyTimes()
+				c.EXPECT().Build(gomock.Any(), gomock.AssignableToTypeOf(build{})).DoAndReturn(
+					func(_ context.Context, b Build) (*client.SolveResponse, error) {
+						assert.Equal(t, "FROM alpine:latest", b.Inline())
+						return &client.SolveResponse{
+							ExporterResponse: map[string]string{"image.name": "alpine:latest"},
+						}, nil
+					},
+				).AnyTimes()
+				c.EXPECT().Delete(gomock.Any(), "inline-dockerfile").Return(nil)
+				return c
+			},
+			op: func(t *testing.T) integration.Operation {
+				return integration.Operation{
+					Inputs: resource.PropertyMap{
+						"push": resource.NewBoolProperty(false),
+						"tags": resource.NewArrayProperty(
+							[]resource.PropertyValue{
+								resource.NewStringProperty("inline-dockerfile"),
+							},
+						),
+						"buildOnPreview": resource.NewBoolProperty(true),
+						"dockerfile": resource.NewObjectProperty(resource.PropertyMap{
+							"inline": resource.NewStringProperty("FROM alpine:latest"),
+						}),
+					},
+					Hook: func(_, output resource.PropertyMap) {
+						context := output["context"]
+						require.NotNil(t, context)
+						require.True(t, context.IsObject())
+						location := context.ObjectValue()["location"]
+						require.True(t, location.IsString())
+						assert.Equal(t, ".", location.StringValue())
+					},
+				}
+			},
+		},
 	}
 
 	for _, tt := range tests {

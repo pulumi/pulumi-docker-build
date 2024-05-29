@@ -166,8 +166,6 @@ resources:
         inline: |
           FROM alpine
           RUN echo "This uses an inline Dockerfile! 👍"
-      context:
-        location: "./app"
 
   # docker buildx build --load .
   dockerLoad:

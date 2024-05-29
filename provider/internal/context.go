@@ -90,7 +90,9 @@ func (c *Context) Annotate(a infer.Annotator) {
 
 // validate returns a non-nil CheckError if the Context is invalid. The
 // returned Dockerfile may have defaults set to match Docker's default
-// handling. The returned Dockerfile should be validated separately.
+// handling. The returned Dockerfile should be validated separately. Non-nil
+// values are returned even in the case of errors to allow additional
+// validation to be performed.
 func (bc *BuildContext) validate(preview bool, d *Dockerfile) (*Dockerfile, *Context, error) {
 	if d == nil {
 		d = &Dockerfile{}
@@ -106,6 +108,11 @@ func (bc *BuildContext) validate(preview bool, d *Dockerfile) (*Dockerfile, *Con
 		// unknown. This isn't an error, but it does prevent us from performing
 		// a build later.
 		return d, c, nil
+	}
+	// If this isn't a preview but our location still isn't set, default it to
+	// the current directory.
+	if c.Location == "" {
+		c.Location = "."
 	}
 
 	if buildx.IsRemoteURL(c.Location) {

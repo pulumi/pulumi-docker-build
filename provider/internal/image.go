@@ -153,7 +153,7 @@ func (ia *ImageArgs) Annotate(a infer.Annotator) {
 		Equivalent to Docker's "--cache-to" flag.
 	`))
 	a.Describe(&ia.Context, dedent(`
-		Build context settings.
+		Build context settings. Defaults to the current directory.
 
 		Equivalent to Docker's "PATH | URL | -" positional argument.
 	`))
@@ -546,6 +546,10 @@ func (ia *ImageArgs) validate(preview bool) (controllerapi.BuildOptions, error) 
 		multierr = errors.Join(multierr, err)
 	}
 	ia.Dockerfile = dockerfile
+	// Set a default context if one wasn't provided.
+	if ia.Context == nil {
+		ia.Context = &BuildContext{Context: *context}
+	}
 
 	if err := ia.Dockerfile.validate(preview, context); err != nil {
 		multierr = errors.Join(multierr, err)
