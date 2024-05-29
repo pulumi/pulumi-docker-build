@@ -1,7 +1,7 @@
 {
   "name": "docker-build",
   "displayName": "docker-build",
-  "version": "0.0.2-alpha.1714063884+13fb5b61",
+  "version": "1.0.0-alpha.0+dev",
   "description": "A Pulumi provider for building modern Docker images with buildx and BuildKit.",
   "keywords": [
     "docker",
@@ -182,11 +182,11 @@
         },
         "url": {
           "type": "string",
-          "description": "The cache server URL to use for artifacts.\n\nDefaults to `$ACTIONS_RUNTIME_URL`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
+          "description": "The cache server URL to use for artifacts.\n\nDefaults to `$ACTIONS_CACHE_URL`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
           "default": "",
           "defaultInfo": {
             "environment": [
-              "ACTIONS_RUNTIME_URL"
+              "ACTIONS_CACHE_URL"
             ]
           }
         }
@@ -412,11 +412,11 @@
         },
         "url": {
           "type": "string",
-          "description": "The cache server URL to use for artifacts.\n\nDefaults to `$ACTIONS_RUNTIME_URL`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
+          "description": "The cache server URL to use for artifacts.\n\nDefaults to `$ACTIONS_CACHE_URL`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
           "default": "",
           "defaultInfo": {
             "environment": [
-              "ACTIONS_RUNTIME_URL"
+              "ACTIONS_CACHE_URL"
             ]
           }
         }
@@ -1162,7 +1162,7 @@
         },
         "context": {
           "$ref": "#/types/docker-build:index:BuildContext",
-          "description": "Build context settings.\n\nEquivalent to Docker's `PATH | URL | -` positional argument."
+          "description": "Build context settings. Defaults to the current directory.\n\nEquivalent to Docker's `PATH | URL | -` positional argument."
         },
         "contextHash": {
           "type": "string",
@@ -1306,7 +1306,7 @@
         },
         "context": {
           "$ref": "#/types/docker-build:index:BuildContext",
-          "description": "Build context settings.\n\nEquivalent to Docker's `PATH | URL | -` positional argument."
+          "description": "Build context settings. Defaults to the current directory.\n\nEquivalent to Docker's `PATH | URL | -` positional argument."
         },
         "dockerfile": {
           "$ref": "#/types/docker-build:index:Dockerfile",
