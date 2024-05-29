@@ -849,7 +849,7 @@ type CacheFromGitHubActions struct {
 	Token *string `pulumi:"token"`
 	// The cache server URL to use for artifacts.
 	//
-	// Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+	// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
 	// `crazy-max/ghaction-github-runtime` is recommended to expose this
 	// environment variable to your jobs.
 	Url *string `pulumi:"url"`
@@ -874,7 +874,7 @@ func (val *CacheFromGitHubActions) Defaults() *CacheFromGitHubActions {
 		}
 	}
 	if tmp.Url == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_URL"); d != nil {
+		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_CACHE_URL"); d != nil {
 			url_ := d.(string)
 			tmp.Url = &url_
 		}
@@ -908,7 +908,7 @@ type CacheFromGitHubActionsArgs struct {
 	Token pulumi.StringPtrInput `pulumi:"token"`
 	// The cache server URL to use for artifacts.
 	//
-	// Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+	// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
 	// `crazy-max/ghaction-github-runtime` is recommended to expose this
 	// environment variable to your jobs.
 	Url pulumi.StringPtrInput `pulumi:"url"`
@@ -931,7 +931,7 @@ func (val *CacheFromGitHubActionsArgs) Defaults() *CacheFromGitHubActionsArgs {
 		}
 	}
 	if tmp.Url == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_URL"); d != nil {
+		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_CACHE_URL"); d != nil {
 			tmp.Url = pulumi.StringPtr(d.(string))
 		}
 	}
@@ -1052,7 +1052,7 @@ func (o CacheFromGitHubActionsOutput) Token() pulumi.StringPtrOutput {
 
 // The cache server URL to use for artifacts.
 //
-// Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
 // `crazy-max/ghaction-github-runtime` is recommended to expose this
 // environment variable to your jobs.
 func (o CacheFromGitHubActionsOutput) Url() pulumi.StringPtrOutput {
@@ -1119,7 +1119,7 @@ func (o CacheFromGitHubActionsPtrOutput) Token() pulumi.StringPtrOutput {
 
 // The cache server URL to use for artifacts.
 //
-// Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
 // `crazy-max/ghaction-github-runtime` is recommended to expose this
 // environment variable to your jobs.
 func (o CacheFromGitHubActionsPtrOutput) Url() pulumi.StringPtrOutput {
@@ -2384,7 +2384,7 @@ type CacheToGitHubActions struct {
 	Token *string `pulumi:"token"`
 	// The cache server URL to use for artifacts.
 	//
-	// Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+	// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
 	// `crazy-max/ghaction-github-runtime` is recommended to expose this
 	// environment variable to your jobs.
 	Url *string `pulumi:"url"`
@@ -2417,7 +2417,7 @@ func (val *CacheToGitHubActions) Defaults() *CacheToGitHubActions {
 		}
 	}
 	if tmp.Url == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_URL"); d != nil {
+		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_CACHE_URL"); d != nil {
 			url_ := d.(string)
 			tmp.Url = &url_
 		}
@@ -2455,7 +2455,7 @@ type CacheToGitHubActionsArgs struct {
 	Token pulumi.StringPtrInput `pulumi:"token"`
 	// The cache server URL to use for artifacts.
 	//
-	// Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+	// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
 	// `crazy-max/ghaction-github-runtime` is recommended to expose this
 	// environment variable to your jobs.
 	Url pulumi.StringPtrInput `pulumi:"url"`
@@ -2484,7 +2484,7 @@ func (val *CacheToGitHubActionsArgs) Defaults() *CacheToGitHubActionsArgs {
 		}
 	}
 	if tmp.Url == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_URL"); d != nil {
+		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_CACHE_URL"); d != nil {
 			tmp.Url = pulumi.StringPtr(d.(string))
 		}
 	}
@@ -2615,7 +2615,7 @@ func (o CacheToGitHubActionsOutput) Token() pulumi.StringPtrOutput {
 
 // The cache server URL to use for artifacts.
 //
-// Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
 // `crazy-max/ghaction-github-runtime` is recommended to expose this
 // environment variable to your jobs.
 func (o CacheToGitHubActionsOutput) Url() pulumi.StringPtrOutput {
@@ -2702,7 +2702,7 @@ func (o CacheToGitHubActionsPtrOutput) Token() pulumi.StringPtrOutput {
 
 // The cache server URL to use for artifacts.
 //
-// Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
 // `crazy-max/ghaction-github-runtime` is recommended to expose this
 // environment variable to your jobs.
 func (o CacheToGitHubActionsPtrOutput) Url() pulumi.StringPtrOutput {

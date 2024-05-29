@@ -97,7 +97,7 @@ public final class CacheToGitHubActionsArgs extends com.pulumi.resources.Resourc
     /**
      * The cache server URL to use for artifacts.
      * 
-     * Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+     * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
      * `crazy-max/ghaction-github-runtime` is recommended to expose this
      * environment variable to your jobs.
      * 
@@ -108,7 +108,7 @@ public final class CacheToGitHubActionsArgs extends com.pulumi.resources.Resourc
     /**
      * @return The cache server URL to use for artifacts.
      * 
-     * Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+     * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
      * `crazy-max/ghaction-github-runtime` is recommended to expose this
      * environment variable to your jobs.
      * 
@@ -248,7 +248,7 @@ public final class CacheToGitHubActionsArgs extends com.pulumi.resources.Resourc
         /**
          * @param url The cache server URL to use for artifacts.
          * 
-         * Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+         * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
          * `crazy-max/ghaction-github-runtime` is recommended to expose this
          * environment variable to your jobs.
          * 
@@ -263,7 +263,7 @@ public final class CacheToGitHubActionsArgs extends com.pulumi.resources.Resourc
         /**
          * @param url The cache server URL to use for artifacts.
          * 
-         * Defaults to `$ACTIONS_RUNTIME_URL`, although a separate action like
+         * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
          * `crazy-max/ghaction-github-runtime` is recommended to expose this
          * environment variable to your jobs.
          * 
@@ -279,7 +279,7 @@ public final class CacheToGitHubActionsArgs extends com.pulumi.resources.Resourc
             $.mode = Codegen.objectProp("mode", CacheMode.class).output().arg($.mode).def(CacheMode.Min).getNullable();
             $.scope = Codegen.stringProp("scope").output().arg($.scope).env("buildkit").def("").getNullable();
             $.token = Codegen.stringProp("token").secret().arg($.token).env("ACTIONS_RUNTIME_TOKEN").def("").getNullable();
-            $.url = Codegen.stringProp("url").output().arg($.url).env("ACTIONS_RUNTIME_URL").def("").getNullable();
+            $.url = Codegen.stringProp("url").output().arg($.url).env("ACTIONS_CACHE_URL").def("").getNullable();
             return $;
         }
     }
