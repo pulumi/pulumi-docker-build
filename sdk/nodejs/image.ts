@@ -545,7 +545,7 @@ export class Image extends pulumi.CustomResource {
      */
     public readonly cacheTo!: pulumi.Output<outputs.CacheTo[] | undefined>;
     /**
-     * Build context settings.
+     * Build context settings. Defaults to the current directory.
      *
      * Equivalent to Docker's `PATH | URL | -` positional argument.
      */
@@ -842,7 +842,7 @@ export interface ImageArgs {
      */
     cacheTo?: pulumi.Input<pulumi.Input<inputs.CacheToArgs>[]>;
     /**
-     * Build context settings.
+     * Build context settings. Defaults to the current directory.
      *
      * Equivalent to Docker's `PATH | URL | -` positional argument.
      */

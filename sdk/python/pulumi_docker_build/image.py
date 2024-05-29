@@ -76,7 +76,7 @@ class ImageArgs:
         :param pulumi.Input[Sequence[pulumi.Input['CacheToArgs']]] cache_to: Cache import configuration.
                
                Equivalent to Docker's `--cache-to` flag.
-        :param pulumi.Input['BuildContextArgs'] context: Build context settings.
+        :param pulumi.Input['BuildContextArgs'] context: Build context settings. Defaults to the current directory.
                
                Equivalent to Docker's `PATH | URL | -` positional argument.
         :param pulumi.Input['DockerfileArgs'] dockerfile: Dockerfile settings.
@@ -328,7 +328,7 @@ class ImageArgs:
     @pulumi.getter
     def context(self) -> Optional[pulumi.Input['BuildContextArgs']]:
         """
-        Build context settings.
+        Build context settings. Defaults to the current directory.
 
         Equivalent to Docker's `PATH | URL | -` positional argument.
         """
@@ -944,7 +944,7 @@ class Image(pulumi.CustomResource):
         :param pulumi.Input[Sequence[pulumi.Input[pulumi.InputType['CacheToArgs']]]] cache_to: Cache import configuration.
                
                Equivalent to Docker's `--cache-to` flag.
-        :param pulumi.Input[pulumi.InputType['BuildContextArgs']] context: Build context settings.
+        :param pulumi.Input[pulumi.InputType['BuildContextArgs']] context: Build context settings. Defaults to the current directory.
                
                Equivalent to Docker's `PATH | URL | -` positional argument.
         :param pulumi.Input[pulumi.InputType['DockerfileArgs']] dockerfile: Dockerfile settings.
@@ -1552,7 +1552,7 @@ class Image(pulumi.CustomResource):
     @pulumi.getter
     def context(self) -> pulumi.Output[Optional['outputs.BuildContext']]:
         """
-        Build context settings.
+        Build context settings. Defaults to the current directory.
 
         Equivalent to Docker's `PATH | URL | -` positional argument.
         """

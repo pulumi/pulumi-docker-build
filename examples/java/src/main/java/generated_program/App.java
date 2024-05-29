@@ -185,9 +185,6 @@ FROM alpine
 RUN echo "This uses an inline Dockerfile! 👍"
                 """)
                 .build())
-            .context(BuildContextArgs.builder()
-                .location("./app")
-                .build())
             .build());
 
         var dockerLoad = new Image("dockerLoad", ImageArgs.builder()        

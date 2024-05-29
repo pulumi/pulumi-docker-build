@@ -154,9 +154,6 @@ const inline = new docker_build.Image("inline", {
 RUN echo "This uses an inline Dockerfile! 👍"
 `,
     },
-    context: {
-        location: "./app",
-    },
 });
 const dockerLoad = new docker_build.Image("dockerLoad", {
     push: false,

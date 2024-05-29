@@ -239,10 +239,6 @@ COPY hello.c ./
 RUN echo ""This uses an inline Dockerfile! 👍""
 ",
         },
-        Context = new DockerBuild.Inputs.BuildContextArgs
-        {
-            Location = "./app",
-        },
     });
 
     var dockerLoad = new DockerBuild.Image("dockerLoad", new()

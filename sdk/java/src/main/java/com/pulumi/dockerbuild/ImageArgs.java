@@ -169,7 +169,7 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
-     * Build context settings.
+     * Build context settings. Defaults to the current directory.
      * 
      * Equivalent to Docker&#39;s `PATH | URL | -` positional argument.
      * 
@@ -178,7 +178,7 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
     private @Nullable Output<BuildContextArgs> context;
 
     /**
-     * @return Build context settings.
+     * @return Build context settings. Defaults to the current directory.
      * 
      * Equivalent to Docker&#39;s `PATH | URL | -` positional argument.
      * 
@@ -816,7 +816,7 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param context Build context settings.
+         * @param context Build context settings. Defaults to the current directory.
          * 
          * Equivalent to Docker&#39;s `PATH | URL | -` positional argument.
          * 
@@ -829,7 +829,7 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param context Build context settings.
+         * @param context Build context settings. Defaults to the current directory.
          * 
          * Equivalent to Docker&#39;s `PATH | URL | -` positional argument.
          * 

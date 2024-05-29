@@ -207,9 +207,6 @@ func main() {
 			Dockerfile: &dockerbuild.DockerfileArgs{
 				Inline: pulumi.String("FROM alpine\nRUN echo \"This uses an inline Dockerfile! 👍\"\n"),
 			},
-			Context: &dockerbuild.BuildContextArgs{
-				Location: pulumi.String("./app"),
-			},
 		})
 		if err != nil {
 			return err
