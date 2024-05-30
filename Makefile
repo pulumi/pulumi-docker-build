@@ -130,7 +130,7 @@ devcontainer::
 	cp -f .devcontainer/devcontainer.json .devcontainer.json
 
 .PHONY: build
-build:: provider sdk/dotnet sdk/go sdk/nodejs sdk/python sdk/java
+build:: provider sdk/dotnet sdk/go sdk/nodejs sdk/python sdk/java ${SCHEMA_PATH}
 
 # Required for the codegen action that runs in pulumi/pulumi
 only_build:: build
@@ -160,7 +160,7 @@ install_nodejs_sdk:: # Required by CI
 codegen: # Required by CI
 
 .PHONY: generate_schema
-generate_schema: # Required by CI
+generate_schema: ${SCHEMA_PATH} # Required by CI
 
 .PHONY: build_go install_go_sdk
 generate_go: sdk/go # Required by CI
