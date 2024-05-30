@@ -183,7 +183,7 @@ generate_dotnet: sdk/dotnet # Required by CI
 build_dotnet: # Required by CI
 
 ${SCHEMA_PATH}: bin/${PROVIDER}
-	pulumi package get-schema bin/${PROVIDER} > $(SCHEMA_PATH)
+	pulumi package get-schema bin/${PROVIDER} | jq 'del(.version)' > $(SCHEMA_PATH)
 
 bin/${PROVIDER}: $(shell find ./provider -name '*.go') go.mod
 	(cd provider && go build -o ../bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION_GENERIC}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
