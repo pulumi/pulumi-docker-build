@@ -130,7 +130,7 @@ devcontainer::
 	cp -f .devcontainer/devcontainer.json .devcontainer.json
 
 .PHONY: build
-build:: provider dotnet_sdk go_sdk nodejs_sdk python_sdk
+build:: provider sdk/dotnet sdk/go sdk/nodejs sdk/python sdk/java
 
 # Required for the codegen action that runs in pulumi/pulumi
 only_build:: build
@@ -196,6 +196,9 @@ go.sum: go.mod
 
 sdk: $(shell mkdir -p sdk)
 sdk: sdk/python sdk/nodejs sdk/java sdk/python sdk/go sdk/dotnet
+
+# Folders can't be used for up-to-date checks as they will be marked as up-to-date even if the step fails - leading to a broken state.
+.PHONY: sdk/*
 
 sdk/python: TMPDIR := $(shell mktemp -d)
 sdk/python: $(PULUMI) bin/${PROVIDER}
