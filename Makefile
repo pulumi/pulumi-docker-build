@@ -26,6 +26,8 @@ PROVIDER_VERSION ?= 1.0.0-alpha.0+dev
 # Use this normalised version everywhere rather than the raw input to ensure consistency.
 VERSION_GENERIC = $(shell pulumictl convert-version --language generic --version "$(PROVIDER_VERSION)")
 
+export PULUMI_IGNORE_AMBIENT_PLUGINS = true
+
 .PHONY: ensure
 ensure:: tidy lint test_provider examples
 
@@ -83,6 +85,9 @@ examples/java: ${PULUMI} bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yam
 ${PULUMI}: go.sum
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/pkg/v3/cmd/pulumi
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3
+	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3
+	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3
+	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi-java/pkg/cmd/pulumi-language-java
 
 ${GOGLANGCILINT}: go.sum
 	GOBIN=${WORKING_DIR}/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint
@@ -125,7 +130,7 @@ devcontainer::
 	cp -f .devcontainer/devcontainer.json .devcontainer.json
 
 .PHONY: build
-build:: provider dotnet_sdk go_sdk nodejs_sdk python_sdk
+build:: provider sdk/dotnet sdk/go sdk/nodejs sdk/python sdk/java
 
 # Required for the codegen action that runs in pulumi/pulumi
 only_build:: build
@@ -192,7 +197,9 @@ go.sum: go.mod
 sdk: $(shell mkdir -p sdk)
 sdk: sdk/python sdk/nodejs sdk/java sdk/python sdk/go sdk/dotnet
 
-sdk/python: PYPI_VERSION := $(shell pulumictl convert-version --language python -v "$(VERSION_GENERIC)")
+# Folders can't be used for up-to-date checks as they will be marked as up-to-date even if the step fails - leading to a broken state.
+.PHONY: sdk/*
+
 sdk/python: TMPDIR := $(shell mktemp -d)
 sdk/python: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/python
@@ -200,15 +207,12 @@ sdk/python: $(PULUMI) bin/${PROVIDER}
 	cp README.md ${TMPDIR}/python/
 	cd ${TMPDIR}/python/ && \
 		rm -rf ./bin/ ../python.bin/ && cp -R . ../python.bin && mv ../python.bin ./bin && \
-		sed -i.bak -e 's/^  version = .*/  version = "$(PYPI_VERSION)"/g' ./bin/pyproject.toml && \
-		rm ./bin/pyproject.toml.bak && \
 		python3 -m venv venv && \
 		./venv/bin/python -m pip install build && \
 		cd ./bin && \
 		../venv/bin/python -m build .
 	mv -f ${TMPDIR}/python ${WORKING_DIR}/sdk/.
 
-sdk/nodejs: NODE_VERSION := $(shell pulumictl convert-version --language javascript -v "$(VERSION_GENERIC)")
 sdk/nodejs: TMPDIR := $(shell mktemp -d)
 sdk/nodejs: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/nodejs
@@ -217,9 +221,7 @@ sdk/nodejs: $(PULUMI) bin/${PROVIDER}
 	cd ${TMPDIR}/nodejs/ && \
 		yarn install && \
 		yarn run tsc && \
-		cp README.md LICENSE package.json yarn.lock bin/ && \
-		sed -i.bak 's/$${VERSION}/$(NODE_VERSION)/g' bin/package.json && \
-		rm ./bin/package.json.bak
+		cp README.md LICENSE package.json yarn.lock bin/
 	mv -f ${TMPDIR}/nodejs ${WORKING_DIR}/sdk/.
 
 sdk/go: TMPDIR := $(shell mktemp -d)
@@ -233,14 +235,13 @@ sdk/go: $(PULUMI) bin/${PROVIDER}
 		go mod tidy
 	mv -f ${TMPDIR}/go ${WORKING_DIR}/sdk/go
 
-sdk/dotnet: DOTNET_VERSION  := $(shell pulumictl convert-version --language dotnet -v "$(VERSION_GENERIC)")
 sdk/dotnet: TMPDIR := $(shell mktemp -d)
 sdk/dotnet: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/dotnet
 	$(PULUMI) package gen-sdk bin/${PROVIDER} --language dotnet -o ${TMPDIR}
 	cd ${TMPDIR}/dotnet/ && \
-		echo "$(DOTNET_VERSION)" > version.txt && \
-		dotnet build /p:Version=${DOTNET_VERSION}
+		echo "$(VERSION_GENERIC)" > version.txt && \
+		dotnet build
 	mv -f ${TMPDIR}/dotnet ${WORKING_DIR}/sdk/.
 
 sdk/java: PACKAGE_VERSION := $(shell pulumictl convert-version --language generic -v "$(VERSION_GENERIC)")

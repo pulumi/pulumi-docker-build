@@ -79,13 +79,15 @@ func NewBuildxProvider() provider.Provider {
 				LanguageMap: map[string]any{
 					"go": gogen.GoPackageInfo{
 						// GenerateResourceContainerTypes: true,
-						Generics: gogen.GenericsSettingSideBySide,
+						RespectSchemaVersion: true,
+						Generics:             gogen.GenericsSettingSideBySide,
 						PackageImportAliases: map[string]string{
 							"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild": "dockerbuild",
 						},
 						ImportBasePath: "github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild",
 					},
 					"csharp": csgen.CSharpPackageInfo{
+						RespectSchemaVersion: true,
 						PackageReferences: map[string]string{
 							"Pulumi": "3.*",
 						},
@@ -100,11 +102,13 @@ func NewBuildxProvider() provider.Provider {
 						},
 					},
 					"nodejs": tsgen.NodePackageInfo{
+						RespectSchemaVersion: true,
 						Dependencies: map[string]string{
 							"@pulumi/pulumi": "^3.0.0",
 						},
 					},
 					"python": pygen.PackageInfo{
+						RespectSchemaVersion: true,
 						PyProject: struct {
 							Enabled bool `json:"enabled,omitempty"`
 						}{Enabled: true},
