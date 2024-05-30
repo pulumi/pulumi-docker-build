@@ -12,7 +12,7 @@
   "homepage": "https://pulumi.com",
   "license": "Apache-2.0",
   "repository": "https://github.com/pulumi/pulumi-docker-build",
-  "publisher": "pulumi",
+  "publisher": "Pulumi",
   "meta": {
     "moduleFormat": "(.*)"
   },
@@ -186,11 +186,11 @@
         },
         "url": {
           "type": "string",
-          "description": "The cache server URL to use for artifacts.\n\nDefaults to `$ACTIONS_RUNTIME_URL`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
+          "description": "The cache server URL to use for artifacts.\n\nDefaults to `$ACTIONS_CACHE_URL`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
           "default": "",
           "defaultInfo": {
             "environment": [
-              "ACTIONS_RUNTIME_URL"
+              "ACTIONS_CACHE_URL"
             ]
           }
         }
@@ -416,11 +416,11 @@
         },
         "url": {
           "type": "string",
-          "description": "The cache server URL to use for artifacts.\n\nDefaults to `$ACTIONS_RUNTIME_URL`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
+          "description": "The cache server URL to use for artifacts.\n\nDefaults to `$ACTIONS_CACHE_URL`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
           "default": "",
           "defaultInfo": {
             "environment": [
-              "ACTIONS_RUNTIME_URL"
+              "ACTIONS_CACHE_URL"
             ]
           }
         }

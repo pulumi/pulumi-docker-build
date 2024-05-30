@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>pulumi</Authors>
-    <Company>pulumi</Company>
+    <Authors>Pulumi</Authors>
+    <Company>Pulumi</Company>
     <Description>A Pulumi provider for building modern Docker images with buildx and BuildKit.</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://pulumi.com</PackageProjectUrl>
