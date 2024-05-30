@@ -39,7 +39,8 @@ import javax.annotation.Nullable;
  * 
  * ## Example Usage
  * ### Multi-platform registry caching
- * ```java
+ * <pre>
+ * {@code
  * package generated_program;
  * 
  * import com.pulumi.Context;
@@ -67,55 +68,56 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var amd64 = new Image(&#34;amd64&#34;, ImageArgs.builder()        
+ *         var amd64 = new Image("amd64", ImageArgs.builder()        
  *             .cacheFrom(CacheFromArgs.builder()
  *                 .registry(CacheFromRegistryArgs.builder()
- *                     .ref(&#34;docker.io/pulumi/pulumi:cache-amd64&#34;)
+ *                     .ref("docker.io/pulumi/pulumi:cache-amd64")
  *                     .build())
  *                 .build())
  *             .cacheTo(CacheToArgs.builder()
  *                 .registry(CacheToRegistryArgs.builder()
- *                     .mode(&#34;max&#34;)
- *                     .ref(&#34;docker.io/pulumi/pulumi:cache-amd64&#34;)
+ *                     .mode("max")
+ *                     .ref("docker.io/pulumi/pulumi:cache-amd64")
  *                     .build())
  *                 .build())
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;app&#34;)
+ *                 .location("app")
  *                 .build())
- *             .platforms(&#34;linux/amd64&#34;)
- *             .tags(&#34;docker.io/pulumi/pulumi:3.107.0-amd64&#34;)
+ *             .platforms("linux/amd64")
+ *             .tags("docker.io/pulumi/pulumi:3.107.0-amd64")
  *             .build());
  * 
- *         var arm64 = new Image(&#34;arm64&#34;, ImageArgs.builder()        
+ *         var arm64 = new Image("arm64", ImageArgs.builder()        
  *             .cacheFrom(CacheFromArgs.builder()
  *                 .registry(CacheFromRegistryArgs.builder()
- *                     .ref(&#34;docker.io/pulumi/pulumi:cache-arm64&#34;)
+ *                     .ref("docker.io/pulumi/pulumi:cache-arm64")
  *                     .build())
  *                 .build())
  *             .cacheTo(CacheToArgs.builder()
  *                 .registry(CacheToRegistryArgs.builder()
- *                     .mode(&#34;max&#34;)
- *                     .ref(&#34;docker.io/pulumi/pulumi:cache-arm64&#34;)
+ *                     .mode("max")
+ *                     .ref("docker.io/pulumi/pulumi:cache-arm64")
  *                     .build())
  *                 .build())
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;app&#34;)
+ *                 .location("app")
  *                 .build())
- *             .platforms(&#34;linux/arm64&#34;)
- *             .tags(&#34;docker.io/pulumi/pulumi:3.107.0-arm64&#34;)
+ *             .platforms("linux/arm64")
+ *             .tags("docker.io/pulumi/pulumi:3.107.0-arm64")
  *             .build());
  * 
- *         var index = new Index(&#34;index&#34;, IndexArgs.builder()        
+ *         var index = new Index("index", IndexArgs.builder()        
  *             .sources(            
  *                 amd64.ref(),
  *                 arm64.ref())
- *             .tag(&#34;docker.io/pulumi/pulumi:3.107.0&#34;)
+ *             .tag("docker.io/pulumi/pulumi:3.107.0")
  *             .build());
  * 
- *         ctx.export(&#34;ref&#34;, index.ref());
+ *         ctx.export("ref", index.ref());
  *     }
  * }
- * ```
+ * }
+ * </pre>
  * 
  */
 @ResourceType(type="docker-build:index:Index")
