@@ -3,6 +3,7 @@ module github.com/pulumi/pulumi-docker-build
 go 1.21.7
 
 require (
+	github.com/aws/aws-sdk-go v1.50.36
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/distribution/reference v0.5.0
 	github.com/docker/buildx v0.13.1
@@ -24,7 +25,7 @@ require (
 	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20240525040238-ee831fc5b644
 	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20240525040238-ee831fc5b644
 	github.com/pulumi/pulumi/sdk/v3 v3.117.1-0.20240525040238-ee831fc5b644
-	github.com/regclient/regclient v0.0.0-20240308005156-a7434cff9c6b
+	github.com/regclient/regclient v0.6.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.11.0
 	github.com/stretchr/testify v1.9.0
@@ -85,7 +86,6 @@ require (
 	github.com/ashanbrown/forbidigo v1.6.0 // indirect
 	github.com/ashanbrown/makezero v1.1.1 // indirect
 	github.com/atotto/clipboard v0.1.4 // indirect
-	github.com/aws/aws-sdk-go v1.50.36 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.26.1 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.2 // indirect
 	github.com/aws/aws-sdk-go-v2/config v1.27.11 // indirect
@@ -259,7 +259,7 @@ require (
 	github.com/kevinburke/ssh_config v1.2.0 // indirect
 	github.com/kisielk/errcheck v1.7.0 // indirect
 	github.com/kkHAIKE/contextcheck v1.1.4 // indirect
-	github.com/klauspost/compress v1.17.4 // indirect
+	github.com/klauspost/compress v1.17.8 // indirect
 	github.com/kulti/thelper v0.6.3 // indirect
 	github.com/kunwardeep/paralleltest v1.0.10 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
@@ -399,7 +399,7 @@ require (
 	github.com/tweekmonster/luser v0.0.0-20161003172636-3fa38070dbd7 // indirect
 	github.com/uber/jaeger-client-go v2.30.0+incompatible // indirect
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
-	github.com/ulikunitz/xz v0.5.11 // indirect
+	github.com/ulikunitz/xz v0.5.12 // indirect
 	github.com/ultraware/funlen v0.1.0 // indirect
 	github.com/ultraware/whitespace v0.1.0 // indirect
 	github.com/uudashr/gocognit v1.1.2 // indirect
