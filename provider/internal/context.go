@@ -26,12 +26,14 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"slices"
 	"syscall"
 
 	buildx "github.com/docker/buildx/build"
 	"github.com/moby/patternmatcher/ignorefile"
 	"github.com/spf13/afero"
 	"github.com/tonistiigi/fsutil"
+	"golang.org/x/exp/maps"
 
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/contract"
@@ -232,8 +234,11 @@ func hashBuildContext(
 		}
 	}
 
-	// Hash any local named contexts.
-	for _, namedContext := range namedContexts {
+	// Hash any local named contexts. Sort keys for stable iteration order.
+	keys := maps.Keys(namedContexts)
+	slices.Sort(keys)
+	for _, key := range keys {
+		namedContext := namedContexts[key]
 		if isLocalDir(fs, namedContext) {
 			fs, err := rootFS(namedContext, excludes)
 			if err != nil {
