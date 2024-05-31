@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"sync"
+	"time"
 
 	"github.com/docker/buildx/builder"
 	"github.com/docker/buildx/store/storeutil"
@@ -129,6 +130,7 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 	}
 
 	if b.Driver == "" && opts.Builder == "" {
+
 		// If we STILL don't have a builder, create a docker-container instance.
 		b, err = builder.Create(
 			context.Background(),
@@ -138,6 +140,10 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 		)
 		if err != nil {
 			return nil, fmt.Errorf("creating builder: %w", err)
+		}
+		ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+		if _, err := b.Boot(ctx); err != nil {
+			return nil, fmt.Errorf("booting builder: %w", err)
 		}
 	}
 
