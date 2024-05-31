@@ -141,7 +141,8 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 		if err != nil {
 			return nil, fmt.Errorf("creating builder: %w", err)
 		}
-		ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
 		if _, err := b.Boot(ctx); err != nil {
 			return nil, fmt.Errorf("booting builder: %w", err)
 		}
