@@ -582,7 +582,7 @@ type Image struct {
 	//
 	// Equivalent to Docker's `--cache-to` flag.
 	CacheTo pulumix.GArrayOutput[CacheTo, CacheToOutput] `pulumi:"cacheTo"`
-	// Build context settings.
+	// Build context settings. Defaults to the current directory.
 	//
 	// Equivalent to Docker's `PATH | URL | -` positional argument.
 	Context pulumix.GPtrOutput[BuildContext, BuildContextOutput] `pulumi:"context"`
@@ -804,7 +804,7 @@ type imageArgs struct {
 	//
 	// Equivalent to Docker's `--cache-to` flag.
 	CacheTo []CacheTo `pulumi:"cacheTo"`
-	// Build context settings.
+	// Build context settings. Defaults to the current directory.
 	//
 	// Equivalent to Docker's `PATH | URL | -` positional argument.
 	Context *BuildContext `pulumi:"context"`
@@ -952,7 +952,7 @@ type ImageArgs struct {
 	//
 	// Equivalent to Docker's `--cache-to` flag.
 	CacheTo pulumix.Input[[]*CacheToArgs]
-	// Build context settings.
+	// Build context settings. Defaults to the current directory.
 	//
 	// Equivalent to Docker's `PATH | URL | -` positional argument.
 	Context pulumix.Input[*BuildContextArgs]
@@ -1151,7 +1151,7 @@ func (o ImageOutput) CacheTo() pulumix.GArrayOutput[CacheTo, CacheToOutput] {
 	return pulumix.GArrayOutput[CacheTo, CacheToOutput]{OutputState: unwrapped.OutputState}
 }
 
-// Build context settings.
+// Build context settings. Defaults to the current directory.
 //
 // Equivalent to Docker's `PATH | URL | -` positional argument.
 func (o ImageOutput) Context() pulumix.GPtrOutput[BuildContext, BuildContextOutput] {

@@ -582,7 +582,7 @@ type Image struct {
 	//
 	// Equivalent to Docker's `--cache-to` flag.
 	CacheTo CacheToArrayOutput `pulumi:"cacheTo"`
-	// Build context settings.
+	// Build context settings. Defaults to the current directory.
 	//
 	// Equivalent to Docker's `PATH | URL | -` positional argument.
 	Context BuildContextPtrOutput `pulumi:"context"`
@@ -804,7 +804,7 @@ type imageArgs struct {
 	//
 	// Equivalent to Docker's `--cache-to` flag.
 	CacheTo []CacheTo `pulumi:"cacheTo"`
-	// Build context settings.
+	// Build context settings. Defaults to the current directory.
 	//
 	// Equivalent to Docker's `PATH | URL | -` positional argument.
 	Context *BuildContext `pulumi:"context"`
@@ -952,7 +952,7 @@ type ImageArgs struct {
 	//
 	// Equivalent to Docker's `--cache-to` flag.
 	CacheTo CacheToArrayInput
-	// Build context settings.
+	// Build context settings. Defaults to the current directory.
 	//
 	// Equivalent to Docker's `PATH | URL | -` positional argument.
 	Context BuildContextPtrInput
@@ -1165,7 +1165,7 @@ func (o ImageOutput) CacheTo() CacheToArrayOutput {
 	return o.ApplyT(func(v *Image) CacheToArrayOutput { return v.CacheTo }).(CacheToArrayOutput)
 }
 
-// Build context settings.
+// Build context settings. Defaults to the current directory.
 //
 // Equivalent to Docker's `PATH | URL | -` positional argument.
 func (o ImageOutput) Context() BuildContextPtrOutput {

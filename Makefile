@@ -107,6 +107,7 @@ define example
 		--language $(1) \
 		--out ${WORKING_DIR}/examples/$(1)
 	cp -r ${WORKING_DIR}/examples/app ${WORKING_DIR}/examples/$(1)/app
+	cp ${WORKING_DIR}/examples/yaml/.dockerignore ${WORKING_DIR}/examples/$(1)/.dockerignore
 endef
 
 up::

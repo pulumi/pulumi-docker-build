@@ -557,7 +557,7 @@ namespace Pulumi.DockerBuild
         public Output<ImmutableArray<Outputs.CacheTo>> CacheTo { get; private set; } = null!;
 
         /// <summary>
-        /// Build context settings.
+        /// Build context settings. Defaults to the current directory.
         /// 
         /// Equivalent to Docker's `PATH | URL | -` positional argument.
         /// </summary>
@@ -897,7 +897,7 @@ namespace Pulumi.DockerBuild
         }
 
         /// <summary>
-        /// Build context settings.
+        /// Build context settings. Defaults to the current directory.
         /// 
         /// Equivalent to Docker's `PATH | URL | -` positional argument.
         /// </summary>

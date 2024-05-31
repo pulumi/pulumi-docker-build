@@ -1165,7 +1165,7 @@
         },
         "context": {
           "$ref": "#/types/docker-build:index:BuildContext",
-          "description": "Build context settings.\n\nEquivalent to Docker's `PATH | URL | -` positional argument."
+          "description": "Build context settings. Defaults to the current directory.\n\nEquivalent to Docker's `PATH | URL | -` positional argument."
         },
         "contextHash": {
           "type": "string",
@@ -1309,7 +1309,7 @@
         },
         "context": {
           "$ref": "#/types/docker-build:index:BuildContext",
-          "description": "Build context settings.\n\nEquivalent to Docker's `PATH | URL | -` positional argument."
+          "description": "Build context settings. Defaults to the current directory.\n\nEquivalent to Docker's `PATH | URL | -` positional argument."
         },
         "dockerfile": {
           "$ref": "#/types/docker-build:index:Dockerfile",

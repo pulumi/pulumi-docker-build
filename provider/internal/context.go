@@ -26,12 +26,14 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"slices"
 	"syscall"
 
 	buildx "github.com/docker/buildx/build"
 	"github.com/moby/patternmatcher/ignorefile"
 	"github.com/spf13/afero"
 	"github.com/tonistiigi/fsutil"
+	"golang.org/x/exp/maps"
 
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/contract"
@@ -90,7 +92,9 @@ func (c *Context) Annotate(a infer.Annotator) {
 
 // validate returns a non-nil CheckError if the Context is invalid. The
 // returned Dockerfile may have defaults set to match Docker's default
-// handling. The returned Dockerfile should be validated separately.
+// handling. The returned Dockerfile should be validated separately. Non-nil
+// values are returned even in the case of errors to allow additional
+// validation to be performed.
 func (bc *BuildContext) validate(preview bool, d *Dockerfile) (*Dockerfile, *Context, error) {
 	if d == nil {
 		d = &Dockerfile{}
@@ -106,6 +110,11 @@ func (bc *BuildContext) validate(preview bool, d *Dockerfile) (*Dockerfile, *Con
 		// unknown. This isn't an error, but it does prevent us from performing
 		// a build later.
 		return d, c, nil
+	}
+	// If this isn't a preview but our location still isn't set, default it to
+	// the current directory.
+	if c.Location == "" {
+		c.Location = "."
 	}
 
 	if buildx.IsRemoteURL(c.Location) {
@@ -225,8 +234,11 @@ func hashBuildContext(
 		}
 	}
 
-	// Hash any local named contexts.
-	for _, namedContext := range namedContexts {
+	// Hash any local named contexts. Sort keys for stable iteration order.
+	keys := maps.Keys(namedContexts)
+	slices.Sort(keys)
+	for _, key := range keys {
+		namedContext := namedContexts[key]
 		if isLocalDir(fs, namedContext) {
 			fs, err := rootFS(namedContext, excludes)
 			if err != nil {

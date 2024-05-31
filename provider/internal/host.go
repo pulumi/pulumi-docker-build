@@ -16,8 +16,10 @@ package internal
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 	"sync"
+	"time"
 
 	"github.com/docker/buildx/builder"
 	"github.com/docker/buildx/store/storeutil"
@@ -72,7 +74,7 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 
 	txn, release, err := storeutil.GetStore(h.cli)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("getting store: %w", err)
 	}
 	defer release()
 
@@ -86,7 +88,7 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 		builder.WithStore(txn),
 	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("new builder: %w", err)
 	}
 
 	// If we didn't request a particular builder, and we loaded a default
@@ -95,7 +97,7 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 	if b.Driver == "" && opts.Builder == "" {
 		builders, err := builder.GetBuilders(h.cli, txn)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("getting builders: %w", err)
 		}
 	nextbuilder:
 		for _, bb := range builders {
@@ -128,6 +130,7 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 	}
 
 	if b.Driver == "" && opts.Builder == "" {
+
 		// If we STILL don't have a builder, create a docker-container instance.
 		b, err = builder.Create(
 			context.Background(),
@@ -136,7 +139,12 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 			builder.CreateOpts{Driver: "docker-container"},
 		)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("creating builder: %w", err)
+		}
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+		if _, err := b.Boot(ctx); err != nil {
+			return nil, fmt.Errorf("booting builder: %w", err)
 		}
 	}
 
@@ -145,7 +153,7 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 	// drivers that are unknown to us.
 	nodes, err := b.LoadNodes(context.Background())
 	if err != nil && !build.ShouldExec() {
-		return nil, err
+		return nil, fmt.Errorf("loading nodes: %w", err)
 	}
 
 	cached := &cachedBuilder{name: b.Name, driver: b.Driver, nodes: nodes}

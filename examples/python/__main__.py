@@ -141,9 +141,6 @@ inline = docker_build.Image("inline",
         inline="""FROM alpine
 RUN echo "This uses an inline Dockerfile! 👍"
 """,
-    ),
-    context=docker_build.BuildContextArgs(
-        location="./app",
     ))
 docker_load = docker_build.Image("dockerLoad",
     push=False,

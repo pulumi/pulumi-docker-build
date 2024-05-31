@@ -33,61 +33,68 @@ func TestValidateContext(t *testing.T) {
 	t.Parallel()
 	tests := []struct {
 		name    string
-		c       Context
+		c       *BuildContext
 		givenD  Dockerfile
 		preview bool
 
 		wantD   *Dockerfile
+		wantC   *Context
 		wantErr string
 	}{
 		{
 			name: "relative",
-			c: Context{
+			c: &BuildContext{Context: Context{
 				Location: "../internal/../internal/testdata/noop",
-			},
+			}},
 			wantD: &Dockerfile{
 				Location: "../internal/testdata/noop/Dockerfile",
 			},
 		},
 		{
 			name: "missing directory",
-			c: Context{
+			c: &BuildContext{Context: Context{
 				Location: "/does/not/exist/",
-			},
+			}},
 			wantErr: "not a valid directory",
 		},
 		{
 			name: "missing default Dockerfile",
-			c: Context{
+			c: &BuildContext{Context: Context{
 				Location: "testdata",
-			},
+			}},
 			wantD: &Dockerfile{Location: "testdata/Dockerfile"},
 		},
 		{
 			name: "with explicit Dockerfile",
-			c: Context{
+			c: &BuildContext{Context: Context{
 				Location: "testdata",
-			},
+			}},
 			givenD: Dockerfile{
 				Location: "testdata/Dockerfile.invalid",
 			},
 		},
 		{
 			name:  "default location",
-			c:     Context{},
+			c:     &BuildContext{Context: Context{}},
 			wantD: &Dockerfile{Location: "Dockerfile"},
 		},
 		{
 			name: "remote context doesn't default to local Dockerfile",
-			c: Context{
+			c: &BuildContext{Context: Context{
 				Location: "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
-			},
+			}},
 			wantD: &Dockerfile{},
 		},
 		{
 			name:    "preview",
-			c:       Context{},
+			c:       &BuildContext{Context: Context{}},
 			preview: true,
+		},
+		{
+			name:  "missing context defaults to current directory",
+			c:     nil,
+			wantC: &Context{Location: "."},
+			wantD: &Dockerfile{Location: "Dockerfile"},
 		},
 	}
 
@@ -96,8 +103,7 @@ func TestValidateContext(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			bc := &BuildContext{Context: tt.c}
-			d, _, err := bc.validate(tt.preview, &tt.givenD)
+			d, c, err := tt.c.validate(tt.preview, &tt.givenD)
 
 			if tt.wantErr == "" {
 				assert.NoError(t, err)
@@ -108,6 +114,9 @@ func TestValidateContext(t *testing.T) {
 			if tt.wantD != nil {
 				assert.Equal(t, tt.wantD.Location, d.Location)
 				assert.Equal(t, tt.wantD.Inline, d.Inline)
+			}
+			if tt.wantC != nil {
+				assert.Equal(t, tt.wantC.Location, c.Location)
 			}
 		})
 	}

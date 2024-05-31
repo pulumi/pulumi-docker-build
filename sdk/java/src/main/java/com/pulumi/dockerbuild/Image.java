@@ -771,7 +771,7 @@ public class Image extends com.pulumi.resources.CustomResource {
         return Codegen.optional(this.cacheTo);
     }
     /**
-     * Build context settings.
+     * Build context settings. Defaults to the current directory.
      * 
      * Equivalent to Docker&#39;s `PATH | URL | -` positional argument.
      * 
@@ -780,7 +780,7 @@ public class Image extends com.pulumi.resources.CustomResource {
     private Output</* @Nullable */ BuildContext> context;
 
     /**
-     * @return Build context settings.
+     * @return Build context settings. Defaults to the current directory.
      * 
      * Equivalent to Docker&#39;s `PATH | URL | -` positional argument.
      * 
