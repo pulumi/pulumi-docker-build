@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>pulumi</Authors>
-    <Company>pulumi</Company>
+    <Authors>Pulumi</Authors>
+    <Company>Pulumi</Company>
     <Description>A Pulumi provider for building modern Docker images with buildx and BuildKit.</Description>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://pulumi.com</PackageProjectUrl>
     <RepositoryUrl>https://github.com/pulumi/pulumi-docker-build</RepositoryUrl>
     <PackageIcon>logo.png</PackageIcon>
+    <Version>0.1.0-alpha.1717073454</Version>
 
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>

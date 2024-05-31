@@ -130,7 +130,8 @@ import javax.annotation.Nullable;
  * 
  * ## Example Usage
  * ### Push to AWS ECR with caching
- * ```java
+ * <pre>
+ * {@code
  * package generated_program;
  * 
  * import com.pulumi.Context;
@@ -160,43 +161,45 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var ecrRepository = new Repository(&#34;ecrRepository&#34;);
+ *         var ecrRepository = new Repository("ecrRepository");
  * 
  *         final var authToken = EcrFunctions.getAuthorizationToken(GetAuthorizationTokenArgs.builder()
  *             .registryId(ecrRepository.registryId())
  *             .build());
  * 
- *         var myImage = new Image(&#34;myImage&#34;, ImageArgs.builder()        
+ *         var myImage = new Image("myImage", ImageArgs.builder()        
  *             .cacheFrom(CacheFromArgs.builder()
  *                 .registry(CacheFromRegistryArgs.builder()
- *                     .ref(ecrRepository.repositoryUrl().applyValue(repositoryUrl -&gt; String.format(&#34;%s:cache&#34;, repositoryUrl)))
+ *                     .ref(ecrRepository.repositoryUrl().applyValue(repositoryUrl -> String.format("%s:cache", repositoryUrl)))
  *                     .build())
  *                 .build())
  *             .cacheTo(CacheToArgs.builder()
  *                 .registry(CacheToRegistryArgs.builder()
  *                     .imageManifest(true)
  *                     .ociMediaTypes(true)
- *                     .ref(ecrRepository.repositoryUrl().applyValue(repositoryUrl -&gt; String.format(&#34;%s:cache&#34;, repositoryUrl)))
+ *                     .ref(ecrRepository.repositoryUrl().applyValue(repositoryUrl -> String.format("%s:cache", repositoryUrl)))
  *                     .build())
  *                 .build())
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;./app&#34;)
+ *                 .location("./app")
  *                 .build())
  *             .push(true)
  *             .registries(RegistryArgs.builder()
  *                 .address(ecrRepository.repositoryUrl())
- *                 .password(authToken.applyValue(getAuthorizationTokenResult -&gt; getAuthorizationTokenResult).applyValue(authToken -&gt; authToken.applyValue(getAuthorizationTokenResult -&gt; getAuthorizationTokenResult.password())))
- *                 .username(authToken.applyValue(getAuthorizationTokenResult -&gt; getAuthorizationTokenResult).applyValue(authToken -&gt; authToken.applyValue(getAuthorizationTokenResult -&gt; getAuthorizationTokenResult.userName())))
+ *                 .password(authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult).applyValue(authToken -> authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult.password())))
+ *                 .username(authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult).applyValue(authToken -> authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult.userName())))
  *                 .build())
- *             .tags(ecrRepository.repositoryUrl().applyValue(repositoryUrl -&gt; String.format(&#34;%s:latest&#34;, repositoryUrl)))
+ *             .tags(ecrRepository.repositoryUrl().applyValue(repositoryUrl -> String.format("%s:latest", repositoryUrl)))
  *             .build());
  * 
- *         ctx.export(&#34;ref&#34;, myImage.ref());
+ *         ctx.export("ref", myImage.ref());
  *     }
  * }
- * ```
+ * }
+ * </pre>
  * ### Multi-platform image
- * ```java
+ * <pre>
+ * {@code
  * package generated_program;
  * 
  * import com.pulumi.Context;
@@ -218,21 +221,23 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image(&#34;image&#34;, ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()        
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;app&#34;)
+ *                 .location("app")
  *                 .build())
  *             .platforms(            
- *                 &#34;plan9/amd64&#34;,
- *                 &#34;plan9/386&#34;)
+ *                 "plan9/amd64",
+ *                 "plan9/386")
  *             .push(false)
  *             .build());
  * 
  *     }
  * }
- * ```
+ * }
+ * </pre>
  * ### Registry export
- * ```java
+ * <pre>
+ * {@code
  * package generated_program;
  * 
  * import com.pulumi.Context;
@@ -255,25 +260,27 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image(&#34;image&#34;, ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()        
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;app&#34;)
+ *                 .location("app")
  *                 .build())
  *             .push(true)
  *             .registries(RegistryArgs.builder()
- *                 .address(&#34;docker.io&#34;)
+ *                 .address("docker.io")
  *                 .password(dockerHubPassword)
- *                 .username(&#34;pulumibot&#34;)
+ *                 .username("pulumibot")
  *                 .build())
- *             .tags(&#34;docker.io/pulumi/pulumi:3.107.0&#34;)
+ *             .tags("docker.io/pulumi/pulumi:3.107.0")
  *             .build());
  * 
- *         ctx.export(&#34;ref&#34;, myImage.ref());
+ *         ctx.export("ref", myImage.ref());
  *     }
  * }
- * ```
+ * }
+ * </pre>
  * ### Caching
- * ```java
+ * <pre>
+ * {@code
  * package generated_program;
  * 
  * import com.pulumi.Context;
@@ -299,29 +306,31 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image(&#34;image&#34;, ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()        
  *             .cacheFrom(CacheFromArgs.builder()
  *                 .local(CacheFromLocalArgs.builder()
- *                     .src(&#34;tmp/cache&#34;)
+ *                     .src("tmp/cache")
  *                     .build())
  *                 .build())
  *             .cacheTo(CacheToArgs.builder()
  *                 .local(CacheToLocalArgs.builder()
- *                     .dest(&#34;tmp/cache&#34;)
- *                     .mode(&#34;max&#34;)
+ *                     .dest("tmp/cache")
+ *                     .mode("max")
  *                     .build())
  *                 .build())
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;app&#34;)
+ *                 .location("app")
  *                 .build())
  *             .push(false)
  *             .build());
  * 
  *     }
  * }
- * ```
+ * }
+ * </pre>
  * ### Docker Build Cloud
- * ```java
+ * <pre>
+ * {@code
  * package generated_program;
  * 
  * import com.pulumi.Context;
@@ -344,12 +353,12 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image(&#34;image&#34;, ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()        
  *             .builder(BuilderConfigArgs.builder()
- *                 .name(&#34;cloud-builder-name&#34;)
+ *                 .name("cloud-builder-name")
  *                 .build())
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;app&#34;)
+ *                 .location("app")
  *                 .build())
  *             .exec(true)
  *             .push(false)
@@ -357,9 +366,11 @@ import javax.annotation.Nullable;
  * 
  *     }
  * }
- * ```
+ * }
+ * </pre>
  * ### Build arguments
- * ```java
+ * <pre>
+ * {@code
  * package generated_program;
  * 
  * import com.pulumi.Context;
@@ -381,19 +392,21 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image(&#34;image&#34;, ImageArgs.builder()        
- *             .buildArgs(Map.of(&#34;SET_ME_TO_TRUE&#34;, &#34;true&#34;))
+ *         var image = new Image("image", ImageArgs.builder()        
+ *             .buildArgs(Map.of("SET_ME_TO_TRUE", "true"))
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;app&#34;)
+ *                 .location("app")
  *                 .build())
  *             .push(false)
  *             .build());
  * 
  *     }
  * }
- * ```
+ * }
+ * </pre>
  * ### Build target
- * ```java
+ * <pre>
+ * {@code
  * package generated_program;
  * 
  * import com.pulumi.Context;
@@ -415,19 +428,21 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image(&#34;image&#34;, ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()        
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;app&#34;)
+ *                 .location("app")
  *                 .build())
  *             .push(false)
- *             .target(&#34;build-me&#34;)
+ *             .target("build-me")
  *             .build());
  * 
  *     }
  * }
- * ```
+ * }
+ * </pre>
  * ### Named contexts
- * ```java
+ * <pre>
+ * {@code
  * package generated_program;
  * 
  * import com.pulumi.Context;
@@ -449,19 +464,21 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image(&#34;image&#34;, ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()        
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;app&#34;)
- *                 .named(Map.of(&#34;golang:latest&#34;, Map.of(&#34;location&#34;, &#34;docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984&#34;)))
+ *                 .location("app")
+ *                 .named(Map.of("golang:latest", Map.of("location", "docker-image://golang{@literal @}sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984")))
  *                 .build())
  *             .push(false)
  *             .build());
  * 
  *     }
  * }
- * ```
+ * }
+ * </pre>
  * ### Remote context
- * ```java
+ * <pre>
+ * {@code
  * package generated_program;
  * 
  * import com.pulumi.Context;
@@ -483,18 +500,20 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image(&#34;image&#34;, ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()        
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile&#34;)
+ *                 .location("https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile")
  *                 .build())
  *             .push(false)
  *             .build());
  * 
  *     }
  * }
- * ```
+ * }
+ * </pre>
  * ### Inline Dockerfile
- * ```java
+ * <pre>
+ * {@code
  * package generated_program;
  * 
  * import com.pulumi.Context;
@@ -517,24 +536,26 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image(&#34;image&#34;, ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()        
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;app&#34;)
+ *                 .location("app")
  *                 .build())
  *             .dockerfile(DockerfileArgs.builder()
- *                 .inline(&#34;&#34;&#34;
+ *                 .inline("""
  * FROM busybox
  * COPY hello.c ./
- *                 &#34;&#34;&#34;)
+ *                 """)
  *                 .build())
  *             .push(false)
  *             .build());
  * 
  *     }
  * }
- * ```
+ * }
+ * </pre>
  * ### Remote context
- * ```java
+ * <pre>
+ * {@code
  * package generated_program;
  * 
  * import com.pulumi.Context;
@@ -557,21 +578,23 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image(&#34;image&#34;, ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()        
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;https://github.com/docker-library/hello-world.git&#34;)
+ *                 .location("https://github.com/docker-library/hello-world.git")
  *                 .build())
  *             .dockerfile(DockerfileArgs.builder()
- *                 .location(&#34;app/Dockerfile&#34;)
+ *                 .location("app/Dockerfile")
  *                 .build())
  *             .push(false)
  *             .build());
  * 
  *     }
  * }
- * ```
+ * }
+ * </pre>
  * ### Local export
- * ```java
+ * <pre>
+ * {@code
  * package generated_program;
  * 
  * import com.pulumi.Context;
@@ -595,9 +618,9 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image(&#34;image&#34;, ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()        
  *             .context(BuildContextArgs.builder()
- *                 .location(&#34;app&#34;)
+ *                 .location("app")
  *                 .build())
  *             .exports(ExportArgs.builder()
  *                 .docker(ExportDockerArgs.builder()
@@ -609,7 +632,8 @@ import javax.annotation.Nullable;
  * 
  *     }
  * }
- * ```
+ * }
+ * </pre>
  * 
  */
 @ResourceType(type="docker-build:index:Image")
@@ -788,7 +812,7 @@ public class Image extends com.pulumi.resources.CustomResource {
      * 
      * Empty if the image was not exported.
      * 
-     * Registry images can be referenced precisely as `&lt;tag&gt;@&lt;digest&gt;`. The
+     * Registry images can be referenced precisely as `&lt;tag&gt;{@literal @}&lt;digest&gt;`. The
      * `ref` output provides one such reference as a convenience.
      * 
      */
@@ -801,7 +825,7 @@ public class Image extends com.pulumi.resources.CustomResource {
      * 
      * Empty if the image was not exported.
      * 
-     * Registry images can be referenced precisely as `&lt;tag&gt;@&lt;digest&gt;`. The
+     * Registry images can be referenced precisely as `&lt;tag&gt;{@literal @}&lt;digest&gt;`. The
      * `ref` output provides one such reference as a convenience.
      * 
      */
