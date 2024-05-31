@@ -130,7 +130,7 @@ devcontainer::
 	cp -f .devcontainer/devcontainer.json .devcontainer.json
 
 .PHONY: build
-build:: provider sdk/dotnet sdk/go sdk/nodejs sdk/python sdk/java
+build:: provider sdk/dotnet sdk/go sdk/nodejs sdk/python sdk/java ${SCHEMA_PATH}
 
 # Required for the codegen action that runs in pulumi/pulumi
 only_build:: build
@@ -160,7 +160,7 @@ install_nodejs_sdk:: # Required by CI
 codegen: # Required by CI
 
 .PHONY: generate_schema
-generate_schema: # Required by CI
+generate_schema: ${SCHEMA_PATH} # Required by CI
 
 .PHONY: build_go install_go_sdk
 generate_go: sdk/go # Required by CI
@@ -183,7 +183,7 @@ generate_dotnet: sdk/dotnet # Required by CI
 build_dotnet: # Required by CI
 
 ${SCHEMA_PATH}: bin/${PROVIDER}
-	pulumi package get-schema bin/${PROVIDER} > $(SCHEMA_PATH)
+	pulumi package get-schema bin/${PROVIDER} | jq 'del(.version)' > $(SCHEMA_PATH)
 
 bin/${PROVIDER}: $(shell find ./provider -name '*.go') go.mod
 	(cd provider && go build -o ../bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION_GENERIC}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))

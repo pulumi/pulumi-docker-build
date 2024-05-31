@@ -73,7 +73,7 @@ func NewBuildxProvider() provider.Provider {
 				Keywords:    []string{"docker", "buildkit", "buildx", "kind/native"},
 				Description: "A Pulumi provider for building modern Docker images with buildx and BuildKit.",
 				Homepage:    "https://pulumi.com",
-				Publisher:   "pulumi",
+				Publisher:   "Pulumi",
 				License:     "Apache-2.0",
 				Repository:  "https://github.com/pulumi/pulumi-docker-build",
 				LanguageMap: map[string]any{
