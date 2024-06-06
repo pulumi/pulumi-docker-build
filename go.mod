@@ -9,7 +9,7 @@ require (
 	github.com/docker/buildx v0.13.1
 	github.com/docker/cli v26.0.0-rc1+incompatible
 	github.com/docker/distribution v2.8.2+incompatible
-	github.com/docker/docker v26.0.0-rc1+incompatible
+	github.com/docker/docker v26.1.4+incompatible
 	github.com/golangci/golangci-lint v1.57.1
 	github.com/moby/buildkit v0.13.0
 	github.com/moby/patternmatcher v0.6.0
@@ -33,6 +33,7 @@ require (
 	github.com/tonistiigi/fsutil v0.0.0-20240301111122-7525a1af2bb5
 	go.uber.org/mock v0.3.0
 	golang.org/x/crypto v0.23.0
+	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3
 	google.golang.org/protobuf v1.33.0
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -442,7 +443,6 @@ require (
 	go.uber.org/zap v1.27.0 // indirect
 	gocloud.dev v0.37.0 // indirect
 	gocloud.dev/secrets/hashivault v0.37.0 // indirect
-	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20240314144324-c7f7c6466f7f // indirect
 	golang.org/x/mod v0.16.0 // indirect
 	golang.org/x/net v0.25.0 // indirect
