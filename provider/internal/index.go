@@ -50,8 +50,15 @@ type Index struct{}
 type IndexArgs struct {
 	Tag      string    `pulumi:"tag"`
 	Sources  []string  `pulumi:"sources"`
-	Push     bool      `pulumi:"push,optional"`
+	Push     *bool     `pulumi:"push,optional"`
 	Registry *Registry `pulumi:"registry,optional"`
+}
+
+func (i IndexArgs) isPushed() bool {
+	if i.Push == nil {
+		return true // default
+	}
+	return *i.Push
 }
 
 // IndexState captures the state of an Index.
@@ -153,7 +160,7 @@ func (i *Index) Update(
 
 	provider.GetLogger(ctx).Debugf("creating index with tag %s and sources %s", input.Tag, input.Sources)
 
-	err = cli.ManifestCreate(ctx, input.Push, input.Tag, input.Sources...)
+	err = cli.ManifestCreate(ctx, input.isPushed(), input.Tag, input.Sources...)
 	if err != nil {
 		return state, fmt.Errorf("creating: %w", err)
 	}
@@ -174,7 +181,7 @@ func (i *Index) Read(
 	state.IndexArgs = input
 	state.Ref = input.Tag
 
-	if !input.Push {
+	if !input.isPushed() {
 		provider.GetLogger(ctx).Debug("skipping read because index was not pushed")
 		return name, input, state, nil // Nothing to read.
 	}
@@ -187,11 +194,11 @@ func (i *Index) Read(
 	provider.GetLogger(ctx).Debug("reading index with tag " + input.Tag)
 
 	digest, err := cli.ManifestInspect(ctx, input.Tag)
-	if err != nil && strings.Contains(err.Error(), "No such manifest:") && input.Push {
+	if err != nil && strings.Contains(err.Error(), "No such manifest:") && input.isPushed() {
 		// A remote tag was expected but isn't there -- delete the resource.
 		return "", input, state, err
 	}
-	if err != nil && strings.Contains(err.Error(), "No such manifest:") && !input.Push {
+	if err != nil && strings.Contains(err.Error(), "No such manifest:") && !input.isPushed() {
 		// Nothing was pushed, so just use the tag without digest..
 		return name, input, state, nil
 	}
@@ -248,7 +255,7 @@ func (i *Index) Check(
 
 // Delete attempts to delete the remote manifest.
 func (i *Index) Delete(ctx context.Context, _ string, state IndexState) error {
-	if !state.Push {
+	if !state.isPushed() {
 		return nil // Nothing to delete.
 	}
 

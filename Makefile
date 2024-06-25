@@ -22,11 +22,12 @@ GOGLANGCILINT    := bin/golangci-lint
 
 # Override during CI using `make [TARGET] PROVIDER_VERSION=""` or by setting a PROVIDER_VERSION environment variable
 # Local & branch builds will just used this fixed default version unless specified
-PROVIDER_VERSION ?= 1.0.0-alpha.0+dev
+PROVIDER_VERSION ?= 0.1.0-alpha.0+dev
 # Use this normalised version everywhere rather than the raw input to ensure consistency.
 VERSION_GENERIC = $(shell pulumictl convert-version --language generic --version "$(PROVIDER_VERSION)")
 
 export PULUMI_IGNORE_AMBIENT_PLUGINS = true
+export PULUMI_DISABLE_AUTOMATIC_PLUGIN_ACQUISITION = true
 
 .PHONY: ensure
 ensure:: tidy lint test_provider examples
@@ -88,6 +89,8 @@ ${PULUMI}: go.sum
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi-java/pkg/cmd/pulumi-language-java
+	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet
+	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi-yaml/cmd/pulumi-converter-yaml
 
 ${GOGLANGCILINT}: go.sum
 	GOBIN=${WORKING_DIR}/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint

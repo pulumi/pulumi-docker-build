@@ -278,8 +278,7 @@ func (ia *ImageArgs) Annotate(a infer.Annotator) {
 		"docker-buildx" binary.
 	`))
 
-	d := Default
-	a.SetDefault(&ia.Network, &d)
+	a.SetDefault(&ia.Network, Default)
 }
 
 // ImageState is serialized to the program's state file.
