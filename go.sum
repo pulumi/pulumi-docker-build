@@ -1031,8 +1031,8 @@ github.com/pulumi/providertest v0.0.13 h1:9CAaoviOTuCVHDI15h3znXa5JsKYtXLYHIIdxO
 github.com/pulumi/providertest v0.0.13/go.mod h1:REAoaN+hGOtdWJGirfWYqcSjCejlbGfzyVTUuemJTuE=
 github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v0.0.0-20240624150732-fa777213effd h1:Ifc7JJZF0WVt+snPsDaEdkCcQXht2x/Hcw7GPnK5gvs=
 github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v0.0.0-20240624150732-fa777213effd/go.mod h1:poRLYpZlEjDr09kC2f50srI97hjjmNay55FBMl6ZHug=
-github.com/pulumi/pulumi-go-provider v0.19.0 h1:1JTPwYqHQ/CvVgxSojXAPGrU1QJ5KR23OOEOLhkLGIA=
-github.com/pulumi/pulumi-go-provider v0.19.0/go.mod h1:yi/hjXmwwjt57wIqkdjaLww28t0/MwXML3BROYo18cg=
+github.com/pulumi/pulumi-go-provider v0.20.0 h1:dSpsqeSk0Dy2NRXRXwNk/x773mcAtHqAaDmUX+JPqUU=
+github.com/pulumi/pulumi-go-provider v0.20.0/go.mod h1:yi/hjXmwwjt57wIqkdjaLww28t0/MwXML3BROYo18cg=
 github.com/pulumi/pulumi-java/pkg v0.12.1-0.20240624103139-022406d291f4 h1:wK1GDGkIDSJB/tJ5wckctjsv0T1swcAeXY5n5FRNNjQ=
 github.com/pulumi/pulumi-java/pkg v0.12.1-0.20240624103139-022406d291f4/go.mod h1:aVpF95s5iTCDUsrbxmCMnbc1h9b+oIdrlaAoP52mdXg=
 github.com/pulumi/pulumi-yaml v1.8.1-0.20240624122559-15eb4027070e h1:9r8XRC08m2yUQgrc5Rr1si9vWPeYF9ih18yHHPS1FgI=
@@ -1043,8 +1043,6 @@ github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20240622000434-79e8
 github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20240622000434-79e814fe0f21/go.mod h1:wQPdnHjdH50xoOID6jFaBS30q82UHXsot+l02X73OLI=
 github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20240622000434-79e814fe0f21 h1:scTIHnzlb90Ci7sQsWsCw7VbInzjhACmOiauFHXmN/Q=
 github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20240622000434-79e814fe0f21/go.mod h1:Z0Sfx+D5umIjn1PfXXoI88tbNjOzXsDFSpIobvj9I10=
-github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20240612161705-f1e4b4ff9448 h1:0fpGrFk0I1vYrLuIeMamzA1DdmiN6b3OMXF0QxjroDc=
-github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20240612161705-f1e4b4ff9448/go.mod h1:Wq1gmEoy1wnbOgnCjjH7Yqvcw71MgdtRuceloIR6Evw=
 github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20240622000434-79e814fe0f21 h1:8AWptdD8yT2SILBH6ehEou8KN+ah33dklOi94Q8Vkkc=
 github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20240622000434-79e814fe0f21/go.mod h1:XmXHME1ZpSfrEKBmrsKtnd6mPeAp25nOoCFG3l8Qx7Y=
 github.com/pulumi/pulumi/sdk/v3 v3.121.0 h1:UsnFKIVOtJN/hQKPkWHL9cZktewPVQRbNUXbXQY/qrk=
