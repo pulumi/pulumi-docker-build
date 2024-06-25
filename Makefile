@@ -26,6 +26,7 @@ PROVIDER_VERSION ?= 0.1.0-alpha.0+dev
 # Use this normalised version everywhere rather than the raw input to ensure consistency.
 VERSION_GENERIC = $(shell pulumictl convert-version --language generic --version "$(PROVIDER_VERSION)")
 
+export PULUMI_IGNORE_AMBIENT_PLUGINS = true
 export PULUMI_DISABLE_AUTOMATIC_PLUGIN_ACQUISITION = true
 
 .PHONY: ensure
