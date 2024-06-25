@@ -255,7 +255,7 @@ func (i *Index) Check(
 
 // Delete attempts to delete the remote manifest.
 func (i *Index) Delete(ctx context.Context, _ string, state IndexState) error {
-	if !*state.Push {
+	if !state.isPushed() {
 		return nil // Nothing to delete.
 	}
 
