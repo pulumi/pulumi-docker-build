@@ -24,7 +24,7 @@ import (
 
 	_ "github.com/docker/buildx/driver/docker-container"
 
-	"github.com/docker/distribution/reference"
+	"github.com/distribution/reference"
 	"github.com/moby/buildkit/client"
 	"github.com/moby/buildkit/exporter/containerimage/exptypes"
 	"github.com/regclient/regclient/types/descriptor"
