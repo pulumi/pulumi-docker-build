@@ -100,7 +100,7 @@ func parseDockerfile(r io.Reader) error {
 	if err != nil {
 		return newCheckFailure(err, "dockerfile")
 	}
-	_, _, err = instructions.Parse(parsed.AST)
+	_, _, err = instructions.Parse(parsed.AST, nil)
 	if err != nil {
 		return err
 	}

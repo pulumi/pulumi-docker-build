@@ -10,6 +10,7 @@ updates:
           - "github.com/pulumi/*"
       docker:
         patterns:
+          - "github.com/distribution/*"
           - "github.com/docker/*"
           - "github.com/moby/*"
       security:
