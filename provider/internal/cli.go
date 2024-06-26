@@ -137,8 +137,8 @@ func (c *cli) Out() *streams.Out {
 	return streams.NewOut(c.w)
 }
 
-func (c *cli) Err() io.Writer {
-	return &c.err
+func (c *cli) Err() *streams.Out {
+	return streams.NewOut(&c.err)
 }
 
 // rc returns a registry client with matching auth.

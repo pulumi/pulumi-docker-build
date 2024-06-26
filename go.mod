@@ -7,7 +7,7 @@ require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/distribution/reference v0.6.0
 	github.com/docker/buildx v0.15.1
-	github.com/docker/cli v26.1.4+incompatible
+	github.com/docker/cli v27.0.1+incompatible
 	github.com/docker/docker v27.0.1+incompatible
 	github.com/golangci/golangci-lint v1.57.1
 	github.com/moby/buildkit v0.14.1
