@@ -9,7 +9,7 @@
     <PackageProjectUrl>https://pulumi.com</PackageProjectUrl>
     <RepositoryUrl>https://github.com/pulumi/pulumi-docker-build</RepositoryUrl>
     <PackageIcon>logo.png</PackageIcon>
-    <Version>0.1.0-alpha.0+dev</Version>
+    <Version>0.1.0-alpha.1719430374+343eadd</Version>
 
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
