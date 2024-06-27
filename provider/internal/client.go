@@ -128,7 +128,7 @@ func (c *cli) Build(
 		_ = printer.Wait()
 		for _, w := range printer.Warnings() {
 			b := &bytes.Buffer{}
-			fmt.Fprint(b, w.Short)
+			fmt.Fprint(b, fmt.Sprint(w.Short))
 			for _, d := range w.Detail {
 				fmt.Fprintf(b, "\n%s", d)
 			}
