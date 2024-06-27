@@ -1025,12 +1025,12 @@ github.com/pulumi/providertest v0.0.13 h1:9CAaoviOTuCVHDI15h3znXa5JsKYtXLYHIIdxO
 github.com/pulumi/providertest v0.0.13/go.mod h1:REAoaN+hGOtdWJGirfWYqcSjCejlbGfzyVTUuemJTuE=
 github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v0.0.0-20240624150732-fa777213effd h1:Ifc7JJZF0WVt+snPsDaEdkCcQXht2x/Hcw7GPnK5gvs=
 github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v0.0.0-20240624150732-fa777213effd/go.mod h1:poRLYpZlEjDr09kC2f50srI97hjjmNay55FBMl6ZHug=
-github.com/pulumi/pulumi-go-provider v0.19.0 h1:1JTPwYqHQ/CvVgxSojXAPGrU1QJ5KR23OOEOLhkLGIA=
-github.com/pulumi/pulumi-go-provider v0.19.0/go.mod h1:yi/hjXmwwjt57wIqkdjaLww28t0/MwXML3BROYo18cg=
+github.com/pulumi/pulumi-go-provider v0.20.0 h1:dSpsqeSk0Dy2NRXRXwNk/x773mcAtHqAaDmUX+JPqUU=
+github.com/pulumi/pulumi-go-provider v0.20.0/go.mod h1:yi/hjXmwwjt57wIqkdjaLww28t0/MwXML3BROYo18cg=
 github.com/pulumi/pulumi-java/pkg v0.12.1-0.20240624103139-022406d291f4 h1:wK1GDGkIDSJB/tJ5wckctjsv0T1swcAeXY5n5FRNNjQ=
 github.com/pulumi/pulumi-java/pkg v0.12.1-0.20240624103139-022406d291f4/go.mod h1:aVpF95s5iTCDUsrbxmCMnbc1h9b+oIdrlaAoP52mdXg=
-github.com/pulumi/pulumi-yaml v1.8.1-0.20240624122559-15eb4027070e h1:9r8XRC08m2yUQgrc5Rr1si9vWPeYF9ih18yHHPS1FgI=
-github.com/pulumi/pulumi-yaml v1.8.1-0.20240624122559-15eb4027070e/go.mod h1:b7y070yz7iWN6RMuvK8Dhviix8T6n6fUjFv+nudRDyE=
+github.com/pulumi/pulumi-yaml v1.9.0 h1:53NA94QRqts89dyKGIOx0yFM0v3whI6thM2tY3uJX5k=
+github.com/pulumi/pulumi-yaml v1.9.0/go.mod h1:b7y070yz7iWN6RMuvK8Dhviix8T6n6fUjFv+nudRDyE=
 github.com/pulumi/pulumi/pkg/v3 v3.121.0 h1:cLUQJYGJKfgCY0ubJo8dVwmsIm2WcgTprb9Orc/yiFg=
 github.com/pulumi/pulumi/pkg/v3 v3.121.0/go.mod h1:aaRixfKOh4DhGtuDJcI56dTPkb7oJBgRgH1aMF1FzbU=
 github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20240622000434-79e814fe0f21 h1:P6lva1h+C0izSJFZUjWk4zFSPidNs9twu2+YiKg5CcQ=
