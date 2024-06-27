@@ -5,7 +5,7 @@
   keywords = ["docker", "buildkit", "buildx", "kind/native"]
   readme = "README.md"
   requires-python = ">=3.8"
-  version = "0.1.0a0+dev"
+  version = "0.1.0a1719430374+343eadd"
   [project.license]
     text = "Apache-2.0"
   [project.urls]
