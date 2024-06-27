@@ -5,6 +5,7 @@
 - Upgraded buildkit from 0.13.0 to 0.14.1.
 - Upgraded buildx from 0.13.1. to 0.15.1.
 - Upgraded docker from 26.0.0-rc1 to 26.1.4.
+- Fixed an issue where warnings were not displayed correctly.
 
 ## 0.0.3 (2024-05-31)
 
