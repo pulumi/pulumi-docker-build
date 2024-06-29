@@ -127,9 +127,12 @@ func (bc *BuildContext) validate(preview bool, d *Dockerfile) (*Dockerfile, *Con
 		return d, c, newCheckFailure(err, "context.location")
 	}
 
-	if d.Location == "" && d.Inline == "" {
+	if d.Location == "" && d.Inline == "" && !preview {
 		// If a Dockerfile wasn't provided and our context is on-disk, then
-		// set our Dockerfile to a default of <PATH>/Dockerfile.
+		// set our Dockerfile to a default of <PATH>/Dockerfile. However, if
+		// we're in preview mode, we don't want to do this because we don't
+		// know if the inline Dockerfile parameter contains unknowns or if
+		// we will use the default Dockerfile.
 		d.Location = filepath.Join(c.Location, "Dockerfile")
 	}
 
