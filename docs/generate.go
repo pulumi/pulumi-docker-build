@@ -34,7 +34,7 @@ import (
 
 func main() {
 	if len(os.Args) < 3 {
-		fmt.Fprintf(os.Stdout, "Usage: %s <yaml source dir path> <markdown destination path>\n", os.Args[0])
+		_, _ = fmt.Fprintf(os.Stdout, "Usage: %s <yaml source dir path> <markdown destination path>\n", os.Args[0])
 		os.Exit(1)
 	}
 	yamlPath := os.Args[1]
@@ -204,7 +204,7 @@ func processYaml(path, mdDir string) error {
 			break
 		}
 	}
-	fmt.Fprintf(os.Stdout, "Writing %s\n", filepath.Join(mdDir, md))
+	_, _ = fmt.Fprintf(os.Stdout, "Writing %s\n", filepath.Join(mdDir, md))
 	f, err := os.OpenFile(filepath.Clean(filepath.Join(mdDir, md)), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0o600)
 	if err != nil {
 		return err
