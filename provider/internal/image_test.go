@@ -799,7 +799,7 @@ func TestValidateImageArgs(t *testing.T) {
 
 		_, err := args.validate(false)
 		assert.ErrorContains(t, err, "invalid value badexport")
-		assert.ErrorContains(t, err, "platform specifier component must match")
+		assert.ErrorContains(t, err, "OSAndVersion specifier component must matc")
 		assert.ErrorContains(t, err, "badcachefrom")
 		assert.ErrorContains(t, err, "badcacheto")
 		assert.ErrorContains(t, err, "invalid reference format")
