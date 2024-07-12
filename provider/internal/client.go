@@ -128,9 +128,10 @@ func (c *cli) Build(
 		_ = printer.Wait()
 		for _, w := range printer.Warnings() {
 			b := &bytes.Buffer{}
-			fmt.Fprint(b, fmt.Sprint(w.Short))
+			_, _ = b.Write(w.Short)
 			for _, d := range w.Detail {
-				fmt.Fprintf(b, "\n%s", d)
+				_ = b.WriteByte('\n')
+				_, _ = b.Write(d)
 			}
 			provider.GetLogger(ctx).Warning(b.String())
 		}

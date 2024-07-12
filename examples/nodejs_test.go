@@ -163,7 +163,7 @@ func tmpEcr(t *testing.T) (ECR, bool) {
 	}
 
 	svc := ecr.New(sess)
-	name := strings.ToLower(t.Name())
+	name := strings.ToLower(t.Name()) + fmt.Sprint(rand.Intn(1000))
 
 	// Always attempt to delete pre-existing repos, in case our cleanup didn't
 	// run.
