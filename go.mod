@@ -3,28 +3,28 @@ module github.com/pulumi/pulumi-docker-build
 go 1.21.7
 
 require (
-	github.com/aws/aws-sdk-go v1.54.18
+	github.com/aws/aws-sdk-go v1.55.3
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/distribution/reference v0.6.0
-	github.com/docker/buildx v0.16.0
-	github.com/docker/cli v27.0.3+incompatible
-	github.com/docker/docker v27.0.3+incompatible
+	github.com/docker/buildx v0.16.2
+	github.com/docker/cli v27.1.1+incompatible
+	github.com/docker/docker v27.1.1+incompatible
 	github.com/golangci/golangci-lint v1.59.1
-	github.com/moby/buildkit v0.15.0
+	github.com/moby/buildkit v0.15.1
 	github.com/moby/patternmatcher v0.6.0
 	github.com/muesli/reflow v0.3.0
 	github.com/otiai10/copy v1.14.0
-	github.com/pulumi/providertest v0.0.13
+	github.com/pulumi/providertest v0.0.14
 	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v0.0.0-20240624150732-fa777213effd
-	github.com/pulumi/pulumi-go-provider v0.20.0
+	github.com/pulumi/pulumi-go-provider v0.21.0
 	github.com/pulumi/pulumi-java/pkg v0.12.1-0.20240624103139-022406d291f4
 	github.com/pulumi/pulumi-yaml v1.9.1
-	github.com/pulumi/pulumi/pkg/v3 v3.123.1-0.20240711160144-b8226b705890
+	github.com/pulumi/pulumi/pkg/v3 v3.126.0
 	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20240711160144-b8226b705890
 	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20240711160144-b8226b705890
 	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20240711160144-b8226b705890
-	github.com/pulumi/pulumi/sdk/v3 v3.123.1-0.20240711160144-b8226b705890
-	github.com/regclient/regclient v0.6.1
+	github.com/pulumi/pulumi/sdk/v3 v3.126.0
+	github.com/regclient/regclient v0.7.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.11.0
 	github.com/stretchr/testify v1.9.0
@@ -198,7 +198,7 @@ require (
 	github.com/go-viper/mapstructure/v2 v2.0.0 // indirect
 	github.com/go-xmlfmt/xmlfmt v1.1.2 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
-	github.com/gofrs/flock v0.12.0 // indirect
+	github.com/gofrs/flock v0.12.1 // indirect
 	github.com/gofrs/uuid v4.2.0+incompatible // indirect
 	github.com/gogo/googleapis v1.4.1 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
