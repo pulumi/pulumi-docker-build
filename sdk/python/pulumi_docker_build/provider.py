@@ -56,7 +56,7 @@ class Provider(pulumi.ProviderResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  host: Optional[pulumi.Input[str]] = None,
-                 registries: Optional[pulumi.Input[Sequence[pulumi.Input[pulumi.InputType['RegistryArgs']]]]] = None,
+                 registries: Optional[pulumi.Input[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict']]]]] = None,
                  __props__=None):
         """
         Create a Docker-build resource with the given unique name, props, and options.
@@ -88,7 +88,7 @@ class Provider(pulumi.ProviderResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  host: Optional[pulumi.Input[str]] = None,
-                 registries: Optional[pulumi.Input[Sequence[pulumi.Input[pulumi.InputType['RegistryArgs']]]]] = None,
+                 registries: Optional[pulumi.Input[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict']]]]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
