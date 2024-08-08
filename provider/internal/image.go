@@ -349,12 +349,12 @@ func (i *Image) client(ctx context.Context, state ImageState, args ImageArgs) (C
 // Check validates ImageArgs, sets defaults, and ensures our client is
 // authenticated.
 func (i *Image) Check(
-	_ context.Context,
+	ctx context.Context,
 	_ string,
 	_ resource.PropertyMap,
 	news resource.PropertyMap,
 ) (ImageArgs, []provider.CheckFailure, error) {
-	args, failures, err := infer.DefaultCheck[ImageArgs](news)
+	args, failures, err := infer.DefaultCheck[ImageArgs](ctx, news)
 	if err != nil || len(failures) != 0 {
 		return args, failures, err
 	}
