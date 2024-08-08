@@ -1,5 +1,17 @@
 ## Unreleased
 
+## 0.0.5 (2024-08-08)
+
+### Fixed
+
+- Fixed Go SDK publishing.
+
+### Changed
+
+- Upgraded docker from 27.0.3 to 27.1.0.
+
+## 0.0.4 (2024-07-15)
+
 ### Changed
 
 - Upgraded buildkit from 0.13.0 to 0.15.0.
