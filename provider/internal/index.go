@@ -218,12 +218,12 @@ func (i *Index) Read(
 // exist on the same registry. This is sufficient to handle the most common
 // cases for now.
 func (i *Index) Check(
-	_ context.Context,
+	ctx context.Context,
 	_ string,
 	_ resource.PropertyMap,
 	news resource.PropertyMap,
 ) (IndexArgs, []provider.CheckFailure, error) {
-	args, failures, err := infer.DefaultCheck[IndexArgs](news)
+	args, failures, err := infer.DefaultCheck[IndexArgs](ctx, news)
 	if err != nil {
 		return args, failures, err
 	}
