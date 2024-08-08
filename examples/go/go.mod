@@ -6,7 +6,7 @@ toolchain go1.21.9
 
 require (
 	github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild v0.0.0-20240425180359-26c144c916b7
-	github.com/pulumi/pulumi/sdk/v3 v3.127.0
+	github.com/pulumi/pulumi/sdk/v3 v3.128.0
 )
 
 require (
