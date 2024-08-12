@@ -166,8 +166,6 @@ jobs:
           lfs: true
           ref: ${{ env.PR_COMMIT_SHA }}
       - uses: jdx/mise-action@v2
-        with:
-          experimental: true # [default: false] enable experimental features
       - id: version
         name: Set Provider Version
         uses: pulumi/provider-version-action@v1

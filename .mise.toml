@@ -9,7 +9,7 @@ gradle = "7.6"
 "go:github.com/golangci/golangci-lint/cmd/golangci-lint" = "1.58.1"
 "go:github.com/pulumi/schema-tools" = "v0.6.0"
 "go:github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt" = "v2.5.0"
-"go:github.com/pulumi/pulumictl/cmd/pulumictl" = "blampe/replace"
+"go:github.com/pulumi/pulumictl/cmd/pulumictl" = "a1b89aaf4299fe5bc78e140fc60eba79088b3dc5" # blampe/replace branch doesn't work?
 
 [env]
 # TODO(https://github.com/jdx/mise/issues/1898): create = true
