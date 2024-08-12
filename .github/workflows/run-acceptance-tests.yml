@@ -340,4 +340,6 @@ jobs:
       - uses: jdx/mise-action@v2
         with:
           experimental: true # [default: false] enable experimental features
+        env:
+          MISE_DEBUG: "1"
       - run: make lint

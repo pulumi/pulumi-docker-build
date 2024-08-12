@@ -3,7 +3,7 @@ pulumi = "3.128.0"
 go = "1.21.7"
 node = "22"
 dotnet = "6"
-python = "3.11"
+python = "3.11.9"
 java = "temurin"
 gradle = "7.6"
 "go:github.com/golangci/golangci-lint/cmd/golangci-lint" = "1.58.1"
@@ -14,5 +14,5 @@ gradle = "7.6"
 _.python.venv = { path = ".venv", create = true }
 
 [settings]
-experimental = true
-python_compile = false
+experimental = true    # Enable Go backend.
+python_compile = false # Don't build Python from source.
