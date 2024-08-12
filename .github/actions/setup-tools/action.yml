@@ -8,6 +8,8 @@ runs:
       uses: catchpoint/workflow-telemetry-action@v2
       with:
         comment_on_pr: false
+      env:
+        GITHUB_TOKEN: ""
 
     - name: Setup mise
       uses: jdx/mise-action@v2

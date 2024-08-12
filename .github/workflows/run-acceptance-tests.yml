@@ -66,7 +66,11 @@ jobs:
     if: github.event_name == 'repository_dispatch' ||
       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    name: prerequisites
+    permissions:
+      contents: read
+      id-token: write
+      actions: write # For telemetry.
+      pull-requests: write # For schema comment.
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -176,6 +180,10 @@ jobs:
 
   test:
     runs-on: pulumi-ubuntu-8core
+    permissions:
+      contents: read
+      id-token: write
+      actions: write # For telemetry.
     needs:
       - prerequisites
     strategy:
@@ -187,10 +195,6 @@ jobs:
           - dotnet
           - go
           - java
-    name: test
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -286,6 +290,10 @@ jobs:
     if: github.event_name == 'repository_dispatch' ||
       github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      actions: write # For telemetry.
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
