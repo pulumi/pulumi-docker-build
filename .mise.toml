@@ -11,7 +11,8 @@ gradle = "7.6"
 "go:github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt" = "v2.5.0"
 
 [env]
-_.python.venv = { path = ".venv", create = true }
+# TODO(https://github.com/jdx/mise/issues/1898): create = true
+_.python.venv = { path = "venv", create = false }
 
 [settings]
 experimental = true    # Enable Go backend.
