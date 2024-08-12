@@ -63,6 +63,8 @@ jobs:
           body: "Please view the PR build: ${{ steps.vars.outputs.run-url }}"
     if: github.event_name == 'repository_dispatch'
   prerequisites:
+    if: github.event_name == 'repository_dispatch' ||
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     name: prerequisites
     steps:
@@ -143,50 +145,9 @@ jobs:
           author_name: Failure in building provider prerequisites
           fields: repo,commit,author,action
           status: ${{ job.status }}
-    if: github.event_name == 'repository_dispatch' ||
-      github.event.pull_request.head.repo.full_name == github.repository
-  build_sdks:
-    needs: prerequisites
-    runs-on: pulumi-ubuntu-8core
-    strategy:
-      fail-fast: true
-      matrix:
-        language:
-          - nodejs
-          - python
-          - dotnet
-          - go
-          - java
-    name: build_sdks
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-          ref: ${{ env.PR_COMMIT_SHA }}
-      - name: Setup tools
-        uses: ./.github/actions/setup-tools
-      - id: version
-        name: Set Provider Version
-        uses: pulumi/provider-version-action@v1
-        with:
-          set-env: PROVIDER_VERSION
-      - name: Download provider + tfgen binaries
-        uses: actions/download-artifact@v4
-        with:
-          name: pulumi-${{ env.PROVIDER }}-provider.tar.gz
-          path: ${{ github.workspace }}/bin
-      - name: UnTar provider binaries
-        run: tar -zxf ${{ github.workspace }}/bin/provider.tar.gz -C ${{
-          github.workspace}}/bin
-      - name: Restore Binary Permissions
-        run:
-          find ${{ github.workspace }} -name "pulumi-*-${{ env.PROVIDER }}" -print
-          -exec chmod +x {} \;
-      - name: Generate SDK
-        run: make generate_${{ matrix.language }}
-      - name: Build SDK
-        run: make build_${{ matrix.language }}
+
+      - name: Generate & Build SDK
+        run: mise run sdk
       - name: Check worktree clean
         uses: pulumi/git-status-check-action@v1
         with:
@@ -198,12 +159,12 @@ jobs:
             sdk/python/pyproject.toml
       - run: git status --porcelain
       - name: Tar SDK folder
-        run: tar -zcf sdk/${{ matrix.language }}.tar.gz -C sdk/${{ matrix.language }} .
+        run: tar -zcf sdk.tar.gz -C sdk .
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.language  }}-sdk.tar.gz
-          path: ${{ github.workspace}}/sdk/${{ matrix.language }}.tar.gz
+          name: sdk.tar.gz
+          path: ${{ github.workspace}}/sdk.tar.gz
           retention-days: 30
       - if: failure() && github.event_name == 'push'
         name: Notify Slack
@@ -212,12 +173,11 @@ jobs:
           author_name: Failure while building SDKs
           fields: repo,commit,author,action
           status: ${{ job.status }}
-    if: github.event_name == 'repository_dispatch' ||
-      github.event.pull_request.head.repo.full_name == github.repository
+
   test:
     runs-on: pulumi-ubuntu-8core
     needs:
-      - build_sdks
+      - prerequisites
     strategy:
       fail-fast: true
       matrix:
@@ -259,12 +219,10 @@ jobs:
       - name: Download SDK
         uses: actions/download-artifact@v4
         with:
-          name: ${{ matrix.language }}-sdk.tar.gz
-          path: ${{ github.workspace}}/sdk/
+          name: sdk.tar.gz
+          path: ${{ github.workspace}}
       - name: UnTar SDK folder
-        run:
-          tar -zxf ${{ github.workspace}}/sdk/${{ matrix.language}}.tar.gz -C ${{
-          github.workspace}}/sdk/${{ matrix.language}}
+        run: tar -zxf ${{ github.workspace}}/sdk.tar.gz -C ${{github.workspace}}/sdk
       - name: Update path
         run: echo "${{ github.workspace }}/bin" >> $GITHUB_PATH
       - name: Install Node dependencies

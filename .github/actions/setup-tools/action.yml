@@ -4,6 +4,11 @@ description: Installs all tools necessary for building and testing the project.
 runs:
   using: "composite"
   steps:
+    - name: Collect workflow stats
+      uses: catchpoint/workflow-telemetry-action@v2
+      with:
+        comment_on_pr: false
+
     - name: Setup mise
       uses: jdx/mise-action@v2
 
@@ -11,8 +16,8 @@ runs:
       id: go-cache-paths
       shell: sh
       run: |
-        echo "::set-output name=go-build::$(go env GOCACHE)"
-        echo "::set-output name=go-mod::$(go env GOMODCACHE)"
+        echo "go-build=$(go env GOCACHE)" >> $GITHUB_OUTPUT
+        echo "go-mod=$(go env GOMODCACHE)" >> $GITHUB_OUTPUT
 
     - name: Go build cache
       uses: actions/cache@v2

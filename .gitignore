@@ -19,3 +19,7 @@ sdk/dotnet/version.txt
 sdk/java/.gradle
 sdk/java/build/
 sdk/java/build.gradle
+
+# Allow local mise overrides.
+.mise.*.local.toml
+.mise.local.toml

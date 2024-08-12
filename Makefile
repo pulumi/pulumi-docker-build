@@ -180,7 +180,7 @@ bin/${PROVIDER}: $(shell find ./provider -name '*.go') go.mod
 bin/pulumi-gen-${PACK}: # Required by CI
 	touch bin/pulumi-gen-${PACK}
 
-go.mod: $(shell find . -name '*.go')
+go.mod: $(shell find provider -name '*.go')
 go.sum: go.mod
 
 sdk: $(shell mkdir -p sdk)

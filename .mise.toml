@@ -1,12 +1,89 @@
+[tasks.provider]
+run = "make provider"
+sources = ["provider/**/*.go", "go.mod"]
+outputs = ["bin/pulumi-resource-docker-build"]
+
+# Generate
+
+[tasks."generate:nodejs"]
+depends = ["provider"]
+run = "make generate_nodejs"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["sdk/nodejs/**/*.ts"]
+
+[tasks."generate:python"]
+run = "make generate_python"
+depends = ["provider"]
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["sdk/python/**/*.py"]
+
+[tasks."generate:dotnet"]
+depends = ["provider"]
+run = "make generate_dotnet"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["sdk/dotnet/**/*.cs"]
+
+[tasks."generate:go"]
+depends = ["provider"]
+run = "make generate_go"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["sdk/go/**/*.go"]
+
+[tasks."generate:java"]
+depends = ["provider"]
+run = "make generate_java"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["sdk/java/**/*.java"]
+
+# Build
+
+[tasks."build:nodejs"]
+depends = ["generate:nodejs"]
+run = "make build_nodejs"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["*"]
+
+[tasks."build:python"]
+depends = ["generate:python"]
+run = "make build_python"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["*"]
+
+[tasks."build:dotnet"]
+depends = ["generate:dotnet"]
+run = "make build_dotnet"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["*"]
+
+[tasks."build:go"]
+depends = ["generate:go"]
+run = "make build_go"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["*"]
+
+[tasks."build:java"]
+depends = ["generate:java"]
+run = "make build_java"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["*"]
+
+[tasks.sdk]
+depends = ["generate:*", "build:*"]
+
+
 [tools]
+# Development tooling.
 go = "latest" # Will read version from go.mod.
+lefthook = "1.7.12"
+golangci-lint = "1.58.1"
+
+# Build and test tools.
 pulumi = "3.128.0"
 node = "22"
 dotnet = "6"
 python = "3.11.9"
 java = "temurin-11"
 gradle = "7.6"
-golangci-lint = "1.58.1"
 "go:github.com/pulumi/schema-tools" = "v0.6.0"
 "go:github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt" = "v2.5.0"
 "go:github.com/pulumi/pulumictl/cmd/pulumictl" = "a1b89aaf4299fe5bc78e140fc60eba79088b3dc5" # blampe/replace branch doesn't work?
