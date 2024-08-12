@@ -341,5 +341,5 @@ jobs:
         with:
           experimental: true # [default: false] enable experimental features
         env:
-          MISE_DEBUG: "1"
+          MISE_TRACE: "1"
       - run: make lint
