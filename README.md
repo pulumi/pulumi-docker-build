@@ -21,14 +21,3 @@ appropriate for managing resources unrelated to building images.
 ## Reference
 
 For more information, including examples and migration guidance, please see the Docker-Build provider's detailed [API documentation](https://www.pulumi.com/registry/packages/docker-build/).
-
-## Development
-
-This project uses [mise](https://mise.jdx.dev) for its development environment.
-
-On a Mac:
-
-```sh
-$ brew install mise
-$ echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
-```
