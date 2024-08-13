@@ -1,5 +1,5 @@
 [tasks.provider]
-run = "make provider"
+run = ["make provider"]
 sources = ["provider/**/*.go", "go.mod"]
 outputs = ["bin/pulumi-resource-docker-build"]
 
@@ -67,9 +67,42 @@ run = "make build_java"
 sources = ["bin/pulumi-resource-docker-build"]
 outputs = ["*"]
 
+# TODO: Might be able to link these directly?
+[tasks."install:dotnet"]
+run = "make install_dotnet_sdk"
+
+[tasks."install:nodejs"]
+run = "make install_nodejs_sdk"
+
 [tasks.sdk]
 depends = ["generate:*", "build:*"]
 
+[tasks.install]
+depends = ["install:*"]
+
+[tasks.test]
+sources = ["**/*.go"]
+outputs = ["*"]
+run = "make test_provider"
+
+[tasks."test:examples"]
+run = "go test -v -json -cover -timeout 2h -tags=all -parallel 4"
+
+[tasks."test:examples:shard"]
+run = "go run ./enumerate/main.go --root ./examples"
+
+[tasks.schema]
+run = "pulumi package get-schema bin/pulumi-resource-docker-build | jq 'del(.version)' > provider/cmd/pulumi-resource-docker-build/schema.json"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["provider/cmd/pulumi-resource-docker-build/schema.json"]
+
+[tasks.docs]
+run = "go generate docs/generate.go"
+depends = ["schema"]
+sources = ["docs/yaml/*.yaml"]
+outputs= ["provider/internal/embed/*.md"]
+
+# TODO: tasks.examples
 
 [tools]
 # Development tooling.
@@ -87,6 +120,8 @@ gradle = "7.6"
 "go:github.com/pulumi/schema-tools" = "v0.6.0"
 "go:github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt" = "v2.5.0"
 "go:github.com/pulumi/pulumictl/cmd/pulumictl" = "a1b89aaf4299fe5bc78e140fc60eba79088b3dc5" # blampe/replace branch doesn't work?
+yarn = "1.22.19"
+gcloud = "455.0.0"
 
 [env]
 # TODO(https://github.com/jdx/mise/issues/1898): create = true
