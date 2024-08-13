@@ -913,6 +913,12 @@ func (*Image) Diff(
 	if fmt.Sprint(olds.Exports) != fmt.Sprint(news.Exports) {
 		diff["exports"] = update
 	}
+	// Confirm local exports exist.
+	for idx, e := range news.Exports {
+		if !e.Local.Exists() || !e.Tar.Exists() {
+			diff[fmt.Sprintf("exports[%d]", idx)] = update
+		}
+	}
 	if !reflect.DeepEqual(olds.Labels, news.Labels) {
 		diff["labels"] = update
 	}
