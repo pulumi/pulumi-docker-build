@@ -68,7 +68,7 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var amd64 = new Image("amd64", ImageArgs.builder()        
+ *         var amd64 = new Image("amd64", ImageArgs.builder()
  *             .cacheFrom(CacheFromArgs.builder()
  *                 .registry(CacheFromRegistryArgs.builder()
  *                     .ref("docker.io/pulumi/pulumi:cache-amd64")
@@ -87,7 +87,7 @@ import javax.annotation.Nullable;
  *             .tags("docker.io/pulumi/pulumi:3.107.0-amd64")
  *             .build());
  * 
- *         var arm64 = new Image("arm64", ImageArgs.builder()        
+ *         var arm64 = new Image("arm64", ImageArgs.builder()
  *             .cacheFrom(CacheFromArgs.builder()
  *                 .registry(CacheFromRegistryArgs.builder()
  *                     .ref("docker.io/pulumi/pulumi:cache-arm64")
@@ -106,7 +106,7 @@ import javax.annotation.Nullable;
  *             .tags("docker.io/pulumi/pulumi:3.107.0-arm64")
  *             .build());
  * 
- *         var index = new Index("index", IndexArgs.builder()        
+ *         var index = new Index("index", IndexArgs.builder()
  *             .sources(            
  *                 amd64.ref(),
  *                 arm64.ref())
