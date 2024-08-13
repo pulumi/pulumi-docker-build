@@ -18,8 +18,10 @@ import (
 	"os"
 	"testing"
 
+	"github.com/regclient/regclient/types/errs"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/integration"
@@ -60,6 +62,40 @@ func TestIndexLifecycle(t *testing.T) {
 			name:   "pushed",
 			skip:   os.Getenv("DOCKER_HUB_PASSWORD") == "",
 			client: realClient,
+			op: func(t *testing.T) integration.Operation {
+				return integration.Operation{
+					Inputs: resource.PropertyMap{
+						"tag": resource.NewStringProperty(
+							"docker.io/pulumibot/buildkit-e2e:manifest",
+						),
+						"sources": resource.NewArrayProperty([]resource.PropertyValue{
+							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:arm64"),
+							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:amd64"),
+						}),
+						"push": resource.NewBoolProperty(true),
+						"registry": resource.NewObjectProperty(resource.PropertyMap{
+							"address":  resource.NewStringProperty("docker.io"),
+							"username": resource.NewStringProperty("pulumibot"),
+							"password": resource.NewSecretProperty(&resource.Secret{
+								Element: resource.NewStringProperty(
+									os.Getenv("DOCKER_HUB_PASSWORD"),
+								),
+							}),
+						}),
+					},
+				}
+			},
+		},
+		{
+			name: "expired credentials",
+			client: func(t *testing.T) Client {
+				ctrl := gomock.NewController(t)
+				c := NewMockClient(ctrl)
+				c.EXPECT().ManifestCreate(gomock.Any(), true, gomock.Any(), gomock.Any())
+				c.EXPECT().ManifestInspect(gomock.Any(), gomock.Any()).Return("", errs.ErrHTTPUnauthorized)
+				c.EXPECT().ManifestDelete(gomock.Any(), gomock.Any()).Return(nil)
+				return c
+			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: resource.PropertyMap{

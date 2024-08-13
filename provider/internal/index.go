@@ -16,12 +16,15 @@ package internal
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"reflect"
 	"strings"
 
 	// For examples/docs.
 	_ "embed"
+
+	"github.com/regclient/regclient/types/errs"
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
@@ -194,12 +197,12 @@ func (i *Index) Read(
 	provider.GetLogger(ctx).Debug("reading index with tag " + input.Tag)
 
 	digest, err := cli.ManifestInspect(ctx, input.Tag)
-	if err != nil && strings.Contains(err.Error(), "No such manifest:") && input.isPushed() {
+	if errors.Is(err, errs.ErrNotFound) {
 		// A remote tag was expected but isn't there -- delete the resource.
-		return "", input, state, err
+		return "", input, state, nil
 	}
-	if err != nil && strings.Contains(err.Error(), "No such manifest:") && !input.isPushed() {
-		// Nothing was pushed, so just use the tag without digest..
+	if errors.Is(err, errs.ErrHTTPUnauthorized) {
+		provider.GetLogger(ctx).Warning("invalid credentials, skipping")
 		return name, input, state, nil
 	}
 	if err != nil {

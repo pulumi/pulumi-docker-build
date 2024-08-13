@@ -1,5 +1,10 @@
 ## Unreleased
 
+### Fixed
+
+- Refreshing an `Index` resource will no longer fail if its stored credentials
+  have expired.
+
 ## 0.0.5 (2024-08-08)
 
 ### Fixed
