@@ -379,6 +379,7 @@ func (e *ExportTar) String() string {
 	return "type=tar,dest=" + e.Dest
 }
 
+// Exists returns true if a file exists at the expected path.
 func (e *ExportTar) Exists() bool {
 	if e == nil {
 		return true // Degenerate case.
