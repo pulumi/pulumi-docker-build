@@ -46,27 +46,27 @@ import pulumi_docker_build as docker_build
 ecr_repository = aws.ecr.Repository("ecr-repository")
 auth_token = aws.ecr.get_authorization_token_output(registry_id=ecr_repository.registry_id)
 my_image = docker_build.Image("my-image",
-    cache_from=[docker_build.CacheFromArgs(
-        registry=docker_build.CacheFromRegistryArgs(
-            ref=ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
-        ),
-    )],
-    cache_to=[docker_build.CacheToArgs(
-        registry=docker_build.CacheToRegistryArgs(
-            image_manifest=True,
-            oci_media_types=True,
-            ref=ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
-        ),
-    )],
-    context=docker_build.BuildContextArgs(
-        location="./app",
-    ),
+    cache_from=[{
+        "registry": {
+            "ref": ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
+        },
+    }],
+    cache_to=[{
+        "registry": {
+            "image_manifest": True,
+            "oci_media_types": True,
+            "ref": ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:cache"),
+        },
+    }],
+    context={
+        "location": "./app",
+    },
     push=True,
-    registries=[docker_build.RegistryArgs(
-        address=ecr_repository.repository_url,
-        password=auth_token.password,
-        username=auth_token.user_name,
-    )],
+    registries=[{
+        "address": ecr_repository.repository_url,
+        "password": auth_token.password,
+        "username": auth_token.user_name,
+    }],
     tags=[ecr_repository.repository_url.apply(lambda repository_url: f"{repository_url}:latest")])
 pulumi.export("ref", my_image.ref)
 ```
@@ -277,7 +277,7 @@ public class App {
             .registryId(ecrRepository.registryId())
             .build());
 
-        var myImage = new Image("myImage", ImageArgs.builder()        
+        var myImage = new Image("myImage", ImageArgs.builder()
             .cacheFrom(CacheFromArgs.builder()
                 .registry(CacheFromRegistryArgs.builder()
                     .ref(ecrRepository.repositoryUrl().applyValue(repositoryUrl -> String.format("%s:cache", repositoryUrl)))
@@ -330,9 +330,9 @@ import pulumi
 import pulumi_docker_build as docker_build
 
 image = docker_build.Image("image",
-    context=docker_build.BuildContextArgs(
-        location="app",
-    ),
+    context={
+        "location": "app",
+    },
     platforms=[
         docker_build.Platform.PLAN9_AMD64,
         docker_build.Platform.PLAN9_386,
@@ -428,7 +428,7 @@ public class App {
     }
 
     public static void stack(Context ctx) {
-        var image = new Image("image", ImageArgs.builder()        
+        var image = new Image("image", ImageArgs.builder()
             .context(BuildContextArgs.builder()
                 .location("app")
                 .build())
@@ -468,15 +468,15 @@ import pulumi
 import pulumi_docker_build as docker_build
 
 image = docker_build.Image("image",
-    context=docker_build.BuildContextArgs(
-        location="app",
-    ),
+    context={
+        "location": "app",
+    },
     push=True,
-    registries=[docker_build.RegistryArgs(
-        address="docker.io",
-        password=docker_hub_password,
-        username="pulumibot",
-    )],
+    registries=[{
+        "address": "docker.io",
+        "password": docker_hub_password,
+        "username": "pulumibot",
+    }],
     tags=["docker.io/pulumi/pulumi:3.107.0"])
 pulumi.export("ref", my_image["ref"])
 ```
@@ -594,7 +594,7 @@ public class App {
     }
 
     public static void stack(Context ctx) {
-        var image = new Image("image", ImageArgs.builder()        
+        var image = new Image("image", ImageArgs.builder()
             .context(BuildContextArgs.builder()
                 .location("app")
                 .build())
@@ -642,20 +642,20 @@ import pulumi
 import pulumi_docker_build as docker_build
 
 image = docker_build.Image("image",
-    cache_from=[docker_build.CacheFromArgs(
-        local=docker_build.CacheFromLocalArgs(
-            src="tmp/cache",
-        ),
-    )],
-    cache_to=[docker_build.CacheToArgs(
-        local=docker_build.CacheToLocalArgs(
-            dest="tmp/cache",
-            mode=docker_build.CacheMode.MAX,
-        ),
-    )],
-    context=docker_build.BuildContextArgs(
-        location="app",
-    ),
+    cache_from=[{
+        "local": {
+            "src": "tmp/cache",
+        },
+    }],
+    cache_to=[{
+        "local": {
+            "dest": "tmp/cache",
+            "mode": docker_build.CacheMode.MAX,
+        },
+    }],
+    context={
+        "location": "app",
+    },
     push=False)
 ```
 ```csharp
@@ -782,7 +782,7 @@ public class App {
     }
 
     public static void stack(Context ctx) {
-        var image = new Image("image", ImageArgs.builder()        
+        var image = new Image("image", ImageArgs.builder()
             .cacheFrom(CacheFromArgs.builder()
                 .local(CacheFromLocalArgs.builder()
                     .src("tmp/cache")
@@ -827,12 +827,12 @@ import pulumi
 import pulumi_docker_build as docker_build
 
 image = docker_build.Image("image",
-    builder=docker_build.BuilderConfigArgs(
-        name="cloud-builder-name",
-    ),
-    context=docker_build.BuildContextArgs(
-        location="app",
-    ),
+    builder={
+        "name": "cloud-builder-name",
+    },
+    context={
+        "location": "app",
+    },
     exec_=True,
     push=False)
 ```
@@ -926,7 +926,7 @@ public class App {
     }
 
     public static void stack(Context ctx) {
-        var image = new Image("image", ImageArgs.builder()        
+        var image = new Image("image", ImageArgs.builder()
             .builder(BuilderConfigArgs.builder()
                 .name("cloud-builder-name")
                 .build())
@@ -966,9 +966,9 @@ image = docker_build.Image("image",
     build_args={
         "SET_ME_TO_TRUE": "true",
     },
-    context=docker_build.BuildContextArgs(
-        location="app",
-    ),
+    context={
+        "location": "app",
+    },
     push=False)
 ```
 ```csharp
@@ -1057,7 +1057,7 @@ public class App {
     }
 
     public static void stack(Context ctx) {
-        var image = new Image("image", ImageArgs.builder()        
+        var image = new Image("image", ImageArgs.builder()
             .buildArgs(Map.of("SET_ME_TO_TRUE", "true"))
             .context(BuildContextArgs.builder()
                 .location("app")
@@ -1089,9 +1089,9 @@ import pulumi
 import pulumi_docker_build as docker_build
 
 image = docker_build.Image("image",
-    context=docker_build.BuildContextArgs(
-        location="app",
-    ),
+    context={
+        "location": "app",
+    },
     push=False,
     target="build-me")
 ```
@@ -1175,7 +1175,7 @@ public class App {
     }
 
     public static void stack(Context ctx) {
-        var image = new Image("image", ImageArgs.builder()        
+        var image = new Image("image", ImageArgs.builder()
             .context(BuildContextArgs.builder()
                 .location("app")
                 .build())
@@ -1211,14 +1211,14 @@ import pulumi
 import pulumi_docker_build as docker_build
 
 image = docker_build.Image("image",
-    context=docker_build.BuildContextArgs(
-        location="app",
-        named={
-            "golang:latest": docker_build.ContextArgs(
-                location="docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
-            ),
+    context={
+        "location": "app",
+        "named": {
+            "golang_latest": {
+                "location": "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
+            },
         },
-    ),
+    },
     push=False)
 ```
 ```csharp
@@ -1313,7 +1313,7 @@ public class App {
     }
 
     public static void stack(Context ctx) {
-        var image = new Image("image", ImageArgs.builder()        
+        var image = new Image("image", ImageArgs.builder()
             .context(BuildContextArgs.builder()
                 .location("app")
                 .named(Map.of("golang:latest", Map.of("location", "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984")))
@@ -1344,9 +1344,9 @@ import pulumi
 import pulumi_docker_build as docker_build
 
 image = docker_build.Image("image",
-    context=docker_build.BuildContextArgs(
-        location="https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
-    ),
+    context={
+        "location": "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile",
+    },
     push=False)
 ```
 ```csharp
@@ -1426,7 +1426,7 @@ public class App {
     }
 
     public static void stack(Context ctx) {
-        var image = new Image("image", ImageArgs.builder()        
+        var image = new Image("image", ImageArgs.builder()
             .context(BuildContextArgs.builder()
                 .location("https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile")
                 .build())
@@ -1461,14 +1461,14 @@ import pulumi
 import pulumi_docker_build as docker_build
 
 image = docker_build.Image("image",
-    context=docker_build.BuildContextArgs(
-        location="app",
-    ),
-    dockerfile=docker_build.DockerfileArgs(
-        inline="""FROM busybox
+    context={
+        "location": "app",
+    },
+    dockerfile={
+        "inline": """FROM busybox
 COPY hello.c ./
 """,
-    ),
+    },
     push=False)
 ```
 ```csharp
@@ -1562,7 +1562,7 @@ public class App {
     }
 
     public static void stack(Context ctx) {
-        var image = new Image("image", ImageArgs.builder()        
+        var image = new Image("image", ImageArgs.builder()
             .context(BuildContextArgs.builder()
                 .location("app")
                 .build())
@@ -1601,12 +1601,12 @@ import pulumi
 import pulumi_docker_build as docker_build
 
 image = docker_build.Image("image",
-    context=docker_build.BuildContextArgs(
-        location="https://github.com/docker-library/hello-world.git",
-    ),
-    dockerfile=docker_build.DockerfileArgs(
-        location="app/Dockerfile",
-    ),
+    context={
+        "location": "https://github.com/docker-library/hello-world.git",
+    },
+    dockerfile={
+        "location": "app/Dockerfile",
+    },
     push=False)
 ```
 ```csharp
@@ -1696,7 +1696,7 @@ public class App {
     }
 
     public static void stack(Context ctx) {
-        var image = new Image("image", ImageArgs.builder()        
+        var image = new Image("image", ImageArgs.builder()
             .context(BuildContextArgs.builder()
                 .location("https://github.com/docker-library/hello-world.git")
                 .build())
@@ -1734,14 +1734,14 @@ import pulumi
 import pulumi_docker_build as docker_build
 
 image = docker_build.Image("image",
-    context=docker_build.BuildContextArgs(
-        location="app",
-    ),
-    exports=[docker_build.ExportArgs(
-        docker=docker_build.ExportDockerArgs(
-            tar=True,
-        ),
-    )],
+    context={
+        "location": "app",
+    },
+    exports=[{
+        "docker": {
+            "tar": True,
+        },
+    }],
     push=False)
 ```
 ```csharp
@@ -1843,7 +1843,7 @@ public class App {
     }
 
     public static void stack(Context ctx) {
-        var image = new Image("image", ImageArgs.builder()        
+        var image = new Image("image", ImageArgs.builder()
             .context(BuildContextArgs.builder()
                 .location("app")
                 .build())
