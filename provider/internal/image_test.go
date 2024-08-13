@@ -757,6 +757,38 @@ func TestImageDiff(t *testing.T) {
 			},
 			wantChanges: true,
 		},
+		{
+			name: "diff if local export doesn't exist",
+			olds: func(t *testing.T, state ImageState) ImageState {
+				state.Exports = []Export{
+					{Local: &ExportLocal{Dest: "not-real"}},
+				}
+				return state
+			},
+			news: func(_ *testing.T, args ImageArgs) ImageArgs {
+				args.Exports = []Export{
+					{Local: &ExportLocal{Dest: "not-real"}},
+				}
+				return args
+			},
+			wantChanges: true,
+		},
+		{
+			name: "diff if tar export doesn't exist",
+			olds: func(t *testing.T, state ImageState) ImageState {
+				state.Exports = []Export{
+					{Tar: &ExportTar{ExportLocal: ExportLocal{Dest: "not-real"}}},
+				}
+				return state
+			},
+			news: func(_ *testing.T, args ImageArgs) ImageArgs {
+				args.Exports = []Export{
+					{Tar: &ExportTar{ExportLocal: ExportLocal{Dest: "not-real"}}},
+				}
+				return args
+			},
+			wantChanges: true,
+		},
 	}
 
 	s := newServer(nil)
