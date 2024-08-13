@@ -802,6 +802,7 @@ func (i *Image) Read(
 			continue
 		}
 
+		//nolint:gocritic // Bytes aren't copied in a hot path.
 		for _, d := range descriptors {
 			if d.Platform != nil && d.Platform.Architecture == "unknown" {
 				// Ignore cache manifests.
