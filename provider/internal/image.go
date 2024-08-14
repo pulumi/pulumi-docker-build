@@ -802,6 +802,7 @@ func (i *Image) Read(
 			continue
 		}
 
+		//nolint:gocritic // Bytes aren't copied in a hot path.
 		for _, d := range descriptors {
 			if d.Platform != nil && d.Platform.Architecture == "unknown" {
 				// Ignore cache manifests.
@@ -911,6 +912,12 @@ func (*Image) Diff(
 	// Use string comparison to ignore any manifests attached to the export.
 	if fmt.Sprint(olds.Exports) != fmt.Sprint(news.Exports) {
 		diff["exports"] = update
+	}
+	// Confirm local exports exist.
+	for idx, e := range news.Exports {
+		if !e.Local.Exists() || !e.Tar.Exists() {
+			diff[fmt.Sprintf("exports[%d]", idx)] = update
+		}
 	}
 	if !reflect.DeepEqual(olds.Labels, news.Labels) {
 		diff["labels"] = update

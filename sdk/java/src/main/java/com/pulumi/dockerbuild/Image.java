@@ -167,7 +167,7 @@ import javax.annotation.Nullable;
  *             .registryId(ecrRepository.registryId())
  *             .build());
  * 
- *         var myImage = new Image("myImage", ImageArgs.builder()        
+ *         var myImage = new Image("myImage", ImageArgs.builder()
  *             .cacheFrom(CacheFromArgs.builder()
  *                 .registry(CacheFromRegistryArgs.builder()
  *                     .ref(ecrRepository.repositoryUrl().applyValue(repositoryUrl -> String.format("%s:cache", repositoryUrl)))
@@ -221,7 +221,7 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image("image", ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()
  *             .context(BuildContextArgs.builder()
  *                 .location("app")
  *                 .build())
@@ -260,7 +260,7 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image("image", ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()
  *             .context(BuildContextArgs.builder()
  *                 .location("app")
  *                 .build())
@@ -306,7 +306,7 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image("image", ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()
  *             .cacheFrom(CacheFromArgs.builder()
  *                 .local(CacheFromLocalArgs.builder()
  *                     .src("tmp/cache")
@@ -353,7 +353,7 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image("image", ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()
  *             .builder(BuilderConfigArgs.builder()
  *                 .name("cloud-builder-name")
  *                 .build())
@@ -392,7 +392,7 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image("image", ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()
  *             .buildArgs(Map.of("SET_ME_TO_TRUE", "true"))
  *             .context(BuildContextArgs.builder()
  *                 .location("app")
@@ -428,7 +428,7 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image("image", ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()
  *             .context(BuildContextArgs.builder()
  *                 .location("app")
  *                 .build())
@@ -464,7 +464,7 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image("image", ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()
  *             .context(BuildContextArgs.builder()
  *                 .location("app")
  *                 .named(Map.of("golang:latest", Map.of("location", "docker-image://golang{@literal @}sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984")))
@@ -500,7 +500,7 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image("image", ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()
  *             .context(BuildContextArgs.builder()
  *                 .location("https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile")
  *                 .build())
@@ -536,7 +536,7 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image("image", ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()
  *             .context(BuildContextArgs.builder()
  *                 .location("app")
  *                 .build())
@@ -578,7 +578,7 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image("image", ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()
  *             .context(BuildContextArgs.builder()
  *                 .location("https://github.com/docker-library/hello-world.git")
  *                 .build())
@@ -618,7 +618,7 @@ import javax.annotation.Nullable;
  *     }
  * 
  *     public static void stack(Context ctx) {
- *         var image = new Image("image", ImageArgs.builder()        
+ *         var image = new Image("image", ImageArgs.builder()
  *             .context(BuildContextArgs.builder()
  *                 .location("app")
  *                 .build())

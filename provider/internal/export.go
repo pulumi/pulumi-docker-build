@@ -17,6 +17,7 @@ package internal
 import (
 	"errors"
 	"fmt"
+	"os"
 	"slices"
 	"strings"
 
@@ -353,6 +354,19 @@ func (e *ExportLocal) Annotate(a infer.Annotator) {
 	a.Describe(&e.Dest, "Output path.")
 }
 
+// Exists returns true if the exported directory exists and is populated with
+// some files.
+func (e *ExportLocal) Exists() bool {
+	if e == nil {
+		return true // Degenerate case.
+	}
+	files, err := os.ReadDir(e.Dest)
+	if err != nil {
+		return false
+	}
+	return len(files) > 0
+}
+
 // ExportTar is an export that uses the tar format for exporting.
 type ExportTar struct {
 	ExportLocal
@@ -363,6 +377,15 @@ func (e *ExportTar) String() string {
 		return ""
 	}
 	return "type=tar,dest=" + e.Dest
+}
+
+// Exists returns true if a file exists at the expected path.
+func (e *ExportTar) Exists() bool {
+	if e == nil {
+		return true // Degenerate case.
+	}
+	_, err := os.Stat(e.Dest)
+	return err == nil
 }
 
 // ExportWithOCI is an export that support OCI media types.

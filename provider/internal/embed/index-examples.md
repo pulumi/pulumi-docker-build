@@ -57,37 +57,37 @@ import pulumi
 import pulumi_docker_build as docker_build
 
 amd64 = docker_build.Image("amd64",
-    cache_from=[docker_build.CacheFromArgs(
-        registry=docker_build.CacheFromRegistryArgs(
-            ref="docker.io/pulumi/pulumi:cache-amd64",
-        ),
-    )],
-    cache_to=[docker_build.CacheToArgs(
-        registry=docker_build.CacheToRegistryArgs(
-            mode=docker_build.CacheMode.MAX,
-            ref="docker.io/pulumi/pulumi:cache-amd64",
-        ),
-    )],
-    context=docker_build.BuildContextArgs(
-        location="app",
-    ),
+    cache_from=[{
+        "registry": {
+            "ref": "docker.io/pulumi/pulumi:cache-amd64",
+        },
+    }],
+    cache_to=[{
+        "registry": {
+            "mode": docker_build.CacheMode.MAX,
+            "ref": "docker.io/pulumi/pulumi:cache-amd64",
+        },
+    }],
+    context={
+        "location": "app",
+    },
     platforms=[docker_build.Platform.LINUX_AMD64],
     tags=["docker.io/pulumi/pulumi:3.107.0-amd64"])
 arm64 = docker_build.Image("arm64",
-    cache_from=[docker_build.CacheFromArgs(
-        registry=docker_build.CacheFromRegistryArgs(
-            ref="docker.io/pulumi/pulumi:cache-arm64",
-        ),
-    )],
-    cache_to=[docker_build.CacheToArgs(
-        registry=docker_build.CacheToRegistryArgs(
-            mode=docker_build.CacheMode.MAX,
-            ref="docker.io/pulumi/pulumi:cache-arm64",
-        ),
-    )],
-    context=docker_build.BuildContextArgs(
-        location="app",
-    ),
+    cache_from=[{
+        "registry": {
+            "ref": "docker.io/pulumi/pulumi:cache-arm64",
+        },
+    }],
+    cache_to=[{
+        "registry": {
+            "mode": docker_build.CacheMode.MAX,
+            "ref": "docker.io/pulumi/pulumi:cache-arm64",
+        },
+    }],
+    context={
+        "location": "app",
+    },
     platforms=[docker_build.Platform.LINUX_ARM64],
     tags=["docker.io/pulumi/pulumi:3.107.0-arm64"])
 index = docker_build.Index("index",
@@ -355,7 +355,7 @@ public class App {
     }
 
     public static void stack(Context ctx) {
-        var amd64 = new Image("amd64", ImageArgs.builder()        
+        var amd64 = new Image("amd64", ImageArgs.builder()
             .cacheFrom(CacheFromArgs.builder()
                 .registry(CacheFromRegistryArgs.builder()
                     .ref("docker.io/pulumi/pulumi:cache-amd64")
@@ -374,7 +374,7 @@ public class App {
             .tags("docker.io/pulumi/pulumi:3.107.0-amd64")
             .build());
 
-        var arm64 = new Image("arm64", ImageArgs.builder()        
+        var arm64 = new Image("arm64", ImageArgs.builder()
             .cacheFrom(CacheFromArgs.builder()
                 .registry(CacheFromRegistryArgs.builder()
                     .ref("docker.io/pulumi/pulumi:cache-arm64")
@@ -393,7 +393,7 @@ public class App {
             .tags("docker.io/pulumi/pulumi:3.107.0-arm64")
             .build());
 
-        var index = new Index("index", IndexArgs.builder()        
+        var index = new Index("index", IndexArgs.builder()
             .sources(            
                 amd64.ref(),
                 arm64.ref())

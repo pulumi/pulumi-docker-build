@@ -1,5 +1,15 @@
 ## Unreleased
 
+### Fixed
+
+- Refreshing an `Index` resource will no longer fail if its stored credentials
+  have expired. (https://github.com/pulumi/pulumi-docker-build/pull/194)
+
+### Changed
+
+- Local and tar exporters will now trigger an update if an export doesn't exist
+  at the expected path. (https://github.com/pulumi/pulumi-docker-build/pull/195)
+
 ## 0.0.5 (2024-08-08)
 
 ### Fixed

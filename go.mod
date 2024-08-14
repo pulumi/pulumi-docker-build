@@ -8,7 +8,7 @@ require (
 	github.com/distribution/reference v0.6.0
 	github.com/docker/buildx v0.16.0
 	github.com/docker/cli v27.0.3+incompatible
-	github.com/docker/docker v27.1.0+incompatible
+	github.com/docker/docker v27.1.1+incompatible
 	github.com/moby/buildkit v0.15.0
 	github.com/moby/patternmatcher v0.6.0
 	github.com/muesli/reflow v0.3.0
@@ -18,7 +18,7 @@ require (
 	github.com/pulumi/pulumi-java/pkg v0.13.0
 	github.com/pulumi/pulumi/pkg/v3 v3.128.0
 	github.com/pulumi/pulumi/sdk/v3 v3.128.0
-	github.com/regclient/regclient v0.6.1
+	github.com/regclient/regclient v0.7.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.11.0
 	github.com/stretchr/testify v1.9.0
@@ -279,7 +279,7 @@ require (
 	golang.org/x/net v0.26.0 // indirect
 	golang.org/x/oauth2 v0.18.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.22.0 // indirect
+	golang.org/x/sys v0.24.0 // indirect
 	golang.org/x/term v0.22.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
