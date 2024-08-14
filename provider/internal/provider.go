@@ -46,7 +46,7 @@ type Config struct {
 }
 
 // _mockClientKey is used by tests to inject a mock Docker client.
-var _mockClientKey struct{}
+var _mockClientKey any = "mock-client"
 
 // Annotate provides user-facing descriptions and defaults for Config's fields.
 func (c *Config) Annotate(a infer.Annotator) {
