@@ -86,7 +86,7 @@ outputs = ["*"]
 run = "make test_provider"
 
 [tasks."test:examples"]
-run = "go test -v -json -cover -timeout 2h -tags=all -parallel 4"
+run = "go test -v -cover -timeout 2h -tags=all -parallel 4"
 
 [tasks."test:examples:shard"]
 run = "go run github.com/blampe/shard@latest --root ./examples"
