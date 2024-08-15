@@ -106,7 +106,7 @@ outputs= ["provider/internal/embed/*.md"]
 
 [tools]
 # Development tooling.
-go = "latest" # Will read version from go.mod.
+go = "1.21.7"
 lefthook = "1.7.12"
 golangci-lint = "1.58.1"
 
