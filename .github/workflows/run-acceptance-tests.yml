@@ -253,7 +253,7 @@ jobs:
       - name: Shard tests
         run: mise run "test:examples:shard" -- --total ${{ strategy.job-total }} --index ${{ strategy.job-index }} > go-test
       - name: Run tests
-        run: mise run "test:examples" $(cat go-test) 2>&1 | tee /tmp/gotest.log | gotestfmt
+        run: mise run "test:examples" $(cat go-test)
       - if: failure() && github.event_name == 'push'
         name: Notify Slack
         uses: 8398a7/action-slack@v3

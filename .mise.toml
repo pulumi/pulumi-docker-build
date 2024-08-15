@@ -102,6 +102,9 @@ depends = ["schema"]
 sources = ["docs/yaml/*.yaml"]
 outputs= ["provider/internal/embed/*.md"]
 
+[tasks.goversion]
+run = "go version"
+
 # TODO: tasks.examples
 
 [tools]
@@ -118,7 +121,6 @@ python = "3.11.9"
 java = "temurin-11"
 gradle = "7.6"
 "go:github.com/pulumi/schema-tools" = "v0.6.0"
-"go:github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt" = "v2.5.0"
 "go:github.com/pulumi/pulumictl/cmd/pulumictl" = "a1b89aaf4299fe5bc78e140fc60eba79088b3dc5" # blampe/replace branch doesn't work?
 yarn = "1.22.19"
 gcloud = "455.0.0"
