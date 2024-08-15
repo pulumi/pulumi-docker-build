@@ -1,0 +1,6 @@
+{
+  "postUpgradeTasks": {
+    "executionMode": "branch",
+    "commands": ["mise trust", "mise install --yes", "mise run sdk"]
+  }
+}

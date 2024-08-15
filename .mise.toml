@@ -1,0 +1,133 @@
+[tasks.provider]
+run = ["make provider"]
+sources = ["provider/**/*.go", "go.mod"]
+outputs = ["bin/pulumi-resource-docker-build"]
+
+# Generate
+
+[tasks."generate:nodejs"]
+depends = ["provider"]
+run = "make generate_nodejs"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["sdk/nodejs/**/*.ts"]
+
+[tasks."generate:python"]
+run = "make generate_python"
+depends = ["provider"]
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["sdk/python/**/*.py"]
+
+[tasks."generate:dotnet"]
+depends = ["provider"]
+run = "make generate_dotnet"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["sdk/dotnet/**/*.cs"]
+
+[tasks."generate:go"]
+depends = ["provider"]
+run = "make generate_go"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["sdk/go/**/*.go"]
+
+[tasks."generate:java"]
+depends = ["provider"]
+run = "make generate_java"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["sdk/java/**/*.java"]
+
+# Build
+
+[tasks."build:nodejs"]
+depends = ["generate:nodejs"]
+run = "make build_nodejs"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["*"]
+
+[tasks."build:python"]
+depends = ["generate:python"]
+run = "make build_python"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["*"]
+
+[tasks."build:dotnet"]
+depends = ["generate:dotnet"]
+run = "make build_dotnet"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["*"]
+
+[tasks."build:go"]
+depends = ["generate:go"]
+run = "make build_go"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["*"]
+
+[tasks."build:java"]
+depends = ["generate:java"]
+run = "make build_java"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["*"]
+
+# TODO: Might be able to link these directly?
+[tasks."install:dotnet"]
+run = "make install_dotnet_sdk"
+
+[tasks."install:nodejs"]
+run = "make install_nodejs_sdk"
+
+[tasks.sdk]
+depends = ["generate:*", "build:*"]
+
+[tasks.install]
+depends = ["install:*"]
+
+[tasks.test]
+sources = ["**/*.go"]
+outputs = ["*"]
+run = "make test_provider"
+
+[tasks."test:examples"]
+run = "go test -v -json -cover -timeout 2h -tags=all -parallel 4"
+
+[tasks."test:examples:shard"]
+run = "go run github.com/blampe/shard@latest --root ./examples"
+
+[tasks.schema]
+run = "pulumi package get-schema bin/pulumi-resource-docker-build | jq 'del(.version)' > provider/cmd/pulumi-resource-docker-build/schema.json"
+sources = ["bin/pulumi-resource-docker-build"]
+outputs = ["provider/cmd/pulumi-resource-docker-build/schema.json"]
+
+[tasks.docs]
+run = "go generate docs/generate.go"
+depends = ["schema"]
+sources = ["docs/yaml/*.yaml"]
+outputs= ["provider/internal/embed/*.md"]
+
+# TODO: tasks.examples
+
+[tools]
+# Development tooling.
+go = "latest" # Will read version from go.mod.
+lefthook = "1.7.12"
+golangci-lint = "1.58.1"
+
+# Build and test tools.
+pulumi = "3.128.0"
+node = "22"
+dotnet = "6"
+python = "3.11.9"
+java = "temurin-11"
+gradle = "7.6"
+"go:github.com/pulumi/schema-tools" = "v0.6.0"
+"go:github.com/gotesttools/gotestfmt/v2/cmd/gotestfmt" = "v2.5.0"
+"go:github.com/pulumi/pulumictl/cmd/pulumictl" = "a1b89aaf4299fe5bc78e140fc60eba79088b3dc5" # blampe/replace branch doesn't work?
+yarn = "1.22.19"
+gcloud = "455.0.0"
+
+[env]
+# TODO(https://github.com/jdx/mise/issues/1898): create = true
+_.python.venv = { path = "venv", create = false }
+CGO_ENABLED = "0"
+
+[settings]
+experimental = true    # Enable Go backend.
+python_compile = false # Don't build Python from source.
