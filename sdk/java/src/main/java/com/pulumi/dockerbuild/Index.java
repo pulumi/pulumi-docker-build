@@ -209,7 +209,7 @@ public class Index extends com.pulumi.resources.CustomResource {
      *
      * @param name The _unique_ name of the resulting resource.
      */
-    public Index(String name) {
+    public Index(java.lang.String name) {
         this(name, IndexArgs.Empty);
     }
     /**
@@ -217,7 +217,7 @@ public class Index extends com.pulumi.resources.CustomResource {
      * @param name The _unique_ name of the resulting resource.
      * @param args The arguments to use to populate this resource's properties.
      */
-    public Index(String name, IndexArgs args) {
+    public Index(java.lang.String name, IndexArgs args) {
         this(name, args, null);
     }
     /**
@@ -226,15 +226,22 @@ public class Index extends com.pulumi.resources.CustomResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param options A bag of options that control this resource's behavior.
      */
-    public Index(String name, IndexArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
-        super("docker-build:index:Index", name, args == null ? IndexArgs.Empty : args, makeResourceOptions(options, Codegen.empty()));
+    public Index(java.lang.String name, IndexArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
+        super("docker-build:index:Index", name, makeArgs(args, options), makeResourceOptions(options, Codegen.empty()), false);
     }
 
-    private Index(String name, Output<String> id, @Nullable com.pulumi.resources.CustomResourceOptions options) {
-        super("docker-build:index:Index", name, null, makeResourceOptions(options, id));
+    private Index(java.lang.String name, Output<java.lang.String> id, @Nullable com.pulumi.resources.CustomResourceOptions options) {
+        super("docker-build:index:Index", name, null, makeResourceOptions(options, id), false);
     }
 
-    private static com.pulumi.resources.CustomResourceOptions makeResourceOptions(@Nullable com.pulumi.resources.CustomResourceOptions options, @Nullable Output<String> id) {
+    private static IndexArgs makeArgs(IndexArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
+        if (options != null && options.getUrn().isPresent()) {
+            return null;
+        }
+        return args == null ? IndexArgs.Empty : args;
+    }
+
+    private static com.pulumi.resources.CustomResourceOptions makeResourceOptions(@Nullable com.pulumi.resources.CustomResourceOptions options, @Nullable Output<java.lang.String> id) {
         var defaultOptions = com.pulumi.resources.CustomResourceOptions.builder()
             .version(Utilities.getVersion())
             .build();
@@ -249,7 +256,7 @@ public class Index extends com.pulumi.resources.CustomResource {
      * @param id The _unique_ provider ID of the resource to lookup.
      * @param options Optional settings to control the behavior of the CustomResource.
      */
-    public static Index get(String name, Output<String> id, @Nullable com.pulumi.resources.CustomResourceOptions options) {
+    public static Index get(java.lang.String name, Output<java.lang.String> id, @Nullable com.pulumi.resources.CustomResourceOptions options) {
         return new Index(name, id, options);
     }
 }

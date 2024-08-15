@@ -32,7 +32,7 @@ public final class ExportRegistry {
      */
     private @Nullable Integer compressionLevel;
     /**
-     * @return Name image with `prefix{@literal @}&lt;digest&gt;`, used for anonymous images.
+     * @return Name image with `prefix{@literal @}<digest&gt;`, used for anonymous images.
      * 
      */
     private @Nullable String danglingNamePrefix;
@@ -47,7 +47,7 @@ public final class ExportRegistry {
      */
     private @Nullable Boolean insecure;
     /**
-     * @return Add additional canonical name (`name{@literal @}&lt;digest&gt;`).
+     * @return Add additional canonical name (`name{@literal @}<digest&gt;`).
      * 
      */
     private @Nullable Boolean nameCanonical;
@@ -112,7 +112,7 @@ public final class ExportRegistry {
         return Optional.ofNullable(this.compressionLevel);
     }
     /**
-     * @return Name image with `prefix{@literal @}&lt;digest&gt;`, used for anonymous images.
+     * @return Name image with `prefix{@literal @}<digest&gt;`, used for anonymous images.
      * 
      */
     public Optional<String> danglingNamePrefix() {
@@ -133,7 +133,7 @@ public final class ExportRegistry {
         return Optional.ofNullable(this.insecure);
     }
     /**
-     * @return Add additional canonical name (`name{@literal @}&lt;digest&gt;`).
+     * @return Add additional canonical name (`name{@literal @}<digest&gt;`).
      * 
      */
     public Optional<Boolean> nameCanonical() {
