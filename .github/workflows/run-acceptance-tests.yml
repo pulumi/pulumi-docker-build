@@ -251,7 +251,7 @@ jobs:
         with:
           skip_install: true
       - name: Shard tests
-        run: mise run "test:examples:shard" -- -n ${{ strategy.job-total }} --shard ${{ strategy.job-index }} > go-test
+        run: mise run "test:examples:shard" -- --total ${{ strategy.job-total }} --index ${{ strategy.job-index }} > go-test
       - name: Run tests
         run: mise run "test:examples" $(cat go-test) 2>&1 | tee /tmp/gotest.log | gotestfmt
       - if: failure() && github.event_name == 'push'

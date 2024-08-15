@@ -89,7 +89,7 @@ run = "make test_provider"
 run = "go test -v -json -cover -timeout 2h -tags=all -parallel 4"
 
 [tasks."test:examples:shard"]
-run = "go run ./enumerate/main.go --root ./examples"
+run = "go run github.com/blampe/shard@latest --root ./examples"
 
 [tasks.schema]
 run = "pulumi package get-schema bin/pulumi-resource-docker-build | jq 'del(.version)' > provider/cmd/pulumi-resource-docker-build/schema.json"
