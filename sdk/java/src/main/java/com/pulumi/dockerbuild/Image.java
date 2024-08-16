@@ -458,22 +458,22 @@ import javax.annotation.Nullable;
  * import java.nio.file.Files;
  * import java.nio.file.Paths;
  * 
- * public class App {
- *     public static void main(String[] args) {
+ * public class App }{{@code
+ *     public static void main(String[] args) }{{@code
  *         Pulumi.run(App::stack);
- *     }
+ *     }}{@code
  * 
- *     public static void stack(Context ctx) {
+ *     public static void stack(Context ctx) }{{@code
  *         var image = new Image("image", ImageArgs.builder()
  *             .context(BuildContextArgs.builder()
  *                 .location("app")
- *                 .named(Map.of("golang:latest", Map.of("location", "docker-image://golang{@literal @}sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984")))
+ *                 .named(Map.of("golang:latest", Map.of("location", "docker-image://golang}{@literal @}{@code sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984")))
  *                 .build())
  *             .push(false)
  *             .build());
  * 
- *     }
- * }
+ *     }}{@code
+ * }}{@code
  * }
  * </pre>
  * ### Remote context
@@ -1235,7 +1235,7 @@ public class Image extends com.pulumi.resources.CustomResource {
      *
      * @param name The _unique_ name of the resulting resource.
      */
-    public Image(String name) {
+    public Image(java.lang.String name) {
         this(name, ImageArgs.Empty);
     }
     /**
@@ -1243,7 +1243,7 @@ public class Image extends com.pulumi.resources.CustomResource {
      * @param name The _unique_ name of the resulting resource.
      * @param args The arguments to use to populate this resource's properties.
      */
-    public Image(String name, ImageArgs args) {
+    public Image(java.lang.String name, ImageArgs args) {
         this(name, args, null);
     }
     /**
@@ -1252,12 +1252,12 @@ public class Image extends com.pulumi.resources.CustomResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param options A bag of options that control this resource's behavior.
      */
-    public Image(String name, ImageArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
-        super("docker-build:index:Image", name, makeArgs(args, options), makeResourceOptions(options, Codegen.empty()));
+    public Image(java.lang.String name, ImageArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
+        super("docker-build:index:Image", name, makeArgs(args, options), makeResourceOptions(options, Codegen.empty()), false);
     }
 
-    private Image(String name, Output<String> id, @Nullable com.pulumi.resources.CustomResourceOptions options) {
-        super("docker-build:index:Image", name, null, makeResourceOptions(options, id));
+    private Image(java.lang.String name, Output<java.lang.String> id, @Nullable com.pulumi.resources.CustomResourceOptions options) {
+        super("docker-build:index:Image", name, null, makeResourceOptions(options, id), false);
     }
 
     private static ImageArgs makeArgs(ImageArgs args, @Nullable com.pulumi.resources.CustomResourceOptions options) {
@@ -1267,7 +1267,7 @@ public class Image extends com.pulumi.resources.CustomResource {
         return args == null ? ImageArgs.Empty : args;
     }
 
-    private static com.pulumi.resources.CustomResourceOptions makeResourceOptions(@Nullable com.pulumi.resources.CustomResourceOptions options, @Nullable Output<String> id) {
+    private static com.pulumi.resources.CustomResourceOptions makeResourceOptions(@Nullable com.pulumi.resources.CustomResourceOptions options, @Nullable Output<java.lang.String> id) {
         var defaultOptions = com.pulumi.resources.CustomResourceOptions.builder()
             .version(Utilities.getVersion())
             .build();
@@ -1282,7 +1282,7 @@ public class Image extends com.pulumi.resources.CustomResource {
      * @param id The _unique_ provider ID of the resource to lookup.
      * @param options Optional settings to control the behavior of the CustomResource.
      */
-    public static Image get(String name, Output<String> id, @Nullable com.pulumi.resources.CustomResourceOptions options) {
+    public static Image get(java.lang.String name, Output<java.lang.String> id, @Nullable com.pulumi.resources.CustomResourceOptions options) {
         return new Image(name, id, options);
     }
 }
