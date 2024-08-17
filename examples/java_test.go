@@ -1,6 +1,3 @@
-//go:build java || all
-// +build java all
-
 package examples
 
 import (
