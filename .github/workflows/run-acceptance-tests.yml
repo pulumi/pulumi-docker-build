@@ -381,7 +381,7 @@ jobs:
         pip3 install virtualenv==20.0.23
         pip3 install pipenv
     - name: Install dependencies
-      run: make -j4 install_sdks
+      run: make install_sdks || make install
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
