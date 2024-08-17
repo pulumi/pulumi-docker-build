@@ -369,7 +369,7 @@ jobs:
         name: java-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/
     - name: UnTar SDK folder
-      run: for f in *.tar.gz; do tar -zxf "$f" -C "${${f}%.tar.gz}"; done
+      run: for f in *.tar.gz; do tar -zxf "$f" -C "${f%.tar.gz}"; done
       working-directory: ${{ github.workspace}}/sdk
     - name: Update path
       run: echo "${{ github.workspace }}/bin" >> $GITHUB_PATH
@@ -410,8 +410,9 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
     - name: Shard tests
       run: echo go test -v -count=1 -cover -timeout 2h -parallel 4 -short "$(go run
-        github.com/blampe/shard@latest --total ${{ strategy.job-total }} --index
-        ${{ strategy.job-index }})" > test-command
+        github.com/blampe/shard@d7b2190cdca822cb0f7411a7c09cea8a429d7f9f --total
+        ${{ strategy.job-total }} --index ${{ strategy.job-index }})" >
+        test-command
       working-directory: examples
     - name: Run tests
       run: cat test-command && $(cat test-command)
