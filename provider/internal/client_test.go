@@ -55,7 +55,7 @@ func TestCustomHost(t *testing.T) {
 	t.Run("env", func(t *testing.T) {
 		t.Setenv("DOCKER_HOST", socket)
 
-		h, err := newHost(nil)
+		h, err := newHost(context.Background(), nil)
 		require.NoError(t, err)
 		cli, err := wrap(h)
 		require.NoError(t, err)
@@ -66,7 +66,7 @@ func TestCustomHost(t *testing.T) {
 
 	t.Run("config", func(t *testing.T) {
 		t.Parallel()
-		h, err := newHost(&Config{Host: socket})
+		h, err := newHost(context.Background(), &Config{Host: socket})
 		require.NoError(t, err)
 		cli, err := wrap(h)
 		require.NoError(t, err)
@@ -290,7 +290,7 @@ func TestBuild(t *testing.T) {
 			ctx := context.Background()
 			cli := testcli(t, true, tt.auths...)
 
-			build, err := tt.args.toBuild(ctx, false)
+			build, err := tt.args.toBuild(ctx, true, false)
 			require.NoError(t, err)
 
 			_, err = cli.Build(ctx, build)
@@ -383,7 +383,7 @@ func TestBuildError(t *testing.T) {
 	ctx := context.Background()
 	cli := testcli(t, true)
 
-	build, err := args.toBuild(ctx, false)
+	build, err := args.toBuild(ctx, true, false)
 	require.NoError(t, err)
 
 	_, err = cli.Build(ctx, build)
@@ -418,7 +418,7 @@ func TestBuildExecError(t *testing.T) {
 	ctx := context.Background()
 	cli := testcli(t, true)
 
-	build, err := args.toBuild(ctx, false)
+	build, err := args.toBuild(ctx, true, false)
 	require.NoError(t, err)
 
 	_, err = cli.Build(ctx, build)
@@ -438,7 +438,7 @@ func TestBuildExecError(t *testing.T) {
 // testcli returns a new standalone CLI instance. Set ping to true if a live
 // daemon is required -- the test will be skipped if the daemon is not available.
 func testcli(t *testing.T, ping bool, auths ...Registry) *cli {
-	h, err := newHost(nil)
+	h, err := newHost(context.Background(), nil)
 	require.NoError(t, err)
 
 	cli, err := wrap(h, auths...)

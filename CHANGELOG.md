@@ -1,5 +1,12 @@
 ## Unreleased
 
+### Added
+
+- Multiple exports are now allowed if the build daemon is detected to have
+  version 0.13 of Buildkit or newer. (https://github.com/pulumi/pulumi-docker-build/issues/21)
+
+## 0.0.6 (2024-08-13)
+
 ### Fixed
 
 - Refreshing an `Index` resource will no longer fail if its stored credentials

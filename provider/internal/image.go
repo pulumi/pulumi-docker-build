@@ -362,7 +362,8 @@ func (i *Image) Check(
 	// :(
 	preview := news.ContainsUnknowns()
 
-	if _, berr := args.validate(preview); berr != nil {
+	cfg := infer.GetConfig[Config](ctx)
+	if _, berr := args.validate(cfg.host.supportsMultipleExports, preview); berr != nil {
 		errs := berr.(interface{ Unwrap() []error }).Unwrap()
 		for _, e := range errs {
 			if cf, ok := e.(checkFailure); ok {
@@ -488,9 +489,10 @@ func (b build) ShouldExec() bool {
 
 func (ia ImageArgs) toBuild(
 	ctx context.Context,
+	supportsMultipleExports bool,
 	preview bool,
 ) (Build, error) {
-	opts, err := ia.validate(preview)
+	opts, err := ia.validate(supportsMultipleExports, preview)
 	if err != nil {
 		return nil, err
 	}
@@ -517,27 +519,29 @@ func (ia ImageArgs) toBuild(
 
 // validate confirms the ImageArgs are valid and returns BuildOptions
 // appropriate for passing to builders.
-func (ia *ImageArgs) validate(preview bool) (controllerapi.BuildOptions, error) {
+func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controllerapi.BuildOptions, error) {
 	var multierr error
 
-	if len(ia.Exports) > 1 {
-		multierr = errors.Join(multierr,
-			newCheckFailure(errors.New("multiple exports are currently unsupported"), "exports"),
-		)
-	}
-	if ia.Push && ia.Load {
-		multierr = errors.Join(
-			multierr,
-			newCheckFailure(
-				errors.New("push and load may not be set together at the moment"),
-				"push",
-			),
-		)
-	}
-	if len(ia.Exports) > 0 && (ia.Push || ia.Load) {
-		multierr = errors.Join(multierr,
-			newCheckFailure(errors.New("exports can't be provided with push or load"), "exports"),
-		)
+	if !supportsMultipleExports {
+		if len(ia.Exports) > 1 {
+			multierr = errors.Join(multierr,
+				newCheckFailure(errors.New("multiple exports require a v0.13 buildkit daemon or newer"), "exports"),
+			)
+		}
+		if ia.Push && ia.Load {
+			multierr = errors.Join(
+				multierr,
+				newCheckFailure(
+					errors.New("simultaneous push and load requires a v0.13 buildkit daemon or newer"),
+					"push",
+				),
+			)
+		}
+		if len(ia.Exports) > 0 && (ia.Push || ia.Load) {
+			multierr = errors.Join(multierr,
+				newCheckFailure(errors.New("multiple exports require a v0.13 buildkit daemon or newer"), "exports"),
+			)
+		}
 	}
 
 	dockerfile, context, err := ia.Context.validate(preview, ia.Dockerfile)
@@ -694,7 +698,7 @@ func (i *Image) Create(
 		return id, state, errors.New("buildkit is not supported on this host")
 	}
 
-	build, err := input.toBuild(ctx, preview)
+	build, err := input.toBuild(ctx, cli.SupportsMultipleExports(), preview)
 	if err != nil {
 		return id, state, fmt.Errorf("preparing: %w", err)
 	}

@@ -15,6 +15,7 @@
 package internal
 
 import (
+	"context"
 	"io"
 	"testing"
 
@@ -27,7 +28,7 @@ import (
 func TestExec(t *testing.T) {
 	t.Parallel()
 
-	h, err := newHost(nil)
+	h, err := newHost(context.Background(), nil)
 	require.NoError(t, err)
 	cli, err := wrap(h)
 	require.NoError(t, err)
@@ -44,7 +45,7 @@ func TestWrappedAuth(t *testing.T) {
 	t.Parallel()
 	ecr := "https://1234.dkr.ecr.us-west-2.amazonaws.com"
 
-	realhost, err := newHost(nil)
+	realhost, err := newHost(context.Background(), nil)
 	require.NoError(t, err)
 
 	h := &host{
@@ -102,7 +103,7 @@ func TestWrappedAuth(t *testing.T) {
 	assert.Len(t, h.auths, 2) // In-memory host auth is unchanged.
 
 	// Assert that our on-disk host's auth is untouched.
-	realhostRefreshed, err := newHost(nil)
+	realhostRefreshed, err := newHost(context.Background(), nil)
 	require.NoError(t, err)
 	assert.Equal(t, realhost.auths, realhostRefreshed.auths)
 }

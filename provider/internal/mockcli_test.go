@@ -5,11 +5,11 @@
 //
 //	mockgen -typed -package internal -source cli.go -destination mockcli_test.go --self_package github.com/pulumi/pulumi-docker-build/provider/internal
 //
+
 // Package internal is a generated GoMock package.
 package internal
 
 import (
-	io "io"
 	reflect "reflect"
 
 	command "github.com/docker/cli/cli/command"
@@ -22,6 +22,9 @@ import (
 	trust "github.com/docker/cli/cli/trust"
 	client0 "github.com/docker/docker/client"
 	client1 "github.com/theupdateframework/notary/client"
+	metric "go.opentelemetry.io/otel/metric"
+	resource "go.opentelemetry.io/otel/sdk/resource"
+	trace "go.opentelemetry.io/otel/trace"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -61,31 +64,31 @@ func (m *MockCli) Apply(ops ...command.CLIOption) error {
 }
 
 // Apply indicates an expected call of Apply.
-func (mr *MockCliMockRecorder) Apply(ops ...any) *CliApplyCall {
+func (mr *MockCliMockRecorder) Apply(ops ...any) *MockCliApplyCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Apply", reflect.TypeOf((*MockCli)(nil).Apply), ops...)
-	return &CliApplyCall{Call: call}
+	return &MockCliApplyCall{Call: call}
 }
 
-// CliApplyCall wrap *gomock.Call
-type CliApplyCall struct {
+// MockCliApplyCall wrap *gomock.Call
+type MockCliApplyCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliApplyCall) Return(arg0 error) *CliApplyCall {
+func (c *MockCliApplyCall) Return(arg0 error) *MockCliApplyCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliApplyCall) Do(f func(...command.CLIOption) error) *CliApplyCall {
+func (c *MockCliApplyCall) Do(f func(...command.CLIOption) error) *MockCliApplyCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliApplyCall) DoAndReturn(f func(...command.CLIOption) error) *CliApplyCall {
+func (c *MockCliApplyCall) DoAndReturn(f func(...command.CLIOption) error) *MockCliApplyCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -100,31 +103,31 @@ func (m *MockCli) BuildKitEnabled() (bool, error) {
 }
 
 // BuildKitEnabled indicates an expected call of BuildKitEnabled.
-func (mr *MockCliMockRecorder) BuildKitEnabled() *CliBuildKitEnabledCall {
+func (mr *MockCliMockRecorder) BuildKitEnabled() *MockCliBuildKitEnabledCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuildKitEnabled", reflect.TypeOf((*MockCli)(nil).BuildKitEnabled))
-	return &CliBuildKitEnabledCall{Call: call}
+	return &MockCliBuildKitEnabledCall{Call: call}
 }
 
-// CliBuildKitEnabledCall wrap *gomock.Call
-type CliBuildKitEnabledCall struct {
+// MockCliBuildKitEnabledCall wrap *gomock.Call
+type MockCliBuildKitEnabledCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliBuildKitEnabledCall) Return(arg0 bool, arg1 error) *CliBuildKitEnabledCall {
+func (c *MockCliBuildKitEnabledCall) Return(arg0 bool, arg1 error) *MockCliBuildKitEnabledCall {
 	c.Call = c.Call.Return(arg0, arg1)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliBuildKitEnabledCall) Do(f func() (bool, error)) *CliBuildKitEnabledCall {
+func (c *MockCliBuildKitEnabledCall) Do(f func() (bool, error)) *MockCliBuildKitEnabledCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliBuildKitEnabledCall) DoAndReturn(f func() (bool, error)) *CliBuildKitEnabledCall {
+func (c *MockCliBuildKitEnabledCall) DoAndReturn(f func() (bool, error)) *MockCliBuildKitEnabledCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -138,31 +141,31 @@ func (m *MockCli) Client() client0.APIClient {
 }
 
 // Client indicates an expected call of Client.
-func (mr *MockCliMockRecorder) Client() *CliClientCall {
+func (mr *MockCliMockRecorder) Client() *MockCliClientCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Client", reflect.TypeOf((*MockCli)(nil).Client))
-	return &CliClientCall{Call: call}
+	return &MockCliClientCall{Call: call}
 }
 
-// CliClientCall wrap *gomock.Call
-type CliClientCall struct {
+// MockCliClientCall wrap *gomock.Call
+type MockCliClientCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliClientCall) Return(arg0 client0.APIClient) *CliClientCall {
+func (c *MockCliClientCall) Return(arg0 client0.APIClient) *MockCliClientCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliClientCall) Do(f func() client0.APIClient) *CliClientCall {
+func (c *MockCliClientCall) Do(f func() client0.APIClient) *MockCliClientCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliClientCall) DoAndReturn(f func() client0.APIClient) *CliClientCall {
+func (c *MockCliClientCall) DoAndReturn(f func() client0.APIClient) *MockCliClientCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -176,31 +179,31 @@ func (m *MockCli) ConfigFile() *configfile.ConfigFile {
 }
 
 // ConfigFile indicates an expected call of ConfigFile.
-func (mr *MockCliMockRecorder) ConfigFile() *CliConfigFileCall {
+func (mr *MockCliMockRecorder) ConfigFile() *MockCliConfigFileCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConfigFile", reflect.TypeOf((*MockCli)(nil).ConfigFile))
-	return &CliConfigFileCall{Call: call}
+	return &MockCliConfigFileCall{Call: call}
 }
 
-// CliConfigFileCall wrap *gomock.Call
-type CliConfigFileCall struct {
+// MockCliConfigFileCall wrap *gomock.Call
+type MockCliConfigFileCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliConfigFileCall) Return(arg0 *configfile.ConfigFile) *CliConfigFileCall {
+func (c *MockCliConfigFileCall) Return(arg0 *configfile.ConfigFile) *MockCliConfigFileCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliConfigFileCall) Do(f func() *configfile.ConfigFile) *CliConfigFileCall {
+func (c *MockCliConfigFileCall) Do(f func() *configfile.ConfigFile) *MockCliConfigFileCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliConfigFileCall) DoAndReturn(f func() *configfile.ConfigFile) *CliConfigFileCall {
+func (c *MockCliConfigFileCall) DoAndReturn(f func() *configfile.ConfigFile) *MockCliConfigFileCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -214,31 +217,31 @@ func (m *MockCli) ContentTrustEnabled() bool {
 }
 
 // ContentTrustEnabled indicates an expected call of ContentTrustEnabled.
-func (mr *MockCliMockRecorder) ContentTrustEnabled() *CliContentTrustEnabledCall {
+func (mr *MockCliMockRecorder) ContentTrustEnabled() *MockCliContentTrustEnabledCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContentTrustEnabled", reflect.TypeOf((*MockCli)(nil).ContentTrustEnabled))
-	return &CliContentTrustEnabledCall{Call: call}
+	return &MockCliContentTrustEnabledCall{Call: call}
 }
 
-// CliContentTrustEnabledCall wrap *gomock.Call
-type CliContentTrustEnabledCall struct {
+// MockCliContentTrustEnabledCall wrap *gomock.Call
+type MockCliContentTrustEnabledCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliContentTrustEnabledCall) Return(arg0 bool) *CliContentTrustEnabledCall {
+func (c *MockCliContentTrustEnabledCall) Return(arg0 bool) *MockCliContentTrustEnabledCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliContentTrustEnabledCall) Do(f func() bool) *CliContentTrustEnabledCall {
+func (c *MockCliContentTrustEnabledCall) Do(f func() bool) *MockCliContentTrustEnabledCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliContentTrustEnabledCall) DoAndReturn(f func() bool) *CliContentTrustEnabledCall {
+func (c *MockCliContentTrustEnabledCall) DoAndReturn(f func() bool) *MockCliContentTrustEnabledCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -252,31 +255,31 @@ func (m *MockCli) ContextStore() store.Store {
 }
 
 // ContextStore indicates an expected call of ContextStore.
-func (mr *MockCliMockRecorder) ContextStore() *CliContextStoreCall {
+func (mr *MockCliMockRecorder) ContextStore() *MockCliContextStoreCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ContextStore", reflect.TypeOf((*MockCli)(nil).ContextStore))
-	return &CliContextStoreCall{Call: call}
+	return &MockCliContextStoreCall{Call: call}
 }
 
-// CliContextStoreCall wrap *gomock.Call
-type CliContextStoreCall struct {
+// MockCliContextStoreCall wrap *gomock.Call
+type MockCliContextStoreCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliContextStoreCall) Return(arg0 store.Store) *CliContextStoreCall {
+func (c *MockCliContextStoreCall) Return(arg0 store.Store) *MockCliContextStoreCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliContextStoreCall) Do(f func() store.Store) *CliContextStoreCall {
+func (c *MockCliContextStoreCall) Do(f func() store.Store) *MockCliContextStoreCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliContextStoreCall) DoAndReturn(f func() store.Store) *CliContextStoreCall {
+func (c *MockCliContextStoreCall) DoAndReturn(f func() store.Store) *MockCliContextStoreCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -290,31 +293,31 @@ func (m *MockCli) CurrentContext() string {
 }
 
 // CurrentContext indicates an expected call of CurrentContext.
-func (mr *MockCliMockRecorder) CurrentContext() *CliCurrentContextCall {
+func (mr *MockCliMockRecorder) CurrentContext() *MockCliCurrentContextCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CurrentContext", reflect.TypeOf((*MockCli)(nil).CurrentContext))
-	return &CliCurrentContextCall{Call: call}
+	return &MockCliCurrentContextCall{Call: call}
 }
 
-// CliCurrentContextCall wrap *gomock.Call
-type CliCurrentContextCall struct {
+// MockCliCurrentContextCall wrap *gomock.Call
+type MockCliCurrentContextCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliCurrentContextCall) Return(arg0 string) *CliCurrentContextCall {
+func (c *MockCliCurrentContextCall) Return(arg0 string) *MockCliCurrentContextCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliCurrentContextCall) Do(f func() string) *CliCurrentContextCall {
+func (c *MockCliCurrentContextCall) Do(f func() string) *MockCliCurrentContextCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliCurrentContextCall) DoAndReturn(f func() string) *CliCurrentContextCall {
+func (c *MockCliCurrentContextCall) DoAndReturn(f func() string) *MockCliCurrentContextCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -328,31 +331,31 @@ func (m *MockCli) CurrentVersion() string {
 }
 
 // CurrentVersion indicates an expected call of CurrentVersion.
-func (mr *MockCliMockRecorder) CurrentVersion() *CliCurrentVersionCall {
+func (mr *MockCliMockRecorder) CurrentVersion() *MockCliCurrentVersionCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CurrentVersion", reflect.TypeOf((*MockCli)(nil).CurrentVersion))
-	return &CliCurrentVersionCall{Call: call}
+	return &MockCliCurrentVersionCall{Call: call}
 }
 
-// CliCurrentVersionCall wrap *gomock.Call
-type CliCurrentVersionCall struct {
+// MockCliCurrentVersionCall wrap *gomock.Call
+type MockCliCurrentVersionCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliCurrentVersionCall) Return(arg0 string) *CliCurrentVersionCall {
+func (c *MockCliCurrentVersionCall) Return(arg0 string) *MockCliCurrentVersionCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliCurrentVersionCall) Do(f func() string) *CliCurrentVersionCall {
+func (c *MockCliCurrentVersionCall) Do(f func() string) *MockCliCurrentVersionCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliCurrentVersionCall) DoAndReturn(f func() string) *CliCurrentVersionCall {
+func (c *MockCliCurrentVersionCall) DoAndReturn(f func() string) *MockCliCurrentVersionCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -366,31 +369,31 @@ func (m *MockCli) DefaultVersion() string {
 }
 
 // DefaultVersion indicates an expected call of DefaultVersion.
-func (mr *MockCliMockRecorder) DefaultVersion() *CliDefaultVersionCall {
+func (mr *MockCliMockRecorder) DefaultVersion() *MockCliDefaultVersionCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DefaultVersion", reflect.TypeOf((*MockCli)(nil).DefaultVersion))
-	return &CliDefaultVersionCall{Call: call}
+	return &MockCliDefaultVersionCall{Call: call}
 }
 
-// CliDefaultVersionCall wrap *gomock.Call
-type CliDefaultVersionCall struct {
+// MockCliDefaultVersionCall wrap *gomock.Call
+type MockCliDefaultVersionCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliDefaultVersionCall) Return(arg0 string) *CliDefaultVersionCall {
+func (c *MockCliDefaultVersionCall) Return(arg0 string) *MockCliDefaultVersionCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliDefaultVersionCall) Do(f func() string) *CliDefaultVersionCall {
+func (c *MockCliDefaultVersionCall) Do(f func() string) *MockCliDefaultVersionCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliDefaultVersionCall) DoAndReturn(f func() string) *CliDefaultVersionCall {
+func (c *MockCliDefaultVersionCall) DoAndReturn(f func() string) *MockCliDefaultVersionCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -404,69 +407,69 @@ func (m *MockCli) DockerEndpoint() docker.Endpoint {
 }
 
 // DockerEndpoint indicates an expected call of DockerEndpoint.
-func (mr *MockCliMockRecorder) DockerEndpoint() *CliDockerEndpointCall {
+func (mr *MockCliMockRecorder) DockerEndpoint() *MockCliDockerEndpointCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DockerEndpoint", reflect.TypeOf((*MockCli)(nil).DockerEndpoint))
-	return &CliDockerEndpointCall{Call: call}
+	return &MockCliDockerEndpointCall{Call: call}
 }
 
-// CliDockerEndpointCall wrap *gomock.Call
-type CliDockerEndpointCall struct {
+// MockCliDockerEndpointCall wrap *gomock.Call
+type MockCliDockerEndpointCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliDockerEndpointCall) Return(arg0 docker.Endpoint) *CliDockerEndpointCall {
+func (c *MockCliDockerEndpointCall) Return(arg0 docker.Endpoint) *MockCliDockerEndpointCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliDockerEndpointCall) Do(f func() docker.Endpoint) *CliDockerEndpointCall {
+func (c *MockCliDockerEndpointCall) Do(f func() docker.Endpoint) *MockCliDockerEndpointCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliDockerEndpointCall) DoAndReturn(f func() docker.Endpoint) *CliDockerEndpointCall {
+func (c *MockCliDockerEndpointCall) DoAndReturn(f func() docker.Endpoint) *MockCliDockerEndpointCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
 
 // Err mocks base method.
-func (m *MockCli) Err() io.Writer {
+func (m *MockCli) Err() *streams.Out {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Err")
-	ret0, _ := ret[0].(io.Writer)
+	ret0, _ := ret[0].(*streams.Out)
 	return ret0
 }
 
 // Err indicates an expected call of Err.
-func (mr *MockCliMockRecorder) Err() *CliErrCall {
+func (mr *MockCliMockRecorder) Err() *MockCliErrCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Err", reflect.TypeOf((*MockCli)(nil).Err))
-	return &CliErrCall{Call: call}
+	return &MockCliErrCall{Call: call}
 }
 
-// CliErrCall wrap *gomock.Call
-type CliErrCall struct {
+// MockCliErrCall wrap *gomock.Call
+type MockCliErrCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliErrCall) Return(arg0 io.Writer) *CliErrCall {
+func (c *MockCliErrCall) Return(arg0 *streams.Out) *MockCliErrCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliErrCall) Do(f func() io.Writer) *CliErrCall {
+func (c *MockCliErrCall) Do(f func() *streams.Out) *MockCliErrCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliErrCall) DoAndReturn(f func() io.Writer) *CliErrCall {
+func (c *MockCliErrCall) DoAndReturn(f func() *streams.Out) *MockCliErrCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -480,31 +483,31 @@ func (m *MockCli) In() *streams.In {
 }
 
 // In indicates an expected call of In.
-func (mr *MockCliMockRecorder) In() *CliInCall {
+func (mr *MockCliMockRecorder) In() *MockCliInCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "In", reflect.TypeOf((*MockCli)(nil).In))
-	return &CliInCall{Call: call}
+	return &MockCliInCall{Call: call}
 }
 
-// CliInCall wrap *gomock.Call
-type CliInCall struct {
+// MockCliInCall wrap *gomock.Call
+type MockCliInCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliInCall) Return(arg0 *streams.In) *CliInCall {
+func (c *MockCliInCall) Return(arg0 *streams.In) *MockCliInCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliInCall) Do(f func() *streams.In) *CliInCall {
+func (c *MockCliInCall) Do(f func() *streams.In) *MockCliInCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliInCall) DoAndReturn(f func() *streams.In) *CliInCall {
+func (c *MockCliInCall) DoAndReturn(f func() *streams.In) *MockCliInCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -518,31 +521,69 @@ func (m *MockCli) ManifestStore() store0.Store {
 }
 
 // ManifestStore indicates an expected call of ManifestStore.
-func (mr *MockCliMockRecorder) ManifestStore() *CliManifestStoreCall {
+func (mr *MockCliMockRecorder) ManifestStore() *MockCliManifestStoreCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ManifestStore", reflect.TypeOf((*MockCli)(nil).ManifestStore))
-	return &CliManifestStoreCall{Call: call}
+	return &MockCliManifestStoreCall{Call: call}
 }
 
-// CliManifestStoreCall wrap *gomock.Call
-type CliManifestStoreCall struct {
+// MockCliManifestStoreCall wrap *gomock.Call
+type MockCliManifestStoreCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliManifestStoreCall) Return(arg0 store0.Store) *CliManifestStoreCall {
+func (c *MockCliManifestStoreCall) Return(arg0 store0.Store) *MockCliManifestStoreCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliManifestStoreCall) Do(f func() store0.Store) *CliManifestStoreCall {
+func (c *MockCliManifestStoreCall) Do(f func() store0.Store) *MockCliManifestStoreCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliManifestStoreCall) DoAndReturn(f func() store0.Store) *CliManifestStoreCall {
+func (c *MockCliManifestStoreCall) DoAndReturn(f func() store0.Store) *MockCliManifestStoreCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// MeterProvider mocks base method.
+func (m *MockCli) MeterProvider() metric.MeterProvider {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "MeterProvider")
+	ret0, _ := ret[0].(metric.MeterProvider)
+	return ret0
+}
+
+// MeterProvider indicates an expected call of MeterProvider.
+func (mr *MockCliMockRecorder) MeterProvider() *MockCliMeterProviderCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "MeterProvider", reflect.TypeOf((*MockCli)(nil).MeterProvider))
+	return &MockCliMeterProviderCall{Call: call}
+}
+
+// MockCliMeterProviderCall wrap *gomock.Call
+type MockCliMeterProviderCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockCliMeterProviderCall) Return(arg0 metric.MeterProvider) *MockCliMeterProviderCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockCliMeterProviderCall) Do(f func() metric.MeterProvider) *MockCliMeterProviderCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockCliMeterProviderCall) DoAndReturn(f func() metric.MeterProvider) *MockCliMeterProviderCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -557,31 +598,31 @@ func (m *MockCli) NotaryClient(imgRefAndAuth trust.ImageRefAndAuth, actions []st
 }
 
 // NotaryClient indicates an expected call of NotaryClient.
-func (mr *MockCliMockRecorder) NotaryClient(imgRefAndAuth, actions any) *CliNotaryClientCall {
+func (mr *MockCliMockRecorder) NotaryClient(imgRefAndAuth, actions any) *MockCliNotaryClientCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NotaryClient", reflect.TypeOf((*MockCli)(nil).NotaryClient), imgRefAndAuth, actions)
-	return &CliNotaryClientCall{Call: call}
+	return &MockCliNotaryClientCall{Call: call}
 }
 
-// CliNotaryClientCall wrap *gomock.Call
-type CliNotaryClientCall struct {
+// MockCliNotaryClientCall wrap *gomock.Call
+type MockCliNotaryClientCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliNotaryClientCall) Return(arg0 client1.Repository, arg1 error) *CliNotaryClientCall {
+func (c *MockCliNotaryClientCall) Return(arg0 client1.Repository, arg1 error) *MockCliNotaryClientCall {
 	c.Call = c.Call.Return(arg0, arg1)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliNotaryClientCall) Do(f func(trust.ImageRefAndAuth, []string) (client1.Repository, error)) *CliNotaryClientCall {
+func (c *MockCliNotaryClientCall) Do(f func(trust.ImageRefAndAuth, []string) (client1.Repository, error)) *MockCliNotaryClientCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliNotaryClientCall) DoAndReturn(f func(trust.ImageRefAndAuth, []string) (client1.Repository, error)) *CliNotaryClientCall {
+func (c *MockCliNotaryClientCall) DoAndReturn(f func(trust.ImageRefAndAuth, []string) (client1.Repository, error)) *MockCliNotaryClientCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -595,31 +636,31 @@ func (m *MockCli) Out() *streams.Out {
 }
 
 // Out indicates an expected call of Out.
-func (mr *MockCliMockRecorder) Out() *CliOutCall {
+func (mr *MockCliMockRecorder) Out() *MockCliOutCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Out", reflect.TypeOf((*MockCli)(nil).Out))
-	return &CliOutCall{Call: call}
+	return &MockCliOutCall{Call: call}
 }
 
-// CliOutCall wrap *gomock.Call
-type CliOutCall struct {
+// MockCliOutCall wrap *gomock.Call
+type MockCliOutCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliOutCall) Return(arg0 *streams.Out) *CliOutCall {
+func (c *MockCliOutCall) Return(arg0 *streams.Out) *MockCliOutCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliOutCall) Do(f func() *streams.Out) *CliOutCall {
+func (c *MockCliOutCall) Do(f func() *streams.Out) *MockCliOutCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliOutCall) DoAndReturn(f func() *streams.Out) *CliOutCall {
+func (c *MockCliOutCall) DoAndReturn(f func() *streams.Out) *MockCliOutCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -633,31 +674,69 @@ func (m *MockCli) RegistryClient(arg0 bool) client.RegistryClient {
 }
 
 // RegistryClient indicates an expected call of RegistryClient.
-func (mr *MockCliMockRecorder) RegistryClient(arg0 any) *CliRegistryClientCall {
+func (mr *MockCliMockRecorder) RegistryClient(arg0 any) *MockCliRegistryClientCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegistryClient", reflect.TypeOf((*MockCli)(nil).RegistryClient), arg0)
-	return &CliRegistryClientCall{Call: call}
+	return &MockCliRegistryClientCall{Call: call}
 }
 
-// CliRegistryClientCall wrap *gomock.Call
-type CliRegistryClientCall struct {
+// MockCliRegistryClientCall wrap *gomock.Call
+type MockCliRegistryClientCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliRegistryClientCall) Return(arg0 client.RegistryClient) *CliRegistryClientCall {
+func (c *MockCliRegistryClientCall) Return(arg0 client.RegistryClient) *MockCliRegistryClientCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliRegistryClientCall) Do(f func(bool) client.RegistryClient) *CliRegistryClientCall {
+func (c *MockCliRegistryClientCall) Do(f func(bool) client.RegistryClient) *MockCliRegistryClientCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliRegistryClientCall) DoAndReturn(f func(bool) client.RegistryClient) *CliRegistryClientCall {
+func (c *MockCliRegistryClientCall) DoAndReturn(f func(bool) client.RegistryClient) *MockCliRegistryClientCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// Resource mocks base method.
+func (m *MockCli) Resource() *resource.Resource {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Resource")
+	ret0, _ := ret[0].(*resource.Resource)
+	return ret0
+}
+
+// Resource indicates an expected call of Resource.
+func (mr *MockCliMockRecorder) Resource() *MockCliResourceCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Resource", reflect.TypeOf((*MockCli)(nil).Resource))
+	return &MockCliResourceCall{Call: call}
+}
+
+// MockCliResourceCall wrap *gomock.Call
+type MockCliResourceCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockCliResourceCall) Return(arg0 *resource.Resource) *MockCliResourceCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockCliResourceCall) Do(f func() *resource.Resource) *MockCliResourceCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockCliResourceCall) DoAndReturn(f func() *resource.Resource) *MockCliResourceCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -671,31 +750,31 @@ func (m *MockCli) ServerInfo() command.ServerInfo {
 }
 
 // ServerInfo indicates an expected call of ServerInfo.
-func (mr *MockCliMockRecorder) ServerInfo() *CliServerInfoCall {
+func (mr *MockCliMockRecorder) ServerInfo() *MockCliServerInfoCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ServerInfo", reflect.TypeOf((*MockCli)(nil).ServerInfo))
-	return &CliServerInfoCall{Call: call}
+	return &MockCliServerInfoCall{Call: call}
 }
 
-// CliServerInfoCall wrap *gomock.Call
-type CliServerInfoCall struct {
+// MockCliServerInfoCall wrap *gomock.Call
+type MockCliServerInfoCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliServerInfoCall) Return(arg0 command.ServerInfo) *CliServerInfoCall {
+func (c *MockCliServerInfoCall) Return(arg0 command.ServerInfo) *MockCliServerInfoCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliServerInfoCall) Do(f func() command.ServerInfo) *CliServerInfoCall {
+func (c *MockCliServerInfoCall) Do(f func() command.ServerInfo) *MockCliServerInfoCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliServerInfoCall) DoAndReturn(f func() command.ServerInfo) *CliServerInfoCall {
+func (c *MockCliServerInfoCall) DoAndReturn(f func() command.ServerInfo) *MockCliServerInfoCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -707,31 +786,69 @@ func (m *MockCli) SetIn(in *streams.In) {
 }
 
 // SetIn indicates an expected call of SetIn.
-func (mr *MockCliMockRecorder) SetIn(in any) *CliSetInCall {
+func (mr *MockCliMockRecorder) SetIn(in any) *MockCliSetInCall {
 	mr.mock.ctrl.T.Helper()
 	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetIn", reflect.TypeOf((*MockCli)(nil).SetIn), in)
-	return &CliSetInCall{Call: call}
+	return &MockCliSetInCall{Call: call}
 }
 
-// CliSetInCall wrap *gomock.Call
-type CliSetInCall struct {
+// MockCliSetInCall wrap *gomock.Call
+type MockCliSetInCall struct {
 	*gomock.Call
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *CliSetInCall) Return() *CliSetInCall {
+func (c *MockCliSetInCall) Return() *MockCliSetInCall {
 	c.Call = c.Call.Return()
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *CliSetInCall) Do(f func(*streams.In)) *CliSetInCall {
+func (c *MockCliSetInCall) Do(f func(*streams.In)) *MockCliSetInCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *CliSetInCall) DoAndReturn(f func(*streams.In)) *CliSetInCall {
+func (c *MockCliSetInCall) DoAndReturn(f func(*streams.In)) *MockCliSetInCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
+// TracerProvider mocks base method.
+func (m *MockCli) TracerProvider() trace.TracerProvider {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TracerProvider")
+	ret0, _ := ret[0].(trace.TracerProvider)
+	return ret0
+}
+
+// TracerProvider indicates an expected call of TracerProvider.
+func (mr *MockCliMockRecorder) TracerProvider() *MockCliTracerProviderCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TracerProvider", reflect.TypeOf((*MockCli)(nil).TracerProvider))
+	return &MockCliTracerProviderCall{Call: call}
+}
+
+// MockCliTracerProviderCall wrap *gomock.Call
+type MockCliTracerProviderCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockCliTracerProviderCall) Return(arg0 trace.TracerProvider) *MockCliTracerProviderCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockCliTracerProviderCall) Do(f func() trace.TracerProvider) *MockCliTracerProviderCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockCliTracerProviderCall) DoAndReturn(f func() trace.TracerProvider) *MockCliTracerProviderCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
