@@ -363,7 +363,11 @@ func (i *Image) Check(
 	preview := news.ContainsUnknowns()
 
 	cfg := infer.GetConfig[Config](ctx)
-	if _, berr := args.validate(cfg.host.supportsMultipleExports, preview); berr != nil {
+	supportsMultipleExports := true
+	if cfg.host != nil {
+		supportsMultipleExports = cfg.host.supportsMultipleExports
+	}
+	if _, berr := args.validate(supportsMultipleExports, preview); berr != nil {
 		errs := berr.(interface{ Unwrap() []error }).Unwrap()
 		for _, e := range errs {
 			if cf, ok := e.(checkFailure); ok {
