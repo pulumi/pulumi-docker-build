@@ -67,14 +67,14 @@ public final class ExportRegistryArgs extends com.pulumi.resources.ResourceArgs 
     }
 
     /**
-     * Name image with `prefix{@literal @}<digest&gt;`, used for anonymous images.
+     * Name image with `prefix{@literal @}&lt;digest&gt;`, used for anonymous images.
      * 
      */
     @Import(name="danglingNamePrefix")
     private @Nullable Output<String> danglingNamePrefix;
 
     /**
-     * @return Name image with `prefix{@literal @}<digest&gt;`, used for anonymous images.
+     * @return Name image with `prefix{@literal @}&lt;digest&gt;`, used for anonymous images.
      * 
      */
     public Optional<Output<String>> danglingNamePrefix() {
@@ -112,14 +112,14 @@ public final class ExportRegistryArgs extends com.pulumi.resources.ResourceArgs 
     }
 
     /**
-     * Add additional canonical name (`name{@literal @}<digest&gt;`).
+     * Add additional canonical name (`name{@literal @}&lt;digest&gt;`).
      * 
      */
     @Import(name="nameCanonical")
     private @Nullable Output<Boolean> nameCanonical;
 
     /**
-     * @return Add additional canonical name (`name{@literal @}<digest&gt;`).
+     * @return Add additional canonical name (`name{@literal @}&lt;digest&gt;`).
      * 
      */
     public Optional<Output<Boolean>> nameCanonical() {
@@ -330,7 +330,7 @@ public final class ExportRegistryArgs extends com.pulumi.resources.ResourceArgs 
         }
 
         /**
-         * @param danglingNamePrefix Name image with `prefix{@literal @}<digest&gt;`, used for anonymous images.
+         * @param danglingNamePrefix Name image with `prefix{@literal @}&lt;digest&gt;`, used for anonymous images.
          * 
          * @return builder
          * 
@@ -341,7 +341,7 @@ public final class ExportRegistryArgs extends com.pulumi.resources.ResourceArgs 
         }
 
         /**
-         * @param danglingNamePrefix Name image with `prefix{@literal @}<digest&gt;`, used for anonymous images.
+         * @param danglingNamePrefix Name image with `prefix{@literal @}&lt;digest&gt;`, used for anonymous images.
          * 
          * @return builder
          * 
@@ -393,7 +393,7 @@ public final class ExportRegistryArgs extends com.pulumi.resources.ResourceArgs 
         }
 
         /**
-         * @param nameCanonical Add additional canonical name (`name{@literal @}<digest&gt;`).
+         * @param nameCanonical Add additional canonical name (`name{@literal @}&lt;digest&gt;`).
          * 
          * @return builder
          * 
@@ -404,7 +404,7 @@ public final class ExportRegistryArgs extends com.pulumi.resources.ResourceArgs 
         }
 
         /**
-         * @param nameCanonical Add additional canonical name (`name{@literal @}<digest&gt;`).
+         * @param nameCanonical Add additional canonical name (`name{@literal @}&lt;digest&gt;`).
          * 
          * @return builder
          * 
