@@ -27,6 +27,7 @@ import (
 	"github.com/pulumi/pulumi-docker-build/provider/internal"
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/integration"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource/plugin"
 )
 
@@ -37,7 +38,7 @@ import (
 func TestConfigure(t *testing.T) {
 	t.Parallel()
 
-	p := configurableProvider(internal.NewBuildxProvider())
+	p := internal.NewBuildxProvider()
 
 	args, err := structpb.NewStruct(map[string]any{
 		"registries": `[{"address": "docker.io"}]`,
@@ -47,10 +48,21 @@ func TestConfigure(t *testing.T) {
 	require.NoError(t, err)
 
 	s := integration.NewServer("docker-build", semver.Version{Major: 0}, p)
-	err = s.Configure(provider.ConfigureRequest{
-		Args: argsMap,
+	resp, err := s.CheckConfig(provider.CheckRequest{
+		News: argsMap,
 	})
-	assert.NoError(t, err)
+	require.NoError(t, err)
+	require.Empty(t, resp.Failures)
+	assert.Equal(t, resource.PropertyMap{
+		"registries": resource.NewProperty([]resource.PropertyValue{
+			resource.NewProperty(resource.PropertyMap{
+				"address":  resource.NewProperty("docker.io"),
+				"username": resource.NewProperty(""),
+				"password": resource.MakeSecret(resource.NewProperty("")),
+			}),
+		}),
+		"host": resource.NewProperty(""),
+	}, resp.Inputs)
 }
 
 func TestVersion(t *testing.T) {
