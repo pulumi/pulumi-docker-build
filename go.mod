@@ -21,11 +21,11 @@ require (
 	github.com/pulumi/pulumi-go-provider v0.21.0
 	github.com/pulumi/pulumi-java/pkg v0.15.0
 	github.com/pulumi/pulumi-yaml v1.10.0
-	github.com/pulumi/pulumi/pkg/v3 v3.131.0
+	github.com/pulumi/pulumi/pkg/v3 v3.132.0
 	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20240910123829-a0ad0ad24344
 	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20240910123829-a0ad0ad24344
 	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20240910123829-a0ad0ad24344
-	github.com/pulumi/pulumi/sdk/v3 v3.131.0
+	github.com/pulumi/pulumi/sdk/v3 v3.132.0
 	github.com/regclient/regclient v0.7.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.11.0
@@ -352,7 +352,7 @@ require (
 	github.com/prometheus/common v0.44.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
-	github.com/pulumi/esc v0.9.1 // indirect
+	github.com/pulumi/esc v0.9.2-0.20240910221656-328d3204100f // indirect
 	github.com/pulumi/inflector v0.2.1 // indirect
 	github.com/quasilyte/go-ruleguard v0.4.2 // indirect
 	github.com/quasilyte/go-ruleguard/dsl v0.3.22 // indirect
