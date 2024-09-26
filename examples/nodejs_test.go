@@ -147,6 +147,18 @@ func TestCaching(t *testing.T) {
 	}
 }
 
+func TestConfig(t *testing.T) {
+	cwd, err := os.Getwd()
+	require.NoError(t, err)
+
+	test := integration.ProgramTestOptions{
+		Dir:          path.Join(cwd, "tests", "config"),
+		Dependencies: []string{"@pulumi/docker-build"},
+	}
+
+	integration.ProgramTest(t, &test)
+}
+
 type ECR struct {
 	address  string
 	username string
