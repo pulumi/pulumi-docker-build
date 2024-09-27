@@ -2,6 +2,13 @@
 
 ### Fixed
 
+- Fixed an issue where registry authentication couldn't be specified on the
+  provider. (https://github.com/pulumi/pulumi-docker-build/issues/262)
+
+## 0.0.6 (2024-08-13)
+
+### Fixed
+
 - Refreshing an `Index` resource will no longer fail if its stored credentials
   have expired. (https://github.com/pulumi/pulumi-docker-build/pull/194)
 
