@@ -55,8 +55,8 @@ func (c *Config) Annotate(a infer.Annotator) {
 }
 
 // Configure validates and processes user-provided configuration values.
-func (c *Config) Configure(_ context.Context) error {
-	h, err := newHost(c)
+func (c *Config) Configure(ctx context.Context) error {
+	h, err := newHost(ctx, c)
 	if err != nil {
 		return fmt.Errorf("getting host: %w", err)
 	}
