@@ -1,6 +1,8 @@
 module github.com/pulumi/pulumi-docker-build
 
-go 1.21.7
+go 1.22
+
+toolchain go1.23.2
 
 require (
 	github.com/aws/aws-sdk-go v1.54.18
@@ -13,11 +15,11 @@ require (
 	github.com/moby/patternmatcher v0.6.0
 	github.com/muesli/reflow v0.3.0
 	github.com/otiai10/copy v1.14.0
-	github.com/pulumi/providertest v0.0.13
-	github.com/pulumi/pulumi-go-provider v0.21.0
-	github.com/pulumi/pulumi-java/pkg v0.13.0
-	github.com/pulumi/pulumi/pkg/v3 v3.128.0
-	github.com/pulumi/pulumi/sdk/v3 v3.128.0
+	github.com/pulumi/providertest v0.1.3
+	github.com/pulumi/pulumi-go-provider v0.23.0
+	github.com/pulumi/pulumi-java/pkg v0.16.1
+	github.com/pulumi/pulumi/pkg/v3 v3.135.1
+	github.com/pulumi/pulumi/sdk/v3 v3.135.1
 	github.com/regclient/regclient v0.7.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.11.0
@@ -223,7 +225,7 @@ require (
 	github.com/prometheus/common v0.44.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
-	github.com/pulumi/esc v0.9.1 // indirect
+	github.com/pulumi/esc v0.10.0 // indirect
 	github.com/pulumi/inflector v0.1.1 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
@@ -246,7 +248,6 @@ require (
 	github.com/tonistiigi/go-csvvalue v0.0.0-20240710180619-ddb21b71c0b4 // indirect
 	github.com/tonistiigi/units v0.0.0-20180711220420-6950e57a87ea // indirect
 	github.com/tonistiigi/vt100 v0.0.0-20240514184818-90bafcd6abab // indirect
-	github.com/tweekmonster/luser v0.0.0-20161003172636-3fa38070dbd7 // indirect
 	github.com/uber/jaeger-client-go v2.30.0+incompatible // indirect
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/ulikunitz/xz v0.5.12 // indirect
@@ -276,7 +277,7 @@ require (
 	gocloud.dev v0.37.0 // indirect
 	gocloud.dev/secrets/hashivault v0.37.0 // indirect
 	golang.org/x/mod v0.18.0 // indirect
-	golang.org/x/net v0.26.0 // indirect
+	golang.org/x/net v0.27.0 // indirect
 	golang.org/x/oauth2 v0.18.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.24.0 // indirect
