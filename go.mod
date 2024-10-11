@@ -17,15 +17,15 @@ require (
 	github.com/muesli/reflow v0.3.0
 	github.com/otiai10/copy v1.14.0
 	github.com/pulumi/providertest v0.0.13
-	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v0.0.0-20240624150732-fa777213effd
+	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v0.0.0-20241007152751-9462eb25c7f9
 	github.com/pulumi/pulumi-go-provider v0.23.0
 	github.com/pulumi/pulumi-java/pkg v0.16.1
 	github.com/pulumi/pulumi-yaml v1.10.3
-	github.com/pulumi/pulumi/pkg/v3 v3.134.1
-	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20240910123829-a0ad0ad24344
-	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20240910123829-a0ad0ad24344
-	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20240910123829-a0ad0ad24344
-	github.com/pulumi/pulumi/sdk/v3 v3.134.1
+	github.com/pulumi/pulumi/pkg/v3 v3.136.1
+	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20241011192335-fd77fa0e32b8
+	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20241011192335-fd77fa0e32b8
+	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20241011192335-fd77fa0e32b8
+	github.com/pulumi/pulumi/sdk/v3 v3.136.1
 	github.com/regclient/regclient v0.7.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.11.0
@@ -260,6 +260,7 @@ require (
 	github.com/jirfag/go-printf-func-name v0.0.0-20200119135958-7558a9eaa5af // indirect
 	github.com/jjti/go-spancheck v0.6.1 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	github.com/jonboulle/clockwork v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/julz/importas v0.1.0 // indirect
