@@ -21,6 +21,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/blang/semver"
 	"github.com/docker/buildx/builder"
 	"github.com/docker/buildx/store/storeutil"
 	"github.com/docker/cli/cli/command"
@@ -35,9 +36,12 @@ type host struct {
 	config   *Config
 	builders map[string]*cachedBuilder
 	auths    map[string]cfgtypes.AuthConfig
+
+	// True if the buildkit daemon is at least v0.13.
+	supportsMultipleExports bool
 }
 
-func newHost(config *Config) (*host, error) {
+func newHost(ctx context.Context, config *Config) (*host, error) {
 	docker, err := newDockerCLI(config)
 	if err != nil {
 		return nil, err
@@ -47,11 +51,13 @@ func newHost(config *Config) (*host, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	h := &host{
-		cli:      docker,
-		config:   config,
-		builders: map[string]*cachedBuilder{},
-		auths:    auths,
+		cli:                     docker,
+		config:                  config,
+		builders:                map[string]*cachedBuilder{},
+		auths:                   auths,
+		supportsMultipleExports: false, // Determined when we boot the builder.
 	}
 	return h, err
 }
@@ -151,9 +157,21 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 	// Attempt to load nodes in order to determine the builder's driver. Ignore
 	// errors for "exec" builds because it's possible to request builders with
 	// drivers that are unknown to us.
-	nodes, err := b.LoadNodes(context.Background())
+	nodes, err := b.LoadNodes(context.Background(), builder.WithData())
 	if err != nil && !build.ShouldExec() {
 		return nil, fmt.Errorf("loading nodes: %w", err)
+	}
+	// Attempt to determine our builder's buildkit version.
+	for idx := range nodes {
+		if nodes[idx].Version == "" {
+			continue
+		}
+		v, err := semver.ParseTolerant(nodes[idx].Version)
+		if err != nil {
+			return nil, fmt.Errorf("parsing buildkit version %q: %w", nodes[idx].Version, err)
+		}
+		h.supportsMultipleExports = v.GE(semver.MustParse("0.13.0"))
+		break
 	}
 
 	cached := &cachedBuilder{name: b.Name, driver: b.Driver, nodes: nodes}

@@ -58,6 +58,8 @@ type Client interface {
 	ManifestCreate(ctx context.Context, push bool, target string, refs ...string) error
 	ManifestInspect(ctx context.Context, target string) (string, error)
 	ManifestDelete(ctx context.Context, target string) error
+
+	SupportsMultipleExports() bool
 }
 
 // Build encapsulates all of the user-provider build parameters and options.
@@ -87,8 +89,6 @@ func newDockerCLI(config *Config) (*command.DockerCli, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	// TODO: Log some version information for debugging.
 
 	return cli, nil
 }
