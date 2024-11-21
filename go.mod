@@ -32,7 +32,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	github.com/theupdateframework/notary v0.7.0
 	github.com/tonistiigi/fsutil v0.0.0-20241028165955-397af5306b5c
-	go.uber.org/mock v0.4.0
+	go.uber.org/mock v0.5.0
 	golang.org/x/crypto v0.27.0
 	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0
 	google.golang.org/protobuf v1.35.1
