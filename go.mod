@@ -31,7 +31,7 @@ require (
 	github.com/spf13/afero v1.11.0
 	github.com/stretchr/testify v1.9.0
 	github.com/theupdateframework/notary v0.7.0
-	github.com/tonistiigi/fsutil v0.0.0-20241028165955-397af5306b5c
+	github.com/tonistiigi/fsutil v0.0.0-20241104203517-8d32dbdd27d3
 	go.uber.org/mock v0.5.0
 	golang.org/x/crypto v0.27.0
 	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0
