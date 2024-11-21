@@ -22,9 +22,12 @@ var _ = (infer.Enum[NetworkMode])((*NetworkMode)(nil))
 type NetworkMode string
 
 const (
-	Default NetworkMode = "default" // Default network mode.
-	Host    NetworkMode = "host"    // Host network mode.
-	None    NetworkMode = "none"    // None or no network mode.
+	// Default network mode.
+	Default NetworkMode = "default"
+	// Host network mode.
+	Host NetworkMode = "host"
+	// None or no network mode.
+	None NetworkMode = "none"
 )
 
 // Values returns all valid NetworkMode values for SDK generation.
