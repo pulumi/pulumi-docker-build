@@ -64,7 +64,7 @@ func TestImageLifecycle(t *testing.T) {
 				ctrl := gomock.NewController(t)
 				c := NewMockClient(ctrl)
 				c.EXPECT().BuildKitEnabled().Return(true, nil).AnyTimes()
-				c.EXPECT().Build(gomock.Any(), gomock.AssignableToTypeOf(build{})).DoAndReturn(
+				c.EXPECT().Build(gomock.Any(), gomock.AssignableToTypeOf(&build{})).DoAndReturn(
 					func(_ context.Context, b Build) (*client.SolveResponse, error) {
 						assert.Equal(t, "testdata/noop/Dockerfile", b.BuildOptions().DockerfileName)
 						return &client.SolveResponse{
@@ -238,7 +238,7 @@ func TestImageLifecycle(t *testing.T) {
 				ctrl := gomock.NewController(t)
 				c := NewMockClient(ctrl)
 				c.EXPECT().BuildKitEnabled().Return(true, nil).AnyTimes()
-				c.EXPECT().Build(gomock.Any(), gomock.AssignableToTypeOf(build{})).DoAndReturn(
+				c.EXPECT().Build(gomock.Any(), gomock.AssignableToTypeOf(&build{})).DoAndReturn(
 					func(_ context.Context, b Build) (*client.SolveResponse, error) {
 						assert.Equal(t, "testdata/noop/Dockerfile", b.BuildOptions().DockerfileName)
 						return &client.SolveResponse{
@@ -279,7 +279,7 @@ func TestImageLifecycle(t *testing.T) {
 				ctrl := gomock.NewController(t)
 				c := NewMockClient(ctrl)
 				c.EXPECT().BuildKitEnabled().Return(true, nil).AnyTimes()
-				c.EXPECT().Build(gomock.Any(), gomock.AssignableToTypeOf(build{})).DoAndReturn(
+				c.EXPECT().Build(gomock.Any(), gomock.AssignableToTypeOf(&build{})).DoAndReturn(
 					func(_ context.Context, b Build) (*client.SolveResponse, error) {
 						assert.Equal(t, "FROM alpine:latest", b.Inline())
 						return &client.SolveResponse{

@@ -329,8 +329,8 @@ func (c *cli) execBuild(b Build) (*client.SolveResponse, error) {
 			return nil, err
 		}
 		// We abuse the pb.Secret proto by stuffing the secret's value in
-		// XXX_unrecognized. We never serialize this proto so this is tolerable.
-		env = append(env, fmt.Sprintf("%s=%s", envvar, s.XXX_unrecognized))
+		// Env. We never serialize this proto so this is tolerable.
+		env = append(env, fmt.Sprintf("%s=%s", envvar, s.Env))
 		args = append(args, "--secret", fmt.Sprintf("id=%s,env=%s", s.ID, envvar))
 	}
 
