@@ -925,7 +925,7 @@ func TestValidateImageArgs(t *testing.T) {
 			Exports: []Export{{Raw: "type=local"}, {Raw: "type=tar"}},
 		}
 		_, err := args.validate(false, false)
-		assert.ErrorContains(t, err, "multiple exports require a v0.13 buildkit daemon or newe")
+		assert.ErrorContains(t, err, "multiple exports require a v0.13 buildkit daemon or newer")
 	})
 
 	t.Run("cache and export entries are union-ish", func(t *testing.T) {
