@@ -58,9 +58,28 @@ func TestValidateDockerfile(t *testing.T) {
 			wantErr: "unknown instruction: RUNN",
 		},
 		{
+			name: "invalid syntax inline with default syntax directive",
+			d: Dockerfile{
+				Inline: `# syntax=docker/dockerfile:1
+				RUNN it`,
+			},
+			wantErr: "unknown instruction: RUNN",
+		},
+		{
 			name: "valid syntax inline",
 			d: Dockerfile{
 				Inline: "FROM scratch",
+			},
+		},
+		{
+			name: "valid custom syntax inline",
+			d: Dockerfile{
+				Inline: `# syntax=docker.io/docker/dockerfile:1.7-labs
+FROM public.ecr.aws/docker/library/node:22-alpine AS base
+
+WORKDIR /app
+COPY --parents ./package.json ./package-lock.json ./apps/*/package.json ./packages/*/package.json ./
+`,
 			},
 		},
 		{
