@@ -24,6 +24,7 @@ import (
 type MockClient struct {
 	ctrl     *gomock.Controller
 	recorder *MockClientMockRecorder
+	isgomock struct{}
 }
 
 // MockClientMockRecorder is the mock recorder for MockClient.
@@ -360,6 +361,7 @@ func (c *MockClientSupportsMultipleExportsCall) DoAndReturn(f func() bool) *Mock
 type MockBuild struct {
 	ctrl     *gomock.Controller
 	recorder *MockBuildMockRecorder
+	isgomock struct{}
 }
 
 // MockBuildMockRecorder is the mock recorder for MockBuild.
