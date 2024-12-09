@@ -5,6 +5,17 @@
 - Multiple exports are now allowed if the build daemon is detected to have
   version 0.13 of Buildkit or newer. (https://github.com/pulumi/pulumi-docker-build/issues/21)
 
+### Changed
+
+- Upgraded buildx from 0.16.0 to 0.18.0.
+
+## 0.0.7 (2024-10-16)
+
+### Fixed
+
+- Fixed an issue where registry authentication couldn't be specified on the
+  provider. (https://github.com/pulumi/pulumi-docker-build/issues/262)
+
 ## 0.0.6 (2024-08-13)
 
 ### Fixed

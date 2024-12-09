@@ -103,18 +103,12 @@ func NewBuildxProvider() provider.Provider {
 					},
 					"nodejs": tsgen.NodePackageInfo{
 						RespectSchemaVersion: true,
-						Dependencies: map[string]string{
-							"@pulumi/pulumi": "^3.0.0",
-						},
 					},
 					"python": pygen.PackageInfo{
 						RespectSchemaVersion: true,
 						PyProject: struct {
 							Enabled bool `json:"enabled,omitempty"`
 						}{Enabled: true},
-						Requires: map[string]string{
-							"pulumi": ">=3.0.0,<4.0.0",
-						},
 					},
 				},
 			},

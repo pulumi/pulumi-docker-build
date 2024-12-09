@@ -42,15 +42,9 @@
       "gradleTest": ""
     },
     "nodejs": {
-      "dependencies": {
-        "@pulumi/pulumi": "^3.0.0"
-      },
       "respectSchemaVersion": true
     },
     "python": {
-      "requires": {
-        "pulumi": ">=3.0.0,<4.0.0"
-      },
       "respectSchemaVersion": true,
       "pyproject": {
         "enabled": true

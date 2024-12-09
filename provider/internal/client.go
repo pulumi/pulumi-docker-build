@@ -22,13 +22,13 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/distribution/reference"
 	buildx "github.com/docker/buildx/build"
 	"github.com/docker/buildx/commands"
 	controllerapi "github.com/docker/buildx/controller/pb"
+	"github.com/docker/buildx/util/confutil"
 	"github.com/docker/buildx/util/dockerutil"
 	"github.com/docker/buildx/util/platformutil"
 	"github.com/docker/buildx/util/progress"
@@ -197,7 +197,7 @@ func (c *cli) Build(
 				DockerfilePath:   opts.DockerfileName,
 				DockerfileInline: build.Inline(),
 				NamedContexts:    namedContexts,
-				InStream:         strings.NewReader(""),
+				InStream:         buildx.NewSyncMultiReader(strings.NewReader("")),
 			},
 			// Disable default provenance for now. Docker's `manifest create`
 			// doesn't handle manifests with provenance included; more reason
@@ -230,7 +230,7 @@ func (c *cli) Build(
 		b.nodes,
 		payload,
 		dockerutil.NewClient(c),
-		filepath.Dir(c.ConfigFile().Filename),
+		confutil.NewConfig(c),
 		printer,
 	)
 	if err != nil {

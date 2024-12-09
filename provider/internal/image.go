@@ -471,15 +471,15 @@ type build struct {
 	exec    bool
 }
 
-func (b build) BuildOptions() controllerapi.BuildOptions {
-	return b.opts
+func (b *build) BuildOptions() controllerapi.BuildOptions {
+	return b.opts //nolint:govet // copylocks - not serialized.
 }
 
-func (b build) Inline() string {
+func (b *build) Inline() string {
 	return b.inline
 }
 
-func (b build) Secrets() session.Attachable {
+func (b *build) Secrets() session.Attachable {
 	m := map[string][]byte{}
 	for k, v := range b.secrets {
 		m[k] = []byte(v)
@@ -487,7 +487,7 @@ func (b build) Secrets() session.Attachable {
 	return secretsprovider.FromMap(m)
 }
 
-func (b build) ShouldExec() bool {
+func (b *build) ShouldExec() bool {
 	return b.exec
 }
 
@@ -513,8 +513,8 @@ func (ia ImageArgs) toBuild(
 				"Instead, perform one cached build per platform and create an Index to join them all together.")
 	}
 
-	return build{
-		opts:    opts,
+	return &build{
+		opts:    opts, //nolint:govet // copylocks - not serialized.
 		inline:  ia.Dockerfile.Inline,
 		secrets: ia.Secrets,
 		exec:    ia.Exec,
@@ -634,10 +634,10 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 	secrets := []*controllerapi.Secret{}
 	for k, v := range normalized.Secrets {
 		// We abuse the pb.Secret proto by stuffing the secret's value in
-		// XXX_unrecognized. We never serialize this proto so this is tolerable.
+		// Env. We never serialize this proto so this is tolerable.
 		secrets = append(secrets, &controllerapi.Secret{
-			ID:               k,
-			XXX_unrecognized: []byte(v),
+			ID:  k,
+			Env: v,
 		})
 	}
 
@@ -667,7 +667,7 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 		Target:         normalized.Target,
 	}
 
-	return opts, multierr
+	return opts, multierr //nolint:govet // copylocks - not serialized.
 }
 
 // Create builds an image using buildkit.

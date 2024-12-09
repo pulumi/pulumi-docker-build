@@ -689,8 +689,10 @@ func (c CacheTo) validate(preview bool) (*controllerapi.CacheOptionsEntry, error
 type CacheMode string
 
 const (
-	Min CacheMode = "min" // Min cache mode.
-	Max CacheMode = "max" // Max cache mode.
+	// Min cache mode.
+	Min CacheMode = "min"
+	// Max cache mode.
+	Max CacheMode = "max"
 )
 
 // Values returns all valid CacheMode values for SDK generation.
@@ -711,9 +713,12 @@ func (CacheMode) Values() []infer.EnumValue[CacheMode] {
 type CompressionType string
 
 const (
-	Gzip    CompressionType = "gzip"    // Gzip compression.
-	Estargz CompressionType = "estargz" // Estargz compression.
-	Zstd    CompressionType = "zstd"    // Zstd compression.
+	// Gzip compression.
+	Gzip CompressionType = "gzip"
+	// Estargz compression.
+	Estargz CompressionType = "estargz"
+	// Zstd compression.
+	Zstd CompressionType = "zstd"
 )
 
 // Values returns all valid CompressionType values for SDK generation.

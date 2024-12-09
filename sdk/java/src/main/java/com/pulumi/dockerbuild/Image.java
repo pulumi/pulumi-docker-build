@@ -812,7 +812,7 @@ public class Image extends com.pulumi.resources.CustomResource {
      * 
      * Empty if the image was not exported.
      * 
-     * Registry images can be referenced precisely as `&lt;tag&gt;{@literal @}<digest&gt;`. The
+     * Registry images can be referenced precisely as `&lt;tag&gt;{@literal @}&lt;digest&gt;`. The
      * `ref` output provides one such reference as a convenience.
      * 
      */
@@ -825,7 +825,7 @@ public class Image extends com.pulumi.resources.CustomResource {
      * 
      * Empty if the image was not exported.
      * 
-     * Registry images can be referenced precisely as `&lt;tag&gt;{@literal @}<digest&gt;`. The
+     * Registry images can be referenced precisely as `&lt;tag&gt;{@literal @}&lt;digest&gt;`. The
      * `ref` output provides one such reference as a convenience.
      * 
      */
