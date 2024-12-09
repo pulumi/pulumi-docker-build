@@ -99,8 +99,11 @@ func (d *Dockerfile) validate(preview bool, c *Context) error {
 func parseDockerfile(r io.Reader) error {
 	// Don't attempt to parse if this uses a custom syntax.
 	df, _ := io.ReadAll(r)
-	_, _, _, custom := parser.DetectSyntax(df)
-	if custom {
+	syntax, _, _, _ := parser.DetectSyntax(df)
+	if syntax == "" {
+		syntax = os.Getenv("BUILDKIT_SYNTAX")
+	}
+	if syntax != "" && syntax != "docker/dockerfile:1" {
 		return nil
 	}
 

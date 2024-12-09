@@ -58,6 +58,14 @@ func TestValidateDockerfile(t *testing.T) {
 			wantErr: "unknown instruction: RUNN",
 		},
 		{
+			name: "invalid syntax inline with default syntax directive",
+			d: Dockerfile{
+				Inline: `# syntax=docker/dockerfile:1
+				RUNN it`,
+			},
+			wantErr: "unknown instruction: RUNN",
+		},
+		{
 			name: "valid syntax inline",
 			d: Dockerfile{
 				Inline: "FROM scratch",
