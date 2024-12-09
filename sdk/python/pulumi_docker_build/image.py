@@ -852,7 +852,7 @@ class Image(pulumi.CustomResource):
             context={
                 "location": "app",
                 "named": {
-                    "golang_latest": {
+                    "golang:latest": {
                         "location": "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
                     },
                 },
@@ -1290,7 +1290,7 @@ class Image(pulumi.CustomResource):
             context={
                 "location": "app",
                 "named": {
-                    "golang_latest": {
+                    "golang:latest": {
                         "location": "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984",
                     },
                 },

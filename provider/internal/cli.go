@@ -141,6 +141,10 @@ func (c *cli) Err() *streams.Out {
 	return streams.NewOut(&c.err)
 }
 
+func (c *cli) SupportsMultipleExports() bool {
+	return c.host.supportsMultipleExports
+}
+
 // rc returns a registry client with matching auth.
 func (c *cli) rc() *regclient.RegClient {
 	hosts := []config.Host{}
