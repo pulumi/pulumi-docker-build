@@ -64,6 +64,17 @@ func TestValidateDockerfile(t *testing.T) {
 			},
 		},
 		{
+			name: "valid custom syntax inline",
+			d: Dockerfile{
+				Inline: `# syntax=docker.io/docker/dockerfile:1.7-labs
+FROM public.ecr.aws/docker/library/node:22-alpine AS base
+
+WORKDIR /app
+COPY --parents ./package.json ./package-lock.json ./apps/*/package.json ./packages/*/package.json ./
+`,
+			},
+		},
+		{
 			name:    "unset",
 			d:       Dockerfile{},
 			wantErr: "missing 'location' or 'inline'",

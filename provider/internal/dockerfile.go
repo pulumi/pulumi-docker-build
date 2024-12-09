@@ -15,6 +15,7 @@
 package internal
 
 import (
+	"bytes"
 	"errors"
 	"io"
 	"os"
@@ -96,13 +97,22 @@ func (d *Dockerfile) validate(preview bool, c *Context) error {
 }
 
 func parseDockerfile(r io.Reader) error {
-	parsed, err := parser.Parse(r)
+	// Don't attempt to parse if this uses a custom syntax.
+	df, _ := io.ReadAll(r)
+	_, _, _, custom := parser.DetectSyntax(df)
+	if custom {
+		return nil
+	}
+
+	parsed, err := parser.Parse(bytes.NewReader(df))
 	if err != nil {
 		return newCheckFailure(err, "dockerfile")
 	}
+
 	_, _, err = instructions.Parse(parsed.AST, nil)
 	if err != nil {
-		return err
+		return newCheckFailure(err, "dockerfile")
 	}
+
 	return nil
 }

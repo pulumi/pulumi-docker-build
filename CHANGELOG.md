@@ -4,6 +4,9 @@
 
 - Upgraded buildx from 0.16.0 to 0.18.0.
 
+### Fixed
+- Custom `# syntax=` directives no longer cause validation errors. (https://github.com/pulumi/pulumi-docker-build/issues/300)
+
 ## 0.0.7 (2024-10-16)
 
 ### Fixed
