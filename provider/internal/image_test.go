@@ -64,6 +64,7 @@ func TestImageLifecycle(t *testing.T) {
 				ctrl := gomock.NewController(t)
 				c := NewMockClient(ctrl)
 				c.EXPECT().BuildKitEnabled().Return(true, nil).AnyTimes()
+				c.EXPECT().SupportsMultipleExports().Return(true).AnyTimes()
 				c.EXPECT().Build(gomock.Any(), gomock.AssignableToTypeOf(&build{})).DoAndReturn(
 					func(_ context.Context, b Build) (*client.SolveResponse, error) {
 						assert.Equal(t, "testdata/noop/Dockerfile", b.BuildOptions().DockerfileName)
@@ -238,6 +239,7 @@ func TestImageLifecycle(t *testing.T) {
 				ctrl := gomock.NewController(t)
 				c := NewMockClient(ctrl)
 				c.EXPECT().BuildKitEnabled().Return(true, nil).AnyTimes()
+				c.EXPECT().SupportsMultipleExports().Return(true).AnyTimes()
 				c.EXPECT().Build(gomock.Any(), gomock.AssignableToTypeOf(&build{})).DoAndReturn(
 					func(_ context.Context, b Build) (*client.SolveResponse, error) {
 						assert.Equal(t, "testdata/noop/Dockerfile", b.BuildOptions().DockerfileName)
@@ -279,6 +281,7 @@ func TestImageLifecycle(t *testing.T) {
 				ctrl := gomock.NewController(t)
 				c := NewMockClient(ctrl)
 				c.EXPECT().BuildKitEnabled().Return(true, nil).AnyTimes()
+				c.EXPECT().SupportsMultipleExports().Return(true).AnyTimes()
 				c.EXPECT().Build(gomock.Any(), gomock.AssignableToTypeOf(&build{})).DoAndReturn(
 					func(_ context.Context, b Build) (*client.SolveResponse, error) {
 						assert.Equal(t, "FROM alpine:latest", b.Inline())
@@ -829,7 +832,7 @@ func TestValidateImageArgs(t *testing.T) {
 			CacheTo:   []CacheTo{{Raw: "=badcacheto"}},
 		}
 
-		_, err := args.validate(false)
+		_, err := args.validate(true, false)
 		assert.ErrorContains(t, err, "invalid value badexport")
 		assert.ErrorContains(t, err, "OSAndVersion specifier component must matc")
 		assert.ErrorContains(t, err, "badcachefrom")
@@ -845,12 +848,12 @@ func TestValidateImageArgs(t *testing.T) {
 			Tags:    []string{"my-tag"},
 			Exports: []Export{{Registry: &ExportRegistry{ExportImage{Push: pulumi.BoolRef(true)}}}},
 		}
-		actual, err := args.validate(true)
+		actual, err := args.validate(true, true)
 		assert.NoError(t, err)
 		assert.Equal(t, "image", actual.Exports[0].Type)
 		assert.Equal(t, "false", actual.Exports[0].Attrs["push"])
 
-		actual, err = args.validate(false)
+		actual, err = args.validate(true, false)
 		assert.NoError(t, err)
 		assert.Equal(t, "image", actual.Exports[0].Type)
 		assert.Equal(t, "true", actual.Exports[0].Attrs["push"])
@@ -886,11 +889,11 @@ func TestValidateImageArgs(t *testing.T) {
 			Tags: []string{"known", ""},
 		}
 
-		_, err := unknowns.validate(true)
+		_, err := unknowns.validate(true, true)
 		assert.NoError(t, err)
 		assert.False(t, unknowns.buildable())
 
-		_, err = unknowns.validate(false)
+		_, err = unknowns.validate(true, false)
 		assert.Error(t, err)
 	})
 
@@ -903,26 +906,26 @@ func TestValidateImageArgs(t *testing.T) {
 			Exports:   []Export{{Raw: "type=registry", Disabled: true}},
 		}
 
-		opts, err := args.validate(true)
+		opts, err := args.validate(true, true)
 		assert.NoError(t, err)
 		assert.Len(t, opts.CacheTo, 0)
 		assert.Len(t, opts.CacheFrom, 0)
 		assert.Len(t, opts.Exports, 0)
 
-		opts, err = args.validate(false)
+		opts, err = args.validate(true, false)
 		assert.NoError(t, err)
 		assert.Len(t, opts.CacheTo, 0)
 		assert.Len(t, opts.CacheFrom, 0)
 		assert.Len(t, opts.Exports, 0)
 	})
 
-	t.Run("multiple exports aren't allowed yet", func(t *testing.T) {
+	t.Run("multiple exports pre-0.13", func(t *testing.T) {
 		t.Parallel()
 		args := ImageArgs{
 			Exports: []Export{{Raw: "type=local"}, {Raw: "type=tar"}},
 		}
-		_, err := args.validate(false)
-		assert.ErrorContains(t, err, "multiple exports are currently unsupported")
+		_, err := args.validate(false, false)
+		assert.ErrorContains(t, err, "multiple exports require a v0.13 buildkit daemon or newer")
 	})
 
 	t.Run("cache and export entries are union-ish", func(t *testing.T) {
@@ -932,7 +935,7 @@ func TestValidateImageArgs(t *testing.T) {
 			CacheTo:   []CacheTo{{Raw: "type=tar", Local: &CacheToLocal{Dest: "/foo"}}},
 			CacheFrom: []CacheFrom{{Raw: "type=tar", Registry: &CacheFromRegistry{}}},
 		}
-		_, err := args.validate(false)
+		_, err := args.validate(true, false)
 		assert.ErrorContains(t, err, "exports should only specify one export type")
 		assert.ErrorContains(t, err, "cacheFrom should only specify one cache type")
 		assert.ErrorContains(t, err, "cacheTo should only specify one cache type")
@@ -949,7 +952,7 @@ func TestValidateImageArgs(t *testing.T) {
 		} {
 			d := d
 			args := ImageArgs{Dockerfile: &d}
-			_, err := args.validate(false)
+			_, err := args.validate(true, false)
 			assert.ErrorContains(t, err, "unknown instruction: RUNN (did you mean RUN?)")
 		}
 	})
@@ -1061,6 +1064,6 @@ func TestToBuild(t *testing.T) {
 		},
 	}
 
-	_, err := ia.toBuild(context.Background(), false)
+	_, err := ia.toBuild(context.Background(), true, false)
 	assert.NoError(t, err)
 }
