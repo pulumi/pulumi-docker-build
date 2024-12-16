@@ -132,6 +132,7 @@ jobs:
     - name: Build Provider
       run: make provider
     - name: Check worktree clean
+      id: worktreeClean
       uses: pulumi/git-status-check-action@54000b91124a8dd9fd6a872cb41f5dd246a46e7c # v1.1.1
       with:
         allowed-changes: |-
@@ -140,6 +141,7 @@ jobs:
           sdk/go/**/pulumiUtilities.go
           sdk/nodejs/package.json
           sdk/python/pyproject.toml
+      continue-on-error: true
     - run: git status --porcelain
     - name: Tar provider binaries
       run: tar -zcf ${{ github.workspace }}/bin/provider.tar.gz -C ${{
@@ -239,6 +241,7 @@ jobs:
     - name: Build SDK
       run: make build_${{ matrix.language }}
     - name: Check worktree clean
+      id: worktreeClean
       uses: pulumi/git-status-check-action@54000b91124a8dd9fd6a872cb41f5dd246a46e7c # v1.1.1
       with:
         allowed-changes: |-
@@ -247,6 +250,18 @@ jobs:
           sdk/go/**/pulumiUtilities.go
           sdk/nodejs/package.json
           sdk/python/pyproject.toml
+      continue-on-error: true
+    - name: Commit SDK changes for Renovate
+      if: steps.worktreeClean.outcome == 'failure' && github.user ==
+        'pulumi-renovate[bot]'
+      shell: bash
+      run: |
+        git add sdk 
+        git commit -m 'Commit SDK for Renovate' 
+        git push 
+        gh run cancel ${{ github.run_id }} 
+    - if: failure()
+      run: exit 1
     - run: git status --porcelain
     - name: Tar SDK folder
       run: tar -zcf sdk/${{ matrix.language }}.tar.gz -C sdk/${{ matrix.language }} .
