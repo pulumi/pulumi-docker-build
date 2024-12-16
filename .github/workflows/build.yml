@@ -70,7 +70,7 @@ jobs:
       with:
         set-env: PROVIDER_VERSION
     - name: Install Go
-      uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+      uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a # v5.2.0
       with:
         go-version: ${{ env.GOVERSION }}
         cache-dependency-path: "**/*.sum"
@@ -139,7 +139,7 @@ jobs:
     - name: Test Provider Library
       run: make test_provider
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@015f24e6818733317a2da2edd6290ab26238649a # v5.0.7
+      uses: codecov/codecov-action@7f8b4b4bde536c465e797be725718b88c5d95e0e # v5.1.1
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     - if: failure() && github.event_name == 'push'
@@ -173,7 +173,7 @@ jobs:
       with:
         set-env: PROVIDER_VERSION
     - name: Install Go
-      uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+      uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a # v5.2.0
       with:
         go-version: ${{ env.GOVERSION }}
         cache-dependency-path: "**/*.sum"
@@ -274,7 +274,7 @@ jobs:
       with:
         set-env: PROVIDER_VERSION
     - name: Install Go
-      uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+      uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a # v5.2.0
       with:
         go-version: ${{ env.GOVERSION }}
         cache-dependency-path: "**/*.sum"
@@ -390,7 +390,7 @@ jobs:
       with:
         set-env: PROVIDER_VERSION
     - name: Install Go
-      uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+      uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a # v5.2.0
       with:
         go-version: ${{ env.GOVERSION }}
         cache-dependency-path: "**/*.sum"
@@ -454,7 +454,7 @@ jobs:
         repository: pulumi/scripts
     - run: echo "ci-scripts" >> .git/info/exclude
     - name: Install Go
-      uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+      uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a # v5.2.0
       with:
         go-version: ${{ env.GOVERSION }}
         cache-dependency-path: "**/*.sum"
@@ -524,7 +524,7 @@ jobs:
         lfs: true
         ref: ${{ env.PR_COMMIT_SHA }}
     - name: Install Go
-      uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+      uses: actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a # v5.2.0
       with:
         go-version: ${{ env.GOVERSION }}
         cache-dependency-path: "**/*.sum"
