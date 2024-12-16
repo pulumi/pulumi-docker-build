@@ -253,8 +253,7 @@ jobs:
             sdk/python/pyproject.toml
       - name: Commit SDK changes for Renovate
         if:
-          failure() && steps.worktreeClean.outcome == 'failure' && github.user ==
-          'blampe'
+          failure() && steps.worktreeClean.outcome == 'failure' && github.actor == 'blampe'
         shell: bash
         run: |
           git add sdk 
