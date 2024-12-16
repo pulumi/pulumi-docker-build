@@ -250,9 +250,8 @@ jobs:
           sdk/go/**/pulumiUtilities.go
           sdk/nodejs/package.json
           sdk/python/pyproject.toml
-      continue-on-error: true
     - name: Commit SDK changes for Renovate
-      if: steps.worktreeClean.outcome == 'failure' && github.user ==
+      if: failure() && steps.worktreeClean.outcome == 'failure' && github.user ==
         'pulumi-renovate[bot]'
       shell: bash
       run: |
@@ -260,8 +259,6 @@ jobs:
         git commit -m 'Commit SDK for Renovate' 
         git push 
         gh run cancel ${{ github.run_id }} 
-    - if: failure()
-      run: exit 1
     - run: git status --porcelain
     - name: Tar SDK folder
       run: tar -zcf sdk/${{ matrix.language }}.tar.gz -C sdk/${{ matrix.language }} .
