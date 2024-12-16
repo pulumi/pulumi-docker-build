@@ -260,8 +260,7 @@ jobs:
           git config --global user.name "pulumi-bot"
           git add sdk 
           git commit -m 'Commit SDK for Renovate' 
-          git push 
-          gh run cancel ${{ github.run_id }}
+          git push origin HEAD:${{ github.ref }}
       - run: git status --porcelain
       - name: Tar SDK folder
         run: tar -zcf sdk/${{ matrix.language }}.tar.gz -C sdk/${{ matrix.language }} .
