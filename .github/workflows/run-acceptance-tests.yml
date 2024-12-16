@@ -256,6 +256,8 @@ jobs:
           failure() && steps.worktreeClean.outcome == 'failure' && github.actor == 'blampe'
         shell: bash
         run: |
+          git config --global user.email "bot@pulumi.com"
+          git config --global user.name "pulumi-bot"
           git add sdk 
           git commit -m 'Commit SDK for Renovate' 
           git push 
