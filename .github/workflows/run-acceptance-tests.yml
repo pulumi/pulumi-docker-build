@@ -288,7 +288,7 @@ jobs:
     needs:
       - build_sdks
     strategy:
-      fail-fast: github.actor != 'blampe'
+      fail-fast: ${{ github.actor != 'blampe' }}
       matrix:
         language:
           - nodejs
