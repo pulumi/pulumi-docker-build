@@ -17,7 +17,3 @@ appropriate for managing resources unrelated to building images.
 | ----------------       | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `@pulumi/docker-build` | Anything related to building images with `docker build`.                                                                                                 |
 | `@pulumi/docker`       | Everything else -- including running containers and creating networks.                                                                                   |
-
-## Reference
-
-For more information, including examples and migration guidance, please see the Docker-Build provider's detailed [API documentation](https://www.pulumi.com/registry/packages/docker-build/).

@@ -258,6 +258,10 @@ jobs:
         run: |
           git config --global user.email "bot@pulumi.com"
           git config --global user.name "pulumi-bot"
+          git stash
+          git fetch
+          git checkout origin/${{ github.head_ref }}
+          git pop
           git add sdk 
           git commit -m 'Commit SDK for Renovate' 
           git push origin HEAD:${{ github.head_ref }}
