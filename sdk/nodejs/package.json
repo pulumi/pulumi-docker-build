@@ -1,6 +1,6 @@
 {
     "name": "@pulumi/docker-build",
-    "version": "0.1.0-alpha.0+dev",
+    "version": "0.1.0-alpha.1734394807+87bd0f5",
     "keywords": [
         "docker",
         "buildkit",
@@ -23,6 +23,6 @@
     "pulumi": {
         "resource": true,
         "name": "docker-build",
-        "version": "0.1.0-alpha.0+dev"
+        "version": "0.1.0-alpha.1734394807+87bd0f5"
     }
 }
