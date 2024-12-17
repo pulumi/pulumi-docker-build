@@ -261,7 +261,7 @@ jobs:
           git stash
           git fetch
           git checkout origin/${{ github.head_ref }}
-          git pop
+          git stash pop
           git add sdk 
           git commit -m 'Commit SDK for Renovate' 
           git push origin HEAD:${{ github.head_ref }}
@@ -288,7 +288,7 @@ jobs:
     needs:
       - build_sdks
     strategy:
-      fail-fast: true
+      fail-fast: github.actor != 'blampe'
       matrix:
         language:
           - nodejs
