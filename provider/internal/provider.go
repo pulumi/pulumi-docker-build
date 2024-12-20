@@ -96,7 +96,7 @@ func NewBuildxProvider() provider.Provider {
 						BuildFiles:                      "gradle",
 						GradleNexusPublishPluginVersion: "1.1.0",
 						Dependencies: map[string]string{
-							"com.pulumi:pulumi":               "0.9.9",
+							"com.pulumi:pulumi":               "0.20.0",
 							"com.google.code.gson:gson":       "2.8.9",
 							"com.google.code.findbugs:jsr305": "3.0.2",
 						},
