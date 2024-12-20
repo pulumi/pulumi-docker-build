@@ -17,15 +17,15 @@ require (
 	github.com/muesli/reflow v0.3.0
 	github.com/otiai10/copy v1.14.0
 	github.com/pulumi/providertest v0.1.3
-	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v0.0.0-20241204093051-ef54328d7bfc
-	github.com/pulumi/pulumi-go-provider v0.23.0
-	github.com/pulumi/pulumi-java/pkg v0.18.0
-	github.com/pulumi/pulumi-yaml v1.12.0
-	github.com/pulumi/pulumi/pkg/v3 v3.142.0
-	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20241126145446-1837a707182a
-	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20241126145446-1837a707182a
-	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20241126145446-1837a707182a
-	github.com/pulumi/pulumi/sdk/v3 v3.142.0
+	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v0.0.0-20241219213128-b19d8c8da35b
+	github.com/pulumi/pulumi-go-provider v0.24.0
+	github.com/pulumi/pulumi-java/pkg v0.20.0
+	github.com/pulumi/pulumi-yaml v1.13.0
+	github.com/pulumi/pulumi/pkg/v3 v3.143.1-0.20241213151151-109d75b57c54
+	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20241220160057-ef1db8482cb8
+	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20241220160057-ef1db8482cb8
+	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20241220164043-1dd366951f61
+	github.com/pulumi/pulumi/sdk/v3 v3.143.1-0.20241213151151-109d75b57c54
 	github.com/regclient/regclient v0.7.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.11.0
@@ -36,7 +36,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.29.0
 	go.opentelemetry.io/otel/trace v1.29.0
 	go.uber.org/mock v0.5.0
-	golang.org/x/crypto v0.27.0
+	golang.org/x/crypto v0.31.0
 	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0
 	google.golang.org/protobuf v1.35.1
 	gopkg.in/yaml.v3 v3.0.1
@@ -308,7 +308,7 @@ require (
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/moby/docker-image-spec v1.3.1 // indirect
 	github.com/moby/locker v1.0.1 // indirect
-	github.com/moby/moby v25.0.4+incompatible // indirect
+	github.com/moby/moby v26.1.0+incompatible // indirect
 	github.com/moby/spdystream v0.2.0 // indirect
 	github.com/moby/sys/mountinfo v0.7.2 // indirect
 	github.com/moby/sys/sequential v0.6.0 // indirect
@@ -458,12 +458,12 @@ require (
 	gocloud.dev/secrets/hashivault v0.39.0 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20240314144324-c7f7c6466f7f // indirect
 	golang.org/x/mod v0.21.0 // indirect
-	golang.org/x/net v0.29.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/oauth2 v0.23.0 // indirect
-	golang.org/x/sync v0.8.0 // indirect
-	golang.org/x/sys v0.26.0 // indirect
-	golang.org/x/term v0.24.0 // indirect
-	golang.org/x/text v0.18.0 // indirect
+	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/term v0.27.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/time v0.6.0 // indirect
 	golang.org/x/tools v0.25.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
