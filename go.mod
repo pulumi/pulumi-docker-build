@@ -25,7 +25,7 @@ require (
 	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20241220160057-ef1db8482cb8
 	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20241220160057-ef1db8482cb8
 	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20241220164043-1dd366951f61
-	github.com/pulumi/pulumi/sdk/v3 v3.143.1-0.20241213151151-109d75b57c54
+	github.com/pulumi/pulumi/sdk/v3 v3.143.1-0.20241220164043-1dd366951f61
 	github.com/regclient/regclient v0.7.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.11.0

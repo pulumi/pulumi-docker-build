@@ -957,8 +957,8 @@ github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-2024122
 github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20241220160057-ef1db8482cb8/go.mod h1:gRUtGhyvmQJbz66yDPg5s2aDcrNWvuu8NkjKfe4PmIE=
 github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20241220164043-1dd366951f61 h1:cw5Bt3z057TUGen2OZCi2kkDFqkEu3iGM3Yn7C51ZTQ=
 github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20241220164043-1dd366951f61/go.mod h1:4fC9MA29DDNpWoyxRDPNcfTLL6Sbplkl1KshDFOi8Cw=
-github.com/pulumi/pulumi/sdk/v3 v3.143.1-0.20241213151151-109d75b57c54 h1:WescGcsAwRElnJ4P3YTCR9sfuEl2pLotjP53FfR8Hgw=
-github.com/pulumi/pulumi/sdk/v3 v3.143.1-0.20241213151151-109d75b57c54/go.mod h1:OFpZabILGxrFqzcABFpMCksrHGVp4ymRM2BkKjlazDY=
+github.com/pulumi/pulumi/sdk/v3 v3.143.1-0.20241220164043-1dd366951f61 h1:FO2w1EyJQJxN92ir1YQaxJkkQdxNhpg1tDnDFjXu6tU=
+github.com/pulumi/pulumi/sdk/v3 v3.143.1-0.20241220164043-1dd366951f61/go.mod h1:/6gxU2XirnLlImBy5OoqV6I4HcjOf+IznNIZNZExZzo=
 github.com/quasilyte/go-ruleguard v0.4.2 h1:htXcXDK6/rO12kiTHKfHuqR4kr3Y4M0J0rOL6CH/BYs=
 github.com/quasilyte/go-ruleguard v0.4.2/go.mod h1:GJLgqsLeo4qgavUoL8JeGFNS7qcisx3awV/w9eWTmNI=
 github.com/quasilyte/go-ruleguard/dsl v0.3.22 h1:wd8zkOhSNr+I+8Qeciml08ivDt1pSXe60+5DqOpCjPE=
