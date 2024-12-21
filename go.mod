@@ -22,9 +22,9 @@ require (
 	github.com/pulumi/pulumi-java/pkg v0.20.0
 	github.com/pulumi/pulumi-yaml v1.13.0
 	github.com/pulumi/pulumi/pkg/v3 v3.144.0
-	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20241220221752-9a4a32328f80
-	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20241220221752-9a4a32328f80
-	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20241220221752-9a4a32328f80
+	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20241220232556-6bfc8dc64f22
+	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20241220232556-6bfc8dc64f22
+	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20241220232556-6bfc8dc64f22
 	github.com/pulumi/pulumi/sdk/v3 v3.144.0
 	github.com/regclient/regclient v0.7.1
 	github.com/sirupsen/logrus v1.9.3
