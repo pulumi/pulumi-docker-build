@@ -171,7 +171,7 @@ jobs:
     needs: prerequisites
     runs-on: pulumi-ubuntu-8core
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         language:
           - nodejs
@@ -263,6 +263,7 @@ jobs:
           git checkout origin/${{ github.head_ref }}
           git stash pop
           git add sdk 
+          git reset sdk/**/pulumi-plugin.json sdk/dotnet/Pulumi.*.csproj sdk/go/**/pulumiUtilities.go sdk/nodejs/package.json sdk/python/pyproject.toml
           git commit -m 'Commit SDK for Renovate' 
           git push origin HEAD:${{ github.head_ref }}
       - run: git status --porcelain
