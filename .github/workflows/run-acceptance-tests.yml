@@ -250,8 +250,7 @@ jobs:
           sdk/nodejs/package.json
           sdk/python/pyproject.toml
     - name: Commit ${{ matrix.language }} SDK changes for Renovate
-      if: failure() && steps.worktreeClean.outcome == 'failure' &&
-        contains(github.actor, 'renovate')
+      if: failure() && steps.worktreeClean.outcome == 'failure'
       shell: bash
       run: >
         git config --global user.email "bot@pulumi.com"
