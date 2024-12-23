@@ -186,7 +186,8 @@ jobs:
         with:
           lfs: true
           ref: ${{ env.PR_COMMIT_SHA }}
-          token: ${{ secrets.PULUMI_BOT_TOKEN }} # https://github.com/orgs/community/discussions/25702
+          # token: ${{ secrets.PULUMI_BOT_TOKEN }} # https://github.com/orgs/community/discussions/25702
+          persist-credentials: false
       - id: version
         name: Set Provider Version
         uses: pulumi/provider-version-action@0391d47b9b0d865d33dd0a295b1fcf9f7021dd4c # v1.5.3
@@ -265,7 +266,7 @@ jobs:
           git stash pop
           git add sdk 
           git reset sdk/python/*/pulumi-plugin.json sdk/dotnet/Pulumi.*.csproj sdk/go/*/internal/pulumiUtilities.go sdk/nodejs/package.json sdk/python/pyproject.toml
-          git commit -m 'Commit SDK for Renovate' 
+          git commit -m 'Commit ${{ matrix.language }} SDK for Renovate'
           git push origin HEAD:${{ github.head_ref }}
       - run: git status --porcelain
       - name: Tar SDK folder
