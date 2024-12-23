@@ -186,6 +186,7 @@ jobs:
         with:
           lfs: true
           ref: ${{ env.PR_COMMIT_SHA }}
+          token: ${{ secrets.PULUMI_BOT_TOKEN }} # https://github.com/orgs/community/discussions/25702
       - id: version
         name: Set Provider Version
         uses: pulumi/provider-version-action@0391d47b9b0d865d33dd0a295b1fcf9f7021dd4c # v1.5.3
@@ -251,7 +252,7 @@ jobs:
             sdk/go/**/pulumiUtilities.go
             sdk/nodejs/package.json
             sdk/python/pyproject.toml
-      - name: Commit SDK changes for Renovate
+      - name: Commit ${{ matrix.language }} SDK changes for Renovate
         if:
           failure() && steps.worktreeClean.outcome == 'failure' && github.actor == 'blampe'
         shell: bash
@@ -263,7 +264,7 @@ jobs:
           git checkout origin/${{ github.head_ref }}
           git stash pop
           git add sdk 
-          git reset sdk/**/pulumi-plugin.json sdk/dotnet/Pulumi.*.csproj sdk/go/**/pulumiUtilities.go sdk/nodejs/package.json sdk/python/pyproject.toml
+          git reset sdk/python/*/pulumi-plugin.json sdk/dotnet/Pulumi.*.csproj sdk/go/*/internal/pulumiUtilities.go sdk/nodejs/package.json sdk/python/pyproject.toml
           git commit -m 'Commit SDK for Renovate' 
           git push origin HEAD:${{ github.head_ref }}
       - run: git status --porcelain
