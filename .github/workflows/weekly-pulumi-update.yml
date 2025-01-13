@@ -4,6 +4,7 @@ name: weekly-pulumi-update
 on:
   schedule:
   - cron: 35 12 * * 4
+  pull_request:
   workflow_dispatch: {}
 env:
   GITHUB_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
@@ -133,4 +134,10 @@ jobs:
         gh pr create -t "$msg" -b "$msg" -B main
       env:
         GITHUB_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
+    - name: Setup upterm session
+      uses: lhotari/action-upterm@v1
+      if: ${{ failure() }}
+      with:
+        ## If no one connects after 5 minutes, shut down server.
+        wait-timeout-minutes: 5
     name: weekly-pulumi-update
