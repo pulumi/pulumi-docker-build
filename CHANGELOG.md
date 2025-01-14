@@ -12,6 +12,7 @@
 ### Fixed
 
 - Custom `# syntax=` directives no longer cause validation errors. (https://github.com/pulumi/pulumi-docker-build/issues/300)
+- Upgrading docker-build no longer causes resource replacements. (https://github.com/pulumi/pulumi-docker-build/issues/404)
 
 ## 0.0.7 (2024-10-16)
 
