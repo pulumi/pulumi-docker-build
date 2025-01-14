@@ -9,12 +9,18 @@ import (
 	"math/rand"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecr"
+	"github.com/pulumi/providertest"
+	"github.com/pulumi/providertest/optproviderupgrade"
+	"github.com/pulumi/providertest/pulumitest"
+	"github.com/pulumi/providertest/pulumitest/assertpreview"
+	"github.com/pulumi/providertest/pulumitest/opttest"
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -33,6 +39,30 @@ func TestNodeExample(t *testing.T) {
 	}
 
 	integration.ProgramTest(t, &test)
+}
+
+func TestNodeExampleUpgrade(t *testing.T) {
+	t.Parallel()
+	var (
+		providerName    string = "docker-build"
+		baselineVersion string = "0.0.7"
+	)
+
+	cwd, err := os.Getwd()
+	require.NoError(t, err)
+
+	options := []opttest.Option{
+		opttest.DownloadProviderVersion(providerName, baselineVersion),
+		opttest.LocalProviderPath(providerName, filepath.Join(cwd, "..", "bin")),
+		opttest.YarnLink("@pulumi/docker-build"),
+		opttest.TestInPlace(),
+	}
+
+	test := pulumitest.NewPulumiTest(t, filepath.Join(cwd, "upgrade-node"), options...)
+	result := providertest.PreviewProviderUpgrade(t, test, providerName, baselineVersion,
+		optproviderupgrade.DisableAttach())
+
+	assertpreview.HasNoReplacements(t, result)
 }
 
 // TestCaching simulates a slow build with --cache-to enabled. We aren't able

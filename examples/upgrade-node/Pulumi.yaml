@@ -1,0 +1,6 @@
+name: provider-docker-build
+runtime: nodejs
+plugins:
+  providers:
+    - name: docker-build
+      path: ../../bin

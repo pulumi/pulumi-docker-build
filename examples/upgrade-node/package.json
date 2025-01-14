@@ -1,0 +1,10 @@
+{
+  "name": "provider-docker-build",
+  "devDependencies": {
+    "@types/node": "^18"
+  },
+  "dependencies": {
+    "typescript": "^4.0.0",
+    "@pulumi/pulumi": "3.144.1"
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "version": 3,
+  "deployment": {
+    "manifest": {
+      "time": "2025-01-14T12:40:32.429451-08:00",
+      "magic": "7c53c69df7094e39d5562ed2abf1e12099c2c54a7b9b411faca1dcb7ec1fef8a",
+      "version": "v3.145.0"
+    },
+    "secrets_providers": {
+      "type": "passphrase",
+      "state": {
+        "salt": "v1:EuqbHY9lEXg=:v1:xNv8Pt7D2Pf/iDkg:tOvHbUIXPITf+BgbbjqPZaWIqKD8jQ=="
+      }
+    },
+    "resources": [
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "custom": false,
+        "type": "pulumi:pulumi:Stack",
+        "created": "2025-01-14T20:40:27.082534Z",
+        "modified": "2025-01-14T20:40:27.082534Z",
+        "sourcePosition": "project:///node_modules/@pulumi/runtime/stack.ts#38,23"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default_0_1_0_alpha_0_dev",
+        "custom": true,
+        "id": "04f4e431-4d74-43f1-86d5-52d410f3f6e8",
+        "type": "pulumi:providers:docker-build",
+        "inputs": {
+          "__internal": {},
+          "host": ""
+        },
+        "outputs": {
+          "host": ""
+        },
+        "created": "2025-01-14T20:40:28.862159Z",
+        "modified": "2025-01-14T20:40:28.862159Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::inline",
+        "custom": true,
+        "id": "inline",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "."
+          },
+          "dockerfile": {
+            "inline": "FROM alpine\nRUN echo \"This uses an inline Dockerfile! 👍\"\n",
+            "location": ""
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "target": ""
+        },
+        "outputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "."
+          },
+          "contextHash": "a9db789a55c8ad91fe04e176aefcf0b74f86636ae12e7cd475421416672da8c1",
+          "digest": "",
+          "dockerfile": {
+            "inline": "FROM alpine\nRUN echo \"This uses an inline Dockerfile! 👍\"\n",
+            "location": ""
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default_0_1_0_alpha_0_dev::04f4e431-4d74-43f1-86d5-52d410f3f6e8",
+        "propertyDependencies": {
+          "buildOnPreview": [],
+          "dockerfile": [],
+          "network": [],
+          "push": []
+        },
+        "created": "2025-01-14T20:40:32.357012Z",
+        "modified": "2025-01-14T20:40:32.357012Z",
+        "sourcePosition": "project:///index.ts#4,16"
+      }
+    ],
+    "metadata": {}
+  }
+}
