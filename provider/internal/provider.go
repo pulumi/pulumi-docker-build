@@ -128,13 +128,16 @@ func NewBuildxProvider() provider.Provider {
 	return prov
 }
 
-// TODO(pulumi/pulumi-docker-build#404): Remove this function once the bug is fixed in either upstream pu/pu or pulumi-go-provider.
+// TODO(pulumi/pulumi-docker-build#404): Remove this function once the bug is fixed in either
+// upstream pu/pu or pulumi-go-provider.
 
 // diffConfigInternalIgnore is a custom DiffConfig implementation for the buildx provider. This is required to
 // circumvent the bug identified in https://github.com/pulumi/pulumi-docker-build/issues/404.
 // Since `__internal` is currently populated in new inputs, but stripped in old state, we need to
 // ignore this field in the diff. There is no easy way to override DiffConfig to compare inputs only.
-func diffConfigIgnoreInternal(diffConfig func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error)) func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error) {
+func diffConfigIgnoreInternal(
+	diffConfig func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error),
+) func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error) {
 	return func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error) {
 		delete(req.News, "__internal")
 
