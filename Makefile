@@ -272,7 +272,7 @@ bin/jsign-6.0.jar:
 
 sign-windows-exe-amd64: GORELEASER_ARCH := amd64_v1
 sign-windows-exe-arm64: GORELEASER_ARCH := arm64
-
+sign-windows-exe-%: SHELL:=/bin/bash
 sign-windows-exe-%: bin/jsign-6.0.jar
 	@# Only sign windows binary if fully configured.
 	@# Test variables set by joining with | between and looking for || showing at least one variable is empty.
@@ -284,7 +284,7 @@ sign-windows-exe-%: bin/jsign-6.0.jar
 			echo "To rebuild with signing delete the unsigned windows exe file and rebuild with the fixed configuration"; \
 			if [[ "${CI}" == "true" ]]; then exit 1; fi; \
 		else \
-			file=dist/pulumi-docker-build_windows_${GORELEASER_ARCH}/pulumi-resource-docker-build.exe; \
+			file=dist/build-provider-sign-windows_windows_${GORELEASER_ARCH}/pulumi-resource-docker-build.exe; \
 			mv $${file} $${file}.unsigned; \
 			az login --service-principal \
 				--username "${AZURE_SIGNING_CLIENT_ID}" \
