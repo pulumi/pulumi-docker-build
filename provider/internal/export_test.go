@@ -74,7 +74,6 @@ func TestValidateExport(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			e, err := tt.e.validate(tt.preview, tt.givenTags)
@@ -181,7 +180,6 @@ func TestExportString(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			actual := tt.given.String()
@@ -236,7 +234,6 @@ func TestExportPushed(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			actual := tt.e.pushed()

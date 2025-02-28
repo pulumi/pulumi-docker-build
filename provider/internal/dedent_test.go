@@ -41,7 +41,6 @@ can be accessed like environment variables inside the ` + "`RUN`\n" + `instructi
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			actual := dedent(tt.given)
