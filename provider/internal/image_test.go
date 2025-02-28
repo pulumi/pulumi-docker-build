@@ -321,7 +321,6 @@ func TestImageLifecycle(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			lc := integration.LifeCycleTest{
@@ -803,7 +802,6 @@ func TestImageDiff(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		baseState := baseState
 		baseArgs := baseArgs
 		t.Run(tt.name, func(t *testing.T) {
@@ -950,7 +948,6 @@ func TestValidateImageArgs(t *testing.T) {
 		for _, d := range []Dockerfile{
 			{Location: path}, {Inline: string(data)},
 		} {
-			d := d
 			args := ImageArgs{Dockerfile: &d}
 			_, err := args.validate(true, false)
 			assert.ErrorContains(t, err, "unknown instruction: RUNN (did you mean RUN?)")
@@ -1027,7 +1024,6 @@ func TestBuildable(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			actual := tt.args.buildable()
