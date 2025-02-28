@@ -7,7 +7,7 @@ linters:
     - depguard
     - errcheck
     - exhaustive
-    - exportloopref
+    - copyloopvar
     - gci
     - gocritic
     - gofumpt
