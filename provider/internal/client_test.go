@@ -263,7 +263,6 @@ func TestBuild(t *testing.T) {
 
 	// Add an exec: true version for all of our test cases.
 	for _, tt := range tests {
-		tt := tt
 		tt.name = "exec-" + tt.name
 		tt.args.Exec = true
 		tmpdir := filepath.Join(t.TempDir(), "exec")
@@ -281,7 +280,6 @@ func TestBuild(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if tt.skip {
@@ -341,7 +339,6 @@ func TestNormalizeReference(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.ref, func(t *testing.T) {
 			t.Parallel()
 			ref, err := normalizeReference(tt.ref)

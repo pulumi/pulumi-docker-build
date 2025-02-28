@@ -123,7 +123,6 @@ func TestIndexLifecycle(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if tt.skip {
@@ -231,7 +230,6 @@ func TestIndexDiff(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			resp, err := s.Diff(provider.DiffRequest{

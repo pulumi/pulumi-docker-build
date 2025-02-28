@@ -128,8 +128,6 @@ func TestConfigEncoding(t *testing.T) {
 
 	t.Run("turnaround", func(t *testing.T) {
 		for i, tc := range turnaroundTestCases {
-			tc := tc
-
 			t.Run(strconv.Itoa(i), func(t *testing.T) {
 				t.Parallel()
 				checkUnmarshal(t, tc)
@@ -172,8 +170,6 @@ func TestConfigEncoding(t *testing.T) {
 			},
 		}
 		for _, tc := range cases {
-			tc := tc
-
 			t.Run(fmt.Sprintf("%v", tc.ty), func(t *testing.T) {
 				t.Parallel()
 				checkUnmarshal(t, tc)
@@ -185,8 +181,6 @@ func TestConfigEncoding(t *testing.T) {
 		unk := resource.MakeComputed(resource.NewStringProperty(""))
 
 		for i, tc := range turnaroundTestCases {
-			tc := tc
-
 			t.Run(strconv.Itoa(i), func(t *testing.T) {
 				t.Parallel()
 				// Unknown sentinel unmarshals to a Computed with a type-appropriate zero value.
@@ -219,8 +213,6 @@ func TestConfigEncoding(t *testing.T) {
 		}
 
 		for i, tc := range secretCases {
-			tc := tc
-
 			t.Run(strconv.Itoa(i), func(t *testing.T) {
 				t.Parallel()
 				checkUnmarshal(t, tc)
@@ -264,7 +256,6 @@ func TestConfigEncoding(t *testing.T) {
 
 	t.Run("regress-unmarshal", func(t *testing.T) {
 		for i, tc := range regressUnmarshalTestCases {
-			tc := tc
 			t.Run(strconv.Itoa(i), func(t *testing.T) {
 				t.Parallel()
 				checkUnmarshal(t, tc)
