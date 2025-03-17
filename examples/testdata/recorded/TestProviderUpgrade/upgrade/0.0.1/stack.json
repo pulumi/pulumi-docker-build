@@ -1,0 +1,944 @@
+{
+  "version": 3,
+  "deployment": {
+    "manifest": {
+      "time": "2024-06-18T15:10:50.439881-07:00",
+      "magic": "",
+      "version": ""
+    },
+    "secrets_providers": {
+      "type": "passphrase",
+      "state": {
+        "salt": "v1:uRYnzeN15MA=:v1:rpAZ+oxUTuiNyCpF:KQmWj5xMhsTrE2XhW35Gd1XoMW7RDg=="
+      }
+    },
+    "resources": [
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "custom": false,
+        "type": "pulumi:pulumi:Stack",
+        "outputs": {
+          "platforms": [
+            "plan9/amd64",
+            "plan9/386"
+          ]
+        },
+        "created": "2024-06-18T22:10:48.091797Z",
+        "modified": "2024-06-18T22:10:48.091797Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default",
+        "custom": true,
+        "id": "b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "type": "pulumi:providers:docker-build",
+        "inputs": {
+          "host": ""
+        },
+        "outputs": {
+          "host": ""
+        },
+        "created": "2024-06-18T22:10:48.187658Z",
+        "modified": "2024-06-18T22:10:48.187658Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::secrets",
+        "custom": true,
+        "id": "secrets",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.secrets"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "secrets": {
+            "password": "hunter2"
+          },
+          "target": ""
+        },
+        "outputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "contextHash": "5c1561571a60aa3b5a234a9c26f69e2ba5d9a18624f426109d36a1d729b23a21",
+          "digest": "",
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.secrets"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "secrets": {
+            "password": "hunter2"
+          },
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "context": [],
+          "dockerfile": [],
+          "push": [],
+          "secrets": []
+        },
+        "created": "2024-06-18T22:10:50.181453Z",
+        "modified": "2024-06-18T22:10:50.181453Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::buildArgs",
+        "custom": true,
+        "id": "buildArgs",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildArgs": {
+            "SET_ME_TO_TRUE": "true"
+          },
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.buildArgs"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "target": ""
+        },
+        "outputs": {
+          "buildArgs": {
+            "SET_ME_TO_TRUE": "true"
+          },
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "contextHash": "55695ddcfb4d08a0d78d1a74c7b0141dada73ed05bc4b056ba29a51e42c83381",
+          "digest": "",
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.buildArgs"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "buildArgs": [],
+          "context": [],
+          "dockerfile": [],
+          "push": []
+        },
+        "created": "2024-06-18T22:10:50.182348Z",
+        "modified": "2024-06-18T22:10:50.182348Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::sshMount",
+        "custom": true,
+        "id": "sshMount",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.sshMount"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ssh": [
+            {
+              "id": "default"
+            }
+          ],
+          "target": ""
+        },
+        "outputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "contextHash": "71d21b382ab9ee0324ad820ce57a0a4318342a0a244931f51fc46b791f1b37e9",
+          "digest": "",
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.sshMount"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "ssh": [
+            {
+              "id": "default"
+            }
+          ],
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "context": [],
+          "dockerfile": [],
+          "push": [],
+          "ssh": []
+        },
+        "created": "2024-06-18T22:10:50.182807Z",
+        "modified": "2024-06-18T22:10:50.182807Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::remoteContext",
+        "custom": true,
+        "id": "remoteContext",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile"
+          },
+          "dockerfile": {
+            "inline": "",
+            "location": ""
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "target": ""
+        },
+        "outputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile"
+          },
+          "contextHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "digest": "",
+          "dockerfile": {
+            "inline": "",
+            "location": ""
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "context": [],
+          "push": []
+        },
+        "created": "2024-06-18T22:10:50.18341Z",
+        "modified": "2024-06-18T22:10:50.18341Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::registryPush",
+        "custom": true,
+        "id": "sha256:0d286c8339e2bc4e166585dcda28a501fb08c8f991c2293209faa78a13bfb79a",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "dockerfile": {
+            "inline": "",
+            "location": "app/Dockerfile"
+          },
+          "exec": false,
+          "exports": [
+            {
+              "disabled": false,
+              "raw": "",
+              "registry": {
+                "compression": "gzip",
+                "compressionLevel": 0,
+                "danglingNamePrefix": "",
+                "forceCompression": false,
+                "ociMediaTypes": true,
+                "push": false,
+                "store": true
+              }
+            }
+          ],
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "tags": [
+            "docker.io/pulumibot/buildkit-e2e:example"
+          ],
+          "target": ""
+        },
+        "outputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "contextHash": "e569495ad1cfde07d0e769ab9b5ed56b889508f299d2e7a90400caf9e12795d5",
+          "digest": "sha256:0d286c8339e2bc4e166585dcda28a501fb08c8f991c2293209faa78a13bfb79a",
+          "dockerfile": {
+            "inline": "",
+            "location": "app/Dockerfile"
+          },
+          "exec": false,
+          "exports": [
+            {
+              "disabled": false,
+              "raw": "",
+              "registry": {
+                "compression": "gzip",
+                "compressionLevel": 0,
+                "danglingNamePrefix": "",
+                "forceCompression": false,
+                "ociMediaTypes": true,
+                "push": false,
+                "store": true
+              }
+            }
+          ],
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "docker.io/pulumibot/buildkit-e2e:example@sha256:0d286c8339e2bc4e166585dcda28a501fb08c8f991c2293209faa78a13bfb79a",
+          "tags": [
+            "docker.io/pulumibot/buildkit-e2e:example"
+          ],
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "context": [],
+          "exports": [],
+          "push": [],
+          "tags": []
+        },
+        "created": "2024-06-18T22:10:50.183668Z",
+        "modified": "2024-06-18T22:10:50.183668Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::dockerLoad",
+        "custom": true,
+        "id": "sha256:ec5d5c149823f61d56f5666d494d19c4edca42cfe4b578e640f57bf2429716a4",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "dockerfile": {
+            "inline": "",
+            "location": "app/Dockerfile"
+          },
+          "exec": false,
+          "exports": [
+            {
+              "disabled": false,
+              "docker": {
+                "compression": "gzip",
+                "compressionLevel": 0,
+                "dest": "",
+                "forceCompression": false,
+                "ociMediaTypes": false,
+                "tar": true
+              },
+              "raw": ""
+            }
+          ],
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "target": ""
+        },
+        "outputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "contextHash": "e569495ad1cfde07d0e769ab9b5ed56b889508f299d2e7a90400caf9e12795d5",
+          "digest": "sha256:ec5d5c149823f61d56f5666d494d19c4edca42cfe4b578e640f57bf2429716a4",
+          "dockerfile": {
+            "inline": "",
+            "location": "app/Dockerfile"
+          },
+          "exec": false,
+          "exports": [
+            {
+              "disabled": false,
+              "docker": {
+                "compression": "gzip",
+                "compressionLevel": 0,
+                "dest": "",
+                "forceCompression": false,
+                "ociMediaTypes": false,
+                "tar": true
+              },
+              "raw": ""
+            }
+          ],
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "context": [],
+          "exports": [],
+          "push": []
+        },
+        "created": "2024-06-18T22:10:50.183874Z",
+        "modified": "2024-06-18T22:10:50.183874Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::labels",
+        "custom": true,
+        "id": "labels",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "dockerfile": {
+            "inline": "",
+            "location": "app/Dockerfile"
+          },
+          "exec": false,
+          "labels": {
+            "description": "This image will get a descriptive label 👍"
+          },
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "target": ""
+        },
+        "outputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "contextHash": "e569495ad1cfde07d0e769ab9b5ed56b889508f299d2e7a90400caf9e12795d5",
+          "digest": "",
+          "dockerfile": {
+            "inline": "",
+            "location": "app/Dockerfile"
+          },
+          "exec": false,
+          "labels": {
+            "description": "This image will get a descriptive label 👍"
+          },
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "context": [],
+          "labels": [],
+          "push": []
+        },
+        "created": "2024-06-18T22:10:50.183996Z",
+        "modified": "2024-06-18T22:10:50.183996Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::inline",
+        "custom": true,
+        "id": "inline",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "dockerfile": {
+            "inline": "FROM alpine\nRUN echo \"This uses an inline Dockerfile! 👍\"\n",
+            "location": ""
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "target": ""
+        },
+        "outputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "contextHash": "36c67969e6700e87bde75fcf604a7db1fa9593194718fc0ae1c498df43228aec",
+          "digest": "",
+          "dockerfile": {
+            "inline": "FROM alpine\nRUN echo \"This uses an inline Dockerfile! 👍\"\n",
+            "location": ""
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "context": [],
+          "dockerfile": [],
+          "push": []
+        },
+        "created": "2024-06-18T22:10:50.184088Z",
+        "modified": "2024-06-18T22:10:50.184088Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::target",
+        "custom": true,
+        "id": "target",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.target"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "target": "build-me"
+        },
+        "outputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "contextHash": "fefadf795b6b4b119e97a87067a25f52a16cc3375223acad7b3f642fdcd413fc",
+          "digest": "",
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.target"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "target": "build-me"
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "context": [],
+          "dockerfile": [],
+          "push": [],
+          "target": []
+        },
+        "created": "2024-06-18T22:10:50.18426Z",
+        "modified": "2024-06-18T22:10:50.18426Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::cached",
+        "custom": true,
+        "id": "cached",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildOnPreview": true,
+          "cacheFrom": [
+            {
+              "disabled": false,
+              "local": {
+                "digest": "",
+                "src": "tmp/cache"
+              },
+              "raw": ""
+            }
+          ],
+          "cacheTo": [
+            {
+              "disabled": false,
+              "local": {
+                "compression": "gzip",
+                "compressionLevel": 0,
+                "dest": "tmp/cache",
+                "forceCompression": false,
+                "ignoreError": false,
+                "mode": "max"
+              },
+              "raw": ""
+            }
+          ],
+          "context": {
+            "location": "./app"
+          },
+          "dockerfile": {
+            "inline": "",
+            "location": "app/Dockerfile"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "target": ""
+        },
+        "outputs": {
+          "buildOnPreview": true,
+          "cacheFrom": [
+            {
+              "disabled": false,
+              "local": {
+                "digest": "",
+                "src": "tmp/cache"
+              },
+              "raw": ""
+            }
+          ],
+          "cacheTo": [
+            {
+              "disabled": false,
+              "local": {
+                "compression": "gzip",
+                "compressionLevel": 0,
+                "dest": "tmp/cache",
+                "forceCompression": false,
+                "ignoreError": false,
+                "mode": "max"
+              },
+              "raw": ""
+            }
+          ],
+          "context": {
+            "location": "./app"
+          },
+          "contextHash": "e569495ad1cfde07d0e769ab9b5ed56b889508f299d2e7a90400caf9e12795d5",
+          "digest": "",
+          "dockerfile": {
+            "inline": "",
+            "location": "app/Dockerfile"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "cacheFrom": [],
+          "cacheTo": [],
+          "context": [],
+          "push": []
+        },
+        "created": "2024-06-18T22:10:50.206842Z",
+        "modified": "2024-06-18T22:10:50.206842Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::multiPlatform",
+        "custom": true,
+        "id": "multiPlatform",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.multiPlatform"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "platforms": [
+            "plan9/amd64",
+            "plan9/386"
+          ],
+          "pull": false,
+          "push": false,
+          "target": ""
+        },
+        "outputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "contextHash": "c7ecf546ed2402de04f2dfa56ca4adb6fd490eed4219d7f1b2e559cd475f1755",
+          "digest": "",
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.multiPlatform"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "platforms": [
+            "plan9/amd64",
+            "plan9/386"
+          ],
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "context": [],
+          "dockerfile": [],
+          "platforms": [],
+          "push": []
+        },
+        "created": "2024-06-18T22:10:50.257528Z",
+        "modified": "2024-06-18T22:10:50.257528Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::extraHosts",
+        "custom": true,
+        "id": "extraHosts",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "addHosts": [
+            "metadata.google.internal:169.254.169.254"
+          ],
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.extraHosts"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "target": ""
+        },
+        "outputs": {
+          "addHosts": [
+            "metadata.google.internal:169.254.169.254"
+          ],
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app"
+          },
+          "contextHash": "e5d510d9ce39d91260e3aa7f8c81d7517a76165eb35e7134cae2f3e4e9fcb712",
+          "digest": "",
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.extraHosts"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "addHosts": [],
+          "context": [],
+          "dockerfile": [],
+          "push": []
+        },
+        "created": "2024-06-18T22:10:50.274264Z",
+        "modified": "2024-06-18T22:10:50.274264Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::remoteContextWithInline",
+        "custom": true,
+        "id": "remoteContextWithInline",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "https://github.com/docker-library/hello-world.git"
+          },
+          "dockerfile": {
+            "inline": "FROM busybox\nCOPY hello.c ./\n",
+            "location": ""
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "target": ""
+        },
+        "outputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "https://github.com/docker-library/hello-world.git"
+          },
+          "contextHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "digest": "",
+          "dockerfile": {
+            "inline": "FROM busybox\nCOPY hello.c ./\n",
+            "location": ""
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "context": [],
+          "dockerfile": [],
+          "push": []
+        },
+        "created": "2024-06-18T22:10:50.332506Z",
+        "modified": "2024-06-18T22:10:50.332506Z"
+      },
+      {
+        "urn": "urn:pulumi:test::provider-docker-build::docker-build:index:Image::namedContexts",
+        "custom": true,
+        "id": "namedContexts",
+        "type": "docker-build:index:Image",
+        "inputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app",
+            "named": {
+              "golang:latest": {
+                "location": "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984"
+              }
+            }
+          },
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.namedContexts"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "target": ""
+        },
+        "outputs": {
+          "buildOnPreview": true,
+          "context": {
+            "location": "./app",
+            "named": {
+              "golang:latest": {
+                "location": "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984"
+              }
+            }
+          },
+          "contextHash": "3adfaaf17fbb548f06310e76d2826bccb223b49463504d0cc4fe86b0eef5d47d",
+          "digest": "",
+          "dockerfile": {
+            "inline": "",
+            "location": "./app/Dockerfile.namedContexts"
+          },
+          "exec": false,
+          "load": false,
+          "network": "default",
+          "noCache": false,
+          "pull": false,
+          "push": false,
+          "ref": "",
+          "target": ""
+        },
+        "parent": "urn:pulumi:test::provider-docker-build::pulumi:pulumi:Stack::provider-docker-build-test",
+        "provider": "urn:pulumi:test::provider-docker-build::pulumi:providers:docker-build::default::b62bb809-b83b-42cb-889c-46d524de5fe7",
+        "propertyDependencies": {
+          "context": [],
+          "dockerfile": [],
+          "push": []
+        },
+        "created": "2024-06-18T22:10:50.422524Z",
+        "modified": "2024-06-18T22:10:50.422524Z"
+      }
+    ]
+  }
+}

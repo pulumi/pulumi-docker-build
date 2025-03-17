@@ -1,17 +1,18 @@
-//go:build java || all
-// +build java all
-
 package examples
 
 import (
 	"os"
 	"path"
-	"path/filepath"
 	"testing"
 
 	"github.com/pulumi/providertest"
+	"github.com/pulumi/providertest/providers"
+	"github.com/pulumi/providertest/pulumitest"
+	"github.com/pulumi/providertest/pulumitest/assertpreview"
+	"github.com/pulumi/providertest/pulumitest/opttest"
 	"github.com/pulumi/pulumi-docker-build/provider"
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
+	pulumirpc "github.com/pulumi/pulumi/sdk/v3/proto/go"
 	"github.com/stretchr/testify/require"
 )
 
@@ -30,25 +31,15 @@ func TestYAMLExample(t *testing.T) {
 }
 
 func TestYAMLExampleUpgrade(t *testing.T) {
-	// t.Setenv("PULUMI_PROVIDER_TEST_MODE", "snapshot")
+	pt := pulumitest.NewPulumiTest(t, "upgrade",
+		opttest.AttachProviderServer("docker-build", providerServerFactory))
+	previewResult := providertest.PreviewProviderUpgrade(t, pt, "docker-build", "0.0.1")
 
-	cwd, err := os.Getwd()
-	require.NoError(t, err)
+	assertpreview.HasNoChanges(t, previewResult)
+}
 
-	bin, err := filepath.Abs("../bin")
-	require.NoError(t, err)
-
-	t.Setenv("PATH", bin+":"+os.Getenv("PATH"))
-	p, err := provider.New(nil)
-	require.NoError(t, err)
-
-	test := providertest.NewProviderTest(path.Join(cwd, "upgrade"),
-		providertest.WithProviderName("docker-build"),
-		providertest.WithBaselineVersion("0.0.1"),
-		providertest.WithResourceProviderServer(p),
-		// providertest.WithConfig("dockerHubPassword", os.Getenv("DOCKER_HUB_PASSWORD")), // Doesn't support secrets yet.
-	)
-	test.Run(t)
+func providerServerFactory(pt providers.PulumiTest) (pulumirpc.ResourceProviderServer, error) {
+	return provider.New(nil)
 }
 
 func TestECR(t *testing.T) {
