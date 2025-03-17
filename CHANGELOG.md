@@ -14,6 +14,7 @@
 - Custom `# syntax=` directives no longer cause validation errors. (<https://github.com/pulumi/pulumi-docker-build/issues/300>)
 - Upgrading docker-build no longer causes resource replacements. (<https://github.com/pulumi/pulumi-docker-build/issues/404>)
 - Fixed leaking the GitHub actions secret in diff logs. (<https://github.com/pulumi/pulumi-docker-build/issues/403>)
+- Provider panics when using Image resource with exec set to true. (<https://github.com/pulumi/pulumi-docker-build/issues/482>)
 
 ## 0.0.7 (2024-10-16)
 
