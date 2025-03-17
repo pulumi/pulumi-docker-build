@@ -2,8 +2,6 @@ module github.com/pulumi/pulumi-docker-build
 
 go 1.23.1
 
-toolchain go1.24.0
-
 require (
 	github.com/aws/aws-sdk-go v1.55.5
 	github.com/blang/semver v3.5.1+incompatible

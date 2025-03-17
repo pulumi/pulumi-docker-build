@@ -2,8 +2,6 @@ module github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild
 
 go 1.23.1
 
-toolchain go1.24.0
-
 require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/pulumi/pulumi/sdk/v3 v3.156.0
