@@ -871,8 +871,8 @@ func TestValidateImageArgs(t *testing.T) {
 				"":      "",
 			},
 			Builder:    nil,
-			CacheFrom:  []CacheFrom{{GHA: &CacheFromGitHubActions{}}, {Raw: ""}},
-			CacheTo:    []CacheTo{{GHA: &CacheToGitHubActions{}}, {Raw: ""}},
+			CacheFrom:  []CacheFrom{{Local: &CacheFromLocal{}}, {Raw: ""}},
+			CacheTo:    []CacheTo{{Local: &CacheToLocal{}}, {Raw: ""}},
 			Context:    nil,
 			Exports:    []Export{{Raw: ""}},
 			Dockerfile: nil,
@@ -1041,7 +1041,10 @@ func TestToBuild(t *testing.T) {
 		Platforms: []Platform{"linux/amd64"},
 		Context:   &BuildContext{Context: Context{Location: "testdata/noop"}},
 		CacheTo: []CacheTo{
-			{GHA: &CacheToGitHubActions{CacheWithMode: CacheWithMode{&Max}}},
+			{GHA: &CacheToGitHubActions{
+				CacheFromGitHubActions: CacheFromGitHubActions{URL: "https://some.endpoint", Token: "token"},
+				CacheWithMode:          CacheWithMode{&Max}},
+			},
 			{
 				Registry: &CacheToRegistry{
 					CacheFromRegistry: CacheFromRegistry{Ref: "docker.io/foo/bar"},
