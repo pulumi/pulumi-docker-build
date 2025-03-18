@@ -1,9 +1,5 @@
 name: provider-docker-build
 runtime: yaml
-plugins:
-  providers:
-    - name: docker-build
-      path: ../../bin
 
 resources:
   # docker buildx build -f app/Dockerfile.multiPlatform --platform plan9/amd64,plan9/386 app
