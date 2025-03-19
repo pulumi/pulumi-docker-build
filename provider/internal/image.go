@@ -576,7 +576,9 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 			multierr = errors.Join(multierr, newCheckFailure(err, "exports[%d]", idx))
 			continue
 		}
-		exports = append(exports, exp)
+		if exp != nil {
+			exports = append(exports, exp)
+		}
 	}
 
 	platforms := []string{}
@@ -586,7 +588,9 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 			multierr = errors.Join(multierr, newCheckFailure(err, "platforms[%d]", idx))
 			continue
 		}
-		platforms = append(platforms, platform)
+		if platform != "" {
+			platforms = append(platforms, platform)
+		}
 	}
 
 	cacheFrom := []*controllerapi.CacheOptionsEntry{}
@@ -599,7 +603,9 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 			multierr = errors.Join(multierr, newCheckFailure(err, "cacheFrom[%d]", idx))
 			continue
 		}
-		cacheFrom = append(cacheFrom, cache)
+		if cache != nil {
+			cacheFrom = append(cacheFrom, cache)
+		}
 	}
 
 	cacheTo := []*controllerapi.CacheOptionsEntry{}
@@ -612,7 +618,9 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 			multierr = errors.Join(multierr, newCheckFailure(err, "cacheTo[%d]", idx))
 			continue
 		}
-		cacheTo = append(cacheTo, cache)
+		if cache != nil {
+			cacheTo = append(cacheTo, cache)
+		}
 	}
 
 	ssh := []*controllerapi.SSH{}
@@ -622,7 +630,9 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 			multierr = errors.Join(multierr, newCheckFailure(err, "ssh[%d]", idx))
 			continue
 		}
-		ssh = append(ssh, ss)
+		if ss != nil {
+			ssh = append(ssh, ss)
+		}
 	}
 
 	for idx, t := range normalized.Tags {

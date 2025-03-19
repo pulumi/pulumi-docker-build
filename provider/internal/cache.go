@@ -468,9 +468,9 @@ func (c CacheFrom) validate(preview bool) (*controllerapi.CacheOptionsEntry, err
 		return nil, err
 	}
 	if len(parsed) == 0 {
-		// This can happen for example if we have a GHA cache but no GitHub
-		// environment variables set.
-		return nil, errors.New("cacheFrom not compatible with the current environment")
+		// This can happen for example if we have a GHA cache configuration but no GitHub
+		// environment variables set. Ignore the cacheFrom entry in this case.
+		return nil, nil
 	}
 	return parsed[0], nil
 }
@@ -676,9 +676,9 @@ func (c CacheTo) validate(preview bool) (*controllerapi.CacheOptionsEntry, error
 		return nil, err
 	}
 	if len(parsed) == 0 {
-		// This can happen for example if we have a GHA cache but no GitHub
-		// environment variables set.
-		return nil, errors.New("cacheTo not compatible with the current environment")
+		// This can happen for example if we have a GHA cache configuration but no GitHub
+		// environment variables set. Ignore the cacheTo entry in this case.
+		return nil, nil
 	}
 	return parsed[0], nil
 }

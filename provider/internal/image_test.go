@@ -22,6 +22,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	pb "github.com/docker/buildx/controller/pb"
 	_ "github.com/docker/buildx/driver/docker-container"
 
 	"github.com/distribution/reference"
@@ -818,7 +819,7 @@ func TestImageDiff(t *testing.T) {
 }
 
 func TestValidateImageArgs(t *testing.T) {
-	t.Parallel()
+
 	t.Run("invalid inputs", func(t *testing.T) {
 		t.Parallel()
 		args := ImageArgs{
@@ -871,8 +872,8 @@ func TestValidateImageArgs(t *testing.T) {
 				"":      "",
 			},
 			Builder:    nil,
-			CacheFrom:  []CacheFrom{{Local: &CacheFromLocal{}}, {Raw: ""}},
-			CacheTo:    []CacheTo{{Local: &CacheToLocal{}}, {Raw: ""}},
+			CacheFrom:  []CacheFrom{{GHA: &CacheFromGitHubActions{}}, {Raw: ""}},
+			CacheTo:    []CacheTo{{GHA: &CacheToGitHubActions{}}, {Raw: ""}},
 			Context:    nil,
 			Exports:    []Export{{Raw: ""}},
 			Dockerfile: nil,
@@ -915,6 +916,85 @@ func TestValidateImageArgs(t *testing.T) {
 		assert.Len(t, opts.CacheTo, 0)
 		assert.Len(t, opts.CacheFrom, 0)
 		assert.Len(t, opts.Exports, 0)
+	})
+
+	t.Run("environment variables", func(t *testing.T) {
+		tests := []struct {
+			name          string
+			envs          map[string]string
+			args          ImageArgs
+			wantCacheFrom *pb.CacheOptionsEntry
+			wantCacheTo   *pb.CacheOptionsEntry
+		}{
+			{
+				name: "gha environment",
+				envs: map[string]string{
+					"ACTIONS_CACHE_URL":     "test-cache-url",
+					"ACTIONS_RUNTIME_TOKEN": "test-runtime-token",
+				},
+				args: ImageArgs{
+					Context:   &BuildContext{Context: Context{Location: "testdata/noop"}},
+					CacheFrom: []CacheFrom{{GHA: &CacheFromGitHubActions{}}},
+					CacheTo: []CacheTo{{GHA: &CacheToGitHubActions{
+						CacheFromGitHubActions: CacheFromGitHubActions{},
+					}}},
+				},
+				wantCacheFrom: &pb.CacheOptionsEntry{
+					Type: "gha",
+					Attrs: map[string]string{
+						"token": "test-runtime-token",
+						"url":   "test-cache-url",
+					},
+				},
+				wantCacheTo: &pb.CacheOptionsEntry{
+					Type: "gha",
+					Attrs: map[string]string{
+						"token": "test-runtime-token",
+						"url":   "test-cache-url",
+					},
+				},
+			},
+			{
+				name: "non-gha environment",
+				envs: map[string]string{
+					"ACTIONS_CACHE_URL":     "",
+					"ACTIONS_RUNTIME_TOKEN": "",
+				},
+				args: ImageArgs{
+					Context:   &BuildContext{Context: Context{Location: "testdata/noop"}},
+					CacheFrom: []CacheFrom{{GHA: &CacheFromGitHubActions{}}},
+					CacheTo: []CacheTo{{GHA: &CacheToGitHubActions{
+						CacheFromGitHubActions: CacheFromGitHubActions{},
+					}}},
+				},
+				wantCacheFrom: nil,
+				wantCacheTo:   nil,
+			},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				for k, v := range tt.envs {
+					t.Setenv(k, v)
+				}
+				validate := func(preview bool) {
+					opts, err := tt.args.validate(true, preview)
+					require.NoError(t, err)
+					if tt.wantCacheFrom != nil {
+						assert.Equal(t, tt.wantCacheFrom, opts.CacheFrom[0])
+					} else {
+						assert.Len(t, opts.CacheFrom, 0)
+					}
+					if tt.wantCacheTo != nil {
+						assert.Equal(t, tt.wantCacheTo, opts.CacheTo[0])
+					} else {
+						assert.Len(t, opts.CacheTo, 0)
+					}
+				}
+				validate(true)
+				validate(false)
+			})
+		}
 	})
 
 	t.Run("multiple exports pre-0.13", func(t *testing.T) {
@@ -1041,10 +1121,7 @@ func TestToBuild(t *testing.T) {
 		Platforms: []Platform{"linux/amd64"},
 		Context:   &BuildContext{Context: Context{Location: "testdata/noop"}},
 		CacheTo: []CacheTo{
-			{GHA: &CacheToGitHubActions{
-				CacheFromGitHubActions: CacheFromGitHubActions{URL: "https://some.endpoint", Token: "token"},
-				CacheWithMode:          CacheWithMode{&Max}},
-			},
+			{GHA: &CacheToGitHubActions{CacheWithMode: CacheWithMode{&Max}}},
 			{
 				Registry: &CacheToRegistry{
 					CacheFromRegistry: CacheFromRegistry{Ref: "docker.io/foo/bar"},
