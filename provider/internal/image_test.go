@@ -22,10 +22,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	pb "github.com/docker/buildx/controller/pb"
 	_ "github.com/docker/buildx/driver/docker-container"
 
 	"github.com/distribution/reference"
+	pb "github.com/docker/buildx/controller/pb"
 	"github.com/moby/buildkit/client"
 	"github.com/moby/buildkit/exporter/containerimage/exptypes"
 	"github.com/regclient/regclient/types/descriptor"
@@ -819,7 +819,6 @@ func TestImageDiff(t *testing.T) {
 }
 
 func TestValidateImageArgs(t *testing.T) {
-
 	t.Run("invalid inputs", func(t *testing.T) {
 		t.Parallel()
 		args := ImageArgs{
