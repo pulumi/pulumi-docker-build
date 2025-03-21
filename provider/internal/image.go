@@ -285,6 +285,7 @@ func (ia *ImageArgs) Annotate(a infer.Annotator) {
 type ImageState struct {
 	ImageArgs
 
+	ImageId     string `pulumi:"imageId"     provider:"output"`
 	Digest      string `pulumi:"digest"      provider:"output"`
 	ContextHash string `pulumi:"contextHash" provider:"output"`
 	Ref         string `pulumi:"ref"         provider:"output"`
@@ -739,6 +740,12 @@ func (i *Image) Create(
 	if err != nil {
 		return id, state, err
 	}
+
+	imageId, ok := result.ExporterResponse[exptypes.ExporterImageConfigKey]
+	if !ok {
+		return id, state, errors.New("could not extract local image id")
+	}
+	state.ImageId = imageId
 
 	if d, ok := result.ExporterResponse[exptypes.ExporterImageDigestKey]; ok {
 		state.Digest = d
