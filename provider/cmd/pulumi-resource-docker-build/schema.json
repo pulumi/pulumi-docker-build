@@ -159,12 +159,7 @@
         "scope": {
           "type": "string",
           "description": "The scope to use for cache keys. Defaults to `buildkit`.\n\nThis should be set if building and caching multiple images in one\nworkflow, otherwise caches will overwrite each other.",
-          "default": "",
-          "defaultInfo": {
-            "environment": [
-              "buildkit"
-            ]
-          }
+          "default": "buildkit"
         },
         "token": {
           "type": "string",
@@ -389,12 +384,7 @@
         "scope": {
           "type": "string",
           "description": "The scope to use for cache keys. Defaults to `buildkit`.\n\nThis should be set if building and caching multiple images in one\nworkflow, otherwise caches will overwrite each other.",
-          "default": "",
-          "defaultInfo": {
-            "environment": [
-              "buildkit"
-            ]
-          }
+          "default": "buildkit"
         },
         "token": {
           "type": "string",
