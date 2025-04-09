@@ -311,6 +311,6 @@ sign-goreleaser-exe-%: bin/jsign-6.0.jar
 # - Run make ci-mgmt to apply the change locally.
 #
 ci-mgmt: .ci-mgmt.yaml
-	go run github.com/pulumi/ci-mgmt/provider-ci@master generate
+	go run github.com/pulumi/ci-mgmt/provider-ci@e3a00c6fa872560ede29a9c0e932cd1fd74eadaf generate
 .PHONY: ci-mgmt
 	fi
