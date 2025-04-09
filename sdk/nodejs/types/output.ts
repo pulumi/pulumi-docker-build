@@ -136,7 +136,7 @@ export interface CacheFromGitHubActions {
 export function cacheFromGitHubActionsProvideDefaults(val: CacheFromGitHubActions): CacheFromGitHubActions {
     return {
         ...val,
-        scope: (val.scope) ?? (utilities.getEnv("buildkit") || ""),
+        scope: (val.scope) ?? "buildkit",
         token: (val.token) ?? (utilities.getEnv("ACTIONS_RUNTIME_TOKEN") || ""),
         url: (val.url) ?? (utilities.getEnv("ACTIONS_CACHE_URL") || ""),
     };
@@ -345,7 +345,7 @@ export function cacheToGitHubActionsProvideDefaults(val: CacheToGitHubActions): 
         ...val,
         ignoreError: (val.ignoreError) ?? false,
         mode: (val.mode) ?? "min",
-        scope: (val.scope) ?? (utilities.getEnv("buildkit") || ""),
+        scope: (val.scope) ?? "buildkit",
         token: (val.token) ?? (utilities.getEnv("ACTIONS_RUNTIME_TOKEN") || ""),
         url: (val.url) ?? (utilities.getEnv("ACTIONS_CACHE_URL") || ""),
     };

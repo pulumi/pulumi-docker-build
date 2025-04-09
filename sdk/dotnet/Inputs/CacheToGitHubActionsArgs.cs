@@ -68,7 +68,7 @@ namespace Pulumi.DockerBuild.Inputs
         {
             IgnoreError = false;
             Mode = Pulumi.DockerBuild.CacheMode.Min;
-            Scope = Utilities.GetEnv("buildkit") ?? "";
+            Scope = "buildkit";
             Token = Utilities.GetEnv("ACTIONS_RUNTIME_TOKEN") ?? "";
             Url = Utilities.GetEnv("ACTIONS_CACHE_URL") ?? "";
         }

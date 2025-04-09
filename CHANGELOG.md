@@ -4,6 +4,7 @@
 
 - Multiple exports are now allowed if the build daemon is detected to have
   version 0.13 of Buildkit or newer. (<https://github.com/pulumi/pulumi-docker-build/issues/21>)
+-  Use 'buildkit' as default scope (<https://github.com/pulumi/pulumi-docker-build/pull/516>)
 
 ### Changed
 

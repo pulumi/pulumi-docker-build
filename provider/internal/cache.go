@@ -157,7 +157,7 @@ type CacheFromGitHubActions struct {
 func (c *CacheFromGitHubActions) Annotate(a infer.Annotator) {
 	a.SetDefault(&c.URL, "", "ACTIONS_CACHE_URL")
 	a.SetDefault(&c.Token, "", "ACTIONS_RUNTIME_TOKEN")
-	a.SetDefault(&c.Scope, "", "buildkit")
+	a.SetDefault(&c.Scope, "buildkit")
 
 	a.Describe(&c.URL, dedent(`
 		The cache server URL to use for artifacts.
