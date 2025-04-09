@@ -332,7 +332,7 @@ class CacheFromGitHubActionsArgs:
                environment variable to your jobs.
         """
         if scope is None:
-            scope = (_utilities.get_env('buildkit') or '')
+            scope = 'buildkit'
         if scope is not None:
             pulumi.set(__self__, "scope", scope)
         if token is None:
@@ -1048,7 +1048,7 @@ class CacheToGitHubActionsArgs:
         if mode is not None:
             pulumi.set(__self__, "mode", mode)
         if scope is None:
-            scope = (_utilities.get_env('buildkit') or '')
+            scope = 'buildkit'
         if scope is not None:
             pulumi.set(__self__, "scope", scope)
         if token is None:

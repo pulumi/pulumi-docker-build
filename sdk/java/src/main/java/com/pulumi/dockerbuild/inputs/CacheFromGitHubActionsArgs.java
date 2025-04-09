@@ -199,7 +199,7 @@ public final class CacheFromGitHubActionsArgs extends com.pulumi.resources.Resou
         }
 
         public CacheFromGitHubActionsArgs build() {
-            $.scope = Codegen.stringProp("scope").output().arg($.scope).env("buildkit").def("").getNullable();
+            $.scope = Codegen.stringProp("scope").output().arg($.scope).def("buildkit").getNullable();
             $.token = Codegen.stringProp("token").secret().arg($.token).env("ACTIONS_RUNTIME_TOKEN").def("").getNullable();
             $.url = Codegen.stringProp("url").output().arg($.url).env("ACTIONS_CACHE_URL").def("").getNullable();
             return $;

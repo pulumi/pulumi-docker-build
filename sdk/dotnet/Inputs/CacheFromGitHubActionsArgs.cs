@@ -54,7 +54,7 @@ namespace Pulumi.DockerBuild.Inputs
 
         public CacheFromGitHubActionsArgs()
         {
-            Scope = Utilities.GetEnv("buildkit") ?? "";
+            Scope = "buildkit";
             Token = Utilities.GetEnv("ACTIONS_RUNTIME_TOKEN") ?? "";
             Url = Utilities.GetEnv("ACTIONS_CACHE_URL") ?? "";
         }

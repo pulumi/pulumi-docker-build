@@ -421,10 +421,8 @@ func (val *CacheFromGitHubActions) Defaults() *CacheFromGitHubActions {
 	}
 	tmp := *val
 	if tmp.Scope == nil {
-		if d := internal.GetEnvOrDefault("", nil, "buildkit"); d != nil {
-			scope_ := d.(string)
-			tmp.Scope = &scope_
-		}
+		scope_ := "buildkit"
+		tmp.Scope = &scope_
 	}
 	if tmp.Token == nil {
 		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_TOKEN"); d != nil {
@@ -469,9 +467,7 @@ func (val *CacheFromGitHubActionsArgs) Defaults() *CacheFromGitHubActionsArgs {
 	}
 	tmp := *val
 	if tmp.Scope == nil {
-		if d := internal.GetEnvOrDefault("", nil, "buildkit"); d != nil {
-			tmp.Scope = pulumix.Ptr(d.(string))
-		}
+		tmp.Scope = pulumix.Ptr("buildkit")
 	}
 	if tmp.Token == nil {
 		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_TOKEN"); d != nil {
@@ -1178,10 +1174,8 @@ func (val *CacheToGitHubActions) Defaults() *CacheToGitHubActions {
 		tmp.Mode = &mode_
 	}
 	if tmp.Scope == nil {
-		if d := internal.GetEnvOrDefault("", nil, "buildkit"); d != nil {
-			scope_ := d.(string)
-			tmp.Scope = &scope_
-		}
+		scope_ := "buildkit"
+		tmp.Scope = &scope_
 	}
 	if tmp.Token == nil {
 		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_TOKEN"); d != nil {
@@ -1236,9 +1230,7 @@ func (val *CacheToGitHubActionsArgs) Defaults() *CacheToGitHubActionsArgs {
 		tmp.Mode = pulumix.Ptr(CacheMode("min"))
 	}
 	if tmp.Scope == nil {
-		if d := internal.GetEnvOrDefault("", nil, "buildkit"); d != nil {
-			tmp.Scope = pulumix.Ptr(d.(string))
-		}
+		tmp.Scope = pulumix.Ptr("buildkit")
 	}
 	if tmp.Token == nil {
 		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_TOKEN"); d != nil {
