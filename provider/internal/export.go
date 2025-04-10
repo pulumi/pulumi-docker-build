@@ -131,10 +131,11 @@ func (e Export) pushed() bool {
 //
 // TODO: Remove this fork and update existing logic/tests.
 func parseExports(inp []string) ([]*controllerapi.ExportEntry, error) {
-	var outs []*controllerapi.ExportEntry
 	if len(inp) == 0 {
 		return nil, nil
 	}
+	outs := make([]*controllerapi.ExportEntry, 0, len(inp))
+
 	for _, s := range inp {
 		fields, err := csvvalue.Fields(s, nil)
 		if err != nil {
@@ -175,7 +176,7 @@ func parseExports(inp []string) ([]*controllerapi.ExportEntry, error) {
 			}
 		}
 		if out.Type == "" {
-			return nil, fmt.Errorf("type is required for output")
+			return nil, errors.New("type is required for output")
 		}
 
 		if out.Type == "registry" {
@@ -204,9 +205,6 @@ func (e Export) validate(preview bool, tags []string) (*controllerapi.ExportEntr
 		return nil, err
 	}
 
-	// if len(ee) == 0 {
-	// 	ee = []*controllerapi.ExportEntry{{}}
-	// }
 	exp := ee[0]
 	if len(tags) == 0 && isRegistryPush(exp) && exp.Attrs["name"] == "" {
 		return nil, errors.New(

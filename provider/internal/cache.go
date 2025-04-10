@@ -483,7 +483,7 @@ func (c CacheFrom) validate(preview bool) (*controllerapi.CacheOptionsEntry, err
 
 // containsGithubToken checks if the GitHub token is set in the cache entry.
 // If it is not a GHA cache entry, it will return true.
-// This is to maintain backwards compatibilty with the old buildx behaviour.
+// This is to maintain backwards compatibility with the old buildx behaviour.
 func containsGithubToken(ci *controllerapi.CacheOptionsEntry) bool {
 	if ci.Type != "gha" {
 		return true
