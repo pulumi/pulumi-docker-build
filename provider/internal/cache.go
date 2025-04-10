@@ -472,7 +472,23 @@ func (c CacheFrom) validate(preview bool) (*controllerapi.CacheOptionsEntry, err
 		// environment variables set. Ignore the cacheFrom entry in this case.
 		return nil, nil
 	}
-	return parsed[0], nil
+
+	pb := parsed[0].ToPB()
+	if !containsGithubToken(pb) {
+		pb = nil
+	}
+
+	return pb, nil
+}
+
+// containsGithubToken checks if the GitHub token is set in the cache entry.
+// If it is not a GHA cache entry, it will return true.
+// This is to maintain backwards compatibilty with the old buildx behaviour.
+func containsGithubToken(ci *controllerapi.CacheOptionsEntry) bool {
+	if ci.Type != "gha" {
+		return true
+	}
+	return ci.Attrs["token"] != "" && ci.Attrs["url"] != ""
 }
 
 // CacheToInline embeds cache information directly into an image.
@@ -680,7 +696,13 @@ func (c CacheTo) validate(preview bool) (*controllerapi.CacheOptionsEntry, error
 		// environment variables set. Ignore the cacheTo entry in this case.
 		return nil, nil
 	}
-	return parsed[0], nil
+
+	pb := parsed[0].ToPB()
+	if !containsGithubToken(pb) {
+		pb = nil
+	}
+
+	return pb, nil
 }
 
 // CacheMode controls the complexity of exported cache manifests.

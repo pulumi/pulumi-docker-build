@@ -218,7 +218,7 @@ func (c *cli) Build(
 
 			Session: []session.Attachable{
 				ssh,
-				authprovider.NewDockerAuthProvider(c.ConfigFile(), nil),
+				authprovider.NewDockerAuthProvider(authprovider.DockerAuthProviderConfig{ConfigFile: c.ConfigFile()}),
 				build.Secrets(),
 			},
 		},
