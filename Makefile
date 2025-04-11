@@ -93,7 +93,7 @@ ${PULUMI}: go.sum
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi-yaml/cmd/pulumi-converter-yaml
 
 ${GOGLANGCILINT}: go.sum
-	GOBIN=${WORKING_DIR}/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint
+	GOBIN=${WORKING_DIR}/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint@8b37f14
 
 define pulumi_login
     export PULUMI_CONFIG_PASSPHRASE=asdfqwerty1234; \
