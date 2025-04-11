@@ -8,7 +8,7 @@
 
 ### Changed
 
-- Upgraded buildx from 0.16.0 to 0.18.0.
+- Upgraded buildx from 0.16.0 to 0.20.1.
 
 ### Fixed
 

@@ -22,7 +22,8 @@ import (
 	"strings"
 
 	controllerapi "github.com/docker/buildx/controller/pb"
-	"github.com/docker/buildx/util/buildflags"
+	"github.com/moby/buildkit/client"
+	"github.com/tonistiigi/go-csvvalue"
 
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
@@ -109,7 +110,7 @@ func (e Export) String() string {
 // pushed returns true if the export would result in a registry push.
 func (e Export) pushed() bool {
 	if e.Raw != "" {
-		exp, err := buildflags.ParseExports([]string{e.Raw.String()})
+		exp, err := parseExports([]string{e.Raw.String()})
 		if err != nil {
 			return false
 		}
@@ -124,14 +125,86 @@ func (e Export) pushed() bool {
 	return false
 }
 
+// parseExports is forked from docker/buildx@v0.18.0 from util/buildflags/export.go
+// to maintain the old logic. This is to get a working version of the provider with
+// the latest buildx while maintaining the old behaviour.
+//
+// TODO: Remove this fork and update existing logic/tests.
+func parseExports(inp []string) ([]*controllerapi.ExportEntry, error) {
+	if len(inp) == 0 {
+		return nil, nil
+	}
+	outs := make([]*controllerapi.ExportEntry, 0, len(inp))
+
+	for _, s := range inp {
+		fields, err := csvvalue.Fields(s, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		out := controllerapi.ExportEntry{
+			Attrs: map[string]string{},
+		}
+		if len(fields) == 1 && fields[0] == s && !strings.HasPrefix(s, "type=") {
+			if s != "-" {
+				outs = append(outs, &controllerapi.ExportEntry{
+					Type:        client.ExporterLocal,
+					Destination: s,
+				})
+				continue
+			}
+			out = controllerapi.ExportEntry{
+				Type:        client.ExporterTar,
+				Destination: s,
+			}
+		}
+
+		if out.Type == "" {
+			for _, field := range fields {
+				parts := strings.SplitN(field, "=", 2)
+				if len(parts) != 2 {
+					return nil, fmt.Errorf("invalid value %s", field)
+				}
+				key := strings.TrimSpace(strings.ToLower(parts[0]))
+				value := parts[1]
+				switch key {
+				case "type":
+					out.Type = value
+				default:
+					out.Attrs[key] = value
+				}
+			}
+		}
+		if out.Type == "" {
+			return nil, errors.New("type is required for output")
+		}
+
+		if out.Type == "registry" {
+			out.Type = client.ExporterImage
+			if _, ok := out.Attrs["push"]; !ok {
+				out.Attrs["push"] = "true"
+			}
+		}
+
+		if dest, ok := out.Attrs["dest"]; ok {
+			out.Destination = dest
+			delete(out.Attrs, "dest")
+		}
+
+		outs = append(outs, &out)
+	}
+	return outs, nil
+}
+
 func (e Export) validate(preview bool, tags []string) (*controllerapi.ExportEntry, error) {
 	if strings.Count(e.String(), "type=") > 1 {
 		return nil, errors.New("exports should only specify one export type")
 	}
-	ee, err := buildflags.ParseExports([]string{e.String()})
+	ee, err := parseExports([]string{e.String()})
 	if err != nil {
 		return nil, err
 	}
+
 	exp := ee[0]
 	if len(tags) == 0 && isRegistryPush(exp) && exp.Attrs["name"] == "" {
 		return nil, errors.New(
