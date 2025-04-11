@@ -1,5 +1,7 @@
 ## Unreleased
 
+## 0.0.11 (2025-04-11)
+
 ### Added
 
 - Multiple exports are now allowed if the build daemon is detected to have
