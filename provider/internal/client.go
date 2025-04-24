@@ -106,10 +106,10 @@ func (c *cli) Build(
 	defer contract.IgnoreClose(c)
 
 	if build.ShouldExec() {
-		return c.execBuild(build)
+		return c.execBuild(ctx, build)
 	}
 
-	b, err := c.host.builderFor(build)
+	b, err := c.host.builderFor(ctx, build)
 	if err != nil {
 		return nil, err
 	}

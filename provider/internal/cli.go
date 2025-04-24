@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -203,7 +204,7 @@ func (c *cli) Close() error {
 // execBuild performs a build by os.Exec'ing the docker-buildx binary.
 // Credentials are communicated to docker-buildx via a temporary directory.
 // Secrets are communicated via dynamic environment variables.
-func (c *cli) execBuild(b Build) (*client.SolveResponse, error) {
+func (c *cli) execBuild(ctx context.Context, b Build) (*client.SolveResponse, error) {
 	// Setup a temporary directory for auth, and clean it up when we're done.
 	tmp, err := os.MkdirTemp("", "pulumi-docker-")
 	if err != nil {
@@ -213,7 +214,7 @@ func (c *cli) execBuild(b Build) (*client.SolveResponse, error) {
 
 	opts := b.BuildOptions()
 
-	builder, err := c.host.builderFor(b)
+	builder, err := c.host.builderFor(ctx, b)
 	if err != nil {
 		return nil, err
 	}
@@ -339,7 +340,7 @@ func (c *cli) execBuild(b Build) (*client.SolveResponse, error) {
 	}
 
 	// Invoke docker-buildx.
-	err = c.exec(args, env)
+	err = c.exec(ctx, args, env)
 	if err != nil {
 		return nil, err
 	}
@@ -378,7 +379,7 @@ func (c *cli) execBuild(b Build) (*client.SolveResponse, error) {
 
 // exec invokes a Docker plugin binary. The first argument should be the name
 // of the plugin's subcommand, e.g. "buildx".
-func (c *cli) exec(args, extraEnv []string) error {
+func (c *cli) exec(ctx context.Context, args, extraEnv []string) error {
 	if len(args) == 0 {
 		return errors.New("args must be non-empty")
 	}
@@ -395,16 +396,18 @@ func (c *cli) exec(args, extraEnv []string) error {
 
 	defer contract.IgnoreClose(c.w)
 
-	cmd, err := manager.PluginRunCommand(c, name, root)
+	runCmd, err := manager.PluginRunCommand(c, name, root)
 	if err != nil {
 		return err
 	}
-	cmd.Args = append([]string{cmd.Args[0]}, args...)
+	// Create a new command that inherits from ctx.
+	cmd := exec.CommandContext(ctx, //nolint:gosec // We take the first argument and binary from runCmd.
+		runCmd.Path, append([]string{runCmd.Args[1]}, args...)...,
+	)
 	cmd.Stderr = c.Err()
 	cmd.Stdout = c.Out()
 	cmd.Stdin = c.In()
-
-	cmd.Env = append(cmd.Env, extraEnv...)
+	cmd.Env = append(runCmd.Env, extraEnv...) //nolint:gocritic // We are intentionally assigning from runCmd to cmd
 
 	return cmd.Run()
 }
