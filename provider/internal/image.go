@@ -38,7 +38,6 @@ import (
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -350,17 +349,14 @@ func (i *Image) client(ctx context.Context, state ImageState, args ImageArgs) (C
 // authenticated.
 func (i *Image) Check(
 	ctx context.Context,
-	_ string,
-	_ resource.PropertyMap,
-	news resource.PropertyMap,
-) (ImageArgs, []provider.CheckFailure, error) {
-	args, failures, err := infer.DefaultCheck[ImageArgs](ctx, news)
+	req infer.CheckRequest,
+) (infer.CheckResponse[ImageArgs], error) {
+	args, failures, err := infer.DefaultCheck[ImageArgs](ctx, req.NewInputs)
 	if err != nil || len(failures) != 0 {
-		return args, failures, err
+		return infer.CheckResponse[ImageArgs]{Failures: failures, Inputs: args}, err
 	}
 
-	// :(
-	preview := news.ContainsUnknowns()
+	preview := req.NewInputs.ContainsUnknowns()
 
 	cfg := infer.GetConfig[Config](ctx)
 	supportsMultipleExports := true
@@ -376,7 +372,7 @@ func (i *Image) Check(
 		}
 	}
 
-	return args, failures, err
+	return infer.CheckResponse[ImageArgs]{Failures: failures, Inputs: args}, err
 }
 
 type checkFailure struct {
@@ -523,7 +519,9 @@ func (ia ImageArgs) toBuild(
 
 // validate confirms the ImageArgs are valid and returns BuildOptions
 // appropriate for passing to builders.
-func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controllerapi.BuildOptions, error) {
+func (ia *ImageArgs) validate(
+	supportsMultipleExports, preview bool,
+) (controllerapi.BuildOptions, error) {
 	var multierr error
 
 	if !supportsMultipleExports {
@@ -531,7 +529,6 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 			multierr = errors.Join(multierr,
 				newCheckFailure(errors.New("multiple exports require a v0.13 buildkit daemon or newer"), "exports"),
 			)
-		}
 		if ia.Push && ia.Load {
 			multierr = errors.Join(
 				multierr,
@@ -683,12 +680,11 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 // Create builds an image using buildkit.
 func (i *Image) Create(
 	ctx context.Context,
-	name string,
-	input ImageArgs,
-	preview bool,
-) (string, ImageState, error) {
+	req infer.CreateRequest[ImageArgs],
+) (infer.CreateResponse[ImageState], error) {
+	input := req.Inputs
 	state := ImageState{ImageArgs: input}
-	id := name
+	id := req.Name
 
 	// Default our ref to one of our tags.
 	for _, tag := range state.Tags {
@@ -701,20 +697,29 @@ func (i *Image) Create(
 
 	cli, err := i.client(ctx, state, input)
 	if err != nil {
-		return id, state, err
+		return infer.CreateResponse[ImageState]{ID: id, Output: state}, err
 	}
 
 	ok, err := cli.BuildKitEnabled()
 	if err != nil {
-		return id, state, fmt.Errorf("checking buildkit compatibility: %w", err)
+		return infer.CreateResponse[ImageState]{
+				ID:     id,
+				Output: state,
+			}, fmt.Errorf("checking buildkit compatibility: %w", err)
 	}
 	if !ok {
-		return id, state, errors.New("buildkit is not supported on this host")
+		return infer.CreateResponse[ImageState]{
+				ID:     id,
+				Output: state,
+			}, fmt.Errorf("buildkit is not supported on this host")
 	}
 
-	build, err := input.toBuild(ctx, cli.SupportsMultipleExports(), preview)
+	build, err := input.toBuild(ctx, cli.SupportsMultipleExports(), req.Preview)
 	if err != nil {
-		return id, state, fmt.Errorf("preparing: %w", err)
+		return infer.CreateResponse[ImageState]{
+				ID:     id,
+				Output: state,
+			}, fmt.Errorf("preparing: %w", err)
 	}
 
 	hash, err := hashBuildContext(
@@ -723,21 +728,24 @@ func (i *Image) Create(
 		input.Context.Named.Map(),
 	)
 	if err != nil {
-		return id, state, fmt.Errorf("hashing build context: %w", err)
+		return infer.CreateResponse[ImageState]{
+				ID:     id,
+				Output: state,
+			}, fmt.Errorf("hashing build context: %w", err)
 	}
 	state.ContextHash = hash
 
-	if preview && !input.shouldBuildOnPreview() {
-		return id, state, nil
+	if req.Preview && !input.shouldBuildOnPreview() {
+		return infer.CreateResponse[ImageState]{ID: id, Output: state}, nil
 	}
-	if preview && !input.buildable() {
+	if req.Preview && !input.buildable() {
 		provider.GetLogger(ctx).Warning("Skipping preview build because some inputs are unknown.")
-		return id, state, nil
+		return infer.CreateResponse[ImageState]{ID: id, Output: state}, nil
 	}
 
 	result, err := cli.Build(ctx, build)
 	if err != nil {
-		return id, state, err
+		return infer.CreateResponse[ImageState]{ID: id, Output: state}, err
 	}
 
 	if d, ok := result.ExporterResponse[exptypes.ExporterImageDigestKey]; ok {
@@ -747,7 +755,7 @@ func (i *Image) Create(
 
 	if state.Digest == "" {
 		// Can't construct a ref, nothing else to do.
-		return id, state, nil
+		return infer.CreateResponse[ImageState]{ID: id, Output: state}, nil
 	}
 
 	// Take the first registry tag we find and add a digest to it. That becomes
@@ -762,7 +770,7 @@ func (i *Image) Create(
 		break
 	}
 
-	return id, state, nil
+	return infer.CreateResponse[ImageState]{ID: id, Output: state}, nil
 }
 
 // Update builds a new image. Normally we create-replace resources, but for
@@ -770,36 +778,41 @@ func (i *Image) Create(
 // updates and simply re-build the image without deleting anything.
 func (i *Image) Update(
 	ctx context.Context,
-	name string,
-	_ ImageState,
-	input ImageArgs,
-	preview bool,
-) (ImageState, error) {
-	_, state, err := i.Create(ctx, name, input, preview)
-	return state, err
+	req infer.UpdateRequest[ImageArgs, ImageState],
+) (infer.UpdateResponse[ImageState], error) {
+	resp, err := i.Create(ctx,
+		infer.CreateRequest[ImageArgs]{Name: req.ID, Inputs: req.News, Preview: req.Preview},
+	)
+	return infer.UpdateResponse[ImageState]{Output: resp.Output}, err
 }
 
 // Read attempts to read manifests from an image's exports. An image without
 // exports will have no manifests.
 func (i *Image) Read(
 	ctx context.Context,
-	name string,
-	input ImageArgs,
-	state ImageState,
+	req infer.ReadRequest[ImageArgs, ImageState],
 ) (
-	string, // id
-	ImageArgs, // normalized inputs
-	ImageState, // normalized state
+	infer.ReadResponse[ImageArgs, ImageState],
 	error,
 ) {
+	state, input := req.State, req.Inputs
+
 	cli, err := i.client(ctx, state, input)
 	if err != nil {
-		return name, input, state, err
+		return infer.ReadResponse[ImageArgs, ImageState]{
+			ID:     req.ID,
+			Inputs: input,
+			State:  state,
+		}, err
 	}
 
 	if !state.isExported() {
 		// Nothing was pushed -- all done.
-		return name, input, state, nil
+		return infer.ReadResponse[ImageArgs, ImageState]{
+			ID:     req.ID,
+			Inputs: input,
+			State:  state,
+		}, nil
 	}
 
 	tagsToKeep := []string{}
@@ -835,29 +848,29 @@ func (i *Image) Read(
 	// If we couldn't find the tags we expected then return an empty ID to
 	// delete the resource.
 	if len(input.Tags) > 0 && len(tagsToKeep) == 0 {
-		return "", input, state, nil
+		return infer.ReadResponse[ImageArgs, ImageState]{ID: "", Inputs: input, State: state}, nil
 	}
 
 	state.Tags = tagsToKeep
 
-	return name, input, state, nil
+	return infer.ReadResponse[ImageArgs, ImageState]{ID: req.ID, Inputs: input, State: state}, nil
 }
 
 // Delete deletes an Image. If the Image was already deleted out-of-band it is
 // treated as a success.
 func (i *Image) Delete(
 	ctx context.Context,
-	_ string,
-	state ImageState,
-) error {
+	req infer.DeleteRequest[ImageState],
+) (infer.DeleteResponse, error) {
+	state := req.State
 	cli, err := i.client(ctx, state, state.ImageArgs)
 	if err != nil {
-		return err
+		return infer.DeleteResponse{}, err
 	}
 
 	if state.Digest == "" {
 		// Nothing was exported. Just try to delete the local image.
-		return cli.Delete(ctx, state.Ref)
+		return infer.DeleteResponse{}, cli.Delete(ctx, state.Ref)
 	}
 
 	digests := []string{}
@@ -885,17 +898,17 @@ func (i *Image) Delete(
 		multierr = errors.Join(multierr, err)
 	}
 
-	return multierr
+	return infer.DeleteResponse{}, multierr
 }
 
 // Diff re-implements most of the default diff behavior, with the exception of
 // ignoring "password" changes on registry inputs.
 func (*Image) Diff(
 	_ context.Context,
-	_ string,
-	olds ImageState,
-	news ImageArgs,
+	req infer.DiffRequest[ImageArgs, ImageState],
 ) (provider.DiffResponse, error) {
+	olds, news := req.Olds, req.News
+
 	diff := map[string]provider.PropertyDiff{}
 	update := provider.PropertyDiff{Kind: provider.Update}
 
