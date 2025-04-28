@@ -519,9 +519,7 @@ func (ia ImageArgs) toBuild(
 
 // validate confirms the ImageArgs are valid and returns BuildOptions
 // appropriate for passing to builders.
-func (ia *ImageArgs) validate(
-	supportsMultipleExports, preview bool,
-) (controllerapi.BuildOptions, error) {
+func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controllerapi.BuildOptions, error) {
 	var multierr error
 
 	if !supportsMultipleExports {
@@ -529,6 +527,7 @@ func (ia *ImageArgs) validate(
 			multierr = errors.Join(multierr,
 				newCheckFailure(errors.New("multiple exports require a v0.13 buildkit daemon or newer"), "exports"),
 			)
+		}
 		if ia.Push && ia.Load {
 			multierr = errors.Join(
 				multierr,
@@ -703,23 +702,23 @@ func (i *Image) Create(
 	ok, err := cli.BuildKitEnabled()
 	if err != nil {
 		return infer.CreateResponse[ImageState]{
-				ID:     id,
-				Output: state,
-			}, fmt.Errorf("checking buildkit compatibility: %w", err)
+			ID:     id,
+			Output: state,
+		}, fmt.Errorf("checking buildkit compatibility: %w", err)
 	}
 	if !ok {
 		return infer.CreateResponse[ImageState]{
-				ID:     id,
-				Output: state,
-			}, fmt.Errorf("buildkit is not supported on this host")
+			ID:     id,
+			Output: state,
+		}, errors.New("buildkit is not supported on this host")
 	}
 
 	build, err := input.toBuild(ctx, cli.SupportsMultipleExports(), req.Preview)
 	if err != nil {
 		return infer.CreateResponse[ImageState]{
-				ID:     id,
-				Output: state,
-			}, fmt.Errorf("preparing: %w", err)
+			ID:     id,
+			Output: state,
+		}, fmt.Errorf("preparing: %w", err)
 	}
 
 	hash, err := hashBuildContext(
@@ -729,9 +728,9 @@ func (i *Image) Create(
 	)
 	if err != nil {
 		return infer.CreateResponse[ImageState]{
-				ID:     id,
-				Output: state,
-			}, fmt.Errorf("hashing build context: %w", err)
+			ID:     id,
+			Output: state,
+		}, fmt.Errorf("hashing build context: %w", err)
 	}
 	state.ContextHash = hash
 
