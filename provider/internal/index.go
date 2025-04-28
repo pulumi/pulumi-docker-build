@@ -137,6 +137,7 @@ func (i *Index) Create(
 		ctx,
 		infer.UpdateRequest[IndexArgs, IndexState]{
 			ID:      req.Name,
+			Olds:    IndexState{},
 			News:    req.Inputs,
 			Preview: req.Preview,
 		},
@@ -173,8 +174,7 @@ func (i *Index) Update(
 	}
 
 	// Read remote manifest information, if it exists.
-	_, err = i.Read(
-		ctx,
+	_, err = i.Read(ctx,
 		infer.ReadRequest[IndexArgs, IndexState]{ID: req.ID, Inputs: input, State: state},
 	)
 	if err != nil {
