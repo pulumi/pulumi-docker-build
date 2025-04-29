@@ -2,22 +2,49 @@
 
 ## 0.0.11 (2025-04-11)
 
-### Added
-
-- Multiple exports are now allowed if the build daemon is detected to have
-  version 0.13 of Buildkit or newer. (<https://github.com/pulumi/pulumi-docker-build/issues/21>)
--  Use 'buildkit' as default scope (<https://github.com/pulumi/pulumi-docker-build/pull/516>)
-
 ### Changed
 
-- Upgraded buildx from 0.16.0 to 0.20.1.
+- Upgraded buildx from 0.18.0 to 0.20.1 to remain compatible with upcoming
+  changes to GitHub Actions. (https://github.com/pulumi/pulumi-docker-build/pull/519)
 
 ### Fixed
 
-- Custom `# syntax=` directives no longer cause validation errors. (<https://github.com/pulumi/pulumi-docker-build/issues/300>)
 - Upgrading docker-build no longer causes resource replacements. (<https://github.com/pulumi/pulumi-docker-build/issues/404>)
-- Fixed leaking the GitHub actions secret in diff logs. (<https://github.com/pulumi/pulumi-docker-build/issues/403>)
-- Provider panics when using Image resource with exec set to true. (<https://github.com/pulumi/pulumi-docker-build/issues/482>)
+- Fixed a panic that could occur in `exec` mode. (https://github.com/pulumi/pulumi-docker-build/issues/482)
+- The default GitHub Actions cache scope is now correctly set as `buildkit`. (https://github.com/pulumi/pulumi-docker-build/issues/496)
+
+## 0.0.10 (2025-01-27)
+
+### Changed
+
+- Windows binaries are now signed. (https://github.com/pulumi/pulumi-docker-build/pull/429)
+
+## 0.0.9 (2025-01-16)
+
+### Changed
+
+- Upgraded pulumi-go-provider to v0.24.1. (https://github.com/pulumi/pulumi-docker-build/pull/413)
+
+### Fixed
+
+- `ACTIONS_RUNTIME_TOKEN` is now correctly marked as a secret. (https://github.com/pulumi/pulumi-docker-build/issues/403)
+
+## 0.0.8 (2024-12-10)
+
+### Added
+
+- Multiple exports are now allowed if the build daemon is detected to have
+  version 0.13 of Buildkit or newer.
+  (https://github.com/pulumi/pulumi-docker-build/issues/21)
+
+### Changed
+
+- Upgraded buildx from 0.16.0 to 0.18.0.
+
+### Fixed
+
+- Custom `# syntax=` directives no longer cause validation errors.
+  (https://github.com/pulumi/pulumi-docker-build/issues/300)
 
 ## 0.0.7 (2024-10-16)
 
