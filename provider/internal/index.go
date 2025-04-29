@@ -173,13 +173,13 @@ func (i *Index) Update(
 	}
 
 	// Read remote manifest information, if it exists.
-	_, err = i.Read(ctx,
+	live, err := i.Read(ctx,
 		infer.ReadRequest[IndexArgs, IndexState]{ID: req.ID, Inputs: input, State: state},
 	)
 	if err != nil {
 		return infer.UpdateResponse[IndexState]{Output: state}, fmt.Errorf("reading: %w", err)
 	}
-	return infer.UpdateResponse[IndexState]{Output: state}, nil
+	return infer.UpdateResponse[IndexState]{Output: live.State}, nil
 }
 
 func (i *Index) Read(
