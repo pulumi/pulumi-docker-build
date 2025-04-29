@@ -133,8 +133,7 @@ func (i *Index) Create(
 	ctx context.Context,
 	req infer.CreateRequest[IndexArgs],
 ) (infer.CreateResponse[IndexState], error) {
-	resp, err := i.Update(
-		ctx,
+	resp, err := i.Update(ctx,
 		infer.UpdateRequest[IndexArgs, IndexState]{
 			ID:      req.Name,
 			Olds:    IndexState{},
