@@ -1,3 +1,6 @@
+//go:build yaml || all
+// +build yaml all
+
 package examples
 
 import (
