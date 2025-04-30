@@ -38,6 +38,7 @@ import (
 	"github.com/pulumi/pulumi-go-provider/integration"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/mapper"
+	"github.com/pulumi/pulumi/sdk/v3/go/property"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -84,46 +85,44 @@ func TestImageLifecycle(t *testing.T) {
 			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e"),
-								resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:main"),
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New(
+							[]property.Value{
+								property.New("docker.io/pulumibot/buildkit-e2e"),
+								property.New("docker.io/pulumibot/buildkit-e2e:main"),
 							},
 						),
-						"platforms": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewStringProperty("linux/arm64"),
-								resource.NewStringProperty("linux/amd64"),
+						"platforms": property.New(
+							[]property.Value{
+								property.New("linux/arm64"),
+								property.New("linux/amd64"),
 							},
 						),
-						"context": resource.NewObjectProperty(resource.PropertyMap{
-							"location": resource.NewStringProperty("testdata/noop"),
+						"context": property.New(map[string]property.Value{
+							"location": property.New("testdata/noop"),
 						}),
-						"dockerfile": resource.NewObjectProperty(resource.PropertyMap{
-							"location": resource.NewStringProperty("testdata/noop/Dockerfile"),
+						"dockerfile": property.New(map[string]property.Value{
+							"location": property.New("testdata/noop/Dockerfile"),
 						}),
-						"exports": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewObjectProperty(resource.PropertyMap{
-									"raw": resource.NewStringProperty("type=registry"),
+						"exports": property.New(
+							[]property.Value{
+								property.New(map[string]property.Value{
+									"raw": property.New("type=registry"),
 								},
 								),
 							},
 						),
-						"registries": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewObjectProperty(resource.PropertyMap{
-									"address":  resource.NewStringProperty("fakeaddress"),
-									"username": resource.NewStringProperty("fakeuser"),
-									"password": resource.MakeSecret(
-										resource.NewStringProperty("password"),
-									),
+						"registries": property.New(
+							[]property.Value{
+								property.New(map[string]property.Value{
+									"address":  property.New("fakeaddress"),
+									"username": property.New("fakeuser"),
+									"password": property.New("password").WithSecret(true),
 								}),
 							},
 						),
-					},
+					}),
 				}
 			},
 		},
@@ -132,20 +131,20 @@ func TestImageLifecycle(t *testing.T) {
 			client: noClient,
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty([]resource.PropertyValue{}),
-						"context": resource.NewObjectProperty(resource.PropertyMap{
-							"location": resource.NewStringProperty("testdata/noop"),
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New([]property.Value{}),
+						"context": property.New(map[string]property.Value{
+							"location": property.New("testdata/noop"),
 						}),
-						"exports": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewObjectProperty(resource.PropertyMap{
-									"raw": resource.NewStringProperty("type=registry"),
+						"exports": property.New(
+							[]property.Value{
+								property.New(map[string]property.Value{
+									"raw": property.New("type=registry"),
 								}),
 							},
 						),
-					},
+					}),
 					ExpectFailure: true,
 					CheckFailures: []provider.CheckFailure{
 						{
@@ -161,19 +160,19 @@ func TestImageLifecycle(t *testing.T) {
 			client: noClient,
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty(
-							[]resource.PropertyValue{resource.NewStringProperty("invalid-exports")},
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New(
+							[]property.Value{property.New("invalid-exports")},
 						),
-						"exports": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewObjectProperty(resource.PropertyMap{
-									"raw": resource.NewStringProperty("type="),
+						"exports": property.New(
+							[]property.Value{
+								property.New(map[string]property.Value{
+									"raw": property.New("type="),
 								}),
 							},
 						),
-					},
+					}),
 					ExpectFailure: true,
 					CheckFailures: []provider.CheckFailure{{
 						Property: "exports[0]",
@@ -194,15 +193,15 @@ func TestImageLifecycle(t *testing.T) {
 			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty(
-							[]resource.PropertyValue{resource.NewStringProperty("foo")},
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New(
+							[]property.Value{property.New("foo")},
 						),
-						"context": resource.NewObjectProperty(resource.PropertyMap{
-							"location": resource.NewStringProperty("testdata/noop"),
+						"context": property.New(map[string]property.Value{
+							"location": property.New("testdata/noop"),
 						}),
-					},
+					}),
 					ExpectFailure: true,
 				}
 			},
@@ -221,15 +220,15 @@ func TestImageLifecycle(t *testing.T) {
 			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty(
-							[]resource.PropertyValue{resource.NewStringProperty("foo")},
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New(
+							[]property.Value{property.New("foo")},
 						),
-						"context": resource.NewObjectProperty(resource.PropertyMap{
-							"location": resource.NewStringProperty("testdata/noop"),
+						"context": property.New(map[string]property.Value{
+							"location": property.New("testdata/noop"),
 						}),
-					},
+					}),
 					ExpectFailure: true,
 				}
 			},
@@ -254,24 +253,24 @@ func TestImageLifecycle(t *testing.T) {
 			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewStringProperty("default-dockerfile"),
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New(
+							[]property.Value{
+								property.New("default-dockerfile"),
 							},
 						),
-						"context": resource.NewObjectProperty(resource.PropertyMap{
-							"location": resource.NewStringProperty("testdata/noop"),
+						"context": property.New(map[string]property.Value{
+							"location": property.New("testdata/noop"),
 						}),
-					},
-					Hook: func(_, output resource.PropertyMap) {
-						dockerfile := output["dockerfile"]
+					}),
+					Hook: func(_, output property.Map) {
+						dockerfile := output.Get("dockerfile")
 						require.NotNil(t, dockerfile)
-						require.True(t, dockerfile.IsObject())
-						location := dockerfile.ObjectValue()["location"]
+						require.True(t, dockerfile.IsMap())
+						location := dockerfile.AsMap().Get("location")
 						require.True(t, location.IsString())
-						assert.Equal(t, "testdata/noop/Dockerfile", location.StringValue())
+						assert.Equal(t, "testdata/noop/Dockerfile", location.AsString())
 					},
 				}
 			},
@@ -296,25 +295,25 @@ func TestImageLifecycle(t *testing.T) {
 			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewStringProperty("inline-dockerfile"),
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New(
+							[]property.Value{
+								property.New("inline-dockerfile"),
 							},
 						),
-						"buildOnPreview": resource.NewBoolProperty(true),
-						"dockerfile": resource.NewObjectProperty(resource.PropertyMap{
-							"inline": resource.NewStringProperty("FROM alpine:latest"),
+						"buildOnPreview": property.New(true),
+						"dockerfile": property.New(map[string]property.Value{
+							"inline": property.New("FROM alpine:latest"),
 						}),
-					},
-					Hook: func(_, output resource.PropertyMap) {
-						context := output["context"]
+					}),
+					Hook: func(_, output property.Map) {
+						context := output.Get("context")
 						require.NotNil(t, context)
-						require.True(t, context.IsObject())
-						location := context.ObjectValue()["location"]
+						require.True(t, context.IsMap())
+						location := context.AsMap().Get("location")
 						require.True(t, location.IsString())
-						assert.Equal(t, ".", location.StringValue())
+						assert.Equal(t, ".", location.AsString())
 					},
 				}
 			},
@@ -360,15 +359,15 @@ func TestDelete(t *testing.T) {
 		err = s.Delete(provider.DeleteRequest{
 			ID:  "foo,bar",
 			Urn: _fakeURN,
-			Properties: resource.PropertyMap{
-				"tags": resource.NewArrayProperty([]resource.PropertyValue{
-					resource.NewStringProperty("docker.io/pulumi/test:foo"),
+			Properties: property.NewMap(map[string]property.Value{
+				"tags": property.New([]property.Value{
+					property.New("docker.io/pulumi/test:foo"),
 				}),
-				"push":        resource.NewBoolProperty(true),
-				"digest":      resource.NewStringProperty("sha256:foo"),
-				"contextHash": resource.NewStringProperty(""),
-				"ref":         resource.NewStringProperty(""),
-			},
+				"push":        property.New(true),
+				"digest":      property.New("sha256:foo"),
+				"contextHash": property.New(""),
+				"ref":         property.New(""),
+			}),
 		})
 		assert.NoError(t, err)
 	})
@@ -398,20 +397,20 @@ func TestRead(t *testing.T) {
 	resp, err := s.Read(provider.ReadRequest{
 		ID:  "my-image",
 		Urn: _fakeURN,
-		Properties: resource.PropertyMap{
-			"exports": resource.NewArrayProperty([]resource.PropertyValue{
-				resource.NewObjectProperty(resource.PropertyMap{
-					"raw": resource.NewStringProperty("type=registry"),
+		Properties: property.NewMap(map[string]property.Value{
+			"exports": property.New([]property.Value{
+				property.New(map[string]property.Value{
+					"raw": property.New("type=registry"),
 				}),
 			}),
-			"tags": resource.NewArrayProperty([]resource.PropertyValue{
-				resource.NewStringProperty(tag),
+			"tags": property.New([]property.Value{
+				property.New(tag),
 			}),
-			"digest": resource.NewStringProperty(digest),
-		},
+			"digest": property.New(digest),
+		}),
 	})
 	require.NoError(t, err)
-	assert.NotNil(t, resp.Properties["exports"].ArrayValue()[0].ObjectValue()["manifest"])
+	assert.NotNil(t, resp.Properties.Get("exports").AsArray().Get(0).AsMap().Get("manifest"))
 }
 
 func TestImageDiff(t *testing.T) {
@@ -796,10 +795,10 @@ func TestImageDiff(t *testing.T) {
 
 	s := newServer(nil)
 
-	encode := func(t *testing.T, x any) resource.PropertyMap {
+	encode := func(t *testing.T, x any) property.Map {
 		raw, err := mapper.New(&mapper.Opts{IgnoreMissing: true}).Encode(x)
 		require.NoError(t, err)
-		return resource.NewPropertyMapFromMap(raw)
+		return resource.FromResourcePropertyMap(resource.NewPropertyMapFromMap(raw))
 	}
 
 	for _, tt := range tests {

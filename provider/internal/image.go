@@ -38,6 +38,7 @@ import (
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
+	"github.com/pulumi/pulumi/sdk/v3/go/property"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -356,7 +357,10 @@ func (i *Image) Check(
 		return infer.CheckResponse[ImageArgs]{Failures: failures, Inputs: args}, err
 	}
 
-	preview := req.NewInputs.ContainsUnknowns()
+	// If the inputs aren't fully resolved we perform a weaker validation, for
+	// example we might not be able to check the Dockerfile for syntactic
+	// correctness.
+	preview := property.New(req.NewInputs).HasComputed()
 
 	cfg := infer.GetConfig[Config](ctx)
 	supportsMultipleExports := true

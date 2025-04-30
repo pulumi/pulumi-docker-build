@@ -29,6 +29,7 @@ import (
 	"github.com/pulumi/pulumi/pkg/v3/codegen/schema"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/contract"
+	"github.com/pulumi/pulumi/sdk/v3/go/property"
 )
 
 var (
@@ -139,7 +140,9 @@ func diffConfigIgnoreInternal(
 	diffConfig func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error),
 ) func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error) {
 	return func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error) {
-		delete(req.News, "__internal")
+		m := req.News.AsMap()
+		delete(m, "__internal")
+		req.News = property.NewMap(m)
 
 		return diffConfig(ctx, req)
 	}

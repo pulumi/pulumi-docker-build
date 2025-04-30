@@ -27,6 +27,7 @@ import (
 	"github.com/pulumi/pulumi-go-provider/integration"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/mapper"
+	"github.com/pulumi/pulumi/sdk/v3/go/property"
 )
 
 func TestIndexLifecycle(t *testing.T) {
@@ -45,16 +46,16 @@ func TestIndexLifecycle(t *testing.T) {
 			client: realClient,
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"tag": resource.NewStringProperty(
+					Inputs: property.NewMap(map[string]property.Value{
+						"tag": property.New(
 							"docker.io/pulumibot/buildkit-e2e:manifest-unit",
 						),
-						"sources": resource.NewArrayProperty([]resource.PropertyValue{
-							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:arm64"),
-							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:amd64"),
+						"sources": property.New([]property.Value{
+							property.New("docker.io/pulumibot/buildkit-e2e:arm64"),
+							property.New("docker.io/pulumibot/buildkit-e2e:amd64"),
 						}),
-						"push": resource.NewBoolProperty(false),
-					},
+						"push": property.New(false),
+					}),
 				}
 			},
 		},
@@ -64,25 +65,21 @@ func TestIndexLifecycle(t *testing.T) {
 			client: realClient,
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"tag": resource.NewStringProperty(
+					Inputs: property.NewMap(map[string]property.Value{
+						"tag": property.New(
 							"docker.io/pulumibot/buildkit-e2e:manifest",
 						),
-						"sources": resource.NewArrayProperty([]resource.PropertyValue{
-							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:arm64"),
-							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:amd64"),
+						"sources": property.New([]property.Value{
+							property.New("docker.io/pulumibot/buildkit-e2e:arm64"),
+							property.New("docker.io/pulumibot/buildkit-e2e:amd64"),
 						}),
-						"push": resource.NewBoolProperty(true),
-						"registry": resource.NewObjectProperty(resource.PropertyMap{
-							"address":  resource.NewStringProperty("docker.io"),
-							"username": resource.NewStringProperty("pulumibot"),
-							"password": resource.NewSecretProperty(&resource.Secret{
-								Element: resource.NewStringProperty(
-									os.Getenv("DOCKER_HUB_PASSWORD"),
-								),
-							}),
+						"push": property.New(true),
+						"registry": property.New(map[string]property.Value{
+							"address":  property.New("docker.io"),
+							"username": property.New("pulumibot"),
+							"password": property.New(os.Getenv("DOCKER_HUB_PASSWORD")).WithSecret(true),
 						}),
-					},
+					}),
 				}
 			},
 		},
@@ -98,25 +95,21 @@ func TestIndexLifecycle(t *testing.T) {
 			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"tag": resource.NewStringProperty(
+					Inputs: property.NewMap(map[string]property.Value{
+						"tag": property.New(
 							"docker.io/pulumibot/buildkit-e2e:manifest",
 						),
-						"sources": resource.NewArrayProperty([]resource.PropertyValue{
-							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:arm64"),
-							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:amd64"),
+						"sources": property.New([]property.Value{
+							property.New("docker.io/pulumibot/buildkit-e2e:arm64"),
+							property.New("docker.io/pulumibot/buildkit-e2e:amd64"),
 						}),
-						"push": resource.NewBoolProperty(true),
-						"registry": resource.NewObjectProperty(resource.PropertyMap{
-							"address":  resource.NewStringProperty("docker.io"),
-							"username": resource.NewStringProperty("pulumibot"),
-							"password": resource.NewSecretProperty(&resource.Secret{
-								Element: resource.NewStringProperty(
-									os.Getenv("DOCKER_HUB_PASSWORD"),
-								),
-							}),
+						"push": property.New(true),
+						"registry": property.New(map[string]property.Value{
+							"address":  property.New("docker.io"),
+							"username": property.New("pulumibot"),
+							"password": property.New(os.Getenv("DOCKER_HUB_PASSWORD")).WithSecret(true),
 						}),
-					},
+					}),
 				}
 			},
 		},
@@ -223,10 +216,10 @@ func TestIndexDiff(t *testing.T) {
 
 	s := newServer(nil)
 
-	encode := func(t *testing.T, x any) resource.PropertyMap {
+	encode := func(t *testing.T, x any) property.Map {
 		raw, err := mapper.New(&mapper.Opts{IgnoreMissing: true}).Encode(x)
 		require.NoError(t, err)
-		return resource.NewPropertyMapFromMap(raw)
+		return resource.FromResourcePropertyMap(resource.NewPropertyMapFromMap(raw))
 	}
 
 	for _, tt := range tests {

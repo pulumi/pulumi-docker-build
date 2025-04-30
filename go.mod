@@ -16,14 +16,14 @@ require (
 	github.com/otiai10/copy v1.14.0
 	github.com/pulumi/providertest v0.3.1
 	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v0.0.0-20241219213128-b19d8c8da35b
-	github.com/pulumi/pulumi-go-provider v0.25.1-0.20250421175102-c887ad454804
-	github.com/pulumi/pulumi-java/pkg v1.10.0
+	github.com/pulumi/pulumi-go-provider v0.25.1-0.20250430161409-af6aefddbb27
+	github.com/pulumi/pulumi-java/pkg v1.10.1-0.20250430211204-978569a2545c
 	github.com/pulumi/pulumi-yaml v1.17.0
-	github.com/pulumi/pulumi/pkg/v3 v3.163.0
+	github.com/pulumi/pulumi/pkg/v3 v3.165.0
 	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20250417110128-49fb14839a5a
 	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20250417110128-49fb14839a5a
 	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20250417110128-49fb14839a5a
-	github.com/pulumi/pulumi/sdk/v3 v3.163.0
+	github.com/pulumi/pulumi/sdk/v3 v3.165.0
 	github.com/regclient/regclient v0.7.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.14.0
