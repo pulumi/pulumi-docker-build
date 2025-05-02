@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Changed
+
+- Respond to cancel for exec builds. (<https://github.com/pulumi/pulumi-docker-build/pull/522>)
+
 ## 0.0.11 (2025-04-11)
 
 ### Changed

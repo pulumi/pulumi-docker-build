@@ -28,12 +28,12 @@ import (
 func TestExec(t *testing.T) {
 	t.Parallel()
 
-	h, err := newHost(context.Background(), nil)
+	h, err := newHost(t.Context(), nil)
 	require.NoError(t, err)
 	cli, err := wrap(h)
 	require.NoError(t, err)
 
-	err = cli.exec([]string{"buildx", "version"}, nil)
+	err = cli.exec(t.Context(), []string{"buildx", "version"}, nil)
 	assert.NoError(t, err)
 
 	out, err := io.ReadAll(cli.r)
