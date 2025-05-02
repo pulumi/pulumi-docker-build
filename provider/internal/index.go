@@ -136,8 +136,8 @@ func (i *Index) Create(
 	resp, err := i.Update(ctx,
 		infer.UpdateRequest[IndexArgs, IndexState]{
 			ID:      req.Name,
-			Olds:    IndexState{},
-			News:    req.Inputs,
+			State:   IndexState{},
+			Inputs:  req.Inputs,
 			Preview: req.Preview,
 		},
 	)
@@ -150,7 +150,7 @@ func (i *Index) Update(
 	ctx context.Context,
 	req infer.UpdateRequest[IndexArgs, IndexState],
 ) (infer.UpdateResponse[IndexState], error) {
-	state, input := req.Olds, req.News
+	state, input := req.State, req.Inputs
 
 	state.IndexArgs = input
 	state.Ref = input.Tag
@@ -309,7 +309,7 @@ func (i *Index) Diff(
 	_ context.Context,
 	req infer.DiffRequest[IndexArgs, IndexState],
 ) (provider.DiffResponse, error) {
-	olds, news := req.Olds, req.News
+	olds, news := req.State, req.Inputs
 
 	diff := map[string]provider.PropertyDiff{}
 	update := provider.PropertyDiff{Kind: provider.Update}

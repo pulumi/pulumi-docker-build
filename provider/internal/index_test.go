@@ -142,22 +142,22 @@ func TestIndexDiff(t *testing.T) {
 	baseState := IndexState{IndexArgs: baseArgs}
 
 	tests := []struct {
-		name string
-		olds func(*testing.T, IndexState) IndexState
-		news func(*testing.T, IndexArgs) IndexArgs
+		name   string
+		state  func(*testing.T, IndexState) IndexState
+		inputs func(*testing.T, IndexArgs) IndexArgs
 
 		wantChanges bool
 	}{
 		{
 			name:        "no diff if no changes",
-			olds:        func(*testing.T, IndexState) IndexState { return baseState },
-			news:        func(*testing.T, IndexArgs) IndexArgs { return baseArgs },
+			state:       func(*testing.T, IndexState) IndexState { return baseState },
+			inputs:      func(*testing.T, IndexArgs) IndexArgs { return baseArgs },
 			wantChanges: false,
 		},
 		{
-			name: "diff if tag changes",
-			olds: func(*testing.T, IndexState) IndexState { return baseState },
-			news: func(t *testing.T, a IndexArgs) IndexArgs {
+			name:  "diff if tag changes",
+			state: func(*testing.T, IndexState) IndexState { return baseState },
+			inputs: func(t *testing.T, a IndexArgs) IndexArgs {
 				a.Tag = "new-tag"
 				return a
 			},
@@ -165,7 +165,7 @@ func TestIndexDiff(t *testing.T) {
 		},
 		{
 			name: "no diff if registry password changes",
-			olds: func(_ *testing.T, s IndexState) IndexState {
+			state: func(_ *testing.T, s IndexState) IndexState {
 				s.Registry = &Registry{
 					Address:  "foo",
 					Username: "foo",
@@ -173,7 +173,7 @@ func TestIndexDiff(t *testing.T) {
 				}
 				return s
 			},
-			news: func(_ *testing.T, a IndexArgs) IndexArgs {
+			inputs: func(_ *testing.T, a IndexArgs) IndexArgs {
 				a.Registry = &Registry{
 					Address:  "foo",
 					Username: "foo",
@@ -184,9 +184,9 @@ func TestIndexDiff(t *testing.T) {
 			wantChanges: false,
 		},
 		{
-			name: "diff if registry added",
-			olds: func(*testing.T, IndexState) IndexState { return baseState },
-			news: func(_ *testing.T, a IndexArgs) IndexArgs {
+			name:  "diff if registry added",
+			state: func(*testing.T, IndexState) IndexState { return baseState },
+			inputs: func(_ *testing.T, a IndexArgs) IndexArgs {
 				a.Registry = &Registry{Address: "foo.com", Username: "foo", Password: "foo"}
 				return a
 			},
@@ -194,7 +194,7 @@ func TestIndexDiff(t *testing.T) {
 		},
 		{
 			name: "diff if registry user changes",
-			olds: func(_ *testing.T, s IndexState) IndexState {
+			state: func(_ *testing.T, s IndexState) IndexState {
 				s.Registry = &Registry{
 					Address:  "foo",
 					Username: "foo",
@@ -202,7 +202,7 @@ func TestIndexDiff(t *testing.T) {
 				}
 				return s
 			},
-			news: func(_ *testing.T, a IndexArgs) IndexArgs {
+			inputs: func(_ *testing.T, a IndexArgs) IndexArgs {
 				a.Registry = &Registry{
 					Address:  "DIFFERENT USER",
 					Username: "foo",
@@ -226,9 +226,9 @@ func TestIndexDiff(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			resp, err := s.Diff(provider.DiffRequest{
-				Urn:  urn,
-				Olds: encode(t, tt.olds(t, baseState)),
-				News: encode(t, tt.news(t, baseArgs)),
+				Urn:    urn,
+				State:  encode(t, tt.state(t, baseState)),
+				Inputs: encode(t, tt.inputs(t, baseArgs)),
 			})
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantChanges, resp.HasChanges, resp.DetailedDiff)

@@ -140,11 +140,11 @@ func diffConfigIgnoreInternal(
 	diffConfig func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error),
 ) func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error) {
 	return func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error) {
-		m := req.News.AsMap()
+		m := req.Inputs.AsMap()
 		delete(m, "__internal")
 		delete(m, "__pulumi-go-provider-infer")
 		delete(m, "__pulumi-go-provider-version")
-		req.News = property.NewMap(m)
+		req.Inputs = property.NewMap(m)
 
 		return diffConfig(ctx, req)
 	}

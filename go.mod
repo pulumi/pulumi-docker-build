@@ -16,7 +16,7 @@ require (
 	github.com/otiai10/copy v1.14.0
 	github.com/pulumi/providertest v0.3.1
 	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v0.0.0-20241219213128-b19d8c8da35b
-	github.com/pulumi/pulumi-go-provider v0.25.1-0.20250430161409-af6aefddbb27
+	github.com/pulumi/pulumi-go-provider v0.25.1-0.20250501172612-76ede73bcfee
 	github.com/pulumi/pulumi-java/pkg v1.10.1-0.20250430211204-978569a2545c
 	github.com/pulumi/pulumi-yaml v1.17.0
 	github.com/pulumi/pulumi/pkg/v3 v3.165.0

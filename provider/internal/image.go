@@ -784,7 +784,7 @@ func (i *Image) Update(
 	req infer.UpdateRequest[ImageArgs, ImageState],
 ) (infer.UpdateResponse[ImageState], error) {
 	resp, err := i.Create(ctx,
-		infer.CreateRequest[ImageArgs]{Name: req.ID, Inputs: req.News, Preview: req.Preview},
+		infer.CreateRequest[ImageArgs]{Name: req.ID, Inputs: req.Inputs, Preview: req.Preview},
 	)
 	return infer.UpdateResponse[ImageState]{Output: resp.Output}, err
 }
@@ -910,7 +910,7 @@ func (*Image) Diff(
 	_ context.Context,
 	req infer.DiffRequest[ImageArgs, ImageState],
 ) (provider.DiffResponse, error) {
-	olds, news := req.Olds, req.News
+	olds, news := req.State, req.Inputs
 
 	diff := map[string]provider.PropertyDiff{}
 	update := provider.PropertyDiff{Kind: provider.Update}
