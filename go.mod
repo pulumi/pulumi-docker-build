@@ -17,7 +17,7 @@ require (
 	github.com/pulumi/providertest v0.3.1
 	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v0.0.0-20241219213128-b19d8c8da35b
 	github.com/pulumi/pulumi-go-provider v0.25.1-0.20250501172612-76ede73bcfee
-	github.com/pulumi/pulumi-java/pkg v1.10.1-0.20250430211204-978569a2545c
+	github.com/pulumi/pulumi-java/pkg v1.10.1-0.20250501074704-87881c4a7c04
 	github.com/pulumi/pulumi-yaml v1.17.0
 	github.com/pulumi/pulumi/pkg/v3 v3.165.0
 	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20250417110128-49fb14839a5a
