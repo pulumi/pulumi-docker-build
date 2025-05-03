@@ -57,11 +57,11 @@ type cli struct {
 	auths map[string]cfgtypes.AuthConfig
 	host  *host
 
-	in       string        // stdin
-	r, w     *os.File      // stdout
-	err      bytes.Buffer  // stderr
-	dumplogs bool          // if true then tail() will re-log status messages
-	done     chan struct{} // signaled when all logs have been forwarded to the engine.
+	in       string       // stdin
+	r, w     *os.File     // stdout
+	err      bytes.Buffer // stderr
+	dumplogs bool         // if true then tail() will re-log status messages
+	builder  Builder      // for mocking build daemon responses
 }
 
 // Cli wraps the Docker interface for mock generation.
@@ -120,11 +120,12 @@ func wrap(host *host, registries ...Registry) (*cli, error) {
 	}
 
 	wrapped := &cli{
-		Cli:   docker,
-		host:  host,
-		auths: auths,
-		r:     r,
-		w:     w,
+		Cli:     docker,
+		host:    host,
+		auths:   auths,
+		r:       r,
+		w:       w,
+		builder: defaultBuilder{},
 	}
 
 	return wrapped, nil
@@ -163,14 +164,6 @@ func (c *cli) rc() *regclient.RegClient {
 // tail is meant to be called as a goroutine and will pipe output from the CLI
 // back to the Pulumi engine. Requires a corresponding call to close.
 func (c *cli) tail(ctx context.Context) {
-	c.done = make(chan struct{}, 1)
-	defer func() {
-		c.done <- struct{}{}
-		if err := recover(); err != nil {
-			fmt.Fprintf(os.Stderr, "recovered: %s\n", err)
-		}
-	}()
-
 	b := bytes.Buffer{}
 
 	s := bufio.NewScanner(c.r)
@@ -194,11 +187,7 @@ func (c *cli) tail(ctx context.Context) {
 
 // close flushes any outstanding logs and cleans up resources.
 func (c *cli) Close() error {
-	err := errors.Join(c.w.Close(), c.r.Close())
-	if c.done != nil {
-		<-c.done
-	}
-	return err
+	return errors.Join(c.w.Close(), c.r.Close())
 }
 
 // execBuild performs a build by os.Exec'ing the docker-buildx binary.

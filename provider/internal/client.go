@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:generate go run go.uber.org/mock/mockgen -typed -package internal -source client.go -destination mockclient_test.go --self_package github.com/pulumi/pulumi-docker-build/provider/internal
+//go:generate go run go.uber.org/mock/mockgen -typed -package internal -source client.go -destination mockclient_test.go --self_package github.com/pulumi/pulumi-docker-build/provider/internal -imports buildx=github.com/docker/buildx/build
 
 package internal
 
@@ -26,6 +26,7 @@ import (
 
 	"github.com/distribution/reference"
 	buildx "github.com/docker/buildx/build"
+	"github.com/docker/buildx/builder"
 	"github.com/docker/buildx/commands"
 	controllerapi "github.com/docker/buildx/controller/pb"
 	"github.com/docker/buildx/util/confutil"
@@ -123,9 +124,15 @@ func (c *cli) Build(
 	if err != nil {
 		return nil, fmt.Errorf("creating printer: %w", err)
 	}
+
 	defer func() {
-		// Log any warnings when we're done.
-		_ = printer.Wait()
+		// Wait for logs to flush if the build finished, but not if we're
+		// exiting early.
+		if ctx.Err() == nil {
+			_ = printer.Wait()
+		}
+
+		// Log any warnings we got, separated by newlines.
 		for _, w := range printer.Warnings() {
 			b := &bytes.Buffer{}
 			_, _ = b.Write(w.Short)
@@ -224,21 +231,40 @@ func (c *cli) Build(
 		},
 	}
 
-	// Perform the build.
-	results, err := buildx.Build(
-		ctx,
-		b.nodes,
-		payload,
-		dockerutil.NewClient(c),
-		confutil.NewConfig(c),
-		printer,
-	)
-	if err != nil {
+	resultC := make(chan map[string]*client.SolveResponse)
+	errC := make(chan error)
+
+	// buildx.Build doesn't handle context cancellation, so we monitor it in a
+	// goroutine. cli.Close cleans up our file descriptors, so if we do exit
+	// early the remote build should terminate as soon as it sees the pipe has
+	// broken.
+	go func() {
+		defer close(resultC)
+		defer close(errC)
+		results, err := c.builder.Build(
+			ctx,
+			b.nodes,
+			payload,
+			dockerutil.NewClient(c),
+			confutil.NewConfig(c),
+			printer,
+		)
+		if err != nil {
+			errC <- err
+			return
+		}
+		resultC <- results
+	}()
+
+	select {
+	case results := <-resultC:
+		return results[target], nil
+	case err := <-errC:
 		c.dumplogs = true
 		return nil, err
+	case <-ctx.Done():
+		return nil, ctx.Err()
 	}
-
-	return results[target], err
 }
 
 // BuildKitEnabled returns true if the client supports buildkit.
@@ -352,6 +378,17 @@ func (c *cli) Delete(ctx context.Context, r string) error {
 	_ = rc.ManifestDelete(ctx, ref)
 
 	return nil
+}
+
+// Builder allows injecting mock responses from the build daemon.
+type Builder interface {
+	Build(ctx context.Context, nodes []builder.Node, opts map[string]buildx.Options, docker *dockerutil.Client, cfg *confutil.Config, w progress.Writer) (resp map[string]*client.SolveResponse, err error)
+}
+
+type defaultBuilder struct{}
+
+func (defaultBuilder) Build(ctx context.Context, nodes []builder.Node, opts map[string]buildx.Options, docker *dockerutil.Client, cfg *confutil.Config, w progress.Writer) (resp map[string]*client.SolveResponse, err error) {
+	return buildx.Build(ctx, nodes, opts, docker, cfg, w)
 }
 
 func normalizeReference(ref string) (reference.Named, error) {

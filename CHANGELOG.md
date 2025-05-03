@@ -4,6 +4,10 @@
 
 - Respond to cancel for exec builds. (<https://github.com/pulumi/pulumi-docker-build/pull/522>)
 
+### Fixed
+
+- Builds now respect cancellation. (https://github.com/pulumi/pulumi-docker-build/issues/533)
+
 ## 0.0.11 (2025-04-11)
 
 ### Changed
