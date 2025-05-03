@@ -382,12 +382,26 @@ func (c *cli) Delete(ctx context.Context, r string) error {
 
 // Builder allows injecting mock responses from the build daemon.
 type Builder interface {
-	Build(ctx context.Context, nodes []builder.Node, opts map[string]buildx.Options, docker *dockerutil.Client, cfg *confutil.Config, w progress.Writer) (resp map[string]*client.SolveResponse, err error)
+	Build(
+		ctx context.Context,
+		nodes []builder.Node,
+		opts map[string]buildx.Options,
+		docker *dockerutil.Client,
+		cfg *confutil.Config,
+		w progress.Writer,
+	) (resp map[string]*client.SolveResponse, err error)
 }
 
 type defaultBuilder struct{}
 
-func (defaultBuilder) Build(ctx context.Context, nodes []builder.Node, opts map[string]buildx.Options, docker *dockerutil.Client, cfg *confutil.Config, w progress.Writer) (resp map[string]*client.SolveResponse, err error) {
+func (defaultBuilder) Build(
+	ctx context.Context,
+	nodes []builder.Node,
+	opts map[string]buildx.Options,
+	docker *dockerutil.Client,
+	cfg *confutil.Config,
+	w progress.Writer,
+) (resp map[string]*client.SolveResponse, err error) {
 	return buildx.Build(ctx, nodes, opts, docker, cfg, w)
 }
 

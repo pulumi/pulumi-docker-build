@@ -17,7 +17,7 @@ package internal
 import (
 	"bytes"
 	"context"
-	"fmt"
+	"errors"
 	"io"
 	"log/slog"
 	"os"
@@ -451,9 +451,16 @@ func TestBuildCancelation(t *testing.T) {
 	b := NewMockBuilder(ctrl)
 	b.EXPECT().Build(
 		gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(),
-	).DoAndReturn(func(_ context.Context, _ []builder.Node, _ map[string]buildx.Options, _ *dockerutil.Client, _ *confutil.Config, _ progress.Writer) (map[string]*client.SolveResponse, error) {
+	).DoAndReturn(func(
+		_ context.Context,
+		_ []builder.Node,
+		_ map[string]buildx.Options,
+		_ *dockerutil.Client,
+		_ *confutil.Config,
+		_ progress.Writer,
+	) (map[string]*client.SolveResponse, error) {
 		cancel()
-		return nil, fmt.Errorf("cancel wasn't respected")
+		return nil, errors.New("cancel wasn't respected")
 	})
 	cli.builder = b
 
