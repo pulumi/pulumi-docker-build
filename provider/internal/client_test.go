@@ -17,15 +17,23 @@ package internal
 import (
 	"bytes"
 	"context"
+	"errors"
 	"io"
 	"log/slog"
 	"os"
 	"path/filepath"
 	"testing"
 
+	buildx "github.com/docker/buildx/build"
+	"github.com/docker/buildx/builder"
+	"github.com/docker/buildx/util/confutil"
+	"github.com/docker/buildx/util/dockerutil"
+	"github.com/docker/buildx/util/progress"
 	"github.com/docker/docker/api/types/registry"
+	"github.com/moby/buildkit/client"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestAuth(t *testing.T) {
@@ -430,6 +438,35 @@ func TestBuildExecError(t *testing.T) {
 	for _, want := range want {
 		assert.Contains(t, cli.err.String(), want)
 	}
+}
+
+func TestBuildCancelation(t *testing.T) {
+	t.Parallel()
+	cli := testcli(t, true)
+
+	ctrl := gomock.NewController(t)
+
+	ctx, cancel := context.WithCancel(context.Background())
+
+	b := NewMockBuilder(ctrl)
+	b.EXPECT().Build(
+		gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any(),
+	).DoAndReturn(func(
+		_ context.Context,
+		_ []builder.Node,
+		_ map[string]buildx.Options,
+		_ *dockerutil.Client,
+		_ *confutil.Config,
+		_ progress.Writer,
+	) (map[string]*client.SolveResponse, error) {
+		cancel()
+		return nil, errors.New("cancel wasn't respected")
+	})
+	cli.builder = b
+
+	resp, err := cli.Build(ctx, &build{})
+	assert.ErrorIs(t, err, context.Canceled)
+	assert.Nil(t, resp)
 }
 
 // testcli returns a new standalone CLI instance. Set ping to true if a live
