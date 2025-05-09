@@ -28,7 +28,6 @@ import (
 	pb "github.com/docker/buildx/controller/pb"
 	"github.com/moby/buildkit/client"
 	"github.com/moby/buildkit/exporter/containerimage/exptypes"
-	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/regclient/regclient/types/descriptor"
 	"github.com/regclient/regclient/types/platform"
 	"github.com/stretchr/testify/assert"
@@ -36,6 +35,7 @@ import (
 	"go.uber.org/mock/gomock"
 
 	provider "github.com/pulumi/pulumi-go-provider"
+	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi-go-provider/integration"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/mapper"
