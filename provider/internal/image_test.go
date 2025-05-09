@@ -353,22 +353,17 @@ func TestDelete(t *testing.T) {
 			Delete(gomock.Any(), "docker.io/pulumi/test@sha256:foo").
 			Return(errNotFound{})
 
-		s := newServer(t.Context(), t, client)
-		err := s.Configure(provider.ConfigureRequest{})
-		require.NoError(t, err)
+		i := &Image{docker: client}
 
-		err = s.Delete(provider.DeleteRequest{
-			ID:  "foo,bar",
-			Urn: _fakeURN,
-			Properties: property.NewMap(map[string]property.Value{
-				"tags": property.New([]property.Value{
-					property.New("docker.io/pulumi/test:foo"),
-				}),
-				"push":        property.New(true),
-				"digest":      property.New("sha256:foo"),
-				"contextHash": property.New(""),
-				"ref":         property.New(""),
-			}),
+		_, err := i.Delete(t.Context(), infer.DeleteRequest[ImageState]{
+			ID: "foo,bar",
+			State: ImageState{
+				ImageArgs: ImageArgs{
+					Tags: []string{"docker.io/pulumi/test:foo"},
+					Push: true,
+				},
+				Digest: "sha256:foo",
+			},
 		})
 		assert.NoError(t, err)
 	})
