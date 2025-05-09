@@ -6,7 +6,7 @@ package tools
 
 import (
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
-	_ "github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet"
+	_ "github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3"
 	_ "github.com/pulumi/pulumi-java/pkg/cmd/pulumi-language-java"
 	_ "github.com/pulumi/pulumi-yaml/cmd/pulumi-converter-yaml"
 	_ "github.com/pulumi/pulumi-yaml/cmd/pulumi-language-yaml"

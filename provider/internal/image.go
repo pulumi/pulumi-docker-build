@@ -717,7 +717,7 @@ func (i *Image) Create(
 		}, errors.New("buildkit is not supported on this host")
 	}
 
-	build, err := input.toBuild(ctx, cli.SupportsMultipleExports(), req.Preview)
+	build, err := input.toBuild(ctx, cli.SupportsMultipleExports(), req.DryRun)
 	if err != nil {
 		return infer.CreateResponse[ImageState]{
 			ID:     id,
@@ -738,10 +738,10 @@ func (i *Image) Create(
 	}
 	state.ContextHash = hash
 
-	if req.Preview && !input.shouldBuildOnPreview() {
+	if req.DryRun && !input.shouldBuildOnPreview() {
 		return infer.CreateResponse[ImageState]{ID: id, Output: state}, nil
 	}
-	if req.Preview && !input.buildable() {
+	if req.DryRun && !input.buildable() {
 		provider.GetLogger(ctx).Warning("Skipping preview build because some inputs are unknown.")
 		return infer.CreateResponse[ImageState]{ID: id, Output: state}, nil
 	}
@@ -784,7 +784,7 @@ func (i *Image) Update(
 	req infer.UpdateRequest[ImageArgs, ImageState],
 ) (infer.UpdateResponse[ImageState], error) {
 	resp, err := i.Create(ctx,
-		infer.CreateRequest[ImageArgs]{Name: req.ID, Inputs: req.Inputs, Preview: req.Preview},
+		infer.CreateRequest[ImageArgs]{Name: req.ID, Inputs: req.Inputs, DryRun: req.DryRun},
 	)
 	return infer.UpdateResponse[ImageState]{Output: resp.Output}, err
 }

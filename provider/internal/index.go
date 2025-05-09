@@ -135,10 +135,10 @@ func (i *Index) Create(
 ) (infer.CreateResponse[IndexState], error) {
 	resp, err := i.Update(ctx,
 		infer.UpdateRequest[IndexArgs, IndexState]{
-			ID:      req.Name,
-			State:   IndexState{},
-			Inputs:  req.Inputs,
-			Preview: req.Preview,
+			ID:     req.Name,
+			State:  IndexState{},
+			Inputs: req.Inputs,
+			DryRun: req.DryRun,
 		},
 	)
 	return infer.CreateResponse[IndexState]{ID: req.Name, Output: resp.Output}, err
@@ -160,7 +160,7 @@ func (i *Index) Update(
 		return infer.UpdateResponse[IndexState]{Output: state}, err
 	}
 
-	if req.Preview {
+	if req.DryRun {
 		return infer.UpdateResponse[IndexState]{Output: state}, nil
 	}
 

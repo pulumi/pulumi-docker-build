@@ -56,10 +56,8 @@ class ProviderArgs:
         pulumi.set(self, "registries", value)
 
 
+@pulumi.type_token("pulumi:providers:docker-build")
 class Provider(pulumi.ProviderResource):
-
-    pulumi_type = "pulumi:providers:docker-build"
-
     @overload
     def __init__(__self__,
                  resource_name: str,

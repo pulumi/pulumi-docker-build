@@ -20,6 +20,7 @@ import (
 
 	"github.com/blang/semver"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
@@ -31,7 +32,7 @@ import (
 func TestConfigure(t *testing.T) {
 	t.Parallel()
 
-	s := newServer(nil)
+	s := newServer(t.Context(), t, nil)
 
 	err := s.Configure(
 		provider.ConfigureRequest{},
@@ -60,7 +61,7 @@ func TestAnnotate(t *testing.T) {
 func TestSchema(t *testing.T) {
 	t.Parallel()
 
-	s := newServer(nil)
+	s := newServer(t.Context(), t, nil)
 
 	_, err := s.GetSchema(provider.GetSchemaRequest{Version: 0})
 	assert.NoError(t, err)
@@ -75,7 +76,9 @@ func (annotator) SetToken(tokens.ModuleName, tokens.TypeName) {}
 func (annotator) AddAlias(tokens.ModuleName, tokens.TypeName) {}
 func (annotator) SetResourceDeprecationMessage(_ string)      {}
 
-func newServer(client Client) integration.Server {
+func newServer(ctx context.Context, t *testing.T, client Client) integration.Server {
+	t.Helper()
+
 	p := NewBuildxProvider()
 
 	// Inject a mock client if provided.
@@ -85,5 +88,11 @@ func newServer(client Client) integration.Server {
 		})
 	}
 
-	return integration.NewServer("docker-build", semver.Version{Major: 0}, p)
+	s, err := integration.NewServer(
+		ctx,
+		"docker-build", semver.Version{Major: 0},
+		integration.WithProvider(p),
+	)
+	require.NoError(t, err)
+	return s
 }

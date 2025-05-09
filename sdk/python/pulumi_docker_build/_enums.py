@@ -3,7 +3,7 @@
 # *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import builtins
-import builtins
+import pulumi
 from enum import Enum
 
 __all__ = [
@@ -14,6 +14,7 @@ __all__ = [
 ]
 
 
+@pulumi.type_token("docker-build:index:CacheMode")
 class CacheMode(builtins.str, Enum):
     MIN = "min"
     """
@@ -25,6 +26,7 @@ class CacheMode(builtins.str, Enum):
     """
 
 
+@pulumi.type_token("docker-build:index:CompressionType")
 class CompressionType(builtins.str, Enum):
     GZIP = "gzip"
     """
@@ -40,6 +42,7 @@ class CompressionType(builtins.str, Enum):
     """
 
 
+@pulumi.type_token("docker-build:index:NetworkMode")
 class NetworkMode(builtins.str, Enum):
     DEFAULT = "default"
     """
@@ -55,6 +58,7 @@ class NetworkMode(builtins.str, Enum):
     """
 
 
+@pulumi.type_token("docker-build:index:Platform")
 class Platform(builtins.str, Enum):
     DARWIN_386 = "darwin/386"
     DARWIN_AMD64 = "darwin/amd64"

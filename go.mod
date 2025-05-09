@@ -15,15 +15,15 @@ require (
 	github.com/muesli/reflow v0.3.0
 	github.com/otiai10/copy v1.14.0
 	github.com/pulumi/providertest v0.3.1
-	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v0.0.0-20241219213128-b19d8c8da35b
-	github.com/pulumi/pulumi-go-provider v0.25.1-0.20250501172612-76ede73bcfee
-	github.com/pulumi/pulumi-java/pkg v1.10.1-0.20250501074704-87881c4a7c04
+	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.0.0-20250507122953-af68281fea7f
+	github.com/pulumi/pulumi-go-provider v1.0.0-rc1.0.20250509163142-82c9935ceef4
+	github.com/pulumi/pulumi-java/pkg v1.11.0
 	github.com/pulumi/pulumi-yaml v1.17.0
-	github.com/pulumi/pulumi/pkg/v3 v3.165.0
-	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20250417110128-49fb14839a5a
-	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20250417110128-49fb14839a5a
-	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20250417110128-49fb14839a5a
-	github.com/pulumi/pulumi/sdk/v3 v3.165.0
+	github.com/pulumi/pulumi/pkg/v3 v3.169.0
+	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20250508095305-a4bdc94d01aa
+	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20250508095305-a4bdc94d01aa
+	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20250508095305-a4bdc94d01aa
+	github.com/pulumi/pulumi/sdk/v3 v3.169.0
 	github.com/regclient/regclient v0.7.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.14.0
@@ -35,7 +35,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.35.0
 	go.opentelemetry.io/otel/trace v1.35.0
 	go.uber.org/mock v0.5.0
-	golang.org/x/crypto v0.37.0
+	golang.org/x/crypto v0.38.0
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/yaml.v3 v3.0.1
@@ -462,12 +462,12 @@ require (
 	gocloud.dev/secrets/hashivault v0.37.0 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20240314144324-c7f7c6466f7f // indirect
 	golang.org/x/mod v0.24.0 // indirect
-	golang.org/x/net v0.39.0 // indirect
+	golang.org/x/net v0.40.0 // indirect
 	golang.org/x/oauth2 v0.25.0 // indirect
-	golang.org/x/sync v0.13.0 // indirect
-	golang.org/x/sys v0.32.0 // indirect
-	golang.org/x/term v0.31.0 // indirect
-	golang.org/x/text v0.24.0 // indirect
+	golang.org/x/sync v0.14.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
+	golang.org/x/term v0.32.0 // indirect
+	golang.org/x/text v0.25.0 // indirect
 	golang.org/x/time v0.6.0 // indirect
 	golang.org/x/tools v0.32.0 // indirect
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect

@@ -99,10 +99,8 @@ class IndexArgs:
         pulumi.set(self, "registry", value)
 
 
+@pulumi.type_token("docker-build:index:Index")
 class Index(pulumi.CustomResource):
-
-    pulumi_type = "docker-build:index:Index"
-
     @overload
     def __init__(__self__,
                  resource_name: str,

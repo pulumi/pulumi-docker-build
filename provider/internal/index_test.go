@@ -125,7 +125,7 @@ func TestIndexLifecycle(t *testing.T) {
 				Resource: "docker-build:index:Index",
 				Create:   tt.op(t),
 			}
-			s := newServer(tt.client(t))
+			s := newServer(t.Context(), t, tt.client(t))
 
 			err := s.Configure(provider.ConfigureRequest{})
 			require.NoError(t, err)
@@ -214,7 +214,7 @@ func TestIndexDiff(t *testing.T) {
 		},
 	}
 
-	s := newServer(nil)
+	s := newServer(t.Context(), t, nil)
 
 	encode := func(t *testing.T, x any) property.Map {
 		raw, err := mapper.New(&mapper.Opts{IgnoreMissing: true}).Encode(x)
