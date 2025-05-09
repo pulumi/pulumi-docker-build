@@ -64,6 +64,8 @@ func (c *Config) Configure(ctx context.Context) error {
 
 // NewBuildxProvider returns a new buildx provider.
 func NewBuildxProvider(mock Client) provider.Provider {
+	config := &Config{}
+
 	prov := infer.Provider(
 		infer.Options{
 			Metadata: pschema.Metadata{
@@ -111,13 +113,13 @@ func NewBuildxProvider(mock Client) provider.Provider {
 				},
 			},
 			Resources: []infer.InferredResource{
-				infer.Resource(&Image{docker: mock}),
-				infer.Resource(&Index{docker: mock}),
+				infer.Resource(&Image{docker: mock, config: config}),
+				infer.Resource(&Index{docker: mock, config: config}),
 			},
 			ModuleMap: map[tokens.ModuleName]tokens.ModuleName{
 				"internal": "index",
 			},
-			Config: infer.Config(&Config{}),
+			Config: infer.Config(config),
 		},
 	)
 

@@ -63,6 +63,7 @@ var _migration string
 // Image is a Docker image build using buildkit.
 type Image struct {
 	docker Client
+	config *Config
 }
 
 // Annotate provides a description of the Image resource.
@@ -331,22 +332,20 @@ func (is *ImageState) Annotate(a infer.Annotator) {
 
 // client produces a CLI client scoped to this resource and layered on top of
 // any host-level credentials.
-func (i *Image) client(ctx context.Context, state ImageState, args ImageArgs) (Client, error) {
+func (i *Image) client(_ context.Context, state ImageState, args ImageArgs) (Client, error) {
 	// Use our mock client, if it's set.
 	if i.docker != nil {
 		return i.docker, nil
 	}
 
-	cfg := infer.GetConfig[Config](ctx)
-
 	// We prefer auth from args, the provider, and state in that order. We
 	// build a slice in reverse order because wrap() will overwrite earlier
 	// entries with later ones.
 	auths := []Registry{}
-	auths = append(auths, cfg.Registries...)
+	auths = append(auths, i.config.Registries...)
 	auths = append(auths, args.Registries...)
 
-	return wrap(cfg.host, auths...)
+	return wrap(i.config.host, auths...)
 }
 
 // Check validates ImageArgs, sets defaults, and ensures our client is
