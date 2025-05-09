@@ -25,7 +25,6 @@ import (
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi-go-provider/integration"
-	mwcontext "github.com/pulumi/pulumi-go-provider/middleware/context"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
 )
 
@@ -79,14 +78,7 @@ func (annotator) SetResourceDeprecationMessage(_ string)      {}
 func newServer(ctx context.Context, t *testing.T, client Client) integration.Server {
 	t.Helper()
 
-	p := NewBuildxProvider()
-
-	// Inject a mock client if provided.
-	if client != nil {
-		p = mwcontext.Wrap(p, func(ctx context.Context) context.Context {
-			return context.WithValue(ctx, _mockClientKey, client)
-		})
-	}
+	p := NewBuildxProvider(client)
 
 	s, err := integration.NewServer(
 		ctx,

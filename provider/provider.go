@@ -34,5 +34,5 @@ func Serve() error {
 
 // New creates a new provider.
 func New(host *provider.HostClient) (rpc.ResourceProviderServer, error) {
-	return gp.RawServer(Name, Version, internal.NewBuildxProvider())(host)
+	return gp.RawServer(Name, Version, internal.NewBuildxProvider(nil))(host)
 }

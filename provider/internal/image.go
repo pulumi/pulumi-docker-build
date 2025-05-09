@@ -61,7 +61,9 @@ var _imageExamples string
 var _migration string
 
 // Image is a Docker image build using buildkit.
-type Image struct{}
+type Image struct {
+	docker Client
+}
 
 // Annotate provides a description of the Image resource.
 func (i *Image) Annotate(a infer.Annotator) {
@@ -330,11 +332,12 @@ func (is *ImageState) Annotate(a infer.Annotator) {
 // client produces a CLI client scoped to this resource and layered on top of
 // any host-level credentials.
 func (i *Image) client(ctx context.Context, state ImageState, args ImageArgs) (Client, error) {
-	cfg := infer.GetConfig[Config](ctx)
-
-	if cli, ok := ctx.Value(_mockClientKey).(Client); ok {
-		return cli, nil
+	// Use our mock client, if it's set.
+	if i.docker != nil {
+		return i.docker, nil
 	}
+
+	cfg := infer.GetConfig[Config](ctx)
 
 	// We prefer auth from args, the provider, and state in that order. We
 	// build a slice in reverse order because wrap() will overwrite earlier

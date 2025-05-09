@@ -46,9 +46,6 @@ type Config struct {
 	host *host
 }
 
-// _mockClientKey is used by tests to inject a mock Docker client.
-var _mockClientKey any = "mock-client"
-
 // Annotate provides user-facing descriptions and defaults for Config's fields.
 func (c *Config) Annotate(a infer.Annotator) {
 	a.Describe(&c.Host, "The build daemon's address.")
@@ -66,7 +63,7 @@ func (c *Config) Configure(ctx context.Context) error {
 }
 
 // NewBuildxProvider returns a new buildx provider.
-func NewBuildxProvider() provider.Provider {
+func NewBuildxProvider(mock Client) provider.Provider {
 	prov := infer.Provider(
 		infer.Options{
 			Metadata: pschema.Metadata{
@@ -114,13 +111,13 @@ func NewBuildxProvider() provider.Provider {
 				},
 			},
 			Resources: []infer.InferredResource{
-				infer.Resource[*Image](),
-				infer.Resource[*Index](),
+				infer.Resource(&Image{docker: mock}),
+				infer.Resource(&Index{docker: mock}),
 			},
 			ModuleMap: map[tokens.ModuleName]tokens.ModuleName{
 				"internal": "index",
 			},
-			Config: infer.Config[*Config](),
+			Config: infer.Config(&Config{}),
 		},
 	)
 
@@ -152,7 +149,7 @@ func diffConfigIgnoreInternal(
 
 // Schema returns our package specification.
 func Schema(ctx context.Context, version string) schema.PackageSpec {
-	p := NewBuildxProvider()
+	p := NewBuildxProvider(nil)
 	spec, err := provider.GetSchema(ctx, "docker-build", version, p)
 	contract.AssertNoErrorf(err, "missing schema")
 	return spec
