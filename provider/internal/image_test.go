@@ -35,6 +35,7 @@ import (
 	"go.uber.org/mock/gomock"
 
 	provider "github.com/pulumi/pulumi-go-provider"
+	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi-go-provider/integration"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/mapper"
@@ -352,22 +353,17 @@ func TestDelete(t *testing.T) {
 			Delete(gomock.Any(), "docker.io/pulumi/test@sha256:foo").
 			Return(errNotFound{})
 
-		s := newServer(t.Context(), t, client)
-		err := s.Configure(provider.ConfigureRequest{})
-		require.NoError(t, err)
+		i := &Image{docker: client}
 
-		err = s.Delete(provider.DeleteRequest{
-			ID:  "foo,bar",
-			Urn: _fakeURN,
-			Properties: property.NewMap(map[string]property.Value{
-				"tags": property.New([]property.Value{
-					property.New("docker.io/pulumi/test:foo"),
-				}),
-				"push":        property.New(true),
-				"digest":      property.New("sha256:foo"),
-				"contextHash": property.New(""),
-				"ref":         property.New(""),
-			}),
+		_, err := i.Delete(t.Context(), infer.DeleteRequest[ImageState]{
+			ID: "foo,bar",
+			State: ImageState{
+				ImageArgs: ImageArgs{
+					Tags: []string{"docker.io/pulumi/test:foo"},
+					Push: true,
+				},
+				Digest: "sha256:foo",
+			},
 		})
 		assert.NoError(t, err)
 	})
@@ -390,27 +386,21 @@ func TestRead(t *testing.T) {
 			},
 		}, nil)
 
-	s := newServer(t.Context(), t, client)
-	err := s.Configure(provider.ConfigureRequest{})
-	require.NoError(t, err)
+	i := &Image{docker: client}
 
-	resp, err := s.Read(provider.ReadRequest{
-		ID:  "my-image",
-		Urn: _fakeURN,
-		Properties: property.NewMap(map[string]property.Value{
-			"exports": property.New([]property.Value{
-				property.New(map[string]property.Value{
-					"raw": property.New("type=registry"),
-				}),
-			}),
-			"tags": property.New([]property.Value{
-				property.New(tag),
-			}),
-			"digest": property.New(digest),
-		}),
+	resp, err := i.Read(t.Context(), infer.ReadRequest[ImageArgs, ImageState]{
+		ID: "my-image",
+		State: ImageState{
+			ImageArgs: ImageArgs{
+				Exports: []Export{{Raw: "type=registry"}},
+				Tags:    []string{tag},
+			},
+			Digest: digest,
+		},
 	})
+
 	require.NoError(t, err)
-	assert.NotNil(t, resp.Properties.Get("exports").AsArray().Get(0).AsMap().Get("manifest"))
+	assert.Equal(t, []string{tag}, resp.State.Tags)
 }
 
 func TestImageDiff(t *testing.T) {

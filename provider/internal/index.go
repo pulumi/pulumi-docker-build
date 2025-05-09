@@ -46,7 +46,10 @@ var (
 var _indexExamples string
 
 // Index is an OCI index or manifest list on a remote registry.
-type Index struct{}
+type Index struct {
+	docker Client
+	config *Config
+}
 
 // IndexArgs instantiate an Index.
 type IndexArgs struct {
@@ -347,24 +350,23 @@ func (i *Index) Diff(
 // client produces a CLI client scoped to this resource and layered on top of
 // any host-level credentials.
 func (i *Index) client(
-	ctx context.Context,
+	_ context.Context,
 	_ IndexState,
 	args IndexArgs,
 ) (Client, error) {
-	cfg := infer.GetConfig[Config](ctx)
-
-	if cli, ok := ctx.Value(_mockClientKey).(Client); ok {
-		return cli, nil
+	// Use our mock client, if it's set.
+	if i.docker != nil {
+		return i.docker, nil
 	}
 
 	// We prefer auth from args, the provider, and state in that order. We
 	// build a slice in reverse order because wrap() will overwrite earlier
 	// entries with later ones.
 	auths := []Registry{}
-	auths = append(auths, cfg.Registries...)
+	auths = append(auths, i.config.Registries...)
 	if args.Registry != nil {
 		auths = append(auths, *args.Registry)
 	}
 
-	return wrap(cfg.host, auths...)
+	return wrap(i.config.host, auths...)
 }
