@@ -15,7 +15,7 @@ require (
 	github.com/muesli/reflow v0.3.0
 	github.com/otiai10/copy v1.14.0
 	github.com/pulumi/providertest v0.3.1
-	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet v3.79.0
+	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.0.0-20250507082843-91c0c9af1eb3
 	github.com/pulumi/pulumi-go-provider v0.26.0
 	github.com/pulumi/pulumi-java/pkg v1.10.1-0.20250501074704-87881c4a7c04
 	github.com/pulumi/pulumi-yaml v1.17.0
@@ -35,7 +35,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.35.0
 	go.opentelemetry.io/otel/trace v1.35.0
 	go.uber.org/mock v0.5.0
-	golang.org/x/crypto v0.37.0
+	golang.org/x/crypto v0.38.0
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0
 	google.golang.org/protobuf v1.36.6
 	gopkg.in/yaml.v3 v3.0.1
@@ -462,12 +462,12 @@ require (
 	gocloud.dev/secrets/hashivault v0.37.0 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20240314144324-c7f7c6466f7f // indirect
 	golang.org/x/mod v0.24.0 // indirect
-	golang.org/x/net v0.39.0 // indirect
+	golang.org/x/net v0.40.0 // indirect
 	golang.org/x/oauth2 v0.25.0 // indirect
-	golang.org/x/sync v0.13.0 // indirect
-	golang.org/x/sys v0.32.0 // indirect
-	golang.org/x/term v0.31.0 // indirect
-	golang.org/x/text v0.24.0 // indirect
+	golang.org/x/sync v0.14.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
+	golang.org/x/term v0.32.0 // indirect
+	golang.org/x/text v0.25.0 // indirect
 	golang.org/x/time v0.6.0 // indirect
 	golang.org/x/tools v0.32.0 // indirect
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
