@@ -16,12 +16,8 @@ import (
 	configfile "github.com/docker/cli/cli/config/configfile"
 	docker "github.com/docker/cli/cli/context/docker"
 	store "github.com/docker/cli/cli/context/store"
-	store0 "github.com/docker/cli/cli/manifest/store"
-	client "github.com/docker/cli/cli/registry/client"
 	streams "github.com/docker/cli/cli/streams"
-	trust "github.com/docker/cli/cli/trust"
-	client0 "github.com/docker/docker/client"
-	client1 "github.com/theupdateframework/notary/client"
+	client "github.com/docker/docker/client"
 	metric "go.opentelemetry.io/otel/metric"
 	resource "go.opentelemetry.io/otel/sdk/resource"
 	trace "go.opentelemetry.io/otel/trace"
@@ -134,10 +130,10 @@ func (c *MockCliBuildKitEnabledCall) DoAndReturn(f func() (bool, error)) *MockCl
 }
 
 // Client mocks base method.
-func (m *MockCli) Client() client0.APIClient {
+func (m *MockCli) Client() client.APIClient {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Client")
-	ret0, _ := ret[0].(client0.APIClient)
+	ret0, _ := ret[0].(client.APIClient)
 	return ret0
 }
 
@@ -154,19 +150,19 @@ type MockCliClientCall struct {
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *MockCliClientCall) Return(arg0 client0.APIClient) *MockCliClientCall {
+func (c *MockCliClientCall) Return(arg0 client.APIClient) *MockCliClientCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockCliClientCall) Do(f func() client0.APIClient) *MockCliClientCall {
+func (c *MockCliClientCall) Do(f func() client.APIClient) *MockCliClientCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockCliClientCall) DoAndReturn(f func() client0.APIClient) *MockCliClientCall {
+func (c *MockCliClientCall) DoAndReturn(f func() client.APIClient) *MockCliClientCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -513,44 +509,6 @@ func (c *MockCliInCall) DoAndReturn(f func() *streams.In) *MockCliInCall {
 	return c
 }
 
-// ManifestStore mocks base method.
-func (m *MockCli) ManifestStore() store0.Store {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ManifestStore")
-	ret0, _ := ret[0].(store0.Store)
-	return ret0
-}
-
-// ManifestStore indicates an expected call of ManifestStore.
-func (mr *MockCliMockRecorder) ManifestStore() *MockCliManifestStoreCall {
-	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ManifestStore", reflect.TypeOf((*MockCli)(nil).ManifestStore))
-	return &MockCliManifestStoreCall{Call: call}
-}
-
-// MockCliManifestStoreCall wrap *gomock.Call
-type MockCliManifestStoreCall struct {
-	*gomock.Call
-}
-
-// Return rewrite *gomock.Call.Return
-func (c *MockCliManifestStoreCall) Return(arg0 store0.Store) *MockCliManifestStoreCall {
-	c.Call = c.Call.Return(arg0)
-	return c
-}
-
-// Do rewrite *gomock.Call.Do
-func (c *MockCliManifestStoreCall) Do(f func() store0.Store) *MockCliManifestStoreCall {
-	c.Call = c.Call.Do(f)
-	return c
-}
-
-// DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockCliManifestStoreCall) DoAndReturn(f func() store0.Store) *MockCliManifestStoreCall {
-	c.Call = c.Call.DoAndReturn(f)
-	return c
-}
-
 // MeterProvider mocks base method.
 func (m *MockCli) MeterProvider() metric.MeterProvider {
 	m.ctrl.T.Helper()
@@ -589,45 +547,6 @@ func (c *MockCliMeterProviderCall) DoAndReturn(f func() metric.MeterProvider) *M
 	return c
 }
 
-// NotaryClient mocks base method.
-func (m *MockCli) NotaryClient(imgRefAndAuth trust.ImageRefAndAuth, actions []string) (client1.Repository, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "NotaryClient", imgRefAndAuth, actions)
-	ret0, _ := ret[0].(client1.Repository)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// NotaryClient indicates an expected call of NotaryClient.
-func (mr *MockCliMockRecorder) NotaryClient(imgRefAndAuth, actions any) *MockCliNotaryClientCall {
-	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "NotaryClient", reflect.TypeOf((*MockCli)(nil).NotaryClient), imgRefAndAuth, actions)
-	return &MockCliNotaryClientCall{Call: call}
-}
-
-// MockCliNotaryClientCall wrap *gomock.Call
-type MockCliNotaryClientCall struct {
-	*gomock.Call
-}
-
-// Return rewrite *gomock.Call.Return
-func (c *MockCliNotaryClientCall) Return(arg0 client1.Repository, arg1 error) *MockCliNotaryClientCall {
-	c.Call = c.Call.Return(arg0, arg1)
-	return c
-}
-
-// Do rewrite *gomock.Call.Do
-func (c *MockCliNotaryClientCall) Do(f func(trust.ImageRefAndAuth, []string) (client1.Repository, error)) *MockCliNotaryClientCall {
-	c.Call = c.Call.Do(f)
-	return c
-}
-
-// DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockCliNotaryClientCall) DoAndReturn(f func(trust.ImageRefAndAuth, []string) (client1.Repository, error)) *MockCliNotaryClientCall {
-	c.Call = c.Call.DoAndReturn(f)
-	return c
-}
-
 // Out mocks base method.
 func (m *MockCli) Out() *streams.Out {
 	m.ctrl.T.Helper()
@@ -662,44 +581,6 @@ func (c *MockCliOutCall) Do(f func() *streams.Out) *MockCliOutCall {
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
 func (c *MockCliOutCall) DoAndReturn(f func() *streams.Out) *MockCliOutCall {
-	c.Call = c.Call.DoAndReturn(f)
-	return c
-}
-
-// RegistryClient mocks base method.
-func (m *MockCli) RegistryClient(arg0 bool) client.RegistryClient {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RegistryClient", arg0)
-	ret0, _ := ret[0].(client.RegistryClient)
-	return ret0
-}
-
-// RegistryClient indicates an expected call of RegistryClient.
-func (mr *MockCliMockRecorder) RegistryClient(arg0 any) *MockCliRegistryClientCall {
-	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegistryClient", reflect.TypeOf((*MockCli)(nil).RegistryClient), arg0)
-	return &MockCliRegistryClientCall{Call: call}
-}
-
-// MockCliRegistryClientCall wrap *gomock.Call
-type MockCliRegistryClientCall struct {
-	*gomock.Call
-}
-
-// Return rewrite *gomock.Call.Return
-func (c *MockCliRegistryClientCall) Return(arg0 client.RegistryClient) *MockCliRegistryClientCall {
-	c.Call = c.Call.Return(arg0)
-	return c
-}
-
-// Do rewrite *gomock.Call.Do
-func (c *MockCliRegistryClientCall) Do(f func(bool) client.RegistryClient) *MockCliRegistryClientCall {
-	c.Call = c.Call.Do(f)
-	return c
-}
-
-// DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockCliRegistryClientCall) DoAndReturn(f func(bool) client.RegistryClient) *MockCliRegistryClientCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
