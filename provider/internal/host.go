@@ -68,7 +68,7 @@ func newHost(ctx context.Context, config *Config) (*host, error) {
 //
 // If the build doesn't specify a builder by name, we will iterate through all
 // available builders until we find one that we can connect to.
-func (h *host) builderFor(build Build) (*cachedBuilder, error) {
+func (h *host) builderFor(ctx context.Context, build Build) (*cachedBuilder, error) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 
@@ -116,7 +116,7 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 			if bb.Err() != nil {
 				continue
 			}
-			nodes, err := bb.LoadNodes(context.Background())
+			nodes, err := bb.LoadNodes(ctx)
 			if err != nil {
 				continue
 			}
@@ -125,7 +125,7 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 				if n.Driver == nil {
 					continue nextbuilder
 				}
-				if _, err := n.Driver.Dial(context.Background()); err != nil {
+				if _, err := n.Driver.Dial(ctx); err != nil {
 					continue nextbuilder
 				}
 				// TODO: Confirm the builder supports the requested platforms.
@@ -139,7 +139,7 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 
 		// If we STILL don't have a builder, create a docker-container instance.
 		b, err = builder.Create(
-			context.Background(),
+			ctx,
 			txn,
 			h.cli,
 			builder.CreateOpts{Driver: "docker-container"},
@@ -147,7 +147,7 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 		if err != nil {
 			return nil, fmt.Errorf("creating builder: %w", err)
 		}
-		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 		defer cancel()
 		if _, err := b.Boot(ctx); err != nil {
 			return nil, fmt.Errorf("booting builder: %w", err)
@@ -157,7 +157,7 @@ func (h *host) builderFor(build Build) (*cachedBuilder, error) {
 	// Attempt to load nodes in order to determine the builder's driver. Ignore
 	// errors for "exec" builds because it's possible to request builders with
 	// drivers that are unknown to us.
-	nodes, err := b.LoadNodes(context.Background(), builder.WithData())
+	nodes, err := b.LoadNodes(ctx, builder.WithData())
 	if err != nil && !build.ShouldExec() {
 		return nil, fmt.Errorf("loading nodes: %w", err)
 	}

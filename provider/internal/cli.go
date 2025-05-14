@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -56,11 +57,11 @@ type cli struct {
 	auths map[string]cfgtypes.AuthConfig
 	host  *host
 
-	in       string        // stdin
-	r, w     *os.File      // stdout
-	err      bytes.Buffer  // stderr
-	dumplogs bool          // if true then tail() will re-log status messages
-	done     chan struct{} // signaled when all logs have been forwarded to the engine.
+	in       string       // stdin
+	r, w     *os.File     // stdout
+	err      bytes.Buffer // stderr
+	dumplogs bool         // if true then tail() will re-log status messages
+	builder  Builder      // for mocking build daemon responses
 }
 
 // Cli wraps the Docker interface for mock generation.
@@ -119,11 +120,12 @@ func wrap(host *host, registries ...Registry) (*cli, error) {
 	}
 
 	wrapped := &cli{
-		Cli:   docker,
-		host:  host,
-		auths: auths,
-		r:     r,
-		w:     w,
+		Cli:     docker,
+		host:    host,
+		auths:   auths,
+		r:       r,
+		w:       w,
+		builder: defaultBuilder{},
 	}
 
 	return wrapped, nil
@@ -162,14 +164,6 @@ func (c *cli) rc() *regclient.RegClient {
 // tail is meant to be called as a goroutine and will pipe output from the CLI
 // back to the Pulumi engine. Requires a corresponding call to close.
 func (c *cli) tail(ctx context.Context) {
-	c.done = make(chan struct{}, 1)
-	defer func() {
-		c.done <- struct{}{}
-		if err := recover(); err != nil {
-			fmt.Fprintf(os.Stderr, "recovered: %s\n", err)
-		}
-	}()
-
 	b := bytes.Buffer{}
 
 	s := bufio.NewScanner(c.r)
@@ -193,17 +187,13 @@ func (c *cli) tail(ctx context.Context) {
 
 // close flushes any outstanding logs and cleans up resources.
 func (c *cli) Close() error {
-	err := errors.Join(c.w.Close(), c.r.Close())
-	if c.done != nil {
-		<-c.done
-	}
-	return err
+	return errors.Join(c.w.Close(), c.r.Close())
 }
 
 // execBuild performs a build by os.Exec'ing the docker-buildx binary.
 // Credentials are communicated to docker-buildx via a temporary directory.
 // Secrets are communicated via dynamic environment variables.
-func (c *cli) execBuild(b Build) (*client.SolveResponse, error) {
+func (c *cli) execBuild(ctx context.Context, b Build) (*client.SolveResponse, error) {
 	// Setup a temporary directory for auth, and clean it up when we're done.
 	tmp, err := os.MkdirTemp("", "pulumi-docker-")
 	if err != nil {
@@ -213,7 +203,7 @@ func (c *cli) execBuild(b Build) (*client.SolveResponse, error) {
 
 	opts := b.BuildOptions()
 
-	builder, err := c.host.builderFor(b)
+	builder, err := c.host.builderFor(ctx, b)
 	if err != nil {
 		return nil, err
 	}
@@ -339,7 +329,7 @@ func (c *cli) execBuild(b Build) (*client.SolveResponse, error) {
 	}
 
 	// Invoke docker-buildx.
-	err = c.exec(args, env)
+	err = c.exec(ctx, args, env)
 	if err != nil {
 		return nil, err
 	}
@@ -378,7 +368,7 @@ func (c *cli) execBuild(b Build) (*client.SolveResponse, error) {
 
 // exec invokes a Docker plugin binary. The first argument should be the name
 // of the plugin's subcommand, e.g. "buildx".
-func (c *cli) exec(args, extraEnv []string) error {
+func (c *cli) exec(ctx context.Context, args, extraEnv []string) error {
 	if len(args) == 0 {
 		return errors.New("args must be non-empty")
 	}
@@ -395,16 +385,18 @@ func (c *cli) exec(args, extraEnv []string) error {
 
 	defer contract.IgnoreClose(c.w)
 
-	cmd, err := manager.PluginRunCommand(c, name, root)
+	runCmd, err := manager.PluginRunCommand(c, name, root)
 	if err != nil {
 		return err
 	}
-	cmd.Args = append([]string{cmd.Args[0]}, args...)
+	// Create a new command that inherits from ctx.
+	cmd := exec.CommandContext(ctx, //nolint:gosec // We take the first argument and binary from runCmd.
+		runCmd.Path, append([]string{runCmd.Args[1]}, args...)...,
+	)
 	cmd.Stderr = c.Err()
 	cmd.Stdout = c.Out()
 	cmd.Stdin = c.In()
-
-	cmd.Env = append(cmd.Env, extraEnv...)
+	cmd.Env = append(runCmd.Env, extraEnv...) //nolint:gocritic // We are intentionally assigning from runCmd to cmd
 
 	return cmd.Run()
 }
