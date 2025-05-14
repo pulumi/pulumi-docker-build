@@ -29,7 +29,6 @@ import (
 	"github.com/pulumi/pulumi/pkg/v3/codegen/schema"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/contract"
-	"github.com/pulumi/pulumi/sdk/v3/go/property"
 )
 
 var (
@@ -123,30 +122,7 @@ func NewBuildxProvider(mock Client) provider.Provider {
 		},
 	)
 
-	prov.DiffConfig = diffConfigIgnoreInternal(prov.DiffConfig)
-
 	return prov
-}
-
-// TODO(pulumi/pulumi-docker-build#404): Remove this function once the bug is fixed in either
-// upstream pu/pu or pulumi-go-provider.
-
-// diffConfigInternalIgnore is a custom DiffConfig implementation for the buildx provider. This is required to
-// circumvent the bug identified in https://github.com/pulumi/pulumi-docker-build/issues/404.
-// Since `__internal` is currently populated in new inputs, but stripped in old state, we need to
-// ignore this field in the diff. There is no easy way to override DiffConfig to compare inputs only.
-func diffConfigIgnoreInternal(
-	diffConfig func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error),
-) func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error) {
-	return func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error) {
-		m := req.Inputs.AsMap()
-		delete(m, "__internal")
-		delete(m, "__pulumi-go-provider-infer")
-		delete(m, "__pulumi-go-provider-version")
-		req.Inputs = property.NewMap(m)
-
-		return diffConfig(ctx, req)
-	}
 }
 
 // Schema returns our package specification.
