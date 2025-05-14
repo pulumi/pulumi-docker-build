@@ -16,7 +16,7 @@ require (
 	github.com/otiai10/copy v1.14.0
 	github.com/pulumi/providertest v0.3.1
 	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.0.0-20250507122953-af68281fea7f
-	github.com/pulumi/pulumi-go-provider v1.0.0-rc1.0.20250508214503-b09e1ae91a79
+	github.com/pulumi/pulumi-go-provider v1.0.0-rc.2
 	github.com/pulumi/pulumi-java/pkg v1.11.0
 	github.com/pulumi/pulumi-yaml v1.17.0
 	github.com/pulumi/pulumi/pkg/v3 v3.169.0
@@ -34,7 +34,7 @@ require (
 	go.opentelemetry.io/otel/metric v1.35.0
 	go.opentelemetry.io/otel/sdk v1.35.0
 	go.opentelemetry.io/otel/trace v1.35.0
-	go.uber.org/mock v0.5.0
+	go.uber.org/mock v0.5.2
 	golang.org/x/crypto v0.38.0
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0
 	google.golang.org/protobuf v1.36.6
