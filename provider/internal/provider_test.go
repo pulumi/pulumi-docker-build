@@ -75,10 +75,14 @@ func (annotator) SetToken(tokens.ModuleName, tokens.TypeName) {}
 func (annotator) AddAlias(tokens.ModuleName, tokens.TypeName) {}
 func (annotator) SetResourceDeprecationMessage(_ string)      {}
 
-func newServer(ctx context.Context, t *testing.T, client Client) integration.Server {
+func newServer(ctx context.Context, t *testing.T, clientF clientF) integration.Server {
 	t.Helper()
 
-	p := NewBuildxProvider(client)
+	if clientF == nil {
+		clientF = RealClientF
+	}
+
+	p := NewBuildxProvider(clientF)
 
 	s, err := integration.NewServer(
 		ctx,

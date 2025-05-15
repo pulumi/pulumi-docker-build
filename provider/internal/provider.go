@@ -61,8 +61,21 @@ func (c *Config) Configure(ctx context.Context) error {
 	return nil
 }
 
+// GetRegistries returns the config's registries, if any.
+func (c Config) GetRegistries() []Registry {
+	return c.Registries
+}
+
+// getHost returns the config's host, or nil if the config is also nil.
+func (c *Config) getHost() *host {
+	if c == nil {
+		return nil
+	}
+	return c.host
+}
+
 // NewBuildxProvider returns a new buildx provider.
-func NewBuildxProvider(mock Client) provider.Provider {
+func NewBuildxProvider(clientF clientF) provider.Provider {
 	config := &Config{}
 
 	prov := infer.Provider(
@@ -112,8 +125,8 @@ func NewBuildxProvider(mock Client) provider.Provider {
 				},
 			},
 			Resources: []infer.InferredResource{
-				infer.Resource(&Image{docker: mock, config: config}),
-				infer.Resource(&Index{docker: mock, config: config}),
+				infer.Resource(&Image{clientF: clientF, config: config}),
+				infer.Resource(&Index{clientF: clientF, config: config}),
 			},
 			ModuleMap: map[tokens.ModuleName]tokens.ModuleName{
 				"internal": "index",

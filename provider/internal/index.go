@@ -47,8 +47,8 @@ var _indexExamples string
 
 // Index is an OCI index or manifest list on a remote registry.
 type Index struct {
-	docker Client
-	config *Config
+	clientF clientF
+	config  *Config
 }
 
 // IndexArgs instantiate an Index.
@@ -64,6 +64,14 @@ func (i IndexArgs) isPushed() bool {
 		return true // default
 	}
 	return *i.Push
+}
+
+// GetRegistries returns the index's registry.
+func (i IndexArgs) GetRegistries() []Registry {
+	if i.Registry == nil {
+		return nil
+	}
+	return []Registry{*i.Registry}
 }
 
 // IndexState captures the state of an Index.
@@ -158,7 +166,7 @@ func (i *Index) Update(
 	state.IndexArgs = input
 	state.Ref = input.Tag
 
-	cli, err := i.client(ctx, state, input)
+	cli, err := i.client(ctx, input)
 	if err != nil {
 		return infer.UpdateResponse[IndexState]{Output: state}, err
 	}
@@ -203,7 +211,7 @@ func (i *Index) Read(
 		}, nil // Nothing to read.
 	}
 
-	cli, err := i.client(ctx, state, input)
+	cli, err := i.client(ctx, input)
 	if err != nil {
 		return infer.ReadResponse[IndexArgs, IndexState]{
 			ID:     req.ID,
@@ -290,7 +298,7 @@ func (i *Index) Delete(
 		return infer.DeleteResponse{}, nil // Nothing to delete.
 	}
 
-	cli, err := i.client(ctx, state, state.IndexArgs)
+	cli, err := i.client(ctx, state.IndexArgs)
 	if err != nil {
 		return infer.DeleteResponse{}, err
 	}
@@ -350,23 +358,8 @@ func (i *Index) Diff(
 // client produces a CLI client scoped to this resource and layered on top of
 // any host-level credentials.
 func (i *Index) client(
-	_ context.Context,
-	_ IndexState,
+	ctx context.Context,
 	args IndexArgs,
 ) (Client, error) {
-	// Use our mock client, if it's set.
-	if i.docker != nil {
-		return i.docker, nil
-	}
-
-	// We prefer auth from args, the provider, and state in that order. We
-	// build a slice in reverse order because wrap() will overwrite earlier
-	// entries with later ones.
-	auths := []Registry{}
-	auths = append(auths, i.config.Registries...)
-	if args.Registry != nil {
-		auths = append(auths, *args.Registry)
-	}
-
-	return wrap(i.config.host, auths...)
+	return i.clientF(ctx, i.config.getHost(), i.config, args)
 }

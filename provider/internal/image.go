@@ -62,8 +62,8 @@ var _migration string
 
 // Image is a Docker image build using buildkit.
 type Image struct {
-	docker Client
-	config *Config
+	clientF clientF
+	config  *Config
 }
 
 // Annotate provides a description of the Image resource.
@@ -284,6 +284,11 @@ func (ia *ImageArgs) Annotate(a infer.Annotator) {
 	a.SetDefault(&ia.Network, Default)
 }
 
+// GetRegistries returns the image's registries, if any.
+func (ia ImageArgs) GetRegistries() []Registry {
+	return ia.Registries
+}
+
 // ImageState is serialized to the program's state file.
 type ImageState struct {
 	ImageArgs
@@ -332,20 +337,8 @@ func (is *ImageState) Annotate(a infer.Annotator) {
 
 // client produces a CLI client scoped to this resource and layered on top of
 // any host-level credentials.
-func (i *Image) client(_ context.Context, state ImageState, args ImageArgs) (Client, error) {
-	// Use our mock client, if it's set.
-	if i.docker != nil {
-		return i.docker, nil
-	}
-
-	// We prefer auth from args, the provider, and state in that order. We
-	// build a slice in reverse order because wrap() will overwrite earlier
-	// entries with later ones.
-	auths := []Registry{}
-	auths = append(auths, i.config.Registries...)
-	auths = append(auths, args.Registries...)
-
-	return wrap(i.config.host, auths...)
+func (i *Image) client(ctx context.Context, args ImageArgs) (Client, error) {
+	return i.clientF(ctx, i.config.getHost(), i.config, args)
 }
 
 // Check validates ImageArgs, sets defaults, and ensures our client is
@@ -700,7 +693,7 @@ func (i *Image) Create(
 		break
 	}
 
-	cli, err := i.client(ctx, state, input)
+	cli, err := i.client(ctx, input)
 	if err != nil {
 		return infer.CreateResponse[ImageState]{ID: id, Output: state}, err
 	}
@@ -802,7 +795,7 @@ func (i *Image) Read(
 ) {
 	state, input := req.State, req.Inputs
 
-	cli, err := i.client(ctx, state, input)
+	cli, err := i.client(ctx, input)
 	if err != nil {
 		return infer.ReadResponse[ImageArgs, ImageState]{
 			ID:     req.ID,
@@ -868,7 +861,7 @@ func (i *Image) Delete(
 	req infer.DeleteRequest[ImageState],
 ) (infer.DeleteResponse, error) {
 	state := req.State
-	cli, err := i.client(ctx, state, state.ImageArgs)
+	cli, err := i.client(ctx, state.ImageArgs)
 	if err != nil {
 		return infer.DeleteResponse{}, err
 	}

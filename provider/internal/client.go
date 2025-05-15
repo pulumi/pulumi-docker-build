@@ -63,6 +63,36 @@ type Client interface {
 	SupportsMultipleExports() bool
 }
 
+// registryGetter is something that can return a list of [Registry].
+type registryGetter interface {
+	GetRegistries() []Registry
+}
+
+// clientF builds a Docker client. The order of registryGetters is significant.
+// We typically prefer credentials from args, then provider config, then the
+// host. Provide them to this function in order of increasing priority: host,
+// config, args.
+//
+// We ignore state because if its creds differ from those in args then they are
+// likely volatile and also likely expired.
+type clientF func(context.Context, *host, ...registryGetter) (Client, error)
+
+// RealClientF builds a real Docker client with auth layered on top of the
+// host's latent credentials.
+func RealClientF(_ context.Context, host *host, getters ...registryGetter) (Client, error) {
+	auths := []Registry{}
+	for _, rg := range getters {
+		auths = append(auths, rg.GetRegistries()...)
+	}
+	return wrap(host, auths...)
+}
+
+func mockClientF(c Client) clientF {
+	return func(context.Context, *host, ...registryGetter) (Client, error) {
+		return c, nil
+	}
+}
+
 // Build encapsulates all of the user-provider build parameters and options.
 type Build interface {
 	BuildOptions() controllerapi.BuildOptions

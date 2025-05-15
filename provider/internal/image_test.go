@@ -328,7 +328,7 @@ func TestImageLifecycle(t *testing.T) {
 				Resource: "docker-build:index:Image",
 				Create:   tt.op(t),
 			}
-			s := newServer(t.Context(), t, tt.client(t))
+			s := newServer(t.Context(), t, mockClientF(tt.client(t)))
 
 			err := s.Configure(provider.ConfigureRequest{})
 			require.NoError(t, err)
@@ -353,7 +353,7 @@ func TestDelete(t *testing.T) {
 			Delete(gomock.Any(), "docker.io/pulumi/test@sha256:foo").
 			Return(errNotFound{})
 
-		i := &Image{docker: client}
+		i := &Image{clientF: mockClientF(client)}
 
 		_, err := i.Delete(t.Context(), infer.DeleteRequest[ImageState]{
 			ID: "foo,bar",
@@ -386,7 +386,7 @@ func TestRead(t *testing.T) {
 			},
 		}, nil)
 
-	i := &Image{docker: client}
+	i := &Image{clientF: mockClientF(client)}
 
 	resp, err := i.Read(t.Context(), infer.ReadRequest[ImageArgs, ImageState]{
 		ID: "my-image",

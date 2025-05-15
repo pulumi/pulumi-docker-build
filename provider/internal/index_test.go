@@ -32,14 +32,14 @@ import (
 
 func TestIndexLifecycle(t *testing.T) {
 	t.Parallel()
-	realClient := func(t *testing.T) Client { return nil }
+	realClient := func(t *testing.T) clientF { return RealClientF }
 
 	tests := []struct {
 		name string
 		skip bool
 
 		op     func(t *testing.T) integration.Operation
-		client func(t *testing.T) Client
+		client func(t *testing.T) clientF
 	}{
 		{
 			name:   "not pushed",
@@ -85,13 +85,13 @@ func TestIndexLifecycle(t *testing.T) {
 		},
 		{
 			name: "expired credentials",
-			client: func(t *testing.T) Client {
+			client: func(t *testing.T) clientF {
 				ctrl := gomock.NewController(t)
 				c := NewMockClient(ctrl)
 				c.EXPECT().ManifestCreate(gomock.Any(), true, gomock.Any(), gomock.Any())
 				c.EXPECT().ManifestInspect(gomock.Any(), gomock.Any()).Return("", errs.ErrHTTPUnauthorized)
 				c.EXPECT().ManifestDelete(gomock.Any(), gomock.Any()).Return(nil)
-				return c
+				return mockClientF(c)
 			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
