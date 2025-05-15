@@ -20,18 +20,18 @@ import (
 
 	"github.com/blang/semver"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi-go-provider/integration"
-	mwcontext "github.com/pulumi/pulumi-go-provider/middleware/context"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
 )
 
 func TestConfigure(t *testing.T) {
 	t.Parallel()
 
-	s := newServer(nil)
+	s := newServer(t.Context(), t, nil)
 
 	err := s.Configure(
 		provider.ConfigureRequest{},
@@ -60,7 +60,7 @@ func TestAnnotate(t *testing.T) {
 func TestSchema(t *testing.T) {
 	t.Parallel()
 
-	s := newServer(nil)
+	s := newServer(t.Context(), t, nil)
 
 	_, err := s.GetSchema(provider.GetSchemaRequest{Version: 0})
 	assert.NoError(t, err)
@@ -68,21 +68,27 @@ func TestSchema(t *testing.T) {
 
 type annotator struct{}
 
+func (annotator) Deprecate(_ any, _ string)                   {}
 func (annotator) Describe(_ any, _ string)                    {}
 func (annotator) SetDefault(_, _ any, _ ...string)            {}
 func (annotator) SetToken(tokens.ModuleName, tokens.TypeName) {}
 func (annotator) AddAlias(tokens.ModuleName, tokens.TypeName) {}
 func (annotator) SetResourceDeprecationMessage(_ string)      {}
 
-func newServer(client Client) integration.Server {
-	p := NewBuildxProvider()
+func newServer(ctx context.Context, t *testing.T, clientF clientF) integration.Server {
+	t.Helper()
 
-	// Inject a mock client if provided.
-	if client != nil {
-		p = mwcontext.Wrap(p, func(ctx context.Context) context.Context {
-			return context.WithValue(ctx, _mockClientKey, client)
-		})
+	if clientF == nil {
+		clientF = RealClientF
 	}
 
-	return integration.NewServer("docker-build", semver.Version{Major: 0}, p)
+	p := NewBuildxProvider(clientF)
+
+	s, err := integration.NewServer(
+		ctx,
+		"docker-build", semver.Version{Major: 0},
+		integration.WithProvider(p),
+	)
+	require.NoError(t, err)
+	return s
 }

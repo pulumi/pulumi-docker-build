@@ -35,9 +35,11 @@ import (
 	"go.uber.org/mock/gomock"
 
 	provider "github.com/pulumi/pulumi-go-provider"
+	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi-go-provider/integration"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/mapper"
+	"github.com/pulumi/pulumi/sdk/v3/go/property"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
@@ -84,46 +86,44 @@ func TestImageLifecycle(t *testing.T) {
 			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e"),
-								resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:main"),
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New(
+							[]property.Value{
+								property.New("docker.io/pulumibot/buildkit-e2e"),
+								property.New("docker.io/pulumibot/buildkit-e2e:main"),
 							},
 						),
-						"platforms": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewStringProperty("linux/arm64"),
-								resource.NewStringProperty("linux/amd64"),
+						"platforms": property.New(
+							[]property.Value{
+								property.New("linux/arm64"),
+								property.New("linux/amd64"),
 							},
 						),
-						"context": resource.NewObjectProperty(resource.PropertyMap{
-							"location": resource.NewStringProperty("testdata/noop"),
+						"context": property.New(map[string]property.Value{
+							"location": property.New("testdata/noop"),
 						}),
-						"dockerfile": resource.NewObjectProperty(resource.PropertyMap{
-							"location": resource.NewStringProperty("testdata/noop/Dockerfile"),
+						"dockerfile": property.New(map[string]property.Value{
+							"location": property.New("testdata/noop/Dockerfile"),
 						}),
-						"exports": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewObjectProperty(resource.PropertyMap{
-									"raw": resource.NewStringProperty("type=registry"),
+						"exports": property.New(
+							[]property.Value{
+								property.New(map[string]property.Value{
+									"raw": property.New("type=registry"),
 								},
 								),
 							},
 						),
-						"registries": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewObjectProperty(resource.PropertyMap{
-									"address":  resource.NewStringProperty("fakeaddress"),
-									"username": resource.NewStringProperty("fakeuser"),
-									"password": resource.MakeSecret(
-										resource.NewStringProperty("password"),
-									),
+						"registries": property.New(
+							[]property.Value{
+								property.New(map[string]property.Value{
+									"address":  property.New("fakeaddress"),
+									"username": property.New("fakeuser"),
+									"password": property.New("password").WithSecret(true),
 								}),
 							},
 						),
-					},
+					}),
 				}
 			},
 		},
@@ -132,20 +132,20 @@ func TestImageLifecycle(t *testing.T) {
 			client: noClient,
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty([]resource.PropertyValue{}),
-						"context": resource.NewObjectProperty(resource.PropertyMap{
-							"location": resource.NewStringProperty("testdata/noop"),
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New([]property.Value{}),
+						"context": property.New(map[string]property.Value{
+							"location": property.New("testdata/noop"),
 						}),
-						"exports": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewObjectProperty(resource.PropertyMap{
-									"raw": resource.NewStringProperty("type=registry"),
+						"exports": property.New(
+							[]property.Value{
+								property.New(map[string]property.Value{
+									"raw": property.New("type=registry"),
 								}),
 							},
 						),
-					},
+					}),
 					ExpectFailure: true,
 					CheckFailures: []provider.CheckFailure{
 						{
@@ -161,19 +161,19 @@ func TestImageLifecycle(t *testing.T) {
 			client: noClient,
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty(
-							[]resource.PropertyValue{resource.NewStringProperty("invalid-exports")},
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New(
+							[]property.Value{property.New("invalid-exports")},
 						),
-						"exports": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewObjectProperty(resource.PropertyMap{
-									"raw": resource.NewStringProperty("type="),
+						"exports": property.New(
+							[]property.Value{
+								property.New(map[string]property.Value{
+									"raw": property.New("type="),
 								}),
 							},
 						),
-					},
+					}),
 					ExpectFailure: true,
 					CheckFailures: []provider.CheckFailure{{
 						Property: "exports[0]",
@@ -194,15 +194,15 @@ func TestImageLifecycle(t *testing.T) {
 			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty(
-							[]resource.PropertyValue{resource.NewStringProperty("foo")},
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New(
+							[]property.Value{property.New("foo")},
 						),
-						"context": resource.NewObjectProperty(resource.PropertyMap{
-							"location": resource.NewStringProperty("testdata/noop"),
+						"context": property.New(map[string]property.Value{
+							"location": property.New("testdata/noop"),
 						}),
-					},
+					}),
 					ExpectFailure: true,
 				}
 			},
@@ -221,15 +221,15 @@ func TestImageLifecycle(t *testing.T) {
 			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty(
-							[]resource.PropertyValue{resource.NewStringProperty("foo")},
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New(
+							[]property.Value{property.New("foo")},
 						),
-						"context": resource.NewObjectProperty(resource.PropertyMap{
-							"location": resource.NewStringProperty("testdata/noop"),
+						"context": property.New(map[string]property.Value{
+							"location": property.New("testdata/noop"),
 						}),
-					},
+					}),
 					ExpectFailure: true,
 				}
 			},
@@ -254,24 +254,24 @@ func TestImageLifecycle(t *testing.T) {
 			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewStringProperty("default-dockerfile"),
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New(
+							[]property.Value{
+								property.New("default-dockerfile"),
 							},
 						),
-						"context": resource.NewObjectProperty(resource.PropertyMap{
-							"location": resource.NewStringProperty("testdata/noop"),
+						"context": property.New(map[string]property.Value{
+							"location": property.New("testdata/noop"),
 						}),
-					},
-					Hook: func(_, output resource.PropertyMap) {
-						dockerfile := output["dockerfile"]
+					}),
+					Hook: func(_, output property.Map) {
+						dockerfile := output.Get("dockerfile")
 						require.NotNil(t, dockerfile)
-						require.True(t, dockerfile.IsObject())
-						location := dockerfile.ObjectValue()["location"]
+						require.True(t, dockerfile.IsMap())
+						location := dockerfile.AsMap().Get("location")
 						require.True(t, location.IsString())
-						assert.Equal(t, "testdata/noop/Dockerfile", location.StringValue())
+						assert.Equal(t, "testdata/noop/Dockerfile", location.AsString())
 					},
 				}
 			},
@@ -296,25 +296,25 @@ func TestImageLifecycle(t *testing.T) {
 			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"push": resource.NewBoolProperty(false),
-						"tags": resource.NewArrayProperty(
-							[]resource.PropertyValue{
-								resource.NewStringProperty("inline-dockerfile"),
+					Inputs: property.NewMap(map[string]property.Value{
+						"push": property.New(false),
+						"tags": property.New(
+							[]property.Value{
+								property.New("inline-dockerfile"),
 							},
 						),
-						"buildOnPreview": resource.NewBoolProperty(true),
-						"dockerfile": resource.NewObjectProperty(resource.PropertyMap{
-							"inline": resource.NewStringProperty("FROM alpine:latest"),
+						"buildOnPreview": property.New(true),
+						"dockerfile": property.New(map[string]property.Value{
+							"inline": property.New("FROM alpine:latest"),
 						}),
-					},
-					Hook: func(_, output resource.PropertyMap) {
-						context := output["context"]
+					}),
+					Hook: func(_, output property.Map) {
+						context := output.Get("context")
 						require.NotNil(t, context)
-						require.True(t, context.IsObject())
-						location := context.ObjectValue()["location"]
+						require.True(t, context.IsMap())
+						location := context.AsMap().Get("location")
 						require.True(t, location.IsString())
-						assert.Equal(t, ".", location.StringValue())
+						assert.Equal(t, ".", location.AsString())
 					},
 				}
 			},
@@ -328,7 +328,7 @@ func TestImageLifecycle(t *testing.T) {
 				Resource: "docker-build:index:Image",
 				Create:   tt.op(t),
 			}
-			s := newServer(tt.client(t))
+			s := newServer(t.Context(), t, mockClientF(tt.client(t)))
 
 			err := s.Configure(provider.ConfigureRequest{})
 			require.NoError(t, err)
@@ -353,21 +353,16 @@ func TestDelete(t *testing.T) {
 			Delete(gomock.Any(), "docker.io/pulumi/test@sha256:foo").
 			Return(errNotFound{})
 
-		s := newServer(client)
-		err := s.Configure(provider.ConfigureRequest{})
-		require.NoError(t, err)
+		i := &Image{clientF: mockClientF(client)}
 
-		err = s.Delete(provider.DeleteRequest{
-			ID:  "foo,bar",
-			Urn: _fakeURN,
-			Properties: resource.PropertyMap{
-				"tags": resource.NewArrayProperty([]resource.PropertyValue{
-					resource.NewStringProperty("docker.io/pulumi/test:foo"),
-				}),
-				"push":        resource.NewBoolProperty(true),
-				"digest":      resource.NewStringProperty("sha256:foo"),
-				"contextHash": resource.NewStringProperty(""),
-				"ref":         resource.NewStringProperty(""),
+		_, err := i.Delete(t.Context(), infer.DeleteRequest[ImageState]{
+			ID: "foo,bar",
+			State: ImageState{
+				ImageArgs: ImageArgs{
+					Tags: []string{"docker.io/pulumi/test:foo"},
+					Push: true,
+				},
+				Digest: "sha256:foo",
 			},
 		})
 		assert.NoError(t, err)
@@ -391,27 +386,21 @@ func TestRead(t *testing.T) {
 			},
 		}, nil)
 
-	s := newServer(client)
-	err := s.Configure(provider.ConfigureRequest{})
-	require.NoError(t, err)
+	i := &Image{clientF: mockClientF(client)}
 
-	resp, err := s.Read(provider.ReadRequest{
-		ID:  "my-image",
-		Urn: _fakeURN,
-		Properties: resource.PropertyMap{
-			"exports": resource.NewArrayProperty([]resource.PropertyValue{
-				resource.NewObjectProperty(resource.PropertyMap{
-					"raw": resource.NewStringProperty("type=registry"),
-				}),
-			}),
-			"tags": resource.NewArrayProperty([]resource.PropertyValue{
-				resource.NewStringProperty(tag),
-			}),
-			"digest": resource.NewStringProperty(digest),
+	resp, err := i.Read(t.Context(), infer.ReadRequest[ImageArgs, ImageState]{
+		ID: "my-image",
+		State: ImageState{
+			ImageArgs: ImageArgs{
+				Exports: []Export{{Raw: "type=registry"}},
+				Tags:    []string{tag},
+			},
+			Digest: digest,
 		},
 	})
+
 	require.NoError(t, err)
-	assert.NotNil(t, resp.Properties["exports"].ArrayValue()[0].ObjectValue()["manifest"])
+	assert.Equal(t, []string{tag}, resp.State.Tags)
 }
 
 func TestImageDiff(t *testing.T) {
@@ -432,21 +421,21 @@ func TestImageDiff(t *testing.T) {
 	}
 
 	tests := []struct {
-		name string
-		olds func(*testing.T, ImageState) ImageState
-		news func(*testing.T, ImageArgs) ImageArgs
+		name   string
+		state  func(*testing.T, ImageState) ImageState
+		inputs func(*testing.T, ImageArgs) ImageArgs
 
 		wantChanges bool
 	}{
 		{
 			name:        "no diff if build context is unchanged",
-			olds:        func(*testing.T, ImageState) ImageState { return baseState },
-			news:        func(*testing.T, ImageArgs) ImageArgs { return baseArgs },
+			state:       func(*testing.T, ImageState) ImageState { return baseState },
+			inputs:      func(*testing.T, ImageArgs) ImageArgs { return baseArgs },
 			wantChanges: false,
 		},
 		{
 			name: "no diff if registry password changes",
-			olds: func(_ *testing.T, s ImageState) ImageState {
+			state: func(_ *testing.T, s ImageState) ImageState {
 				s.Registries = []Registry{{
 					Address:  "foo",
 					Username: "foo",
@@ -454,7 +443,7 @@ func TestImageDiff(t *testing.T) {
 				}}
 				return s
 			},
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Registries = []Registry{{
 					Address:  "foo",
 					Username: "foo",
@@ -466,11 +455,11 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name: "no diff if pull=true but no exports",
-			olds: func(_ *testing.T, is ImageState) ImageState {
+			state: func(_ *testing.T, is ImageState) ImageState {
 				is.Pull = true
 				return is
 			},
-			news: func(t *testing.T, ia ImageArgs) ImageArgs {
+			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
 				ia.Pull = true
 				return ia
 			},
@@ -478,12 +467,12 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name: "diff if pull=true with exports",
-			olds: func(_ *testing.T, is ImageState) ImageState {
+			state: func(_ *testing.T, is ImageState) ImageState {
 				is.Pull = true
 				is.Load = true
 				return is
 			},
-			news: func(t *testing.T, ia ImageArgs) ImageArgs {
+			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
 				ia.Pull = true
 				ia.Load = true
 				return ia
@@ -491,9 +480,9 @@ func TestImageDiff(t *testing.T) {
 			wantChanges: true,
 		},
 		{
-			name: "diff if build context changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(t *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if build context changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(t *testing.T, a ImageArgs) ImageArgs {
 				tmp := filepath.Join(a.Context.Location, "tmp")
 				err := os.WriteFile(tmp, []byte{}, 0o600)
 				require.NoError(t, err)
@@ -503,9 +492,9 @@ func TestImageDiff(t *testing.T) {
 			wantChanges: true,
 		},
 		{
-			name: "diff if registry added",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if registry added",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Registries = []Registry{{}}
 				return a
 			},
@@ -513,7 +502,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name: "diff if registry user changes",
-			olds: func(_ *testing.T, s ImageState) ImageState {
+			state: func(_ *testing.T, s ImageState) ImageState {
 				s.Registries = []Registry{{
 					Address:  "foo",
 					Username: "foo",
@@ -521,7 +510,7 @@ func TestImageDiff(t *testing.T) {
 				}}
 				return s
 			},
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Registries = []Registry{{
 					Address:  "DIFFERENT USER",
 					Username: "foo",
@@ -532,9 +521,9 @@ func TestImageDiff(t *testing.T) {
 			wantChanges: true,
 		},
 		{
-			name: "diff if buildArgs changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if buildArgs changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.BuildArgs = map[string]string{
 					"foo": "bar",
 				}
@@ -543,36 +532,36 @@ func TestImageDiff(t *testing.T) {
 			wantChanges: true,
 		},
 		{
-			name: "diff if pull changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(t *testing.T, ia ImageArgs) ImageArgs {
+			name:  "diff if pull changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
 				ia.Pull = true
 				return ia
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if load changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(t *testing.T, ia ImageArgs) ImageArgs {
+			name:  "diff if load changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
 				ia.Load = true
 				return ia
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if push changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(t *testing.T, ia ImageArgs) ImageArgs {
+			name:  "diff if push changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
 				ia.Push = true
 				return ia
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if buildOnPreview doesn't change",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(t *testing.T, ia ImageArgs) ImageArgs {
+			name:  "diff if buildOnPreview doesn't change",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
 				val := true
 				ia.BuildOnPreview = &val
 				return ia
@@ -580,9 +569,9 @@ func TestImageDiff(t *testing.T) {
 			wantChanges: true,
 		},
 		{
-			name: "diff if buildOnPreview changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(t *testing.T, ia ImageArgs) ImageArgs {
+			name:  "diff if buildOnPreview changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
 				val := false
 				ia.BuildOnPreview = &val
 				return ia
@@ -590,171 +579,171 @@ func TestImageDiff(t *testing.T) {
 			wantChanges: true,
 		},
 		{
-			name: "diff if ssh changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(t *testing.T, ia ImageArgs) ImageArgs {
+			name:  "diff if ssh changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
 				ia.SSH = []SSH{{ID: "default"}}
 				return ia
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if hosts change",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(t *testing.T, ia ImageArgs) ImageArgs {
+			name:  "diff if hosts change",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
 				ia.AddHosts = []string{"localhost"}
 				return ia
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if cacheFrom changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if cacheFrom changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.CacheFrom = []CacheFrom{{Raw: "a"}}
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if cacheTo changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if cacheTo changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.CacheTo = []CacheTo{{Raw: "a"}}
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if context changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if context changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Context = &BuildContext{Context: Context{Location: "testdata/ignores"}}
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if named context changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if named context changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Context = &BuildContext{Named: NamedContexts{"foo": Context{Location: "bar"}}}
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if network changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if network changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Network = &host
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if dockerfile location changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if dockerfile location changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Dockerfile = &Dockerfile{Location: "testdata/ignores/basedir/Dockerfile"}
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if dockerfile inline changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if dockerfile inline changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Dockerfile = &Dockerfile{Inline: "FROM scratch"}
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if platforms change",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if platforms change",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Platforms = []Platform{"linux/amd64"}
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if pull changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if pull changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Pull = true
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if builder changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if builder changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Builder = &BuilderConfig{Name: "foo"}
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if tags change",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if tags change",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Tags = []string{"foo"}
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if exports change",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if exports change",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Exports = []Export{{Raw: "foo"}}
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if target changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if target changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Target = "foo"
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if pulling",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if pulling",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Pull = true
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if noCache changes",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if noCache changes",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.NoCache = true
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if labels change",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if labels change",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Labels = map[string]string{"foo": "bar"}
 				return a
 			},
 			wantChanges: true,
 		},
 		{
-			name: "diff if secrets change",
-			olds: func(*testing.T, ImageState) ImageState { return baseState },
-			news: func(_ *testing.T, a ImageArgs) ImageArgs {
+			name:  "diff if secrets change",
+			state: func(*testing.T, ImageState) ImageState { return baseState },
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Secrets = map[string]string{"foo": "bar"}
 				return a
 			},
@@ -762,13 +751,13 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name: "diff if local export doesn't exist",
-			olds: func(t *testing.T, state ImageState) ImageState {
+			state: func(t *testing.T, state ImageState) ImageState {
 				state.Exports = []Export{
 					{Local: &ExportLocal{Dest: "not-real"}},
 				}
 				return state
 			},
-			news: func(_ *testing.T, args ImageArgs) ImageArgs {
+			inputs: func(_ *testing.T, args ImageArgs) ImageArgs {
 				args.Exports = []Export{
 					{Local: &ExportLocal{Dest: "not-real"}},
 				}
@@ -778,13 +767,13 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name: "diff if tar export doesn't exist",
-			olds: func(t *testing.T, state ImageState) ImageState {
+			state: func(t *testing.T, state ImageState) ImageState {
 				state.Exports = []Export{
 					{Tar: &ExportTar{ExportLocal: ExportLocal{Dest: "not-real"}}},
 				}
 				return state
 			},
-			news: func(_ *testing.T, args ImageArgs) ImageArgs {
+			inputs: func(_ *testing.T, args ImageArgs) ImageArgs {
 				args.Exports = []Export{
 					{Tar: &ExportTar{ExportLocal: ExportLocal{Dest: "not-real"}}},
 				}
@@ -794,12 +783,12 @@ func TestImageDiff(t *testing.T) {
 		},
 	}
 
-	s := newServer(nil)
+	s := newServer(t.Context(), t, nil)
 
-	encode := func(t *testing.T, x any) resource.PropertyMap {
+	encode := func(t *testing.T, x any) property.Map {
 		raw, err := mapper.New(&mapper.Opts{IgnoreMissing: true}).Encode(x)
 		require.NoError(t, err)
-		return resource.NewPropertyMapFromMap(raw)
+		return resource.FromResourcePropertyMap(resource.NewPropertyMapFromMap(raw))
 	}
 
 	for _, tt := range tests {
@@ -808,9 +797,9 @@ func TestImageDiff(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			resp, err := s.Diff(provider.DiffRequest{
-				Urn:  _fakeURN,
-				Olds: encode(t, tt.olds(t, baseState)),
-				News: encode(t, tt.news(t, baseArgs)),
+				Urn:    _fakeURN,
+				State:  encode(t, tt.state(t, baseState)),
+				Inputs: encode(t, tt.inputs(t, baseArgs)),
 			})
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantChanges, resp.HasChanges, resp.DetailedDiff)

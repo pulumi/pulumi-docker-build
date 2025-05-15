@@ -27,34 +27,35 @@ import (
 	"github.com/pulumi/pulumi-go-provider/integration"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/mapper"
+	"github.com/pulumi/pulumi/sdk/v3/go/property"
 )
 
 func TestIndexLifecycle(t *testing.T) {
 	t.Parallel()
-	realClient := func(t *testing.T) Client { return nil }
+	realClient := func(t *testing.T) clientF { return RealClientF }
 
 	tests := []struct {
 		name string
 		skip bool
 
 		op     func(t *testing.T) integration.Operation
-		client func(t *testing.T) Client
+		client func(t *testing.T) clientF
 	}{
 		{
 			name:   "not pushed",
 			client: realClient,
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"tag": resource.NewStringProperty(
+					Inputs: property.NewMap(map[string]property.Value{
+						"tag": property.New(
 							"docker.io/pulumibot/buildkit-e2e:manifest-unit",
 						),
-						"sources": resource.NewArrayProperty([]resource.PropertyValue{
-							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:arm64"),
-							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:amd64"),
+						"sources": property.New([]property.Value{
+							property.New("docker.io/pulumibot/buildkit-e2e:arm64"),
+							property.New("docker.io/pulumibot/buildkit-e2e:amd64"),
 						}),
-						"push": resource.NewBoolProperty(false),
-					},
+						"push": property.New(false),
+					}),
 				}
 			},
 		},
@@ -64,59 +65,51 @@ func TestIndexLifecycle(t *testing.T) {
 			client: realClient,
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"tag": resource.NewStringProperty(
+					Inputs: property.NewMap(map[string]property.Value{
+						"tag": property.New(
 							"docker.io/pulumibot/buildkit-e2e:manifest",
 						),
-						"sources": resource.NewArrayProperty([]resource.PropertyValue{
-							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:arm64"),
-							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:amd64"),
+						"sources": property.New([]property.Value{
+							property.New("docker.io/pulumibot/buildkit-e2e:arm64"),
+							property.New("docker.io/pulumibot/buildkit-e2e:amd64"),
 						}),
-						"push": resource.NewBoolProperty(true),
-						"registry": resource.NewObjectProperty(resource.PropertyMap{
-							"address":  resource.NewStringProperty("docker.io"),
-							"username": resource.NewStringProperty("pulumibot"),
-							"password": resource.NewSecretProperty(&resource.Secret{
-								Element: resource.NewStringProperty(
-									os.Getenv("DOCKER_HUB_PASSWORD"),
-								),
-							}),
+						"push": property.New(true),
+						"registry": property.New(map[string]property.Value{
+							"address":  property.New("docker.io"),
+							"username": property.New("pulumibot"),
+							"password": property.New(os.Getenv("DOCKER_HUB_PASSWORD")).WithSecret(true),
 						}),
-					},
+					}),
 				}
 			},
 		},
 		{
 			name: "expired credentials",
-			client: func(t *testing.T) Client {
+			client: func(t *testing.T) clientF {
 				ctrl := gomock.NewController(t)
 				c := NewMockClient(ctrl)
 				c.EXPECT().ManifestCreate(gomock.Any(), true, gomock.Any(), gomock.Any())
 				c.EXPECT().ManifestInspect(gomock.Any(), gomock.Any()).Return("", errs.ErrHTTPUnauthorized)
 				c.EXPECT().ManifestDelete(gomock.Any(), gomock.Any()).Return(nil)
-				return c
+				return mockClientF(c)
 			},
 			op: func(t *testing.T) integration.Operation {
 				return integration.Operation{
-					Inputs: resource.PropertyMap{
-						"tag": resource.NewStringProperty(
+					Inputs: property.NewMap(map[string]property.Value{
+						"tag": property.New(
 							"docker.io/pulumibot/buildkit-e2e:manifest",
 						),
-						"sources": resource.NewArrayProperty([]resource.PropertyValue{
-							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:arm64"),
-							resource.NewStringProperty("docker.io/pulumibot/buildkit-e2e:amd64"),
+						"sources": property.New([]property.Value{
+							property.New("docker.io/pulumibot/buildkit-e2e:arm64"),
+							property.New("docker.io/pulumibot/buildkit-e2e:amd64"),
 						}),
-						"push": resource.NewBoolProperty(true),
-						"registry": resource.NewObjectProperty(resource.PropertyMap{
-							"address":  resource.NewStringProperty("docker.io"),
-							"username": resource.NewStringProperty("pulumibot"),
-							"password": resource.NewSecretProperty(&resource.Secret{
-								Element: resource.NewStringProperty(
-									os.Getenv("DOCKER_HUB_PASSWORD"),
-								),
-							}),
+						"push": property.New(true),
+						"registry": property.New(map[string]property.Value{
+							"address":  property.New("docker.io"),
+							"username": property.New("pulumibot"),
+							"password": property.New(os.Getenv("DOCKER_HUB_PASSWORD")).WithSecret(true),
 						}),
-					},
+					}),
 				}
 			},
 		},
@@ -132,7 +125,7 @@ func TestIndexLifecycle(t *testing.T) {
 				Resource: "docker-build:index:Index",
 				Create:   tt.op(t),
 			}
-			s := newServer(tt.client(t))
+			s := newServer(t.Context(), t, tt.client(t))
 
 			err := s.Configure(provider.ConfigureRequest{})
 			require.NoError(t, err)
@@ -149,22 +142,22 @@ func TestIndexDiff(t *testing.T) {
 	baseState := IndexState{IndexArgs: baseArgs}
 
 	tests := []struct {
-		name string
-		olds func(*testing.T, IndexState) IndexState
-		news func(*testing.T, IndexArgs) IndexArgs
+		name   string
+		state  func(*testing.T, IndexState) IndexState
+		inputs func(*testing.T, IndexArgs) IndexArgs
 
 		wantChanges bool
 	}{
 		{
 			name:        "no diff if no changes",
-			olds:        func(*testing.T, IndexState) IndexState { return baseState },
-			news:        func(*testing.T, IndexArgs) IndexArgs { return baseArgs },
+			state:       func(*testing.T, IndexState) IndexState { return baseState },
+			inputs:      func(*testing.T, IndexArgs) IndexArgs { return baseArgs },
 			wantChanges: false,
 		},
 		{
-			name: "diff if tag changes",
-			olds: func(*testing.T, IndexState) IndexState { return baseState },
-			news: func(t *testing.T, a IndexArgs) IndexArgs {
+			name:  "diff if tag changes",
+			state: func(*testing.T, IndexState) IndexState { return baseState },
+			inputs: func(t *testing.T, a IndexArgs) IndexArgs {
 				a.Tag = "new-tag"
 				return a
 			},
@@ -172,7 +165,7 @@ func TestIndexDiff(t *testing.T) {
 		},
 		{
 			name: "no diff if registry password changes",
-			olds: func(_ *testing.T, s IndexState) IndexState {
+			state: func(_ *testing.T, s IndexState) IndexState {
 				s.Registry = &Registry{
 					Address:  "foo",
 					Username: "foo",
@@ -180,7 +173,7 @@ func TestIndexDiff(t *testing.T) {
 				}
 				return s
 			},
-			news: func(_ *testing.T, a IndexArgs) IndexArgs {
+			inputs: func(_ *testing.T, a IndexArgs) IndexArgs {
 				a.Registry = &Registry{
 					Address:  "foo",
 					Username: "foo",
@@ -191,9 +184,9 @@ func TestIndexDiff(t *testing.T) {
 			wantChanges: false,
 		},
 		{
-			name: "diff if registry added",
-			olds: func(*testing.T, IndexState) IndexState { return baseState },
-			news: func(_ *testing.T, a IndexArgs) IndexArgs {
+			name:  "diff if registry added",
+			state: func(*testing.T, IndexState) IndexState { return baseState },
+			inputs: func(_ *testing.T, a IndexArgs) IndexArgs {
 				a.Registry = &Registry{Address: "foo.com", Username: "foo", Password: "foo"}
 				return a
 			},
@@ -201,7 +194,7 @@ func TestIndexDiff(t *testing.T) {
 		},
 		{
 			name: "diff if registry user changes",
-			olds: func(_ *testing.T, s IndexState) IndexState {
+			state: func(_ *testing.T, s IndexState) IndexState {
 				s.Registry = &Registry{
 					Address:  "foo",
 					Username: "foo",
@@ -209,7 +202,7 @@ func TestIndexDiff(t *testing.T) {
 				}
 				return s
 			},
-			news: func(_ *testing.T, a IndexArgs) IndexArgs {
+			inputs: func(_ *testing.T, a IndexArgs) IndexArgs {
 				a.Registry = &Registry{
 					Address:  "DIFFERENT USER",
 					Username: "foo",
@@ -221,21 +214,21 @@ func TestIndexDiff(t *testing.T) {
 		},
 	}
 
-	s := newServer(nil)
+	s := newServer(t.Context(), t, nil)
 
-	encode := func(t *testing.T, x any) resource.PropertyMap {
+	encode := func(t *testing.T, x any) property.Map {
 		raw, err := mapper.New(&mapper.Opts{IgnoreMissing: true}).Encode(x)
 		require.NoError(t, err)
-		return resource.NewPropertyMapFromMap(raw)
+		return resource.FromResourcePropertyMap(resource.NewPropertyMapFromMap(raw))
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			resp, err := s.Diff(provider.DiffRequest{
-				Urn:  urn,
-				Olds: encode(t, tt.olds(t, baseState)),
-				News: encode(t, tt.news(t, baseArgs)),
+				Urn:    urn,
+				State:  encode(t, tt.state(t, baseState)),
+				Inputs: encode(t, tt.inputs(t, baseArgs)),
 			})
 			assert.NoError(t, err)
 			assert.Equal(t, tt.wantChanges, resp.HasChanges, resp.DetailedDiff)

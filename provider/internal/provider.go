@@ -45,9 +45,6 @@ type Config struct {
 	host *host
 }
 
-// _mockClientKey is used by tests to inject a mock Docker client.
-var _mockClientKey any = "mock-client"
-
 // Annotate provides user-facing descriptions and defaults for Config's fields.
 func (c *Config) Annotate(a infer.Annotator) {
 	a.Describe(&c.Host, "The build daemon's address.")
@@ -64,8 +61,23 @@ func (c *Config) Configure(ctx context.Context) error {
 	return nil
 }
 
+// GetRegistries returns the config's registries, if any.
+func (c Config) GetRegistries() []Registry {
+	return c.Registries
+}
+
+// getHost returns the config's host, or nil if the config is also nil.
+func (c *Config) getHost() *host {
+	if c == nil {
+		return nil
+	}
+	return c.host
+}
+
 // NewBuildxProvider returns a new buildx provider.
-func NewBuildxProvider() provider.Provider {
+func NewBuildxProvider(clientF clientF) provider.Provider {
+	config := &Config{}
+
 	prov := infer.Provider(
 		infer.Options{
 			Metadata: pschema.Metadata{
@@ -113,41 +125,22 @@ func NewBuildxProvider() provider.Provider {
 				},
 			},
 			Resources: []infer.InferredResource{
-				infer.Resource[*Image](),
-				infer.Resource[*Index](),
+				infer.Resource(&Image{clientF: clientF, config: config}),
+				infer.Resource(&Index{clientF: clientF, config: config}),
 			},
 			ModuleMap: map[tokens.ModuleName]tokens.ModuleName{
 				"internal": "index",
 			},
-			Config: infer.Config[*Config](),
+			Config: infer.Config(config),
 		},
 	)
-
-	prov.DiffConfig = diffConfigIgnoreInternal(prov.DiffConfig)
 
 	return prov
 }
 
-// TODO(pulumi/pulumi-docker-build#404): Remove this function once the bug is fixed in either
-// upstream pu/pu or pulumi-go-provider.
-
-// diffConfigInternalIgnore is a custom DiffConfig implementation for the buildx provider. This is required to
-// circumvent the bug identified in https://github.com/pulumi/pulumi-docker-build/issues/404.
-// Since `__internal` is currently populated in new inputs, but stripped in old state, we need to
-// ignore this field in the diff. There is no easy way to override DiffConfig to compare inputs only.
-func diffConfigIgnoreInternal(
-	diffConfig func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error),
-) func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error) {
-	return func(ctx context.Context, req provider.DiffRequest) (provider.DiffResponse, error) {
-		delete(req.News, "__internal")
-
-		return diffConfig(ctx, req)
-	}
-}
-
 // Schema returns our package specification.
 func Schema(ctx context.Context, version string) schema.PackageSpec {
-	p := NewBuildxProvider()
+	p := NewBuildxProvider(nil)
 	spec, err := provider.GetSchema(ctx, "docker-build", version, p)
 	contract.AssertNoErrorf(err, "missing schema")
 	return spec

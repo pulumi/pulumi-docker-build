@@ -28,7 +28,6 @@ import (
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 )
 
 var (
@@ -47,7 +46,10 @@ var (
 var _indexExamples string
 
 // Index is an OCI index or manifest list on a remote registry.
-type Index struct{}
+type Index struct {
+	clientF clientF
+	config  *Config
+}
 
 // IndexArgs instantiate an Index.
 type IndexArgs struct {
@@ -62,6 +64,14 @@ func (i IndexArgs) isPushed() bool {
 		return true // default
 	}
 	return *i.Push
+}
+
+// GetRegistries returns the index's registry.
+func (i IndexArgs) GetRegistries() []Registry {
+	if i.Registry == nil {
+		return nil
+	}
+	return []Registry{*i.Registry}
 }
 
 // IndexState captures the state of an Index.
@@ -132,66 +142,82 @@ func (i *IndexState) Annotate(a infer.Annotator) {
 // Create is a passthrough to Update.
 func (i *Index) Create(
 	ctx context.Context,
-	name string,
-	input IndexArgs,
-	preview bool,
-) (string, IndexState, error) {
-	state, err := i.Update(ctx, name, IndexState{}, input, preview)
-	return name, state, err
+	req infer.CreateRequest[IndexArgs],
+) (infer.CreateResponse[IndexState], error) {
+	resp, err := i.Update(ctx,
+		infer.UpdateRequest[IndexArgs, IndexState]{
+			ID:     req.Name,
+			State:  IndexState{},
+			Inputs: req.Inputs,
+			DryRun: req.DryRun,
+		},
+	)
+	return infer.CreateResponse[IndexState]{ID: req.Name, Output: resp.Output}, err
 }
 
 // Update performs `buildx imagetools create` to create a new OCI index /
 // manifest list.
 func (i *Index) Update(
 	ctx context.Context,
-	name string,
-	state IndexState,
-	input IndexArgs,
-	preview bool,
-) (IndexState, error) {
+	req infer.UpdateRequest[IndexArgs, IndexState],
+) (infer.UpdateResponse[IndexState], error) {
+	state, input := req.State, req.Inputs
+
 	state.IndexArgs = input
 	state.Ref = input.Tag
 
-	cli, err := i.client(ctx, state, input)
+	cli, err := i.client(ctx, input)
 	if err != nil {
-		return state, err
+		return infer.UpdateResponse[IndexState]{Output: state}, err
 	}
 
-	if preview {
-		return state, nil
+	if req.DryRun {
+		return infer.UpdateResponse[IndexState]{Output: state}, nil
 	}
 
-	provider.GetLogger(ctx).Debugf("creating index with tag %s and sources %s", input.Tag, input.Sources)
+	provider.GetLogger(ctx).
+		Debugf("creating index with tag %s and sources %s", input.Tag, input.Sources)
 
 	err = cli.ManifestCreate(ctx, input.isPushed(), input.Tag, input.Sources...)
 	if err != nil {
-		return state, fmt.Errorf("creating: %w", err)
+		return infer.UpdateResponse[IndexState]{Output: state}, fmt.Errorf("creating: %w", err)
 	}
 
-	_, _, state, err = i.Read(ctx, name, input, state)
+	// Read remote manifest information, if it exists.
+	live, err := i.Read(ctx,
+		infer.ReadRequest[IndexArgs, IndexState]{ID: req.ID, Inputs: input, State: state},
+	)
 	if err != nil {
-		return state, fmt.Errorf("reading: %w", err)
+		return infer.UpdateResponse[IndexState]{Output: state}, fmt.Errorf("reading: %w", err)
 	}
-	return state, nil
+	return infer.UpdateResponse[IndexState]{Output: live.State}, nil
 }
 
 func (i *Index) Read(
 	ctx context.Context,
-	name string,
-	input IndexArgs,
-	state IndexState,
-) (string, IndexArgs, IndexState, error) {
+	req infer.ReadRequest[IndexArgs, IndexState],
+) (infer.ReadResponse[IndexArgs, IndexState], error) {
+	state, input := req.State, req.Inputs
+
 	state.IndexArgs = input
 	state.Ref = input.Tag
 
 	if !input.isPushed() {
 		provider.GetLogger(ctx).Debug("skipping read because index was not pushed")
-		return name, input, state, nil // Nothing to read.
+		return infer.ReadResponse[IndexArgs, IndexState]{
+			ID:     req.ID,
+			Inputs: input,
+			State:  state,
+		}, nil // Nothing to read.
 	}
 
-	cli, err := i.client(ctx, state, input)
+	cli, err := i.client(ctx, input)
 	if err != nil {
-		return name, input, state, err
+		return infer.ReadResponse[IndexArgs, IndexState]{
+			ID:     req.ID,
+			Inputs: input,
+			State:  state,
+		}, err
 	}
 
 	provider.GetLogger(ctx).Debug("reading index with tag " + input.Tag)
@@ -199,21 +225,29 @@ func (i *Index) Read(
 	digest, err := cli.ManifestInspect(ctx, input.Tag)
 	if errors.Is(err, errs.ErrNotFound) {
 		// A remote tag was expected but isn't there -- delete the resource.
-		return "", input, state, nil
+		return infer.ReadResponse[IndexArgs, IndexState]{ID: "", Inputs: input, State: state}, nil
 	}
 	if errors.Is(err, errs.ErrHTTPUnauthorized) {
 		provider.GetLogger(ctx).Warning("invalid credentials, skipping")
-		return name, input, state, nil
+		return infer.ReadResponse[IndexArgs, IndexState]{
+			ID:     req.ID,
+			Inputs: input,
+			State:  state,
+		}, nil
 	}
 	if err != nil {
-		return name, input, state, err
+		return infer.ReadResponse[IndexArgs, IndexState]{
+			ID:     req.ID,
+			Inputs: input,
+			State:  state,
+		}, err
 	}
 
 	if ref, ok := addDigest(input.Tag, digest); ok {
 		state.Ref = ref
 	}
 
-	return name, input, state, nil
+	return infer.ReadResponse[IndexArgs, IndexState]{ID: req.ID, Inputs: input, State: state}, nil
 }
 
 // Check confirms the Index's tag and source refs are all valid. This doesn't
@@ -222,13 +256,11 @@ func (i *Index) Read(
 // cases for now.
 func (i *Index) Check(
 	ctx context.Context,
-	_ string,
-	_ resource.PropertyMap,
-	news resource.PropertyMap,
-) (IndexArgs, []provider.CheckFailure, error) {
-	args, failures, err := infer.DefaultCheck[IndexArgs](ctx, news)
+	req infer.CheckRequest,
+) (infer.CheckResponse[IndexArgs], error) {
+	args, failures, err := infer.DefaultCheck[IndexArgs](ctx, req.NewInputs)
 	if err != nil {
-		return args, failures, err
+		return infer.CheckResponse[IndexArgs]{Failures: failures, Inputs: args}, err
 	}
 
 	if _, err := normalizeReference(args.Tag); args.Tag != "" && err != nil {
@@ -253,27 +285,31 @@ func (i *Index) Check(
 		}
 	}
 
-	return args, failures, nil
+	return infer.CheckResponse[IndexArgs]{Failures: failures, Inputs: args}, nil
 }
 
 // Delete attempts to delete the remote manifest.
-func (i *Index) Delete(ctx context.Context, _ string, state IndexState) error {
+func (i *Index) Delete(
+	ctx context.Context,
+	req infer.DeleteRequest[IndexState],
+) (infer.DeleteResponse, error) {
+	state := req.State
 	if !state.isPushed() {
-		return nil // Nothing to delete.
+		return infer.DeleteResponse{}, nil // Nothing to delete.
 	}
 
-	cli, err := i.client(ctx, state, state.IndexArgs)
+	cli, err := i.client(ctx, state.IndexArgs)
 	if err != nil {
-		return err
+		return infer.DeleteResponse{}, err
 	}
 
 	err = cli.ManifestDelete(ctx, state.Ref)
 	// TODO: Upstream buildx swallows the error types we'd like to test for
 	// here.
 	if err != nil && strings.Contains(err.Error(), "No such manifest:") {
-		return nil
+		return infer.DeleteResponse{}, nil
 	}
-	return err
+	return infer.DeleteResponse{}, err
 }
 
 // Diff returns a diff of proposed changes against current state. Ideally we
@@ -282,10 +318,10 @@ func (i *Index) Delete(ctx context.Context, _ string, state IndexState) error {
 // change all the time due to short-lived AWS credentials).
 func (i *Index) Diff(
 	_ context.Context,
-	_ string,
-	olds IndexState,
-	news IndexArgs,
+	req infer.DiffRequest[IndexArgs, IndexState],
 ) (provider.DiffResponse, error) {
+	olds, news := req.State, req.Inputs
+
 	diff := map[string]provider.PropertyDiff{}
 	update := provider.PropertyDiff{Kind: provider.Update}
 	replace := provider.PropertyDiff{Kind: provider.UpdateReplace}
@@ -323,23 +359,7 @@ func (i *Index) Diff(
 // any host-level credentials.
 func (i *Index) client(
 	ctx context.Context,
-	_ IndexState,
 	args IndexArgs,
 ) (Client, error) {
-	cfg := infer.GetConfig[Config](ctx)
-
-	if cli, ok := ctx.Value(_mockClientKey).(Client); ok {
-		return cli, nil
-	}
-
-	// We prefer auth from args, the provider, and state in that order. We
-	// build a slice in reverse order because wrap() will overwrite earlier
-	// entries with later ones.
-	auths := []Registry{}
-	auths = append(auths, cfg.Registries...)
-	if args.Registry != nil {
-		auths = append(auths, *args.Registry)
-	}
-
-	return wrap(cfg.host, auths...)
+	return i.clientF(ctx, i.config.getHost(), i.config, args)
 }

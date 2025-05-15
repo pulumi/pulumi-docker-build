@@ -22,36 +22,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	"google.golang.org/protobuf/types/known/structpb"
-
-	"github.com/pulumi/pulumi-docker-build/provider/internal"
-	provider "github.com/pulumi/pulumi-go-provider"
-	"github.com/pulumi/pulumi-go-provider/integration"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/resource/plugin"
 )
-
-// TestConfigure checks backwards-compatibility with SDKs that still send
-// provider config as JSON-encoded strings. This test can be removed once we
-// upgrade to a version of pulumi that no longer generates SDKs with that
-// behavior.
-func TestConfigure(t *testing.T) {
-	t.Parallel()
-
-	p := configurableProvider(internal.NewBuildxProvider())
-
-	args, err := structpb.NewStruct(map[string]any{
-		"registries": `[{"address": "docker.io"}]`,
-	})
-	require.NoError(t, err)
-	argsMap, err := plugin.UnmarshalProperties(args, plugin.MarshalOptions{})
-	require.NoError(t, err)
-
-	s := integration.NewServer("docker-build", semver.Version{Major: 0}, p)
-	err = s.Configure(provider.ConfigureRequest{
-		Args: argsMap,
-	})
-	assert.NoError(t, err)
-}
 
 func TestVersion(t *testing.T) {
 	t.Parallel()

@@ -583,10 +583,8 @@ class ImageArgs:
         pulumi.set(self, "target", value)
 
 
+@pulumi.type_token("docker-build:index:Image")
 class Image(pulumi.CustomResource):
-
-    pulumi_type = "docker-build:index:Image"
-
     @overload
     def __init__(__self__,
                  resource_name: str,

@@ -89,7 +89,7 @@ ${PULUMI}: go.sum
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi-java/pkg/cmd/pulumi-language-java
-	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet
+	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi-yaml/cmd/pulumi-converter-yaml
 
 ${GOGLANGCILINT}: go.sum
