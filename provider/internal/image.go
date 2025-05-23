@@ -374,18 +374,8 @@ func (i *Image) Check(
 	return infer.CheckResponse[ImageArgs]{Failures: failures, Inputs: args}, err
 }
 
-type checkFailure struct {
-	provider.CheckFailure
-}
-
-func (cf checkFailure) Error() string {
-	return cf.Reason
-}
-
 func newCheckFailure(err error, format string, args ...any) error {
-	return checkFailure{
-		provider.CheckFailure{Property: fmt.Sprintf(format, args...), Reason: err.Error()},
-	}
+	return provider.CheckFailure{Property: fmt.Sprintf(format, args...), Reason: err.Error()}
 }
 
 // normalize returns a copy of ImageArgs after accounting for unknown (preview)
