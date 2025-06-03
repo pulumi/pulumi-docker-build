@@ -97,8 +97,9 @@ func (h *host) builderFor(ctx context.Context, build Build) (*cachedBuilder, err
 	)
 	if err != nil && build.ShouldExec() && strings.HasPrefix(opts.Builder, "cloud-") {
 		//nolint:revive // Human-readable.
-		err = errors.Join(err, errors.New(
-			"Make sure you're logged in to Docker (`docker login`) if you're trying to use a cloud builder."),
+		err = errors.Join(err,
+			errors.New("Make sure you're logged in to Docker (`docker login`) if you're trying to use a cloud builder."),
+			errors.New("Make sure you have the correct buildx plugin installed (https://github.com/docker/buildx-desktop)."),
 		)
 	}
 	if err != nil && build.ShouldExec() {
