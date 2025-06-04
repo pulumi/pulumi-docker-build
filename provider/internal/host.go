@@ -16,8 +16,10 @@ package internal
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 
@@ -93,6 +95,19 @@ func (h *host) builderFor(ctx context.Context, build Build) (*cachedBuilder, err
 		builder.WithContextPathHash(contextPathHash),
 		builder.WithStore(txn),
 	)
+	if err != nil && build.ShouldExec() && strings.HasPrefix(opts.Builder, "cloud-") {
+		//nolint:revive // Human-readable.
+		err = errors.Join(err,
+			errors.New("Make sure you're logged in to Docker (`docker login`) if you're trying to use a cloud builder."),
+			errors.New("Make sure you have the correct buildx plugin installed (https://github.com/docker/buildx-desktop)."),
+		)
+	}
+	if err != nil && build.ShouldExec() {
+		//nolint:revive // Human-readable.
+		err = errors.Join(err, errors.New(
+			"Make sure your buildx plugin is executable (`docker buildx version`)"),
+		)
+	}
 	if err != nil {
 		return nil, fmt.Errorf("new builder: %w", err)
 	}
@@ -159,6 +174,12 @@ func (h *host) builderFor(ctx context.Context, build Build) (*cachedBuilder, err
 	// drivers that are unknown to us.
 	nodes, err := b.LoadNodes(ctx, builder.WithData())
 	if err != nil && !build.ShouldExec() {
+		if strings.Contains(err.Error(), "failed to find driver") {
+			//nolint:revive // Human-readable.
+			err = errors.Join(err, errors.New(
+				"Use `exec: true` if you're trying to use Docker Build Cloud or other custom drivers.",
+			))
+		}
 		return nil, fmt.Errorf("loading nodes: %w", err)
 	}
 	// Attempt to determine our builder's buildkit version.
