@@ -207,7 +207,7 @@ sdk: sdk/python sdk/nodejs sdk/java sdk/python sdk/go sdk/dotnet
 sdk/python: TMPDIR := $(shell mktemp -d)
 sdk/python: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/python
-	$(PULUMI) package gen-sdk bin/$(PROVIDER) --language python -o ${TMPDIR}
+	$(PULUMI) package gen-sdk ./bin/$(PROVIDER) --language python -o ${TMPDIR}
 	cp README.md ${TMPDIR}/python/
 	cd ${TMPDIR}/python/ && \
 		rm -rf ./bin/ ../python.bin/ && cp -R . ../python.bin && mv ../python.bin ./bin && \
@@ -220,7 +220,7 @@ sdk/python: $(PULUMI) bin/${PROVIDER}
 sdk/nodejs: TMPDIR := $(shell mktemp -d)
 sdk/nodejs: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/nodejs
-	$(PULUMI) package gen-sdk bin/$(PROVIDER) --language nodejs -o ${TMPDIR}
+	$(PULUMI) package gen-sdk ./bin/$(PROVIDER) --language nodejs -o ${TMPDIR}
 	cp README.md LICENSE ${TMPDIR}/nodejs
 	cd ${TMPDIR}/nodejs/ && \
 		yarn install && \
@@ -232,7 +232,7 @@ sdk/go: TMPDIR := $(shell mktemp -d)
 sdk/go: PATH := "$(WORKING_DIR)/bin:$(PATH)"
 sdk/go: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/go
-	PATH=$(PATH) $(PULUMI) package gen-sdk bin/$(PROVIDER) --language go -o ${TMPDIR}
+	PATH=$(PATH) $(PULUMI) package gen-sdk ./bin/$(PROVIDER) --language go -o ${TMPDIR}
 	cp go.mod ${TMPDIR}/go/dockerbuild/go.mod
 	cd ${TMPDIR}/go/dockerbuild && \
 		go mod edit -module=github.com/pulumi/pulumi-${PACK}/${PACKDIR}/go/dockerbuild && \
@@ -242,7 +242,7 @@ sdk/go: $(PULUMI) bin/${PROVIDER}
 sdk/dotnet: TMPDIR := $(shell mktemp -d)
 sdk/dotnet: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/dotnet
-	$(PULUMI) package gen-sdk bin/${PROVIDER} --language dotnet -o ${TMPDIR}
+	$(PULUMI) package gen-sdk ./bin/${PROVIDER} --language dotnet -o ${TMPDIR}
 	cd ${TMPDIR}/dotnet/ && \
 		echo "$(VERSION_GENERIC)" > version.txt && \
 		dotnet build
@@ -252,7 +252,7 @@ sdk/java: PACKAGE_VERSION := $(shell pulumictl convert-version --language generi
 sdk/java: TMPDIR := $(shell mktemp -d)
 sdk/java: $(PULUMI) bin/${PROVIDER}
 	rm -rf sdk/java
-	$(PULUMI) package gen-sdk --language java bin/${PROVIDER} -o ${TMPDIR}
+	$(PULUMI) package gen-sdk --language java ./bin/${PROVIDER} -o ${TMPDIR}
 	cd ${TMPDIR}/java/ && gradle --console=plain build
 	mv -f ${TMPDIR}/java ${WORKING_DIR}/sdk/.
 
