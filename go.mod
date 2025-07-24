@@ -19,11 +19,11 @@ require (
 	github.com/pulumi/pulumi-go-provider v1.1.0
 	github.com/pulumi/pulumi-java/pkg v1.16.0
 	github.com/pulumi/pulumi-yaml v1.21.2
-	github.com/pulumi/pulumi/pkg/v3 v3.183.1-0.20250718110245-a8f88047ab64
+	github.com/pulumi/pulumi/pkg/v3 v3.185.0
 	github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3 v3.0.0-20250718110245-a8f88047ab64
 	github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3 v3.0.0-20250718110245-a8f88047ab64
 	github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3 v3.0.0-20250718110245-a8f88047ab64
-	github.com/pulumi/pulumi/sdk/v3 v3.184.0
+	github.com/pulumi/pulumi/sdk/v3 v3.185.0
 	github.com/regclient/regclient v0.7.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.14.0
@@ -462,7 +462,7 @@ require (
 	golang.org/x/exp/typeparams v0.0.0-20240314144324-c7f7c6466f7f // indirect
 	golang.org/x/mod v0.25.0 // indirect
 	golang.org/x/net v0.40.0 // indirect
-	golang.org/x/oauth2 v0.27.0 // indirect
+	golang.org/x/oauth2 v0.30.0 // indirect
 	golang.org/x/sync v0.15.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/term v0.32.0 // indirect
