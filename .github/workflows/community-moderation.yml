@@ -7,6 +7,12 @@ jobs:
     name: warn_codegen
     runs-on: ubuntu-latest
     steps:
+    - name: Testing duplicate JSON key behavior
+      shell: bash
+      run: |
+        export JSON='{"FOO": "BAR", "FOO": "BAZ"}'
+        echo ${{ fromJSON($JSON) }}
+
     - name: Checkout Repo
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
