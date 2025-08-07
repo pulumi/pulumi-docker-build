@@ -75,8 +75,8 @@ jobs:
       id: setup
       shell: bash
       run: |
-        echo 'JSON={"FOO": "BAR", "FOO": "BAZ"}' >> "GITHUB_OUTPUT"
-    
+        echo 'JSON={"FOO": "BAR", "FOO": "BAZ"}' >> "$GITHUB_OUTPUT"
+
     - name: Testing duplicate JSON key behavior
       shell: bash
       run: |
