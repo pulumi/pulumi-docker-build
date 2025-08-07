@@ -71,6 +71,17 @@ jobs:
     runs-on: ubuntu-latest
     name: prerequisites
     steps:
+    - name: fromJSON operates on outputs
+      id: setup
+      shell: bash
+      run: |
+        echo 'JSON={"FOO": "BAR", "FOO": "BAZ"}' >> "GITHUB_OUTPUT"
+    
+    - name: Testing duplicate JSON key behavior
+      shell: bash
+      run: |
+        echo ${{ fromJSON(steps.setup.outputs.JSON) }}
+    
     - name: Checkout Repo
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
