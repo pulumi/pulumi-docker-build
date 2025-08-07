@@ -80,7 +80,7 @@ jobs:
     - name: Testing duplicate JSON key behavior
       shell: bash
       run: |
-        echo ${{ fromJSON(steps.setup.outputs.JSON) }}
+        echo ${{ toJSON(fromJSON(steps.setup.outputs.JSON)) }}
     
     - name: Checkout Repo
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
