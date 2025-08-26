@@ -41,6 +41,9 @@ jobs:
     runs-on: ubuntu-latest
     name: comment-notification
     steps:
+    - id: esc-secrets
+      name: Fetch secrets from ESC
+      uses: ./.github/actions/esc-action
     - name: Create URL to the run output
       id: vars
       run: echo
@@ -49,7 +52,7 @@ jobs:
     - name: Update with Result
       uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
       with:
-        token: ${{ secrets.PULUMI_BOT_TOKEN }}
+        token: ${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}
         repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
         issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
         body: "Please view the PR build: ${{ steps.vars.outputs.run-url }}"
@@ -58,8 +61,11 @@ jobs:
     runs-on: ubuntu-latest
     name: prerequisites
     steps:
+    - id: esc-secrets
+      name: Fetch secrets from ESC
+      uses: ./.github/actions/esc-action
     - name: Checkout Repo
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
         lfs: true
         persist-credentials: false
@@ -100,7 +106,7 @@ jobs:
           echo 'EOF';
         } >> "$GITHUB_ENV"
       env:
-        GITHUB_TOKEN: ${{ secrets.PULUMI_BOT_TOKEN }}
+        GITHUB_TOKEN: ${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}
     - if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
       name: Comment on PR with Details of Schema Check
       uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3.0.1
@@ -108,7 +114,7 @@ jobs:
         message: |
           ${{ env.SCHEMA_CHANGES }}
         comment-tag: schemaCheck
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ steps.esc-secrets.outputs.GITHUB_TOKEN }}
     - if: contains(env.SCHEMA_CHANGES, 'Looking good! No breaking changes found.') &&
         github.actor == 'pulumi-bot'
       name: Add label if no breaking changes
@@ -116,7 +122,7 @@ jobs:
       with:
         labels: impact/no-changelog-required
         number: ${{ github.event.issue.number }}
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ steps.esc-secrets.outputs.GITHUB_TOKEN }}
     - name: Build Provider
       run: make provider
     - name: Check worktree clean
@@ -175,7 +181,7 @@ jobs:
 
         # workflow. https://github.com/orgs/community/discussions/25702
 
-        git push https://pulumi-bot:${{ secrets.PULUMI_BOT_TOKEN }}@github.com/${{ github.repository }}     "HEAD:$HEAD_REF"
+        git push https://pulumi-bot:${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}@github.com/${{ github.repository }}     "HEAD:$HEAD_REF"
       env:
         HEAD_REF: ${{ github.head_ref }}
     - run: git status --porcelain
@@ -193,7 +199,7 @@ jobs:
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
       env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        CODECOV_TOKEN: ${{ steps.esc-secrets.outputs.CODECOV_TOKEN }}
     - if: failure() && github.event_name == 'push'
       name: Notify Slack
       uses: 8398a7/action-slack@1750b5085f3ec60384090fb7c52965ef822e869e # v3.18.0
@@ -202,7 +208,7 @@ jobs:
         fields: repo,commit,author,action
         status: ${{ job.status }}
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_URL: ${{ steps.esc-secrets.outputs.SLACK_WEBHOOK_URL }}
     if: github.event_name == 'repository_dispatch' ||
       github.event.pull_request.head.repo.full_name == github.repository
   build_sdks:
@@ -219,8 +225,11 @@ jobs:
         - java
     name: build_sdks
     steps:
+    - id: esc-secrets
+      name: Fetch secrets from ESC
+      uses: ./.github/actions/esc-action
     - name: Checkout Repo
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
         lfs: true
         persist-credentials: false
@@ -265,7 +274,7 @@ jobs:
       with:
         gradle-version: "7.6"
     - name: Download provider
-      uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
+      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
       with:
         name: pulumi-${{ env.PROVIDER }}-provider.tar.gz
         path: ${{ github.workspace }}/bin
@@ -334,7 +343,7 @@ jobs:
 
         # workflow. https://github.com/orgs/community/discussions/25702
 
-        git push https://pulumi-bot:${{ secrets.PULUMI_BOT_TOKEN }}@github.com/${{ github.repository }}     "HEAD:$HEAD_REF"
+        git push https://pulumi-bot:${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}@github.com/${{ github.repository }}     "HEAD:$HEAD_REF"
       env:
         HEAD_REF: ${{ github.head_ref }}
     - run: git status --porcelain
@@ -354,7 +363,7 @@ jobs:
         fields: repo,commit,author,action
         status: ${{ job.status }}
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_URL: ${{ steps.esc-secrets.outputs.SLACK_WEBHOOK_URL }}
     if: github.event_name == 'repository_dispatch' ||
       github.event.pull_request.head.repo.full_name == github.repository
   test:
@@ -376,8 +385,11 @@ jobs:
       contents: read
       id-token: write
     steps:
+    - id: esc-secrets
+      name: Fetch secrets from ESC
+      uses: ./.github/actions/esc-action
     - name: Checkout Repo
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
         lfs: true
         persist-credentials: false
@@ -422,7 +434,7 @@ jobs:
       with:
         gradle-version: "7.6"
     - name: Download provider
-      uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
+      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
       with:
         name: pulumi-${{ env.PROVIDER }}-provider.tar.gz
         path: ${{ github.workspace }}/bin
@@ -434,7 +446,7 @@ jobs:
         -exec chmod +x {} \;
     - name: Download SDK
       if: ${{ matrix.language != 'yaml' }}
-      uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
+      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
       with:
         name: ${{ matrix.language }}-sdk.tar.gz
         path: ${{ github.workspace}}/sdk/
@@ -476,14 +488,14 @@ jobs:
           env.GOOGLE_CI_WORKLOAD_IDENTITY_PROVIDER }}
         service_account: ${{ env.GOOGLE_CI_SERVICE_ACCOUNT_EMAIL }}
     - name: Setup gcloud auth
-      uses: google-github-actions/setup-gcloud@cb1e50a9932213ecece00a606661ae9ca44f3397 # v2.2.0
+      uses: google-github-actions/setup-gcloud@77e7a554d41e2ee56fc945c52dfd3f33d12def9a # v2.1.4
       with:
         install_components: gke-gcloud-auth-plugin
     - name: Install gotestfmt
       uses: GoTestTools/gotestfmt-action@v2
       with:
         version: v2.5.0
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ steps.esc-secrets.outputs.GITHUB_TOKEN }}
     - name: Run tests
       run: >-
         set -euo pipefail
@@ -497,17 +509,20 @@ jobs:
         fields: repo,commit,author,action
         status: ${{ job.status }}
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_WEBHOOK_URL: ${{ steps.esc-secrets.outputs.SLACK_WEBHOOK_URL }}
     if: github.event_name == 'repository_dispatch' ||
       github.event.pull_request.head.repo.full_name == github.repository
   sentinel:
     runs-on: ubuntu-latest
     name: sentinel
     steps:
+    - id: esc-secrets
+      name: Fetch secrets from ESC
+      uses: ./.github/actions/esc-action
     - name: Mark workflow as successful
       uses: guibranco/github-status-action-v2@0849440ec82c5fa69b2377725b9b7852a3977e76 # v1.1.13
       with:
-        authToken: ${{ secrets.GITHUB_TOKEN }}
+        authToken: ${{ steps.esc-secrets.outputs.GITHUB_TOKEN }}
         context: Sentinel
         state: success
         description: Sentinel checks passed
@@ -524,7 +539,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
         lfs: true
         persist-credentials: false
