@@ -1,8 +1,14 @@
 ## Unreleased
 
+## 0.0.13 (2025-08-27)
+
 ### Changed
 
 - Docker Build Cloud and `exec` errors are more helpful. (https://github.com/pulumi/pulumi-docker-build/issues/549)
+
+### Fixed
+
+- The provider is no longer replaced on version changes. (https://github.com/pulumi/pulumi-docker-build/issues/581)
 
 ## 0.0.12 (2025-05-16)
 
