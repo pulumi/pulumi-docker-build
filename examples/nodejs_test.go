@@ -181,8 +181,9 @@ func TestConfig(t *testing.T) {
 	require.NoError(t, err)
 
 	test := integration.ProgramTestOptions{
-		Dir:          path.Join(cwd, "tests", "config"),
-		Dependencies: []string{"@pulumi/docker-build"},
+		Dir:                    path.Join(cwd, "tests", "config"),
+		Dependencies:           []string{"@pulumi/docker-build"},
+		SkipEmptyPreviewUpdate: true,
 	}
 
 	integration.ProgramTest(t, &test)

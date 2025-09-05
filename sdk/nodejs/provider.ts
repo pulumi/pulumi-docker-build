@@ -25,7 +25,7 @@ export class Provider extends pulumi.ProviderResource {
     /**
      * The build daemon's address.
      */
-    public readonly host!: pulumi.Output<string | undefined>;
+    declare public readonly host: pulumi.Output<string | undefined>;
 
     /**
      * Create a Provider resource with the given unique name, arguments, and options.
@@ -38,8 +38,8 @@ export class Provider extends pulumi.ProviderResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         {
-            resourceInputs["host"] = (args ? args.host : undefined) ?? (utilities.getEnv("DOCKER_HOST") || "");
-            resourceInputs["registries"] = pulumi.output(args ? args.registries : undefined).apply(JSON.stringify);
+            resourceInputs["host"] = (args?.host) ?? (utilities.getEnv("DOCKER_HOST") || "");
+            resourceInputs["registries"] = pulumi.output(args?.registries).apply(JSON.stringify);
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         super(Provider.__pulumiType, name, resourceInputs, opts);
