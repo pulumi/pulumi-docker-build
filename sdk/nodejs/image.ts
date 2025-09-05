@@ -501,7 +501,7 @@ export class Image extends pulumi.CustomResource {
      *
      * Equivalent to Docker's `--add-host` flag.
      */
-    public readonly addHosts!: pulumi.Output<string[] | undefined>;
+    declare public readonly addHosts: pulumi.Output<string[] | undefined>;
     /**
      * `ARG` names and values to set during the build.
      *
@@ -513,7 +513,7 @@ export class Image extends pulumi.CustomResource {
      *
      * Equivalent to Docker's `--build-arg` flag.
      */
-    public readonly buildArgs!: pulumi.Output<{[key: string]: string} | undefined>;
+    declare public readonly buildArgs: pulumi.Output<{[key: string]: string} | undefined>;
     /**
      * Setting this to `false` will always skip image builds during previews,
      * and setting it to `true` will always build images during previews.
@@ -527,35 +527,35 @@ export class Image extends pulumi.CustomResource {
      * Defaults to `true` as a safeguard against broken images merging as part
      * of CI pipelines.
      */
-    public readonly buildOnPreview!: pulumi.Output<boolean | undefined>;
+    declare public readonly buildOnPreview: pulumi.Output<boolean | undefined>;
     /**
      * Builder configuration.
      */
-    public readonly builder!: pulumi.Output<outputs.BuilderConfig | undefined>;
+    declare public readonly builder: pulumi.Output<outputs.BuilderConfig | undefined>;
     /**
      * Cache export configuration.
      *
      * Equivalent to Docker's `--cache-from` flag.
      */
-    public readonly cacheFrom!: pulumi.Output<outputs.CacheFrom[] | undefined>;
+    declare public readonly cacheFrom: pulumi.Output<outputs.CacheFrom[] | undefined>;
     /**
      * Cache import configuration.
      *
      * Equivalent to Docker's `--cache-to` flag.
      */
-    public readonly cacheTo!: pulumi.Output<outputs.CacheTo[] | undefined>;
+    declare public readonly cacheTo: pulumi.Output<outputs.CacheTo[] | undefined>;
     /**
      * Build context settings. Defaults to the current directory.
      *
      * Equivalent to Docker's `PATH | URL | -` positional argument.
      */
-    public readonly context!: pulumi.Output<outputs.BuildContext | undefined>;
+    declare public readonly context: pulumi.Output<outputs.BuildContext | undefined>;
     /**
      * A preliminary hash of the image's build context.
      *
      * Pulumi uses this to determine if an image _may_ need to be re-built.
      */
-    public /*out*/ readonly contextHash!: pulumi.Output<string>;
+    declare public /*out*/ readonly contextHash: pulumi.Output<string>;
     /**
      * A SHA256 digest of the image if it was exported to a registry or
      * elsewhere.
@@ -565,13 +565,13 @@ export class Image extends pulumi.CustomResource {
      * Registry images can be referenced precisely as `<tag>@<digest>`. The
      * `ref` output provides one such reference as a convenience.
      */
-    public /*out*/ readonly digest!: pulumi.Output<string>;
+    declare public /*out*/ readonly digest: pulumi.Output<string>;
     /**
      * Dockerfile settings.
      *
      * Equivalent to Docker's `--file` flag.
      */
-    public readonly dockerfile!: pulumi.Output<outputs.Dockerfile | undefined>;
+    declare public readonly dockerfile: pulumi.Output<outputs.Dockerfile | undefined>;
     /**
      * Use `exec` mode to build this image.
      *
@@ -594,7 +594,7 @@ export class Image extends pulumi.CustomResource {
      * are temporarily written to disk in order to provide them to the
      * `docker-buildx` binary.
      */
-    public readonly exec!: pulumi.Output<boolean | undefined>;
+    declare public readonly exec: pulumi.Output<boolean | undefined>;
     /**
      * Controls where images are persisted after building.
      *
@@ -606,13 +606,13 @@ export class Image extends pulumi.CustomResource {
      *
      * Equivalent to Docker's `--output` flag.
      */
-    public readonly exports!: pulumi.Output<outputs.Export[] | undefined>;
+    declare public readonly exports: pulumi.Output<outputs.Export[] | undefined>;
     /**
      * Attach arbitrary key/value metadata to the image.
      *
      * Equivalent to Docker's `--label` flag.
      */
-    public readonly labels!: pulumi.Output<{[key: string]: string} | undefined>;
+    declare public readonly labels: pulumi.Output<{[key: string]: string} | undefined>;
     /**
      * When `true` the build will automatically include a `docker` export.
      *
@@ -620,7 +620,7 @@ export class Image extends pulumi.CustomResource {
      *
      * Equivalent to Docker's `--load` flag.
      */
-    public readonly load!: pulumi.Output<boolean | undefined>;
+    declare public readonly load: pulumi.Output<boolean | undefined>;
     /**
      * Set the network mode for `RUN` instructions. Defaults to `default`.
      *
@@ -628,25 +628,25 @@ export class Image extends pulumi.CustomResource {
      *
      * Equivalent to Docker's `--network` flag.
      */
-    public readonly network!: pulumi.Output<enums.NetworkMode | undefined>;
+    declare public readonly network: pulumi.Output<enums.NetworkMode | undefined>;
     /**
      * Do not import cache manifests when building the image.
      *
      * Equivalent to Docker's `--no-cache` flag.
      */
-    public readonly noCache!: pulumi.Output<boolean | undefined>;
+    declare public readonly noCache: pulumi.Output<boolean | undefined>;
     /**
      * Set target platform(s) for the build. Defaults to the host's platform.
      *
      * Equivalent to Docker's `--platform` flag.
      */
-    public readonly platforms!: pulumi.Output<enums.Platform[] | undefined>;
+    declare public readonly platforms: pulumi.Output<enums.Platform[] | undefined>;
     /**
      * Always pull referenced images.
      *
      * Equivalent to Docker's `--pull` flag.
      */
-    public readonly pull!: pulumi.Output<boolean | undefined>;
+    declare public readonly pull: pulumi.Output<boolean | undefined>;
     /**
      * When `true` the build will automatically include a `registry` export.
      *
@@ -654,7 +654,7 @@ export class Image extends pulumi.CustomResource {
      *
      * Equivalent to Docker's `--push` flag.
      */
-    public readonly push!: pulumi.Output<boolean>;
+    declare public readonly push: pulumi.Output<boolean>;
     /**
      * If the image was pushed to any registries then this will contain a
      * single fully-qualified tag including the build's digest.
@@ -671,7 +671,7 @@ export class Image extends pulumi.CustomResource {
      * For more control over tags consumed by downstream resources you should
      * use the `digest` output.
      */
-    public /*out*/ readonly ref!: pulumi.Output<string>;
+    declare public /*out*/ readonly ref: pulumi.Output<string>;
     /**
      * Registry credentials. Required if reading or exporting to private
      * repositories.
@@ -681,7 +681,7 @@ export class Image extends pulumi.CustomResource {
      *
      * Similar to `docker login`.
      */
-    public readonly registries!: pulumi.Output<outputs.Registry[] | undefined>;
+    declare public readonly registries: pulumi.Output<outputs.Registry[] | undefined>;
     /**
      * A mapping of secret names to their corresponding values.
      *
@@ -693,13 +693,13 @@ export class Image extends pulumi.CustomResource {
      *
      * Similar to Docker's `--secret` flag.
      */
-    public readonly secrets!: pulumi.Output<{[key: string]: string} | undefined>;
+    declare public readonly secrets: pulumi.Output<{[key: string]: string} | undefined>;
     /**
      * SSH agent socket or keys to expose to the build.
      *
      * Equivalent to Docker's `--ssh` flag.
      */
-    public readonly ssh!: pulumi.Output<outputs.SSH[] | undefined>;
+    declare public readonly ssh: pulumi.Output<outputs.SSH[] | undefined>;
     /**
      * Name and optionally a tag (format: `name:tag`).
      *
@@ -708,7 +708,7 @@ export class Image extends pulumi.CustomResource {
      *
      * Equivalent to Docker's `--tag` flag.
      */
-    public readonly tags!: pulumi.Output<string[] | undefined>;
+    declare public readonly tags: pulumi.Output<string[] | undefined>;
     /**
      * Set the target build stage(s) to build.
      *
@@ -716,7 +716,7 @@ export class Image extends pulumi.CustomResource {
      *
      * Equivalent to Docker's `--target` flag.
      */
-    public readonly target!: pulumi.Output<string | undefined>;
+    declare public readonly target: pulumi.Output<string | undefined>;
 
     /**
      * Create a Image resource with the given unique name, arguments, and options.
@@ -729,31 +729,31 @@ export class Image extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.push === undefined) && !opts.urn) {
+            if (args?.push === undefined && !opts.urn) {
                 throw new Error("Missing required property 'push'");
             }
-            resourceInputs["addHosts"] = args ? args.addHosts : undefined;
-            resourceInputs["buildArgs"] = args ? args.buildArgs : undefined;
-            resourceInputs["buildOnPreview"] = (args ? args.buildOnPreview : undefined) ?? true;
-            resourceInputs["builder"] = args ? args.builder : undefined;
-            resourceInputs["cacheFrom"] = args ? args.cacheFrom : undefined;
-            resourceInputs["cacheTo"] = args ? args.cacheTo : undefined;
-            resourceInputs["context"] = args ? args.context : undefined;
-            resourceInputs["dockerfile"] = args ? args.dockerfile : undefined;
-            resourceInputs["exec"] = args ? args.exec : undefined;
-            resourceInputs["exports"] = args ? args.exports : undefined;
-            resourceInputs["labels"] = args ? args.labels : undefined;
-            resourceInputs["load"] = args ? args.load : undefined;
-            resourceInputs["network"] = (args ? args.network : undefined) ?? "default";
-            resourceInputs["noCache"] = args ? args.noCache : undefined;
-            resourceInputs["platforms"] = args ? args.platforms : undefined;
-            resourceInputs["pull"] = args ? args.pull : undefined;
-            resourceInputs["push"] = args ? args.push : undefined;
-            resourceInputs["registries"] = args ? args.registries : undefined;
-            resourceInputs["secrets"] = args ? args.secrets : undefined;
-            resourceInputs["ssh"] = args ? args.ssh : undefined;
-            resourceInputs["tags"] = args ? args.tags : undefined;
-            resourceInputs["target"] = args ? args.target : undefined;
+            resourceInputs["addHosts"] = args?.addHosts;
+            resourceInputs["buildArgs"] = args?.buildArgs;
+            resourceInputs["buildOnPreview"] = (args?.buildOnPreview) ?? true;
+            resourceInputs["builder"] = args?.builder;
+            resourceInputs["cacheFrom"] = args?.cacheFrom;
+            resourceInputs["cacheTo"] = args?.cacheTo;
+            resourceInputs["context"] = args?.context;
+            resourceInputs["dockerfile"] = args?.dockerfile;
+            resourceInputs["exec"] = args?.exec;
+            resourceInputs["exports"] = args?.exports;
+            resourceInputs["labels"] = args?.labels;
+            resourceInputs["load"] = args?.load;
+            resourceInputs["network"] = (args?.network) ?? "default";
+            resourceInputs["noCache"] = args?.noCache;
+            resourceInputs["platforms"] = args?.platforms;
+            resourceInputs["pull"] = args?.pull;
+            resourceInputs["push"] = args?.push;
+            resourceInputs["registries"] = args?.registries;
+            resourceInputs["secrets"] = args?.secrets;
+            resourceInputs["ssh"] = args?.ssh;
+            resourceInputs["tags"] = args?.tags;
+            resourceInputs["target"] = args?.target;
             resourceInputs["contextHash"] = undefined /*out*/;
             resourceInputs["digest"] = undefined /*out*/;
             resourceInputs["ref"] = undefined /*out*/;
