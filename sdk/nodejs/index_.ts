@@ -113,27 +113,27 @@ export class Index extends pulumi.CustomResource {
      *
      * Defaults to `true`.
      */
-    public readonly push!: pulumi.Output<boolean | undefined>;
+    declare public readonly push: pulumi.Output<boolean | undefined>;
     /**
      * The pushed tag with digest.
      *
      * Identical to the tag if the index was not pushed.
      */
-    public /*out*/ readonly ref!: pulumi.Output<string>;
+    declare public /*out*/ readonly ref: pulumi.Output<string>;
     /**
      * Authentication for the registry where the tagged index will be pushed.
      *
      * Credentials can also be included with the provider's configuration.
      */
-    public readonly registry!: pulumi.Output<outputs.Registry | undefined>;
+    declare public readonly registry: pulumi.Output<outputs.Registry | undefined>;
     /**
      * Existing images to include in the index.
      */
-    public readonly sources!: pulumi.Output<string[]>;
+    declare public readonly sources: pulumi.Output<string[]>;
     /**
      * The tag to apply to the index.
      */
-    public readonly tag!: pulumi.Output<string>;
+    declare public readonly tag: pulumi.Output<string>;
 
     /**
      * Create a Index resource with the given unique name, arguments, and options.
@@ -146,16 +146,16 @@ export class Index extends pulumi.CustomResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         if (!opts.id) {
-            if ((!args || args.sources === undefined) && !opts.urn) {
+            if (args?.sources === undefined && !opts.urn) {
                 throw new Error("Missing required property 'sources'");
             }
-            if ((!args || args.tag === undefined) && !opts.urn) {
+            if (args?.tag === undefined && !opts.urn) {
                 throw new Error("Missing required property 'tag'");
             }
-            resourceInputs["push"] = (args ? args.push : undefined) ?? true;
-            resourceInputs["registry"] = args ? args.registry : undefined;
-            resourceInputs["sources"] = args ? args.sources : undefined;
-            resourceInputs["tag"] = args ? args.tag : undefined;
+            resourceInputs["push"] = (args?.push) ?? true;
+            resourceInputs["registry"] = args?.registry;
+            resourceInputs["sources"] = args?.sources;
+            resourceInputs["tag"] = args?.tag;
             resourceInputs["ref"] = undefined /*out*/;
         } else {
             resourceInputs["push"] = undefined /*out*/;
