@@ -38,8 +38,8 @@ jobs:
     runs-on: ubuntu-latest
     name: comment-notification
     permissions:
-      contents: write
       id-token: write # For ESC secrets.
+      pull-requests: write # For comment.
     steps:
     - name: Checkout Repo
       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -72,7 +72,6 @@ jobs:
     runs-on: ubuntu-latest
     name: prerequisites
     permissions:
-      contents: write
       id-token: write # For ESC secrets.
       pull-requests: write # For schema check comment.
     steps:
@@ -252,7 +251,7 @@ jobs:
         - java
     name: build_sdks
     permissions:
-      contents: write
+      contents: read
       id-token: write # For ESC secrets.
     steps:
     - name: Checkout Repo
@@ -288,7 +287,7 @@ jobs:
     - name: Install Pulumi CLI
       uses: pulumi/actions@cc7494be991dba0978f7ffafaf995b0449a0998e # v6.5.0
     - name: Setup Node
-      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
       with:
         node-version: ${{ env.NODEVERSION }}
         registry-url: https://registry.npmjs.org
@@ -455,7 +454,7 @@ jobs:
     - name: Install Pulumi CLI
       uses: pulumi/actions@cc7494be991dba0978f7ffafaf995b0449a0998e # v6.5.0
     - name: Setup Node
-      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
       with:
         node-version: ${{ env.NODEVERSION }}
         registry-url: https://registry.npmjs.org
