@@ -1,5 +1,11 @@
 ## Unreleased
 
+## 0.0.14 (2025-09-30)
+
+### Fixed
+
+- A warning is no longer emitted for the reserved `__internal` key. (https://github.com/pulumi/pulumi-docker-build/issues/579)
+
 ## 0.0.13 (2025-08-27)
 
 ### Changed
