@@ -1,7 +1,0 @@
-FROM --platform=$BUILDPLATFORM alpine as build
-RUN echo ${BUILDPLATFORM} > buildplatform
-RUN echo ${TARGETPLATFORM} > targetplatform
-
-FROM build
-RUN cat buildplatform
-RUN cat targetplatform
