@@ -17,8 +17,8 @@ WORKING_DIR      := $(shell pwd)
 EXAMPLES_DIR     := ${WORKING_DIR}/examples/yaml
 TESTPARALLELISM  := 4
 
-PULUMI           := bin/pulumi
-GOGLANGCILINT    := bin/golangci-lint
+PULUMI           := pulumi
+GOGLANGCILINT    := golangci-lint
 
 # Override during CI using `make [TARGET] PROVIDER_VERSION=""` or by setting a PROVIDER_VERSION environment variable
 # Local & branch builds will just used this fixed default version unless specified
@@ -84,16 +84,12 @@ examples/java: ${PULUMI} bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yam
 	@git checkout examples/java/pom.xml
 
 ${PULUMI}: go.sum
-	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/pkg/v3/cmd/pulumi
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/sdk/go/pulumi-language-go/v3
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/sdk/nodejs/cmd/pulumi-language-nodejs/v3
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi/sdk/python/cmd/pulumi-language-python/v3
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi-java/pkg/cmd/pulumi-language-java
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3
 	GOBIN=${WORKING_DIR}/bin go install github.com/pulumi/pulumi-yaml/cmd/pulumi-converter-yaml
-
-${GOGLANGCILINT}: go.sum
-	GOBIN=${WORKING_DIR}/bin go install github.com/golangci/golangci-lint/cmd/golangci-lint@8b37f14
 
 define pulumi_login
     export PULUMI_CONFIG_PASSPHRASE=asdfqwerty1234; \
@@ -140,7 +136,7 @@ build:: provider sdk/dotnet sdk/go sdk/nodejs sdk/python sdk/java ${SCHEMA_PATH}
 only_build:: build
 
 .PHONY: lint
-lint: ${GOGLANGCILINT}
+lint:
 	${GOGLANGCILINT} run --fix -c .golangci.yml
 
 install:: install_nodejs_sdk install_dotnet_sdk
