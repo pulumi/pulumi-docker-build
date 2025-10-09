@@ -155,25 +155,22 @@ type CacheFromGitHubActions struct {
 
 // Annotate sets docstrings on CacheFromGitHubActions.
 func (c *CacheFromGitHubActions) Annotate(a infer.Annotator) {
-	a.SetDefault(&c.URL, "", "ACTIONS_CACHE_URL")
-	a.SetDefault(&c.Token, "", "ACTIONS_RUNTIME_TOKEN")
 	a.SetDefault(&c.Scope, "buildkit")
 
 	a.Describe(&c.URL, dedent(`
 		The cache server URL to use for artifacts.
 
-		Defaults to "$ACTIONS_CACHE_URL", although a separate action like
-		"crazy-max/ghaction-github-runtime" is recommended to expose this
-		environment variable to your jobs.
+		Not set by default. If desired, set to "$ACTIONS_CACHE_URL", although
+		a separate action like "crazy-max/ghaction-github-runtime" is recommended
+		to expose this environment variable to your jobs.
 	`))
 	a.Describe(&c.Token, dedent(`
 		The GitHub Actions token to use. This is not a personal access tokens
 		and is typically generated automatically as part of each job.
 
-		Defaults to "$ACTIONS_RUNTIME_TOKEN", although a separate action like
-		"crazy-max/ghaction-github-runtime" is recommended to expose this
-		environment variable to your jobs.
-
+		Not set by default. If desired, set to "$ACTIONS_RUNTIME_TOKEN", although
+		a separate action like "crazy-max/ghaction-github-runtime" is recommended
+		to expose this environment variable to your jobs.
 	`))
 	a.Describe(&c.Scope, dedent(`
 		The scope to use for cache keys. Defaults to "buildkit".

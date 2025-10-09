@@ -163,24 +163,12 @@
         },
         "token": {
           "type": "string",
-          "description": "The GitHub Actions token to use. This is not a personal access tokens\nand is typically generated automatically as part of each job.\n\nDefaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
-          "default": "",
-          "defaultInfo": {
-            "environment": [
-              "ACTIONS_RUNTIME_TOKEN"
-            ]
-          },
+          "description": "The GitHub Actions token to use. This is not a personal access tokens\nand is typically generated automatically as part of each job.\n\nNot set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although\na separate action like `crazy-max/ghaction-github-runtime` is recommended\nto expose this environment variable to your jobs.",
           "secret": true
         },
         "url": {
           "type": "string",
-          "description": "The cache server URL to use for artifacts.\n\nDefaults to `$ACTIONS_CACHE_URL`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
-          "default": "",
-          "defaultInfo": {
-            "environment": [
-              "ACTIONS_CACHE_URL"
-            ]
-          }
+          "description": "The cache server URL to use for artifacts.\n\nNot set by default. If desired, set to `$ACTIONS_CACHE_URL`, although\na separate action like `crazy-max/ghaction-github-runtime` is recommended\nto expose this environment variable to your jobs."
         }
       },
       "type": "object"
@@ -388,24 +376,12 @@
         },
         "token": {
           "type": "string",
-          "description": "The GitHub Actions token to use. This is not a personal access tokens\nand is typically generated automatically as part of each job.\n\nDefaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
-          "default": "",
-          "defaultInfo": {
-            "environment": [
-              "ACTIONS_RUNTIME_TOKEN"
-            ]
-          },
+          "description": "The GitHub Actions token to use. This is not a personal access tokens\nand is typically generated automatically as part of each job.\n\nNot set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although\na separate action like `crazy-max/ghaction-github-runtime` is recommended\nto expose this environment variable to your jobs.",
           "secret": true
         },
         "url": {
           "type": "string",
-          "description": "The cache server URL to use for artifacts.\n\nDefaults to `$ACTIONS_CACHE_URL`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
-          "default": "",
-          "defaultInfo": {
-            "environment": [
-              "ACTIONS_CACHE_URL"
-            ]
-          }
+          "description": "The cache server URL to use for artifacts.\n\nNot set by default. If desired, set to `$ACTIONS_CACHE_URL`, although\na separate action like `crazy-max/ghaction-github-runtime` is recommended\nto expose this environment variable to your jobs."
         }
       },
       "type": "object"
