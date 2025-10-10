@@ -843,15 +843,15 @@ type CacheFromGitHubActions struct {
 	// The GitHub Actions token to use. This is not a personal access tokens
 	// and is typically generated automatically as part of each job.
 	//
-	// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
+	// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+	// to expose this environment variable to your jobs.
 	Token *string `pulumi:"token"`
 	// The cache server URL to use for artifacts.
 	//
-	// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
+	// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+	// to expose this environment variable to your jobs.
 	Url *string `pulumi:"url"`
 }
 
@@ -864,18 +864,6 @@ func (val *CacheFromGitHubActions) Defaults() *CacheFromGitHubActions {
 	if tmp.Scope == nil {
 		scope_ := "buildkit"
 		tmp.Scope = &scope_
-	}
-	if tmp.Token == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_TOKEN"); d != nil {
-			token_ := d.(string)
-			tmp.Token = &token_
-		}
-	}
-	if tmp.Url == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_CACHE_URL"); d != nil {
-			url_ := d.(string)
-			tmp.Url = &url_
-		}
 	}
 	return &tmp
 }
@@ -900,15 +888,15 @@ type CacheFromGitHubActionsArgs struct {
 	// The GitHub Actions token to use. This is not a personal access tokens
 	// and is typically generated automatically as part of each job.
 	//
-	// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
+	// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+	// to expose this environment variable to your jobs.
 	Token pulumi.StringPtrInput `pulumi:"token"`
 	// The cache server URL to use for artifacts.
 	//
-	// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
+	// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+	// to expose this environment variable to your jobs.
 	Url pulumi.StringPtrInput `pulumi:"url"`
 }
 
@@ -920,16 +908,6 @@ func (val *CacheFromGitHubActionsArgs) Defaults() *CacheFromGitHubActionsArgs {
 	tmp := *val
 	if tmp.Scope == nil {
 		tmp.Scope = pulumi.StringPtr("buildkit")
-	}
-	if tmp.Token == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_TOKEN"); d != nil {
-			tmp.Token = pulumi.StringPtr(d.(string))
-		}
-	}
-	if tmp.Url == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_CACHE_URL"); d != nil {
-			tmp.Url = pulumi.StringPtr(d.(string))
-		}
 	}
 	return &tmp
 }
@@ -1039,18 +1017,18 @@ func (o CacheFromGitHubActionsOutput) Scope() pulumi.StringPtrOutput {
 // The GitHub Actions token to use. This is not a personal access tokens
 // and is typically generated automatically as part of each job.
 //
-// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-// `crazy-max/ghaction-github-runtime` is recommended to expose this
-// environment variable to your jobs.
+// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+// to expose this environment variable to your jobs.
 func (o CacheFromGitHubActionsOutput) Token() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v CacheFromGitHubActions) *string { return v.Token }).(pulumi.StringPtrOutput)
 }
 
 // The cache server URL to use for artifacts.
 //
-// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-// `crazy-max/ghaction-github-runtime` is recommended to expose this
-// environment variable to your jobs.
+// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+// to expose this environment variable to your jobs.
 func (o CacheFromGitHubActionsOutput) Url() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v CacheFromGitHubActions) *string { return v.Url }).(pulumi.StringPtrOutput)
 }
@@ -1101,9 +1079,9 @@ func (o CacheFromGitHubActionsPtrOutput) Scope() pulumi.StringPtrOutput {
 // The GitHub Actions token to use. This is not a personal access tokens
 // and is typically generated automatically as part of each job.
 //
-// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-// `crazy-max/ghaction-github-runtime` is recommended to expose this
-// environment variable to your jobs.
+// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+// to expose this environment variable to your jobs.
 func (o CacheFromGitHubActionsPtrOutput) Token() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *CacheFromGitHubActions) *string {
 		if v == nil {
@@ -1115,9 +1093,9 @@ func (o CacheFromGitHubActionsPtrOutput) Token() pulumi.StringPtrOutput {
 
 // The cache server URL to use for artifacts.
 //
-// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-// `crazy-max/ghaction-github-runtime` is recommended to expose this
-// environment variable to your jobs.
+// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+// to expose this environment variable to your jobs.
 func (o CacheFromGitHubActionsPtrOutput) Url() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *CacheFromGitHubActions) *string {
 		if v == nil {
@@ -2374,15 +2352,15 @@ type CacheToGitHubActions struct {
 	// The GitHub Actions token to use. This is not a personal access tokens
 	// and is typically generated automatically as part of each job.
 	//
-	// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
+	// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+	// to expose this environment variable to your jobs.
 	Token *string `pulumi:"token"`
 	// The cache server URL to use for artifacts.
 	//
-	// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
+	// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+	// to expose this environment variable to your jobs.
 	Url *string `pulumi:"url"`
 }
 
@@ -2403,18 +2381,6 @@ func (val *CacheToGitHubActions) Defaults() *CacheToGitHubActions {
 	if tmp.Scope == nil {
 		scope_ := "buildkit"
 		tmp.Scope = &scope_
-	}
-	if tmp.Token == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_TOKEN"); d != nil {
-			token_ := d.(string)
-			tmp.Token = &token_
-		}
-	}
-	if tmp.Url == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_CACHE_URL"); d != nil {
-			url_ := d.(string)
-			tmp.Url = &url_
-		}
 	}
 	return &tmp
 }
@@ -2443,15 +2409,15 @@ type CacheToGitHubActionsArgs struct {
 	// The GitHub Actions token to use. This is not a personal access tokens
 	// and is typically generated automatically as part of each job.
 	//
-	// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
+	// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+	// to expose this environment variable to your jobs.
 	Token pulumi.StringPtrInput `pulumi:"token"`
 	// The cache server URL to use for artifacts.
 	//
-	// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
+	// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+	// to expose this environment variable to your jobs.
 	Url pulumi.StringPtrInput `pulumi:"url"`
 }
 
@@ -2469,16 +2435,6 @@ func (val *CacheToGitHubActionsArgs) Defaults() *CacheToGitHubActionsArgs {
 	}
 	if tmp.Scope == nil {
 		tmp.Scope = pulumi.StringPtr("buildkit")
-	}
-	if tmp.Token == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_TOKEN"); d != nil {
-			tmp.Token = pulumi.StringPtr(d.(string))
-		}
-	}
-	if tmp.Url == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_CACHE_URL"); d != nil {
-			tmp.Url = pulumi.StringPtr(d.(string))
-		}
 	}
 	return &tmp
 }
@@ -2598,18 +2554,18 @@ func (o CacheToGitHubActionsOutput) Scope() pulumi.StringPtrOutput {
 // The GitHub Actions token to use. This is not a personal access tokens
 // and is typically generated automatically as part of each job.
 //
-// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-// `crazy-max/ghaction-github-runtime` is recommended to expose this
-// environment variable to your jobs.
+// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+// to expose this environment variable to your jobs.
 func (o CacheToGitHubActionsOutput) Token() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v CacheToGitHubActions) *string { return v.Token }).(pulumi.StringPtrOutput)
 }
 
 // The cache server URL to use for artifacts.
 //
-// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-// `crazy-max/ghaction-github-runtime` is recommended to expose this
-// environment variable to your jobs.
+// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+// to expose this environment variable to your jobs.
 func (o CacheToGitHubActionsOutput) Url() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v CacheToGitHubActions) *string { return v.Url }).(pulumi.StringPtrOutput)
 }
@@ -2680,9 +2636,9 @@ func (o CacheToGitHubActionsPtrOutput) Scope() pulumi.StringPtrOutput {
 // The GitHub Actions token to use. This is not a personal access tokens
 // and is typically generated automatically as part of each job.
 //
-// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-// `crazy-max/ghaction-github-runtime` is recommended to expose this
-// environment variable to your jobs.
+// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+// to expose this environment variable to your jobs.
 func (o CacheToGitHubActionsPtrOutput) Token() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *CacheToGitHubActions) *string {
 		if v == nil {
@@ -2694,9 +2650,9 @@ func (o CacheToGitHubActionsPtrOutput) Token() pulumi.StringPtrOutput {
 
 // The cache server URL to use for artifacts.
 //
-// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-// `crazy-max/ghaction-github-runtime` is recommended to expose this
-// environment variable to your jobs.
+// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+// a separate action like `crazy-max/ghaction-github-runtime` is recommended
+// to expose this environment variable to your jobs.
 func (o CacheToGitHubActionsPtrOutput) Url() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *CacheToGitHubActions) *string {
 		if v == nil {
