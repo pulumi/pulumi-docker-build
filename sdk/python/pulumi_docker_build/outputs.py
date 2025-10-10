@@ -305,25 +305,21 @@ class CacheFromGitHubActions(dict):
         :param _builtins.str token: The GitHub Actions token to use. This is not a personal access tokens
                and is typically generated automatically as part of each job.
                
-               Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-               `crazy-max/ghaction-github-runtime` is recommended to expose this
-               environment variable to your jobs.
+               Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+               a separate action like `crazy-max/ghaction-github-runtime` is recommended
+               to expose this environment variable to your jobs.
         :param _builtins.str url: The cache server URL to use for artifacts.
                
-               Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-               `crazy-max/ghaction-github-runtime` is recommended to expose this
-               environment variable to your jobs.
+               Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+               a separate action like `crazy-max/ghaction-github-runtime` is recommended
+               to expose this environment variable to your jobs.
         """
         if scope is None:
             scope = 'buildkit'
         if scope is not None:
             pulumi.set(__self__, "scope", scope)
-        if token is None:
-            token = (_utilities.get_env('ACTIONS_RUNTIME_TOKEN') or '')
         if token is not None:
             pulumi.set(__self__, "token", token)
-        if url is None:
-            url = (_utilities.get_env('ACTIONS_CACHE_URL') or '')
         if url is not None:
             pulumi.set(__self__, "url", url)
 
@@ -345,9 +341,9 @@ class CacheFromGitHubActions(dict):
         The GitHub Actions token to use. This is not a personal access tokens
         and is typically generated automatically as part of each job.
 
-        Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-        `crazy-max/ghaction-github-runtime` is recommended to expose this
-        environment variable to your jobs.
+        Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+        a separate action like `crazy-max/ghaction-github-runtime` is recommended
+        to expose this environment variable to your jobs.
         """
         return pulumi.get(self, "token")
 
@@ -357,9 +353,9 @@ class CacheFromGitHubActions(dict):
         """
         The cache server URL to use for artifacts.
 
-        Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-        `crazy-max/ghaction-github-runtime` is recommended to expose this
-        environment variable to your jobs.
+        Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+        a separate action like `crazy-max/ghaction-github-runtime` is recommended
+        to expose this environment variable to your jobs.
         """
         return pulumi.get(self, "url")
 
@@ -817,14 +813,14 @@ class CacheToGitHubActions(dict):
         :param _builtins.str token: The GitHub Actions token to use. This is not a personal access tokens
                and is typically generated automatically as part of each job.
                
-               Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-               `crazy-max/ghaction-github-runtime` is recommended to expose this
-               environment variable to your jobs.
+               Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+               a separate action like `crazy-max/ghaction-github-runtime` is recommended
+               to expose this environment variable to your jobs.
         :param _builtins.str url: The cache server URL to use for artifacts.
                
-               Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-               `crazy-max/ghaction-github-runtime` is recommended to expose this
-               environment variable to your jobs.
+               Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+               a separate action like `crazy-max/ghaction-github-runtime` is recommended
+               to expose this environment variable to your jobs.
         """
         if ignore_error is None:
             ignore_error = False
@@ -838,12 +834,8 @@ class CacheToGitHubActions(dict):
             scope = 'buildkit'
         if scope is not None:
             pulumi.set(__self__, "scope", scope)
-        if token is None:
-            token = (_utilities.get_env('ACTIONS_RUNTIME_TOKEN') or '')
         if token is not None:
             pulumi.set(__self__, "token", token)
-        if url is None:
-            url = (_utilities.get_env('ACTIONS_CACHE_URL') or '')
         if url is not None:
             pulumi.set(__self__, "url", url)
 
@@ -881,9 +873,9 @@ class CacheToGitHubActions(dict):
         The GitHub Actions token to use. This is not a personal access tokens
         and is typically generated automatically as part of each job.
 
-        Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-        `crazy-max/ghaction-github-runtime` is recommended to expose this
-        environment variable to your jobs.
+        Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+        a separate action like `crazy-max/ghaction-github-runtime` is recommended
+        to expose this environment variable to your jobs.
         """
         return pulumi.get(self, "token")
 
@@ -893,9 +885,9 @@ class CacheToGitHubActions(dict):
         """
         The cache server URL to use for artifacts.
 
-        Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-        `crazy-max/ghaction-github-runtime` is recommended to expose this
-        environment variable to your jobs.
+        Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+        a separate action like `crazy-max/ghaction-github-runtime` is recommended
+        to expose this environment variable to your jobs.
         """
         return pulumi.get(self, "url")
 

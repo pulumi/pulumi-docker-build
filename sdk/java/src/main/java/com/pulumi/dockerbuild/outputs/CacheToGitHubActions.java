@@ -35,18 +35,18 @@ public final class CacheToGitHubActions {
      * @return The GitHub Actions token to use. This is not a personal access tokens
      * and is typically generated automatically as part of each job.
      * 
-     * Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-     * `crazy-max/ghaction-github-runtime` is recommended to expose this
-     * environment variable to your jobs.
+     * Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+     * a separate action like `crazy-max/ghaction-github-runtime` is recommended
+     * to expose this environment variable to your jobs.
      * 
      */
     private @Nullable String token;
     /**
      * @return The cache server URL to use for artifacts.
      * 
-     * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-     * `crazy-max/ghaction-github-runtime` is recommended to expose this
-     * environment variable to your jobs.
+     * Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+     * a separate action like `crazy-max/ghaction-github-runtime` is recommended
+     * to expose this environment variable to your jobs.
      * 
      */
     private @Nullable String url;
@@ -80,9 +80,9 @@ public final class CacheToGitHubActions {
      * @return The GitHub Actions token to use. This is not a personal access tokens
      * and is typically generated automatically as part of each job.
      * 
-     * Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-     * `crazy-max/ghaction-github-runtime` is recommended to expose this
-     * environment variable to your jobs.
+     * Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
+     * a separate action like `crazy-max/ghaction-github-runtime` is recommended
+     * to expose this environment variable to your jobs.
      * 
      */
     public Optional<String> token() {
@@ -91,9 +91,9 @@ public final class CacheToGitHubActions {
     /**
      * @return The cache server URL to use for artifacts.
      * 
-     * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-     * `crazy-max/ghaction-github-runtime` is recommended to expose this
-     * environment variable to your jobs.
+     * Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
+     * a separate action like `crazy-max/ghaction-github-runtime` is recommended
+     * to expose this environment variable to your jobs.
      * 
      */
     public Optional<String> url() {
