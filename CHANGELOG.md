@@ -2,7 +2,7 @@
 
 ## Changed
 
-- The default value for `CacheFromGitHubActions.URL` and `CacheFromGitHubActions.Token` is now empty. If the previous behaviour is desired, those values can be set to `$ACTIONS_CACHE_URL` and `$ACTIONS_RUNTIME_TOKEN` respectively. (https://github.com/pulumi/pulumi-docker-build/issues/75)
+- Arguments `CacheFromGitHubActions.URL` and `CacheFromGitHubActions.Token` have been removed. If the previous behaviour is desired, those values can be set to `$ACTIONS_CACHE_URL` and `$ACTIONS_RUNTIME_TOKEN` respectively using the `scope` argument. (https://github.com/pulumi/pulumi-docker-build/issues/75)
 
 ## 0.0.14 (2025-09-30)
 

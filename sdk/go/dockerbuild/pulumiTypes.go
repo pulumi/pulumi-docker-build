@@ -834,25 +834,17 @@ func (o CacheFromAzureBlobPtrOutput) SecretAccessKey() pulumi.StringPtrOutput {
 	}).(pulumi.StringPtrOutput)
 }
 
+// Recommended for use with GitHub Actions workflows.
+//
+//	An action like crazy-max/ghaction-github-runtime is recommended to expose
+//
+// appropriate credentials to your GitHub workflow.
 type CacheFromGitHubActions struct {
 	// The scope to use for cache keys. Defaults to `buildkit`.
 	//
 	// This should be set if building and caching multiple images in one
 	// workflow, otherwise caches will overwrite each other.
 	Scope *string `pulumi:"scope"`
-	// The GitHub Actions token to use. This is not a personal access tokens
-	// and is typically generated automatically as part of each job.
-	//
-	// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
-	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-	// to expose this environment variable to your jobs.
-	Token *string `pulumi:"token"`
-	// The cache server URL to use for artifacts.
-	//
-	// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
-	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-	// to expose this environment variable to your jobs.
-	Url *string `pulumi:"url"`
 }
 
 // Defaults sets the appropriate defaults for CacheFromGitHubActions
@@ -879,25 +871,17 @@ type CacheFromGitHubActionsInput interface {
 	ToCacheFromGitHubActionsOutputWithContext(context.Context) CacheFromGitHubActionsOutput
 }
 
+// Recommended for use with GitHub Actions workflows.
+//
+//	An action like crazy-max/ghaction-github-runtime is recommended to expose
+//
+// appropriate credentials to your GitHub workflow.
 type CacheFromGitHubActionsArgs struct {
 	// The scope to use for cache keys. Defaults to `buildkit`.
 	//
 	// This should be set if building and caching multiple images in one
 	// workflow, otherwise caches will overwrite each other.
 	Scope pulumi.StringPtrInput `pulumi:"scope"`
-	// The GitHub Actions token to use. This is not a personal access tokens
-	// and is typically generated automatically as part of each job.
-	//
-	// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
-	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-	// to expose this environment variable to your jobs.
-	Token pulumi.StringPtrInput `pulumi:"token"`
-	// The cache server URL to use for artifacts.
-	//
-	// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
-	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-	// to expose this environment variable to your jobs.
-	Url pulumi.StringPtrInput `pulumi:"url"`
 }
 
 // Defaults sets the appropriate defaults for CacheFromGitHubActionsArgs
@@ -976,6 +960,11 @@ func (i *cacheFromGitHubActionsPtrType) ToOutput(ctx context.Context) pulumix.Ou
 	}
 }
 
+// Recommended for use with GitHub Actions workflows.
+//
+//	An action like crazy-max/ghaction-github-runtime is recommended to expose
+//
+// appropriate credentials to your GitHub workflow.
 type CacheFromGitHubActionsOutput struct{ *pulumi.OutputState }
 
 func (CacheFromGitHubActionsOutput) ElementType() reflect.Type {
@@ -1012,25 +1001,6 @@ func (o CacheFromGitHubActionsOutput) ToOutput(ctx context.Context) pulumix.Outp
 // workflow, otherwise caches will overwrite each other.
 func (o CacheFromGitHubActionsOutput) Scope() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v CacheFromGitHubActions) *string { return v.Scope }).(pulumi.StringPtrOutput)
-}
-
-// The GitHub Actions token to use. This is not a personal access tokens
-// and is typically generated automatically as part of each job.
-//
-// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
-// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-// to expose this environment variable to your jobs.
-func (o CacheFromGitHubActionsOutput) Token() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v CacheFromGitHubActions) *string { return v.Token }).(pulumi.StringPtrOutput)
-}
-
-// The cache server URL to use for artifacts.
-//
-// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
-// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-// to expose this environment variable to your jobs.
-func (o CacheFromGitHubActionsOutput) Url() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v CacheFromGitHubActions) *string { return v.Url }).(pulumi.StringPtrOutput)
 }
 
 type CacheFromGitHubActionsPtrOutput struct{ *pulumi.OutputState }
@@ -1073,35 +1043,6 @@ func (o CacheFromGitHubActionsPtrOutput) Scope() pulumi.StringPtrOutput {
 			return nil
 		}
 		return v.Scope
-	}).(pulumi.StringPtrOutput)
-}
-
-// The GitHub Actions token to use. This is not a personal access tokens
-// and is typically generated automatically as part of each job.
-//
-// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
-// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-// to expose this environment variable to your jobs.
-func (o CacheFromGitHubActionsPtrOutput) Token() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *CacheFromGitHubActions) *string {
-		if v == nil {
-			return nil
-		}
-		return v.Token
-	}).(pulumi.StringPtrOutput)
-}
-
-// The cache server URL to use for artifacts.
-//
-// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
-// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-// to expose this environment variable to your jobs.
-func (o CacheFromGitHubActionsPtrOutput) Url() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *CacheFromGitHubActions) *string {
-		if v == nil {
-			return nil
-		}
-		return v.Url
 	}).(pulumi.StringPtrOutput)
 }
 
@@ -2339,6 +2280,11 @@ func (o CacheToAzureBlobPtrOutput) SecretAccessKey() pulumi.StringPtrOutput {
 	}).(pulumi.StringPtrOutput)
 }
 
+// Recommended for use with GitHub Actions workflows.
+//
+//	An action like crazy-max/ghaction-github-runtime is recommended to expose
+//
+// appropriate credentials to your GitHub workflow.
 type CacheToGitHubActions struct {
 	// Ignore errors caused by failed cache exports.
 	IgnoreError *bool `pulumi:"ignoreError"`
@@ -2349,19 +2295,6 @@ type CacheToGitHubActions struct {
 	// This should be set if building and caching multiple images in one
 	// workflow, otherwise caches will overwrite each other.
 	Scope *string `pulumi:"scope"`
-	// The GitHub Actions token to use. This is not a personal access tokens
-	// and is typically generated automatically as part of each job.
-	//
-	// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
-	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-	// to expose this environment variable to your jobs.
-	Token *string `pulumi:"token"`
-	// The cache server URL to use for artifacts.
-	//
-	// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
-	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-	// to expose this environment variable to your jobs.
-	Url *string `pulumi:"url"`
 }
 
 // Defaults sets the appropriate defaults for CacheToGitHubActions
@@ -2396,6 +2329,11 @@ type CacheToGitHubActionsInput interface {
 	ToCacheToGitHubActionsOutputWithContext(context.Context) CacheToGitHubActionsOutput
 }
 
+// Recommended for use with GitHub Actions workflows.
+//
+//	An action like crazy-max/ghaction-github-runtime is recommended to expose
+//
+// appropriate credentials to your GitHub workflow.
 type CacheToGitHubActionsArgs struct {
 	// Ignore errors caused by failed cache exports.
 	IgnoreError pulumi.BoolPtrInput `pulumi:"ignoreError"`
@@ -2406,19 +2344,6 @@ type CacheToGitHubActionsArgs struct {
 	// This should be set if building and caching multiple images in one
 	// workflow, otherwise caches will overwrite each other.
 	Scope pulumi.StringPtrInput `pulumi:"scope"`
-	// The GitHub Actions token to use. This is not a personal access tokens
-	// and is typically generated automatically as part of each job.
-	//
-	// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
-	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-	// to expose this environment variable to your jobs.
-	Token pulumi.StringPtrInput `pulumi:"token"`
-	// The cache server URL to use for artifacts.
-	//
-	// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
-	// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-	// to expose this environment variable to your jobs.
-	Url pulumi.StringPtrInput `pulumi:"url"`
 }
 
 // Defaults sets the appropriate defaults for CacheToGitHubActionsArgs
@@ -2503,6 +2428,11 @@ func (i *cacheToGitHubActionsPtrType) ToOutput(ctx context.Context) pulumix.Outp
 	}
 }
 
+// Recommended for use with GitHub Actions workflows.
+//
+//	An action like crazy-max/ghaction-github-runtime is recommended to expose
+//
+// appropriate credentials to your GitHub workflow.
 type CacheToGitHubActionsOutput struct{ *pulumi.OutputState }
 
 func (CacheToGitHubActionsOutput) ElementType() reflect.Type {
@@ -2549,25 +2479,6 @@ func (o CacheToGitHubActionsOutput) Mode() CacheModePtrOutput {
 // workflow, otherwise caches will overwrite each other.
 func (o CacheToGitHubActionsOutput) Scope() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v CacheToGitHubActions) *string { return v.Scope }).(pulumi.StringPtrOutput)
-}
-
-// The GitHub Actions token to use. This is not a personal access tokens
-// and is typically generated automatically as part of each job.
-//
-// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
-// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-// to expose this environment variable to your jobs.
-func (o CacheToGitHubActionsOutput) Token() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v CacheToGitHubActions) *string { return v.Token }).(pulumi.StringPtrOutput)
-}
-
-// The cache server URL to use for artifacts.
-//
-// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
-// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-// to expose this environment variable to your jobs.
-func (o CacheToGitHubActionsOutput) Url() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v CacheToGitHubActions) *string { return v.Url }).(pulumi.StringPtrOutput)
 }
 
 type CacheToGitHubActionsPtrOutput struct{ *pulumi.OutputState }
@@ -2630,35 +2541,6 @@ func (o CacheToGitHubActionsPtrOutput) Scope() pulumi.StringPtrOutput {
 			return nil
 		}
 		return v.Scope
-	}).(pulumi.StringPtrOutput)
-}
-
-// The GitHub Actions token to use. This is not a personal access tokens
-// and is typically generated automatically as part of each job.
-//
-// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
-// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-// to expose this environment variable to your jobs.
-func (o CacheToGitHubActionsPtrOutput) Token() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *CacheToGitHubActions) *string {
-		if v == nil {
-			return nil
-		}
-		return v.Token
-	}).(pulumi.StringPtrOutput)
-}
-
-// The cache server URL to use for artifacts.
-//
-// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
-// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-// to expose this environment variable to your jobs.
-func (o CacheToGitHubActionsPtrOutput) Url() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *CacheToGitHubActions) *string {
-		if v == nil {
-			return nil
-		}
-		return v.Url
 	}).(pulumi.StringPtrOutput)
 }
 

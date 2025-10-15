@@ -58,14 +58,13 @@ func TestCacheString(t *testing.T) {
 			want:  "type=gha",
 		},
 		{
-			name: "gha-with-url-and-token",
+			name: "gha-with-scope",
 			given: CacheTo{GHA: &CacheToGitHubActions{
 				CacheFromGitHubActions: CacheFromGitHubActions{
-					URL:   "https://github.com/user/repo",
-					Token: "token",
+					Scope: "scope",
 				},
 			}},
-			want: "type=gha,token=token,url=https://github.com/user/repo",
+			want: "type=gha,scope=scope",
 		},
 		{
 			name:  "from-local",

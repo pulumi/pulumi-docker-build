@@ -10,6 +10,12 @@ using Pulumi.Serialization;
 namespace Pulumi.DockerBuild.Inputs
 {
 
+    /// <summary>
+    /// Recommended for use with GitHub Actions workflows.
+    /// 
+    ///   	An action like crazy-max/ghaction-github-runtime is recommended to expose
+    /// appropriate credentials to your GitHub workflow.
+    /// </summary>
     public sealed class CacheFromGitHubActionsArgs : global::Pulumi.ResourceArgs
     {
         /// <summary>
@@ -20,37 +26,6 @@ namespace Pulumi.DockerBuild.Inputs
         /// </summary>
         [Input("scope")]
         public Input<string>? Scope { get; set; }
-
-        [Input("token")]
-        private Input<string>? _token;
-
-        /// <summary>
-        /// The GitHub Actions token to use. This is not a personal access tokens
-        /// and is typically generated automatically as part of each job.
-        /// 
-        /// Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
-        /// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-        /// to expose this environment variable to your jobs.
-        /// </summary>
-        public Input<string>? Token
-        {
-            get => _token;
-            set
-            {
-                var emptySecret = Output.CreateSecret(0);
-                _token = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
-            }
-        }
-
-        /// <summary>
-        /// The cache server URL to use for artifacts.
-        /// 
-        /// Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
-        /// a separate action like `crazy-max/ghaction-github-runtime` is recommended
-        /// to expose this environment variable to your jobs.
-        /// </summary>
-        [Input("url")]
-        public Input<string>? Url { get; set; }
 
         public CacheFromGitHubActionsArgs()
         {

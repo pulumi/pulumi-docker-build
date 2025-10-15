@@ -170,14 +170,14 @@ import javax.annotation.Nullable;
  *         var myImage = new Image("myImage", ImageArgs.builder()
  *             .cacheFrom(CacheFromArgs.builder()
  *                 .registry(CacheFromRegistryArgs.builder()
- *                     .ref(ecrRepository.repositoryUrl().applyValue(repositoryUrl -> String.format("%s:cache", repositoryUrl)))
+ *                     .ref(ecrRepository.repositoryUrl().applyValue(_repositoryUrl -> String.format("%s:cache", _repositoryUrl)))
  *                     .build())
  *                 .build())
  *             .cacheTo(CacheToArgs.builder()
  *                 .registry(CacheToRegistryArgs.builder()
  *                     .imageManifest(true)
  *                     .ociMediaTypes(true)
- *                     .ref(ecrRepository.repositoryUrl().applyValue(repositoryUrl -> String.format("%s:cache", repositoryUrl)))
+ *                     .ref(ecrRepository.repositoryUrl().applyValue(_repositoryUrl -> String.format("%s:cache", _repositoryUrl)))
  *                     .build())
  *                 .build())
  *             .context(BuildContextArgs.builder()
@@ -186,10 +186,10 @@ import javax.annotation.Nullable;
  *             .push(true)
  *             .registries(RegistryArgs.builder()
  *                 .address(ecrRepository.repositoryUrl())
- *                 .password(authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult).applyValue(authToken -> authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult.password())))
- *                 .username(authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult).applyValue(authToken -> authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult.userName())))
+ *                 .password(authToken.applyValue(_authToken -> _authToken.password()))
+ *                 .username(authToken.applyValue(_authToken -> _authToken.userName()))
  *                 .build())
- *             .tags(ecrRepository.repositoryUrl().applyValue(repositoryUrl -> String.format("%s:latest", repositoryUrl)))
+ *             .tags(ecrRepository.repositoryUrl().applyValue(_repositoryUrl -> String.format("%s:latest", _repositoryUrl)))
  *             .build());
  * 
  *         ctx.export("ref", myImage.ref());
@@ -458,22 +458,23 @@ import javax.annotation.Nullable;
  * import java.nio.file.Files;
  * import java.nio.file.Paths;
  * 
- * public class App }{{@code
- *     public static void main(String[] args) }{{@code
+ * public class App {
+ *     public static void main(String[] args) {
  *         Pulumi.run(App::stack);
- *     }}{@code
+ *     }
  * 
- *     public static void stack(Context ctx) }{{@code
+ *     public static void stack(Context ctx) {
  *         var image = new Image("image", ImageArgs.builder()
  *             .context(BuildContextArgs.builder()
  *                 .location("app")
- *                 .named(Map.of("golang:latest", Map.of("location", "docker-image://golang}{@literal @}{@code sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984")))
- *                 .build())
- *             .push(false)
- *             .build());
+ *                 .named(Map.of("golang:latest", ContextArgs.builder()
+ * %!v(PANIC=Format method: interface conversion: model.Expression is *model.TemplateExpression, not *model.LiteralValueExpression)))
+ *                     .build())
+ *                 .push(false)
+ *                 .build());
  * 
- *     }}{@code
- * }}{@code
+ *         }
+ * }
  * }
  * </pre>
  * ### Remote context

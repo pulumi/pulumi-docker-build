@@ -104,6 +104,12 @@ export interface CacheFromAzureBlob {
     secretAccessKey?: string;
 }
 
+/**
+ * Recommended for use with GitHub Actions workflows.
+ *
+ *   	An action like crazy-max/ghaction-github-runtime is recommended to expose
+ * appropriate credentials to your GitHub workflow.
+ */
 export interface CacheFromGitHubActions {
     /**
      * The scope to use for cache keys. Defaults to `buildkit`.
@@ -112,23 +118,6 @@ export interface CacheFromGitHubActions {
      * workflow, otherwise caches will overwrite each other.
      */
     scope?: string;
-    /**
-     * The GitHub Actions token to use. This is not a personal access tokens
-     * and is typically generated automatically as part of each job.
-     *
-     * Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
-     * a separate action like `crazy-max/ghaction-github-runtime` is recommended
-     * to expose this environment variable to your jobs.
-     */
-    token?: string;
-    /**
-     * The cache server URL to use for artifacts.
-     *
-     * Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
-     * a separate action like `crazy-max/ghaction-github-runtime` is recommended
-     * to expose this environment variable to your jobs.
-     */
-    url?: string;
 }
 /**
  * cacheFromGitHubActionsProvideDefaults sets the appropriate defaults for CacheFromGitHubActions
@@ -301,6 +290,12 @@ export function cacheToAzureBlobProvideDefaults(val: CacheToAzureBlob): CacheToA
     };
 }
 
+/**
+ * Recommended for use with GitHub Actions workflows.
+ *
+ *   	An action like crazy-max/ghaction-github-runtime is recommended to expose
+ * appropriate credentials to your GitHub workflow.
+ */
 export interface CacheToGitHubActions {
     /**
      * Ignore errors caused by failed cache exports.
@@ -317,23 +312,6 @@ export interface CacheToGitHubActions {
      * workflow, otherwise caches will overwrite each other.
      */
     scope?: string;
-    /**
-     * The GitHub Actions token to use. This is not a personal access tokens
-     * and is typically generated automatically as part of each job.
-     *
-     * Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
-     * a separate action like `crazy-max/ghaction-github-runtime` is recommended
-     * to expose this environment variable to your jobs.
-     */
-    token?: string;
-    /**
-     * The cache server URL to use for artifacts.
-     *
-     * Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
-     * a separate action like `crazy-max/ghaction-github-runtime` is recommended
-     * to expose this environment variable to your jobs.
-     */
-    url?: string;
 }
 /**
  * cacheToGitHubActionsProvideDefaults sets the appropriate defaults for CacheToGitHubActions

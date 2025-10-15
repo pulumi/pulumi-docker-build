@@ -148,30 +148,20 @@ func (c CacheWithOCI) String() string {
 
 // CacheFromGitHubActions pulls cache manifests from the GitHub actions cache.
 type CacheFromGitHubActions struct {
-	URL   string `pulumi:"url,optional"`
-	Token string `pulumi:"token,optional" provider:"secret"`
 	Scope string `pulumi:"scope,optional"`
 }
 
 // Annotate sets docstrings on CacheFromGitHubActions.
 func (c *CacheFromGitHubActions) Annotate(a infer.Annotator) {
+	a.Describe(&c, dedent(`
+		Recommended for use with GitHub Actions workflows.
+
+		An action like "crazy-max/ghaction-github-runtime" is recommended to expose
+		appropriate credentials to your GitHub workflow.
+	`))
+
 	a.SetDefault(&c.Scope, "buildkit")
 
-	a.Describe(&c.URL, dedent(`
-		The cache server URL to use for artifacts.
-
-		Not set by default. If desired, set to "$ACTIONS_CACHE_URL", although
-		a separate action like "crazy-max/ghaction-github-runtime" is recommended
-		to expose this environment variable to your jobs.
-	`))
-	a.Describe(&c.Token, dedent(`
-		The GitHub Actions token to use. This is not a personal access tokens
-		and is typically generated automatically as part of each job.
-
-		Not set by default. If desired, set to "$ACTIONS_RUNTIME_TOKEN", although
-		a separate action like "crazy-max/ghaction-github-runtime" is recommended
-		to expose this environment variable to your jobs.
-	`))
 	a.Describe(&c.Scope, dedent(`
 		The scope to use for cache keys. Defaults to "buildkit".
 
@@ -187,12 +177,6 @@ func (c *CacheFromGitHubActions) String() string {
 	parts := []string{"type=gha"}
 	if c.Scope != "" {
 		parts = append(parts, "scope="+c.Scope)
-	}
-	if c.Token != "" {
-		parts = append(parts, "token="+c.Token)
-	}
-	if c.URL != "" {
-		parts = append(parts, "url="+c.URL)
 	}
 	return strings.Join(parts, ",")
 }

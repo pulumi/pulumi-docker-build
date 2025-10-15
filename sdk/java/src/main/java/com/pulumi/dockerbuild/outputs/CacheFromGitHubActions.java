@@ -19,25 +19,6 @@ public final class CacheFromGitHubActions {
      * 
      */
     private @Nullable String scope;
-    /**
-     * @return The GitHub Actions token to use. This is not a personal access tokens
-     * and is typically generated automatically as part of each job.
-     * 
-     * Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
-     * a separate action like `crazy-max/ghaction-github-runtime` is recommended
-     * to expose this environment variable to your jobs.
-     * 
-     */
-    private @Nullable String token;
-    /**
-     * @return The cache server URL to use for artifacts.
-     * 
-     * Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
-     * a separate action like `crazy-max/ghaction-github-runtime` is recommended
-     * to expose this environment variable to your jobs.
-     * 
-     */
-    private @Nullable String url;
 
     private CacheFromGitHubActions() {}
     /**
@@ -50,29 +31,6 @@ public final class CacheFromGitHubActions {
     public Optional<String> scope() {
         return Optional.ofNullable(this.scope);
     }
-    /**
-     * @return The GitHub Actions token to use. This is not a personal access tokens
-     * and is typically generated automatically as part of each job.
-     * 
-     * Not set by default. If desired, set to `$ACTIONS_RUNTIME_TOKEN`, although
-     * a separate action like `crazy-max/ghaction-github-runtime` is recommended
-     * to expose this environment variable to your jobs.
-     * 
-     */
-    public Optional<String> token() {
-        return Optional.ofNullable(this.token);
-    }
-    /**
-     * @return The cache server URL to use for artifacts.
-     * 
-     * Not set by default. If desired, set to `$ACTIONS_CACHE_URL`, although
-     * a separate action like `crazy-max/ghaction-github-runtime` is recommended
-     * to expose this environment variable to your jobs.
-     * 
-     */
-    public Optional<String> url() {
-        return Optional.ofNullable(this.url);
-    }
 
     public static Builder builder() {
         return new Builder();
@@ -84,14 +42,10 @@ public final class CacheFromGitHubActions {
     @CustomType.Builder
     public static final class Builder {
         private @Nullable String scope;
-        private @Nullable String token;
-        private @Nullable String url;
         public Builder() {}
         public Builder(CacheFromGitHubActions defaults) {
     	      Objects.requireNonNull(defaults);
     	      this.scope = defaults.scope;
-    	      this.token = defaults.token;
-    	      this.url = defaults.url;
         }
 
         @CustomType.Setter
@@ -100,23 +54,9 @@ public final class CacheFromGitHubActions {
             this.scope = scope;
             return this;
         }
-        @CustomType.Setter
-        public Builder token(@Nullable String token) {
-
-            this.token = token;
-            return this;
-        }
-        @CustomType.Setter
-        public Builder url(@Nullable String url) {
-
-            this.url = url;
-            return this;
-        }
         public CacheFromGitHubActions build() {
             final var _resultValue = new CacheFromGitHubActions();
             _resultValue.scope = scope;
-            _resultValue.token = token;
-            _resultValue.url = url;
             return _resultValue;
         }
     }
