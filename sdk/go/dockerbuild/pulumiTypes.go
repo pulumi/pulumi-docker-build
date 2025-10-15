@@ -836,8 +836,7 @@ func (o CacheFromAzureBlobPtrOutput) SecretAccessKey() pulumi.StringPtrOutput {
 
 // Recommended for use with GitHub Actions workflows.
 //
-//	An action like crazy-max/ghaction-github-runtime is recommended to expose
-//
+// An action like `crazy-max/ghaction-github-runtime` is recommended to expose
 // appropriate credentials to your GitHub workflow.
 type CacheFromGitHubActions struct {
 	// The scope to use for cache keys. Defaults to `buildkit`.
@@ -873,8 +872,7 @@ type CacheFromGitHubActionsInput interface {
 
 // Recommended for use with GitHub Actions workflows.
 //
-//	An action like crazy-max/ghaction-github-runtime is recommended to expose
-//
+// An action like `crazy-max/ghaction-github-runtime` is recommended to expose
 // appropriate credentials to your GitHub workflow.
 type CacheFromGitHubActionsArgs struct {
 	// The scope to use for cache keys. Defaults to `buildkit`.
@@ -962,8 +960,7 @@ func (i *cacheFromGitHubActionsPtrType) ToOutput(ctx context.Context) pulumix.Ou
 
 // Recommended for use with GitHub Actions workflows.
 //
-//	An action like crazy-max/ghaction-github-runtime is recommended to expose
-//
+// An action like `crazy-max/ghaction-github-runtime` is recommended to expose
 // appropriate credentials to your GitHub workflow.
 type CacheFromGitHubActionsOutput struct{ *pulumi.OutputState }
 
@@ -2282,8 +2279,7 @@ func (o CacheToAzureBlobPtrOutput) SecretAccessKey() pulumi.StringPtrOutput {
 
 // Recommended for use with GitHub Actions workflows.
 //
-//	An action like crazy-max/ghaction-github-runtime is recommended to expose
-//
+// An action like `crazy-max/ghaction-github-runtime` is recommended to expose
 // appropriate credentials to your GitHub workflow.
 type CacheToGitHubActions struct {
 	// Ignore errors caused by failed cache exports.
@@ -2331,8 +2327,7 @@ type CacheToGitHubActionsInput interface {
 
 // Recommended for use with GitHub Actions workflows.
 //
-//	An action like crazy-max/ghaction-github-runtime is recommended to expose
-//
+// An action like `crazy-max/ghaction-github-runtime` is recommended to expose
 // appropriate credentials to your GitHub workflow.
 type CacheToGitHubActionsArgs struct {
 	// Ignore errors caused by failed cache exports.
@@ -2430,8 +2425,7 @@ func (i *cacheToGitHubActionsPtrType) ToOutput(ctx context.Context) pulumix.Outp
 
 // Recommended for use with GitHub Actions workflows.
 //
-//	An action like crazy-max/ghaction-github-runtime is recommended to expose
-//
+// An action like `crazy-max/ghaction-github-runtime` is recommended to expose
 // appropriate credentials to your GitHub workflow.
 type CacheToGitHubActionsOutput struct{ *pulumi.OutputState }
 

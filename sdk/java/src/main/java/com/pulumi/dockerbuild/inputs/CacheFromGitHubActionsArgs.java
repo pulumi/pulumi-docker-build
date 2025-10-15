@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 /**
  * Recommended for use with GitHub Actions workflows.
  * 
- *     An action like crazy-max/ghaction-github-runtime is recommended to expose
+ * An action like `crazy-max/ghaction-github-runtime` is recommended to expose
  * appropriate credentials to your GitHub workflow.
  * 
  */

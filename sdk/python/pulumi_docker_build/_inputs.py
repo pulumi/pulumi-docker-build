@@ -284,7 +284,7 @@ if not MYPY:
         """
         Recommended for use with GitHub Actions workflows.
 
-          	An action like crazy-max/ghaction-github-runtime is recommended to expose
+        An action like `crazy-max/ghaction-github-runtime` is recommended to expose
         appropriate credentials to your GitHub workflow.
         """
         scope: NotRequired[pulumi.Input[_builtins.str]]
@@ -304,7 +304,7 @@ class CacheFromGitHubActionsArgs:
         """
         Recommended for use with GitHub Actions workflows.
 
-          	An action like crazy-max/ghaction-github-runtime is recommended to expose
+        An action like `crazy-max/ghaction-github-runtime` is recommended to expose
         appropriate credentials to your GitHub workflow.
         :param pulumi.Input[_builtins.str] scope: The scope to use for cache keys. Defaults to `buildkit`.
                
@@ -919,7 +919,7 @@ if not MYPY:
         """
         Recommended for use with GitHub Actions workflows.
 
-          	An action like crazy-max/ghaction-github-runtime is recommended to expose
+        An action like `crazy-max/ghaction-github-runtime` is recommended to expose
         appropriate credentials to your GitHub workflow.
         """
         ignore_error: NotRequired[pulumi.Input[_builtins.bool]]
@@ -949,7 +949,7 @@ class CacheToGitHubActionsArgs:
         """
         Recommended for use with GitHub Actions workflows.
 
-          	An action like crazy-max/ghaction-github-runtime is recommended to expose
+        An action like `crazy-max/ghaction-github-runtime` is recommended to expose
         appropriate credentials to your GitHub workflow.
         :param pulumi.Input[_builtins.bool] ignore_error: Ignore errors caused by failed cache exports.
         :param pulumi.Input['CacheMode'] mode: The cache mode to use. Defaults to `min`.

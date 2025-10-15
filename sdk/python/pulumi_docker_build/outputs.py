@@ -296,7 +296,7 @@ class CacheFromGitHubActions(dict):
     """
     Recommended for use with GitHub Actions workflows.
 
-      	An action like crazy-max/ghaction-github-runtime is recommended to expose
+    An action like `crazy-max/ghaction-github-runtime` is recommended to expose
     appropriate credentials to your GitHub workflow.
     """
     def __init__(__self__, *,
@@ -304,7 +304,7 @@ class CacheFromGitHubActions(dict):
         """
         Recommended for use with GitHub Actions workflows.
 
-          	An action like crazy-max/ghaction-github-runtime is recommended to expose
+        An action like `crazy-max/ghaction-github-runtime` is recommended to expose
         appropriate credentials to your GitHub workflow.
         :param _builtins.str scope: The scope to use for cache keys. Defaults to `buildkit`.
                
@@ -751,7 +751,7 @@ class CacheToGitHubActions(dict):
     """
     Recommended for use with GitHub Actions workflows.
 
-      	An action like crazy-max/ghaction-github-runtime is recommended to expose
+    An action like `crazy-max/ghaction-github-runtime` is recommended to expose
     appropriate credentials to your GitHub workflow.
     """
     @staticmethod
@@ -778,7 +778,7 @@ class CacheToGitHubActions(dict):
         """
         Recommended for use with GitHub Actions workflows.
 
-          	An action like crazy-max/ghaction-github-runtime is recommended to expose
+        An action like `crazy-max/ghaction-github-runtime` is recommended to expose
         appropriate credentials to your GitHub workflow.
         :param _builtins.bool ignore_error: Ignore errors caused by failed cache exports.
         :param 'CacheMode' mode: The cache mode to use. Defaults to `min`.
