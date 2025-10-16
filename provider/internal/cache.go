@@ -17,6 +17,7 @@ package internal
 import (
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	controllerapi "github.com/docker/buildx/controller/pb"
@@ -177,6 +178,13 @@ func (c *CacheFromGitHubActions) String() string {
 	parts := []string{"type=gha"}
 	if c.Scope != "" {
 		parts = append(parts, "scope="+c.Scope)
+	}
+	// Preserving backwards compatibility with the old behaviour.
+	if token := os.Getenv("ACTIONS_RUNTIME_TOKEN"); token != "" {
+		parts = append(parts, "token="+token)
+	}
+	if url := os.Getenv("ACTIONS_CACHE_URL"); url != "" {
+		parts = append(parts, "url="+url)
 	}
 	return strings.Join(parts, ",")
 }
