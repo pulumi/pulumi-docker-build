@@ -1,5 +1,9 @@
 ## Unreleased
 
+## Changed
+
+- Arguments `CacheFromGitHubActions.URL` and `CacheFromGitHubActions.Token` have been removed. If the previous behaviour is desired, set the `ACTIONS_CACHE_URL` and `ACTIONS_RUNTIME_TOKEN` environment variables. (https://github.com/pulumi/pulumi-docker-build/issues/75)
+
 ## 0.0.14 (2025-09-30)
 
 ### Fixed

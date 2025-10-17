@@ -155,32 +155,12 @@
       ]
     },
     "docker-build:index:CacheFromGitHubActions": {
+      "description": "Recommended for use with GitHub Actions workflows.\n\nAn action like `crazy-max/ghaction-github-runtime` is recommended to expose\nappropriate credentials to your GitHub workflow.",
       "properties": {
         "scope": {
           "type": "string",
           "description": "The scope to use for cache keys. Defaults to `buildkit`.\n\nThis should be set if building and caching multiple images in one\nworkflow, otherwise caches will overwrite each other.",
           "default": "buildkit"
-        },
-        "token": {
-          "type": "string",
-          "description": "The GitHub Actions token to use. This is not a personal access tokens\nand is typically generated automatically as part of each job.\n\nDefaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
-          "default": "",
-          "defaultInfo": {
-            "environment": [
-              "ACTIONS_RUNTIME_TOKEN"
-            ]
-          },
-          "secret": true
-        },
-        "url": {
-          "type": "string",
-          "description": "The cache server URL to use for artifacts.\n\nDefaults to `$ACTIONS_CACHE_URL`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
-          "default": "",
-          "defaultInfo": {
-            "environment": [
-              "ACTIONS_CACHE_URL"
-            ]
-          }
         }
       },
       "type": "object"
@@ -370,6 +350,7 @@
       ]
     },
     "docker-build:index:CacheToGitHubActions": {
+      "description": "Recommended for use with GitHub Actions workflows.\n\nAn action like `crazy-max/ghaction-github-runtime` is recommended to expose\nappropriate credentials to your GitHub workflow.",
       "properties": {
         "ignoreError": {
           "type": "boolean",
@@ -385,27 +366,6 @@
           "type": "string",
           "description": "The scope to use for cache keys. Defaults to `buildkit`.\n\nThis should be set if building and caching multiple images in one\nworkflow, otherwise caches will overwrite each other.",
           "default": "buildkit"
-        },
-        "token": {
-          "type": "string",
-          "description": "The GitHub Actions token to use. This is not a personal access tokens\nand is typically generated automatically as part of each job.\n\nDefaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
-          "default": "",
-          "defaultInfo": {
-            "environment": [
-              "ACTIONS_RUNTIME_TOKEN"
-            ]
-          },
-          "secret": true
-        },
-        "url": {
-          "type": "string",
-          "description": "The cache server URL to use for artifacts.\n\nDefaults to `$ACTIONS_CACHE_URL`, although a separate action like\n`crazy-max/ghaction-github-runtime` is recommended to expose this\nenvironment variable to your jobs.",
-          "default": "",
-          "defaultInfo": {
-            "environment": [
-              "ACTIONS_CACHE_URL"
-            ]
-          }
         }
       },
       "type": "object"

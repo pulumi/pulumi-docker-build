@@ -917,8 +917,10 @@ func TestValidateImageArgs(t *testing.T) {
 			{
 				name: "gha environment",
 				envs: map[string]string{
-					"ACTIONS_CACHE_URL":     "test-cache-url",
-					"ACTIONS_RUNTIME_TOKEN": "test-runtime-token",
+					"ACTIONS_CACHE_URL":        "test-cache-url",
+					"ACTIONS_RUNTIME_TOKEN":    "test-runtime-token",
+					"ACTIONS_RESULTS_URL":      "test-results-url",
+					"ACTIONS_CACHE_SERVICE_V2": "true",
 				},
 				args: ImageArgs{
 					Context:   &BuildContext{Context: Context{Location: "testdata/noop"}},
@@ -930,15 +932,17 @@ func TestValidateImageArgs(t *testing.T) {
 				wantCacheFrom: &pb.CacheOptionsEntry{
 					Type: "gha",
 					Attrs: map[string]string{
-						"token": "test-runtime-token",
-						"url":   "test-cache-url",
+						"token":  "test-runtime-token",
+						"url":    "test-cache-url",
+						"url_v2": "test-results-url",
 					},
 				},
 				wantCacheTo: &pb.CacheOptionsEntry{
 					Type: "gha",
 					Attrs: map[string]string{
-						"token": "test-runtime-token",
-						"url":   "test-cache-url",
+						"token":  "test-runtime-token",
+						"url":    "test-cache-url",
+						"url_v2": "test-results-url",
 					},
 				},
 			},

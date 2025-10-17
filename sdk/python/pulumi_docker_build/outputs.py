@@ -293,39 +293,28 @@ class CacheFromAzureBlob(dict):
 
 @pulumi.output_type
 class CacheFromGitHubActions(dict):
+    """
+    Recommended for use with GitHub Actions workflows.
+
+    An action like `crazy-max/ghaction-github-runtime` is recommended to expose
+    appropriate credentials to your GitHub workflow.
+    """
     def __init__(__self__, *,
-                 scope: Optional[_builtins.str] = None,
-                 token: Optional[_builtins.str] = None,
-                 url: Optional[_builtins.str] = None):
+                 scope: Optional[_builtins.str] = None):
         """
+        Recommended for use with GitHub Actions workflows.
+
+        An action like `crazy-max/ghaction-github-runtime` is recommended to expose
+        appropriate credentials to your GitHub workflow.
         :param _builtins.str scope: The scope to use for cache keys. Defaults to `buildkit`.
                
                This should be set if building and caching multiple images in one
                workflow, otherwise caches will overwrite each other.
-        :param _builtins.str token: The GitHub Actions token to use. This is not a personal access tokens
-               and is typically generated automatically as part of each job.
-               
-               Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-               `crazy-max/ghaction-github-runtime` is recommended to expose this
-               environment variable to your jobs.
-        :param _builtins.str url: The cache server URL to use for artifacts.
-               
-               Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-               `crazy-max/ghaction-github-runtime` is recommended to expose this
-               environment variable to your jobs.
         """
         if scope is None:
             scope = 'buildkit'
         if scope is not None:
             pulumi.set(__self__, "scope", scope)
-        if token is None:
-            token = (_utilities.get_env('ACTIONS_RUNTIME_TOKEN') or '')
-        if token is not None:
-            pulumi.set(__self__, "token", token)
-        if url is None:
-            url = (_utilities.get_env('ACTIONS_CACHE_URL') or '')
-        if url is not None:
-            pulumi.set(__self__, "url", url)
 
     @_builtins.property
     @pulumi.getter
@@ -337,31 +326,6 @@ class CacheFromGitHubActions(dict):
         workflow, otherwise caches will overwrite each other.
         """
         return pulumi.get(self, "scope")
-
-    @_builtins.property
-    @pulumi.getter
-    def token(self) -> Optional[_builtins.str]:
-        """
-        The GitHub Actions token to use. This is not a personal access tokens
-        and is typically generated automatically as part of each job.
-
-        Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-        `crazy-max/ghaction-github-runtime` is recommended to expose this
-        environment variable to your jobs.
-        """
-        return pulumi.get(self, "token")
-
-    @_builtins.property
-    @pulumi.getter
-    def url(self) -> Optional[_builtins.str]:
-        """
-        The cache server URL to use for artifacts.
-
-        Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-        `crazy-max/ghaction-github-runtime` is recommended to expose this
-        environment variable to your jobs.
-        """
-        return pulumi.get(self, "url")
 
 
 @pulumi.output_type
@@ -784,6 +748,12 @@ class CacheToAzureBlob(dict):
 
 @pulumi.output_type
 class CacheToGitHubActions(dict):
+    """
+    Recommended for use with GitHub Actions workflows.
+
+    An action like `crazy-max/ghaction-github-runtime` is recommended to expose
+    appropriate credentials to your GitHub workflow.
+    """
     @staticmethod
     def __key_warning(key: str):
         suggest = None
@@ -804,27 +774,18 @@ class CacheToGitHubActions(dict):
     def __init__(__self__, *,
                  ignore_error: Optional[_builtins.bool] = None,
                  mode: Optional['CacheMode'] = None,
-                 scope: Optional[_builtins.str] = None,
-                 token: Optional[_builtins.str] = None,
-                 url: Optional[_builtins.str] = None):
+                 scope: Optional[_builtins.str] = None):
         """
+        Recommended for use with GitHub Actions workflows.
+
+        An action like `crazy-max/ghaction-github-runtime` is recommended to expose
+        appropriate credentials to your GitHub workflow.
         :param _builtins.bool ignore_error: Ignore errors caused by failed cache exports.
         :param 'CacheMode' mode: The cache mode to use. Defaults to `min`.
         :param _builtins.str scope: The scope to use for cache keys. Defaults to `buildkit`.
                
                This should be set if building and caching multiple images in one
                workflow, otherwise caches will overwrite each other.
-        :param _builtins.str token: The GitHub Actions token to use. This is not a personal access tokens
-               and is typically generated automatically as part of each job.
-               
-               Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-               `crazy-max/ghaction-github-runtime` is recommended to expose this
-               environment variable to your jobs.
-        :param _builtins.str url: The cache server URL to use for artifacts.
-               
-               Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-               `crazy-max/ghaction-github-runtime` is recommended to expose this
-               environment variable to your jobs.
         """
         if ignore_error is None:
             ignore_error = False
@@ -838,14 +799,6 @@ class CacheToGitHubActions(dict):
             scope = 'buildkit'
         if scope is not None:
             pulumi.set(__self__, "scope", scope)
-        if token is None:
-            token = (_utilities.get_env('ACTIONS_RUNTIME_TOKEN') or '')
-        if token is not None:
-            pulumi.set(__self__, "token", token)
-        if url is None:
-            url = (_utilities.get_env('ACTIONS_CACHE_URL') or '')
-        if url is not None:
-            pulumi.set(__self__, "url", url)
 
     @_builtins.property
     @pulumi.getter(name="ignoreError")
@@ -873,31 +826,6 @@ class CacheToGitHubActions(dict):
         workflow, otherwise caches will overwrite each other.
         """
         return pulumi.get(self, "scope")
-
-    @_builtins.property
-    @pulumi.getter
-    def token(self) -> Optional[_builtins.str]:
-        """
-        The GitHub Actions token to use. This is not a personal access tokens
-        and is typically generated automatically as part of each job.
-
-        Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-        `crazy-max/ghaction-github-runtime` is recommended to expose this
-        environment variable to your jobs.
-        """
-        return pulumi.get(self, "token")
-
-    @_builtins.property
-    @pulumi.getter
-    def url(self) -> Optional[_builtins.str]:
-        """
-        The cache server URL to use for artifacts.
-
-        Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-        `crazy-max/ghaction-github-runtime` is recommended to expose this
-        environment variable to your jobs.
-        """
-        return pulumi.get(self, "url")
 
 
 @pulumi.output_type

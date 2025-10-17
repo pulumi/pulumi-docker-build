@@ -24,14 +24,15 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
 
+//nolint:paralleltest // We don't call t.Parallel here to prevent environment corruption.
 func TestCacheString(t *testing.T) {
-	t.Parallel()
 	gzip := Gzip
 
 	tests := []struct {
-		name  string
-		given fmt.Stringer
-		want  string
+		name    string
+		arrange func(t *testing.T)
+		given   fmt.Stringer
+		want    string
 	}{
 		{
 			name: "s3",
@@ -55,7 +56,37 @@ func TestCacheString(t *testing.T) {
 		{
 			name:  "gha",
 			given: CacheTo{GHA: &CacheToGitHubActions{}},
-			want:  "type=gha",
+			arrange: func(t *testing.T) {
+				t.Setenv("ACTIONS_CACHE_URL", "")
+				t.Setenv("ACTIONS_RUNTIME_TOKEN", "")
+			},
+			want: "type=gha",
+		},
+		{
+			name: "gha-default-envs",
+			arrange: func(t *testing.T) {
+				t.Setenv("ACTIONS_CACHE_URL", "https://example.com")
+				t.Setenv("ACTIONS_RUNTIME_TOKEN", "token")
+			},
+			given: CacheTo{GHA: &CacheToGitHubActions{
+				CacheFromGitHubActions: CacheFromGitHubActions{
+					Scope: "scope",
+				},
+			}},
+			want: "type=gha,scope=scope,token=token,url=https://example.com",
+		},
+		{
+			name: "gha-with-scope",
+			arrange: func(t *testing.T) {
+				t.Setenv("ACTIONS_CACHE_URL", "")
+				t.Setenv("ACTIONS_RUNTIME_TOKEN", "")
+			},
+			given: CacheTo{GHA: &CacheToGitHubActions{
+				CacheFromGitHubActions: CacheFromGitHubActions{
+					Scope: "scope",
+				},
+			}},
+			want: "type=gha,scope=scope",
 		},
 		{
 			name:  "from-local",
@@ -121,9 +152,12 @@ func TestCacheString(t *testing.T) {
 		},
 	}
 
+	//nolint:paralleltest // We don't call t.Parallel here to prevent environment corruption.
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
+			if tt.arrange != nil {
+				tt.arrange(t)
+			}
 
 			actual := tt.given.String()
 			assert.Equal(t, tt.want, actual)

@@ -14,6 +14,13 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 
+/**
+ * Recommended for use with GitHub Actions workflows.
+ * 
+ * An action like `crazy-max/ghaction-github-runtime` is recommended to expose
+ * appropriate credentials to your GitHub workflow.
+ * 
+ */
 public final class CacheToGitHubActionsArgs extends com.pulumi.resources.ResourceArgs {
 
     public static final CacheToGitHubActionsArgs Empty = new CacheToGitHubActionsArgs();
@@ -69,62 +76,12 @@ public final class CacheToGitHubActionsArgs extends com.pulumi.resources.Resourc
         return Optional.ofNullable(this.scope);
     }
 
-    /**
-     * The GitHub Actions token to use. This is not a personal access tokens
-     * and is typically generated automatically as part of each job.
-     * 
-     * Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-     * `crazy-max/ghaction-github-runtime` is recommended to expose this
-     * environment variable to your jobs.
-     * 
-     */
-    @Import(name="token")
-    private @Nullable Output<String> token;
-
-    /**
-     * @return The GitHub Actions token to use. This is not a personal access tokens
-     * and is typically generated automatically as part of each job.
-     * 
-     * Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-     * `crazy-max/ghaction-github-runtime` is recommended to expose this
-     * environment variable to your jobs.
-     * 
-     */
-    public Optional<Output<String>> token() {
-        return Optional.ofNullable(this.token);
-    }
-
-    /**
-     * The cache server URL to use for artifacts.
-     * 
-     * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-     * `crazy-max/ghaction-github-runtime` is recommended to expose this
-     * environment variable to your jobs.
-     * 
-     */
-    @Import(name="url")
-    private @Nullable Output<String> url;
-
-    /**
-     * @return The cache server URL to use for artifacts.
-     * 
-     * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-     * `crazy-max/ghaction-github-runtime` is recommended to expose this
-     * environment variable to your jobs.
-     * 
-     */
-    public Optional<Output<String>> url() {
-        return Optional.ofNullable(this.url);
-    }
-
     private CacheToGitHubActionsArgs() {}
 
     private CacheToGitHubActionsArgs(CacheToGitHubActionsArgs $) {
         this.ignoreError = $.ignoreError;
         this.mode = $.mode;
         this.scope = $.scope;
-        this.token = $.token;
-        this.url = $.url;
     }
 
     public static Builder builder() {
@@ -214,72 +171,10 @@ public final class CacheToGitHubActionsArgs extends com.pulumi.resources.Resourc
             return scope(Output.of(scope));
         }
 
-        /**
-         * @param token The GitHub Actions token to use. This is not a personal access tokens
-         * and is typically generated automatically as part of each job.
-         * 
-         * Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-         * `crazy-max/ghaction-github-runtime` is recommended to expose this
-         * environment variable to your jobs.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder token(@Nullable Output<String> token) {
-            $.token = token;
-            return this;
-        }
-
-        /**
-         * @param token The GitHub Actions token to use. This is not a personal access tokens
-         * and is typically generated automatically as part of each job.
-         * 
-         * Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-         * `crazy-max/ghaction-github-runtime` is recommended to expose this
-         * environment variable to your jobs.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder token(String token) {
-            return token(Output.of(token));
-        }
-
-        /**
-         * @param url The cache server URL to use for artifacts.
-         * 
-         * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-         * `crazy-max/ghaction-github-runtime` is recommended to expose this
-         * environment variable to your jobs.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder url(@Nullable Output<String> url) {
-            $.url = url;
-            return this;
-        }
-
-        /**
-         * @param url The cache server URL to use for artifacts.
-         * 
-         * Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-         * `crazy-max/ghaction-github-runtime` is recommended to expose this
-         * environment variable to your jobs.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder url(String url) {
-            return url(Output.of(url));
-        }
-
         public CacheToGitHubActionsArgs build() {
             $.ignoreError = Codegen.booleanProp("ignoreError").output().arg($.ignoreError).def(false).getNullable();
             $.mode = Codegen.objectProp("mode", CacheMode.class).output().arg($.mode).def(CacheMode.Min).getNullable();
             $.scope = Codegen.stringProp("scope").output().arg($.scope).def("buildkit").getNullable();
-            $.token = Codegen.stringProp("token").secret().arg($.token).env("ACTIONS_RUNTIME_TOKEN").def("").getNullable();
-            $.url = Codegen.stringProp("url").output().arg($.url).env("ACTIONS_CACHE_URL").def("").getNullable();
             return $;
         }
     }

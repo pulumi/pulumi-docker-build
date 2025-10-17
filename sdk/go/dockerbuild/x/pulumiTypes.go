@@ -393,25 +393,16 @@ func (o CacheFromAzureBlobOutput) SecretAccessKey() pulumix.Output[*string] {
 	return pulumix.Apply[CacheFromAzureBlob](o, func(v CacheFromAzureBlob) *string { return v.SecretAccessKey })
 }
 
+// Recommended for use with GitHub Actions workflows.
+//
+// An action like `crazy-max/ghaction-github-runtime` is recommended to expose
+// appropriate credentials to your GitHub workflow.
 type CacheFromGitHubActions struct {
 	// The scope to use for cache keys. Defaults to `buildkit`.
 	//
 	// This should be set if building and caching multiple images in one
 	// workflow, otherwise caches will overwrite each other.
 	Scope *string `pulumi:"scope"`
-	// The GitHub Actions token to use. This is not a personal access tokens
-	// and is typically generated automatically as part of each job.
-	//
-	// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
-	Token *string `pulumi:"token"`
-	// The cache server URL to use for artifacts.
-	//
-	// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
-	Url *string `pulumi:"url"`
 }
 
 // Defaults sets the appropriate defaults for CacheFromGitHubActions
@@ -424,40 +415,19 @@ func (val *CacheFromGitHubActions) Defaults() *CacheFromGitHubActions {
 		scope_ := "buildkit"
 		tmp.Scope = &scope_
 	}
-	if tmp.Token == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_TOKEN"); d != nil {
-			token_ := d.(string)
-			tmp.Token = &token_
-		}
-	}
-	if tmp.Url == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_CACHE_URL"); d != nil {
-			url_ := d.(string)
-			tmp.Url = &url_
-		}
-	}
 	return &tmp
 }
 
+// Recommended for use with GitHub Actions workflows.
+//
+// An action like `crazy-max/ghaction-github-runtime` is recommended to expose
+// appropriate credentials to your GitHub workflow.
 type CacheFromGitHubActionsArgs struct {
 	// The scope to use for cache keys. Defaults to `buildkit`.
 	//
 	// This should be set if building and caching multiple images in one
 	// workflow, otherwise caches will overwrite each other.
 	Scope pulumix.Input[*string] `pulumi:"scope"`
-	// The GitHub Actions token to use. This is not a personal access tokens
-	// and is typically generated automatically as part of each job.
-	//
-	// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
-	Token pulumix.Input[*string] `pulumi:"token"`
-	// The cache server URL to use for artifacts.
-	//
-	// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
-	Url pulumix.Input[*string] `pulumi:"url"`
 }
 
 // Defaults sets the appropriate defaults for CacheFromGitHubActionsArgs
@@ -468,16 +438,6 @@ func (val *CacheFromGitHubActionsArgs) Defaults() *CacheFromGitHubActionsArgs {
 	tmp := *val
 	if tmp.Scope == nil {
 		tmp.Scope = pulumix.Ptr("buildkit")
-	}
-	if tmp.Token == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_TOKEN"); d != nil {
-			tmp.Token = pulumix.Ptr(d.(string))
-		}
-	}
-	if tmp.Url == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_CACHE_URL"); d != nil {
-			tmp.Url = pulumix.Ptr(d.(string))
-		}
 	}
 	return &tmp
 }
@@ -497,6 +457,10 @@ func (i *CacheFromGitHubActionsArgs) ToOutput(ctx context.Context) pulumix.Outpu
 	return pulumix.Val(i)
 }
 
+// Recommended for use with GitHub Actions workflows.
+//
+// An action like `crazy-max/ghaction-github-runtime` is recommended to expose
+// appropriate credentials to your GitHub workflow.
 type CacheFromGitHubActionsOutput struct{ *pulumi.OutputState }
 
 func (CacheFromGitHubActionsOutput) ElementType() reflect.Type {
@@ -523,25 +487,6 @@ func (o CacheFromGitHubActionsOutput) ToOutput(ctx context.Context) pulumix.Outp
 // workflow, otherwise caches will overwrite each other.
 func (o CacheFromGitHubActionsOutput) Scope() pulumix.Output[*string] {
 	return pulumix.Apply[CacheFromGitHubActions](o, func(v CacheFromGitHubActions) *string { return v.Scope })
-}
-
-// The GitHub Actions token to use. This is not a personal access tokens
-// and is typically generated automatically as part of each job.
-//
-// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-// `crazy-max/ghaction-github-runtime` is recommended to expose this
-// environment variable to your jobs.
-func (o CacheFromGitHubActionsOutput) Token() pulumix.Output[*string] {
-	return pulumix.Apply[CacheFromGitHubActions](o, func(v CacheFromGitHubActions) *string { return v.Token })
-}
-
-// The cache server URL to use for artifacts.
-//
-// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-// `crazy-max/ghaction-github-runtime` is recommended to expose this
-// environment variable to your jobs.
-func (o CacheFromGitHubActionsOutput) Url() pulumix.Output[*string] {
-	return pulumix.Apply[CacheFromGitHubActions](o, func(v CacheFromGitHubActions) *string { return v.Url })
 }
 
 type CacheFromLocal struct {
@@ -1134,6 +1079,10 @@ func (o CacheToAzureBlobOutput) SecretAccessKey() pulumix.Output[*string] {
 	return pulumix.Apply[CacheToAzureBlob](o, func(v CacheToAzureBlob) *string { return v.SecretAccessKey })
 }
 
+// Recommended for use with GitHub Actions workflows.
+//
+// An action like `crazy-max/ghaction-github-runtime` is recommended to expose
+// appropriate credentials to your GitHub workflow.
 type CacheToGitHubActions struct {
 	// Ignore errors caused by failed cache exports.
 	IgnoreError *bool `pulumi:"ignoreError"`
@@ -1144,19 +1093,6 @@ type CacheToGitHubActions struct {
 	// This should be set if building and caching multiple images in one
 	// workflow, otherwise caches will overwrite each other.
 	Scope *string `pulumi:"scope"`
-	// The GitHub Actions token to use. This is not a personal access tokens
-	// and is typically generated automatically as part of each job.
-	//
-	// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
-	Token *string `pulumi:"token"`
-	// The cache server URL to use for artifacts.
-	//
-	// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
-	Url *string `pulumi:"url"`
 }
 
 // Defaults sets the appropriate defaults for CacheToGitHubActions
@@ -1177,21 +1113,13 @@ func (val *CacheToGitHubActions) Defaults() *CacheToGitHubActions {
 		scope_ := "buildkit"
 		tmp.Scope = &scope_
 	}
-	if tmp.Token == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_TOKEN"); d != nil {
-			token_ := d.(string)
-			tmp.Token = &token_
-		}
-	}
-	if tmp.Url == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_CACHE_URL"); d != nil {
-			url_ := d.(string)
-			tmp.Url = &url_
-		}
-	}
 	return &tmp
 }
 
+// Recommended for use with GitHub Actions workflows.
+//
+// An action like `crazy-max/ghaction-github-runtime` is recommended to expose
+// appropriate credentials to your GitHub workflow.
 type CacheToGitHubActionsArgs struct {
 	// Ignore errors caused by failed cache exports.
 	IgnoreError pulumix.Input[*bool] `pulumi:"ignoreError"`
@@ -1202,19 +1130,6 @@ type CacheToGitHubActionsArgs struct {
 	// This should be set if building and caching multiple images in one
 	// workflow, otherwise caches will overwrite each other.
 	Scope pulumix.Input[*string] `pulumi:"scope"`
-	// The GitHub Actions token to use. This is not a personal access tokens
-	// and is typically generated automatically as part of each job.
-	//
-	// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
-	Token pulumix.Input[*string] `pulumi:"token"`
-	// The cache server URL to use for artifacts.
-	//
-	// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-	// `crazy-max/ghaction-github-runtime` is recommended to expose this
-	// environment variable to your jobs.
-	Url pulumix.Input[*string] `pulumi:"url"`
 }
 
 // Defaults sets the appropriate defaults for CacheToGitHubActionsArgs
@@ -1231,16 +1146,6 @@ func (val *CacheToGitHubActionsArgs) Defaults() *CacheToGitHubActionsArgs {
 	}
 	if tmp.Scope == nil {
 		tmp.Scope = pulumix.Ptr("buildkit")
-	}
-	if tmp.Token == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_RUNTIME_TOKEN"); d != nil {
-			tmp.Token = pulumix.Ptr(d.(string))
-		}
-	}
-	if tmp.Url == nil {
-		if d := internal.GetEnvOrDefault("", nil, "ACTIONS_CACHE_URL"); d != nil {
-			tmp.Url = pulumix.Ptr(d.(string))
-		}
 	}
 	return &tmp
 }
@@ -1260,6 +1165,10 @@ func (i *CacheToGitHubActionsArgs) ToOutput(ctx context.Context) pulumix.Output[
 	return pulumix.Val(i)
 }
 
+// Recommended for use with GitHub Actions workflows.
+//
+// An action like `crazy-max/ghaction-github-runtime` is recommended to expose
+// appropriate credentials to your GitHub workflow.
 type CacheToGitHubActionsOutput struct{ *pulumi.OutputState }
 
 func (CacheToGitHubActionsOutput) ElementType() reflect.Type {
@@ -1296,25 +1205,6 @@ func (o CacheToGitHubActionsOutput) Mode() pulumix.Output[*CacheMode] {
 // workflow, otherwise caches will overwrite each other.
 func (o CacheToGitHubActionsOutput) Scope() pulumix.Output[*string] {
 	return pulumix.Apply[CacheToGitHubActions](o, func(v CacheToGitHubActions) *string { return v.Scope })
-}
-
-// The GitHub Actions token to use. This is not a personal access tokens
-// and is typically generated automatically as part of each job.
-//
-// Defaults to `$ACTIONS_RUNTIME_TOKEN`, although a separate action like
-// `crazy-max/ghaction-github-runtime` is recommended to expose this
-// environment variable to your jobs.
-func (o CacheToGitHubActionsOutput) Token() pulumix.Output[*string] {
-	return pulumix.Apply[CacheToGitHubActions](o, func(v CacheToGitHubActions) *string { return v.Token })
-}
-
-// The cache server URL to use for artifacts.
-//
-// Defaults to `$ACTIONS_CACHE_URL`, although a separate action like
-// `crazy-max/ghaction-github-runtime` is recommended to expose this
-// environment variable to your jobs.
-func (o CacheToGitHubActionsOutput) Url() pulumix.Output[*string] {
-	return pulumix.Apply[CacheToGitHubActions](o, func(v CacheToGitHubActions) *string { return v.Url })
 }
 
 // Include an inline cache with the exported image.
