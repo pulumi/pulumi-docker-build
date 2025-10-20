@@ -19,6 +19,7 @@ TESTPARALLELISM  := 4
 
 PULUMI           := pulumi
 GOGLANGCILINT    := golangci-lint
+GOTEST           := go test
 
 # Override during CI using `make [TARGET] PROVIDER_VERSION=""` or by setting a PROVIDER_VERSION environment variable
 # Local & branch builds will just used this fixed default version unless specified
@@ -46,10 +47,10 @@ provider_debug::
 	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -gcflags="all=-N -l" -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION_GENERIC}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
 
 test_provider:: # Required by CI
-	go test -short -v -coverprofile="coverage.txt" -coverpkg=./provider/... -timeout 2h -parallel ${TESTPARALLELISM} ./provider/...
+	${GOTEST} -short -v -coverprofile="coverage.txt" -coverpkg=./provider/... -timeout 2h -parallel ${TESTPARALLELISM} ./provider/...
 
 test_examples: install_nodejs_sdk install_dotnet_sdk
-	go test -short -v -cover -tags=all -timeout 2h -parallel ${TESTPARALLELISM} ./examples/...
+	${GOTEST} -short -v -cover -tags=all -timeout 2h -parallel ${TESTPARALLELISM} ./examples/...
 
 test_all:: test_provider test_examples
 
