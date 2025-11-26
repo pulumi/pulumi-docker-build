@@ -291,6 +291,31 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
+     * A list of secret names to ignore when calculating diffs.
+     * 
+     * These secrets will not be considered when calculating diffs, even if they
+     * are changed. Note: only applicable if the secret is present in both the old and the new state.
+     * 
+     * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+     * 
+     */
+    @Import(name="ignoreSecretsInDiffCalculation")
+    private @Nullable Output<List<String>> ignoreSecretsInDiffCalculation;
+
+    /**
+     * @return A list of secret names to ignore when calculating diffs.
+     * 
+     * These secrets will not be considered when calculating diffs, even if they
+     * are changed. Note: only applicable if the secret is present in both the old and the new state.
+     * 
+     * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+     * 
+     */
+    public Optional<Output<List<String>>> ignoreSecretsInDiffCalculation() {
+        return Optional.ofNullable(this.ignoreSecretsInDiffCalculation);
+    }
+
+    /**
      * Attach arbitrary key/value metadata to the image.
      * 
      * Equivalent to Docker&#39;s `--label` flag.
@@ -573,6 +598,7 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
         this.dockerfile = $.dockerfile;
         this.exec = $.exec;
         this.exports = $.exports;
+        this.ignoreSecretsInDiffCalculation = $.ignoreSecretsInDiffCalculation;
         this.labels = $.labels;
         this.load = $.load;
         this.network = $.network;
@@ -977,6 +1003,52 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
          */
         public Builder exports(ExportArgs... exports) {
             return exports(List.of(exports));
+        }
+
+        /**
+         * @param ignoreSecretsInDiffCalculation A list of secret names to ignore when calculating diffs.
+         * 
+         * These secrets will not be considered when calculating diffs, even if they
+         * are changed. Note: only applicable if the secret is present in both the old and the new state.
+         * 
+         * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder ignoreSecretsInDiffCalculation(@Nullable Output<List<String>> ignoreSecretsInDiffCalculation) {
+            $.ignoreSecretsInDiffCalculation = ignoreSecretsInDiffCalculation;
+            return this;
+        }
+
+        /**
+         * @param ignoreSecretsInDiffCalculation A list of secret names to ignore when calculating diffs.
+         * 
+         * These secrets will not be considered when calculating diffs, even if they
+         * are changed. Note: only applicable if the secret is present in both the old and the new state.
+         * 
+         * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder ignoreSecretsInDiffCalculation(List<String> ignoreSecretsInDiffCalculation) {
+            return ignoreSecretsInDiffCalculation(Output.of(ignoreSecretsInDiffCalculation));
+        }
+
+        /**
+         * @param ignoreSecretsInDiffCalculation A list of secret names to ignore when calculating diffs.
+         * 
+         * These secrets will not be considered when calculating diffs, even if they
+         * are changed. Note: only applicable if the secret is present in both the old and the new state.
+         * 
+         * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder ignoreSecretsInDiffCalculation(String... ignoreSecretsInDiffCalculation) {
+            return ignoreSecretsInDiffCalculation(List.of(ignoreSecretsInDiffCalculation));
         }
 
         /**

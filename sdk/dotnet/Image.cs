@@ -632,6 +632,17 @@ namespace Pulumi.DockerBuild
         public Output<ImmutableArray<Outputs.Export>> Exports { get; private set; } = null!;
 
         /// <summary>
+        /// A list of secret names to ignore when calculating diffs.
+        /// 
+        /// These secrets will not be considered when calculating diffs, even if they
+        /// are changed. Note: only applicable if the secret is present in both the old and the new state.
+        /// 
+        /// This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+        /// </summary>
+        [Output("ignoreSecretsInDiffCalculation")]
+        public Output<ImmutableArray<string>> IgnoreSecretsInDiffCalculation { get; private set; } = null!;
+
+        /// <summary>
         /// Attach arbitrary key/value metadata to the image.
         /// 
         /// Equivalent to Docker's `--label` flag.
@@ -955,6 +966,23 @@ namespace Pulumi.DockerBuild
         {
             get => _exports ?? (_exports = new InputList<Inputs.ExportArgs>());
             set => _exports = value;
+        }
+
+        [Input("ignoreSecretsInDiffCalculation")]
+        private InputList<string>? _ignoreSecretsInDiffCalculation;
+
+        /// <summary>
+        /// A list of secret names to ignore when calculating diffs.
+        /// 
+        /// These secrets will not be considered when calculating diffs, even if they
+        /// are changed. Note: only applicable if the secret is present in both the old and the new state.
+        /// 
+        /// This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+        /// </summary>
+        public InputList<string> IgnoreSecretsInDiffCalculation
+        {
+            get => _ignoreSecretsInDiffCalculation ?? (_ignoreSecretsInDiffCalculation = new InputList<string>());
+            set => _ignoreSecretsInDiffCalculation = value;
         }
 
         [Input("labels")]

@@ -633,6 +633,13 @@ type Image struct {
 	//
 	// Equivalent to Docker's `--output` flag.
 	Exports pulumix.GArrayOutput[Export, ExportOutput] `pulumi:"exports"`
+	// A list of secret names to ignore when calculating diffs.
+	//
+	// These secrets will not be considered when calculating diffs, even if they
+	// are changed. Note: only applicable if the secret is present in both the old and the new state.
+	//
+	// This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+	IgnoreSecretsInDiffCalculation pulumix.ArrayOutput[string] `pulumi:"ignoreSecretsInDiffCalculation"`
 	// Attach arbitrary key/value metadata to the image.
 	//
 	// Equivalent to Docker's `--label` flag.
@@ -843,6 +850,13 @@ type imageArgs struct {
 	//
 	// Equivalent to Docker's `--output` flag.
 	Exports []Export `pulumi:"exports"`
+	// A list of secret names to ignore when calculating diffs.
+	//
+	// These secrets will not be considered when calculating diffs, even if they
+	// are changed. Note: only applicable if the secret is present in both the old and the new state.
+	//
+	// This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+	IgnoreSecretsInDiffCalculation []string `pulumi:"ignoreSecretsInDiffCalculation"`
 	// Attach arbitrary key/value metadata to the image.
 	//
 	// Equivalent to Docker's `--label` flag.
@@ -991,6 +1005,13 @@ type ImageArgs struct {
 	//
 	// Equivalent to Docker's `--output` flag.
 	Exports pulumix.Input[[]*ExportArgs]
+	// A list of secret names to ignore when calculating diffs.
+	//
+	// These secrets will not be considered when calculating diffs, even if they
+	// are changed. Note: only applicable if the secret is present in both the old and the new state.
+	//
+	// This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+	IgnoreSecretsInDiffCalculation pulumix.Input[[]string]
 	// Attach arbitrary key/value metadata to the image.
 	//
 	// Equivalent to Docker's `--label` flag.
@@ -1227,6 +1248,18 @@ func (o ImageOutput) Exports() pulumix.GArrayOutput[Export, ExportOutput] {
 	value := pulumix.Apply[Image](o, func(v Image) pulumix.GArrayOutput[Export, ExportOutput] { return v.Exports })
 	unwrapped := pulumix.Flatten[[]Export, pulumix.GArrayOutput[Export, ExportOutput]](value)
 	return pulumix.GArrayOutput[Export, ExportOutput]{OutputState: unwrapped.OutputState}
+}
+
+// A list of secret names to ignore when calculating diffs.
+//
+// These secrets will not be considered when calculating diffs, even if they
+// are changed. Note: only applicable if the secret is present in both the old and the new state.
+//
+// This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+func (o ImageOutput) IgnoreSecretsInDiffCalculation() pulumix.ArrayOutput[string] {
+	value := pulumix.Apply[Image](o, func(v Image) pulumix.ArrayOutput[string] { return v.IgnoreSecretsInDiffCalculation })
+	unwrapped := pulumix.Flatten[[]string, pulumix.ArrayOutput[string]](value)
+	return pulumix.ArrayOutput[string]{OutputState: unwrapped.OutputState}
 }
 
 // Attach arbitrary key/value metadata to the image.

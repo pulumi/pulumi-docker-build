@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"maps"
 	"reflect"
 	"slices"
 
@@ -86,28 +87,29 @@ func (i *Image) Annotate(a infer.Annotator) {
 
 // ImageArgs instantiates a new Image.
 type ImageArgs struct {
-	AddHosts       []string          `pulumi:"addHosts,optional"`
-	BuildArgs      map[string]string `pulumi:"buildArgs,optional"`
-	BuildOnPreview *bool             `pulumi:"buildOnPreview,optional"`
-	Builder        *BuilderConfig    `pulumi:"builder,optional"`
-	CacheFrom      []CacheFrom       `pulumi:"cacheFrom,optional"`
-	CacheTo        []CacheTo         `pulumi:"cacheTo,optional"`
-	Context        *BuildContext     `pulumi:"context,optional"`
-	Dockerfile     *Dockerfile       `pulumi:"dockerfile,optional"`
-	Exports        []Export          `pulumi:"exports,optional"`
-	Labels         map[string]string `pulumi:"labels,optional"`
-	Load           bool              `pulumi:"load,optional"`
-	Network        *NetworkMode      `pulumi:"network,optional"`
-	NoCache        bool              `pulumi:"noCache,optional"`
-	Platforms      []Platform        `pulumi:"platforms,optional"`
-	Pull           bool              `pulumi:"pull,optional"`
-	Push           bool              `pulumi:"push"`
-	Registries     []Registry        `pulumi:"registries,optional"`
-	Secrets        map[string]string `pulumi:"secrets,optional"`
-	SSH            []SSH             `pulumi:"ssh,optional"`
-	Tags           []string          `pulumi:"tags,optional"`
-	Target         string            `pulumi:"target,optional"`
-	Exec           bool              `pulumi:"exec,optional"`
+	AddHosts                       []string          `pulumi:"addHosts,optional"`
+	BuildArgs                      map[string]string `pulumi:"buildArgs,optional"`
+	BuildOnPreview                 *bool             `pulumi:"buildOnPreview,optional"`
+	Builder                        *BuilderConfig    `pulumi:"builder,optional"`
+	CacheFrom                      []CacheFrom       `pulumi:"cacheFrom,optional"`
+	CacheTo                        []CacheTo         `pulumi:"cacheTo,optional"`
+	Context                        *BuildContext     `pulumi:"context,optional"`
+	Dockerfile                     *Dockerfile       `pulumi:"dockerfile,optional"`
+	Exports                        []Export          `pulumi:"exports,optional"`
+	Labels                         map[string]string `pulumi:"labels,optional"`
+	Load                           bool              `pulumi:"load,optional"`
+	Network                        *NetworkMode      `pulumi:"network,optional"`
+	NoCache                        bool              `pulumi:"noCache,optional"`
+	Platforms                      []Platform        `pulumi:"platforms,optional"`
+	Pull                           bool              `pulumi:"pull,optional"`
+	Push                           bool              `pulumi:"push"`
+	Registries                     []Registry        `pulumi:"registries,optional"`
+	Secrets                        map[string]string `pulumi:"secrets,optional"`
+	IgnoreSecretsInDiffCalculation []string          `pulumi:"ignoreSecretsInDiffCalculation,optional"`
+	SSH                            []SSH             `pulumi:"ssh,optional"`
+	Tags                           []string          `pulumi:"tags,optional"`
+	Target                         string            `pulumi:"target,optional"`
+	Exec                           bool              `pulumi:"exec,optional"`
 }
 
 // Annotate describes inputs to the Image resource.
@@ -227,6 +229,14 @@ func (ia *ImageArgs) Annotate(a infer.Annotator) {
 		image, so you should use this for sensitive values.
 
 		Similar to Docker's "--secret" flag.
+	`))
+	a.Describe(&ia.IgnoreSecretsInDiffCalculation, dedent(`
+		A list of secret names to ignore when calculating diffs.
+
+		These secrets will not be considered when calculating diffs, even if they
+		are changed. Note: only applicable if the secret is present in both the old and the new state.
+
+		This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
 	`))
 	a.Describe(&ia.SSH, dedent(`
 		SSH agent socket or keys to expose to the build.
@@ -969,7 +979,17 @@ func (*Image) Diff(
 	if !reflect.DeepEqual(olds.Push, news.Push) {
 		diff["push"] = update
 	}
-	if !reflect.DeepEqual(olds.Secrets, news.Secrets) {
+	oldSecretsCopy := maps.Clone(olds.Secrets)
+	newsSecretsCopy := maps.Clone(news.Secrets)
+	for _, ignoreSecretKey := range news.IgnoreSecretsInDiffCalculation {
+		_, inOld := oldSecretsCopy[ignoreSecretKey]
+		_, inNew := newsSecretsCopy[ignoreSecretKey]
+		if inOld && inNew {
+			delete(oldSecretsCopy, ignoreSecretKey)
+			delete(newsSecretsCopy, ignoreSecretKey)
+		}
+	}
+	if !reflect.DeepEqual(oldSecretsCopy, newsSecretsCopy) {
 		diff["secrets"] = update
 	}
 	if !reflect.DeepEqual(olds.SSH, news.SSH) {
