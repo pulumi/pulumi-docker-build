@@ -32,6 +32,7 @@ env:
   GOOGLE_REGION: us-central1
   GOOGLE_ZONE: us-central1-a
   PULUMI_API: https://api.pulumi-staging.io
+  PULUMI_PULUMI_ENABLE_JOURNALING: "true"
   PR_COMMIT_SHA: ${{ github.event.client_payload.pull_request.head.sha }}
 jobs:
   comment-notification:
@@ -40,7 +41,7 @@ jobs:
     name: comment-notification
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       with:
         lfs: true
         persist-credentials: false
@@ -65,7 +66,7 @@ jobs:
       pull-requests: write # For schema check comment.
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       with:
         lfs: true
         persist-credentials: false
@@ -90,7 +91,7 @@ jobs:
       uses: ./.github/actions/setup-tools
       with:
         cache: 'true'
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}
     - if: github.event_name == 'pull_request'
       name: Install Schema Tools
       uses: jaxxstorm/action-install-gh-release@6096f2a2bbfee498ced520b6922ac2c06e990ed2 # v2.1.0
@@ -240,7 +241,7 @@ jobs:
       id-token: write # For ESC secrets.
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       with:
         lfs: true
         persist-credentials: false
@@ -264,7 +265,7 @@ jobs:
     - name: Setup Tools
       uses: ./.github/actions/setup-tools
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}
     - name: Download provider
       uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
       with:
@@ -379,7 +380,7 @@ jobs:
       id-token: write
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       with:
         lfs: true
         persist-credentials: false
@@ -403,7 +404,7 @@ jobs:
     - name: Setup Tools
       uses: ./.github/actions/setup-tools
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ steps.esc-secrets.outputs.PULUMI_BOT_TOKEN }}
     - name: Download provider
       uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
       with:
@@ -490,7 +491,7 @@ jobs:
     name: sentinel
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       with:
         lfs: true
         persist-credentials: false
@@ -525,7 +526,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Repo
-      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       with:
         lfs: true
         persist-credentials: false
