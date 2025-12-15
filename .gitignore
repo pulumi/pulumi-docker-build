@@ -7,6 +7,7 @@
 **/.ionide
 **/.vscode
 *.swp
+.pulumi
 Pulumi.*.yaml
 yarn.lock
 ci-scripts
