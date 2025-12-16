@@ -495,7 +495,7 @@ jobs:
       run: >-
         set -euo pipefail
 
-        cd examples && go test -count=1 -cover -timeout 2h -tags=${{ matrix.language }} -parallel 4 .
+        cd examples && go test -count=1 -cover -timeout 2h -v -tags=${{ matrix.language }} -parallel 4 .
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - if: failure() && github.event_name == 'push'
