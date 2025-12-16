@@ -1,0 +1,2 @@
+[tools]
+"vfox-pulumi:pulumi/pulumi-docker-build" = "0.0.7" # For upgrade testing.
