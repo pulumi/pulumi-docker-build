@@ -933,6 +933,30 @@ public class Image extends com.pulumi.resources.CustomResource {
         return Codegen.optional(this.exports);
     }
     /**
+     * A list of secret names to ignore when calculating diffs.
+     * 
+     * These secrets will not be considered when calculating diffs, even if they
+     * are changed. Note: only applicable if the secret is present in both the old and the new state.
+     * 
+     * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+     * 
+     */
+    @Export(name="ignoreSecretsInDiffCalculation", refs={List.class,String.class}, tree="[0,1]")
+    private Output</* @Nullable */ List<String>> ignoreSecretsInDiffCalculation;
+
+    /**
+     * @return A list of secret names to ignore when calculating diffs.
+     * 
+     * These secrets will not be considered when calculating diffs, even if they
+     * are changed. Note: only applicable if the secret is present in both the old and the new state.
+     * 
+     * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+     * 
+     */
+    public Output<Optional<List<String>>> ignoreSecretsInDiffCalculation() {
+        return Codegen.optional(this.ignoreSecretsInDiffCalculation);
+    }
+    /**
      * Attach arbitrary key/value metadata to the image.
      * 
      * Equivalent to Docker&#39;s `--label` flag.
