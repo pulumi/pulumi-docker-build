@@ -10,7 +10,7 @@ require (
 	github.com/docker/cli v28.0.4+incompatible
 	github.com/docker/docker v28.0.1+incompatible
 	github.com/golangci/golangci-lint v1.59.1
-	github.com/moby/buildkit v0.20.1
+	github.com/moby/buildkit v0.27.1
 	github.com/moby/patternmatcher v0.6.0
 	github.com/muesli/reflow v0.3.0
 	github.com/otiai10/copy v1.14.0
