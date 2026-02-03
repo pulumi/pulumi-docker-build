@@ -391,7 +391,7 @@ func (c *cli) exec(ctx context.Context, args, extraEnv []string) error {
 	}
 	// Create a new command that inherits from ctx.
 	cmd := exec.CommandContext(ctx, //nolint:gosec // We take the first argument and binary from runCmd.
-		runCmd.Path, append([]string{runCmd.Args[1]}, args...)...,
+		runCmd.Path, args...,
 	)
 	cmd.Stderr = c.Err()
 	cmd.Stdout = c.Out()
