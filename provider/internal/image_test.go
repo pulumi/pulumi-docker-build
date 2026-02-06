@@ -84,7 +84,7 @@ func TestImageLifecycle(t *testing.T) {
 					Return(nil)
 				return c
 			},
-			op: func(t *testing.T) integration.Operation {
+			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
 						"push": property.New(false),
@@ -130,7 +130,7 @@ func TestImageLifecycle(t *testing.T) {
 		{
 			name:   "tags are required when pushing",
 			client: noClient,
-			op: func(t *testing.T) integration.Operation {
+			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
 						"push": property.New(false),
@@ -159,7 +159,7 @@ func TestImageLifecycle(t *testing.T) {
 		{
 			name:   "invalid exports",
 			client: noClient,
-			op: func(t *testing.T) integration.Operation {
+			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
 						"push": property.New(false),
@@ -192,7 +192,7 @@ func TestImageLifecycle(t *testing.T) {
 				)
 				return c
 			},
-			op: func(t *testing.T) integration.Operation {
+			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
 						"push": property.New(false),
@@ -219,7 +219,7 @@ func TestImageLifecycle(t *testing.T) {
 				)
 				return c
 			},
-			op: func(t *testing.T) integration.Operation {
+			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
 						"push": property.New(false),
@@ -252,7 +252,7 @@ func TestImageLifecycle(t *testing.T) {
 				c.EXPECT().Delete(gomock.Any(), "default-dockerfile").Return(nil)
 				return c
 			},
-			op: func(t *testing.T) integration.Operation {
+			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
 						"push": property.New(false),
@@ -294,7 +294,7 @@ func TestImageLifecycle(t *testing.T) {
 				c.EXPECT().Delete(gomock.Any(), "inline-dockerfile").Return(nil)
 				return c
 			},
-			op: func(t *testing.T) integration.Operation {
+			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
 						"push": property.New(false),
@@ -459,7 +459,7 @@ func TestImageDiff(t *testing.T) {
 				is.Pull = true
 				return is
 			},
-			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
+			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				ia.Pull = true
 				return ia
 			},
@@ -472,7 +472,7 @@ func TestImageDiff(t *testing.T) {
 				is.Load = true
 				return is
 			},
-			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
+			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				ia.Pull = true
 				ia.Load = true
 				return ia
@@ -534,7 +534,7 @@ func TestImageDiff(t *testing.T) {
 		{
 			name:  "diff if pull changes",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
-			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
+			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				ia.Pull = true
 				return ia
 			},
@@ -543,7 +543,7 @@ func TestImageDiff(t *testing.T) {
 		{
 			name:  "diff if load changes",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
-			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
+			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				ia.Load = true
 				return ia
 			},
@@ -552,7 +552,7 @@ func TestImageDiff(t *testing.T) {
 		{
 			name:  "diff if push changes",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
-			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
+			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				ia.Push = true
 				return ia
 			},
@@ -561,7 +561,7 @@ func TestImageDiff(t *testing.T) {
 		{
 			name:  "diff if buildOnPreview doesn't change",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
-			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
+			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				val := true
 				ia.BuildOnPreview = &val
 				return ia
@@ -571,7 +571,7 @@ func TestImageDiff(t *testing.T) {
 		{
 			name:  "diff if buildOnPreview changes",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
-			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
+			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				val := false
 				ia.BuildOnPreview = &val
 				return ia
@@ -581,7 +581,7 @@ func TestImageDiff(t *testing.T) {
 		{
 			name:  "diff if ssh changes",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
-			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
+			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				ia.SSH = []SSH{{ID: "default"}}
 				return ia
 			},
@@ -590,7 +590,7 @@ func TestImageDiff(t *testing.T) {
 		{
 			name:  "diff if hosts change",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
-			inputs: func(t *testing.T, ia ImageArgs) ImageArgs {
+			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				ia.AddHosts = []string{"localhost"}
 				return ia
 			},
@@ -751,7 +751,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name: "diff if local export doesn't exist",
-			state: func(t *testing.T, state ImageState) ImageState {
+			state: func(_ *testing.T, state ImageState) ImageState {
 				state.Exports = []Export{
 					{Local: &ExportLocal{Dest: "not-real"}},
 				}
@@ -767,7 +767,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name: "diff if tar export doesn't exist",
-			state: func(t *testing.T, state ImageState) ImageState {
+			state: func(_ *testing.T, state ImageState) ImageState {
 				state.Exports = []Export{
 					{Tar: &ExportTar{ExportLocal: ExportLocal{Dest: "not-real"}}},
 				}
