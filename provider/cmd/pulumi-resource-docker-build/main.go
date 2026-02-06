@@ -16,8 +16,9 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-docker-build/provider"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/cmdutil"
+
+	"github.com/pulumi/pulumi-docker-build/provider"
 )
 
 func main() {

@@ -28,6 +28,10 @@ import (
 	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
+const (
+	trueLiteral = "true"
+)
+
 var (
 	_ fmt.Stringer    = (*Export)(nil)
 	_ fmt.Stringer    = (*ExportDocker)(nil)
@@ -114,7 +118,7 @@ func (e Export) pushed() bool {
 		if err != nil {
 			return false
 		}
-		return exp[0].Attrs["push"] == "true"
+		return exp[0].Attrs["push"] == trueLiteral
 	}
 	if e.Registry != nil {
 		return e.Registry.Push == nil || *e.Registry.Push
@@ -182,7 +186,7 @@ func parseExports(inp []string) ([]*controllerapi.ExportEntry, error) {
 		if out.Type == "registry" {
 			out.Type = client.ExporterImage
 			if _, ok := out.Attrs["push"]; !ok {
-				out.Attrs["push"] = "true"
+				out.Attrs["push"] = trueLiteral
 			}
 		}
 

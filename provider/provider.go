@@ -15,10 +15,11 @@
 package provider
 
 import (
-	"github.com/pulumi/pulumi-docker-build/provider/internal"
 	gp "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi/pkg/v3/resource/provider"
 	rpc "github.com/pulumi/pulumi/sdk/v3/proto/go"
+
+	"github.com/pulumi/pulumi-docker-build/provider/internal"
 )
 
 // Version is initialized by the Go linker to contain the semver of this build.

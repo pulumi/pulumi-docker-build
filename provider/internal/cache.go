@@ -448,7 +448,7 @@ func (c CacheFrom) String() string {
 	return join(c.Local, c.Registry, c.GHA, c.AZBlob, c.S3, c.Raw)
 }
 
-func (c CacheFrom) validate(preview bool) (*controllerapi.CacheOptionsEntry, error) {
+func (c CacheFrom) validate(_ bool) (*controllerapi.CacheOptionsEntry, error) {
 	if strings.Count(c.String(), "type=") > 1 {
 		return nil, errors.New("cacheFrom should only specify one cache type")
 	}
@@ -672,7 +672,7 @@ func (c CacheTo) String() string {
 	return join(c.Inline, c.Local, c.Registry, c.GHA, c.AZBlob, c.S3, c.Raw)
 }
 
-func (c CacheTo) validate(preview bool) (*controllerapi.CacheOptionsEntry, error) {
+func (c CacheTo) validate(_ bool) (*controllerapi.CacheOptionsEntry, error) {
 	if strings.Count(c.String(), "type=") > 1 {
 		return nil, errors.New("cacheTo should only specify one cache type")
 	}

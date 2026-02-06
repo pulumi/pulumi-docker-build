@@ -32,7 +32,7 @@ import (
 
 func TestIndexLifecycle(t *testing.T) {
 	t.Parallel()
-	realClient := func(t *testing.T) clientF { return RealClientF }
+	realClient := func(_ *testing.T) clientF { return RealClientF }
 
 	tests := []struct {
 		name string
@@ -44,7 +44,7 @@ func TestIndexLifecycle(t *testing.T) {
 		{
 			name:   "not pushed",
 			client: realClient,
-			op: func(t *testing.T) integration.Operation {
+			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
 						"tag": property.New(
@@ -63,7 +63,7 @@ func TestIndexLifecycle(t *testing.T) {
 			name:   "pushed",
 			skip:   os.Getenv("DOCKER_HUB_PASSWORD") == "",
 			client: realClient,
-			op: func(t *testing.T) integration.Operation {
+			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
 						"tag": property.New(
@@ -85,7 +85,7 @@ func TestIndexLifecycle(t *testing.T) {
 		},
 		{
 			name: "expired credentials",
-			client: func(t *testing.T) clientF {
+			client: func(_ *testing.T) clientF {
 				ctrl := gomock.NewController(t)
 				c := NewMockClient(ctrl)
 				c.EXPECT().ManifestCreate(gomock.Any(), true, gomock.Any(), gomock.Any())
@@ -93,7 +93,7 @@ func TestIndexLifecycle(t *testing.T) {
 				c.EXPECT().ManifestDelete(gomock.Any(), gomock.Any()).Return(nil)
 				return mockClientF(c)
 			},
-			op: func(t *testing.T) integration.Operation {
+			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
 						"tag": property.New(
@@ -157,7 +157,7 @@ func TestIndexDiff(t *testing.T) {
 		{
 			name:  "diff if tag changes",
 			state: func(*testing.T, IndexState) IndexState { return baseState },
-			inputs: func(t *testing.T, a IndexArgs) IndexArgs {
+			inputs: func(_ *testing.T, a IndexArgs) IndexArgs {
 				a.Tag = "new-tag"
 				return a
 			},

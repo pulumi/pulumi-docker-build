@@ -43,7 +43,7 @@ type host struct {
 	supportsMultipleExports bool
 }
 
-func newHost(ctx context.Context, config *Config) (*host, error) {
+func newHost(_ context.Context, config *Config) (*host, error) {
 	docker, err := newDockerCLI(config)
 	if err != nil {
 		return nil, err
