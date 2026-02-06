@@ -12,9 +12,6 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/pulumi/pulumi-docker-build",
   "publisher": "Pulumi",
-  "meta": {
-    "moduleFormat": "(.*)"
-  },
   "language": {
     "csharp": {
       "packageReferences": {
@@ -264,8 +261,8 @@
       },
       "type": "object",
       "required": [
-        "bucket",
-        "region"
+        "region",
+        "bucket"
       ]
     },
     "docker-build:index:CacheMode": {
@@ -539,8 +536,8 @@
       },
       "type": "object",
       "required": [
-        "bucket",
-        "region"
+        "region",
+        "bucket"
       ]
     },
     "docker-build:index:CompressionType": {
@@ -1044,9 +1041,14 @@
             "DOCKER_HOST"
           ]
         }
+      },
+      "registries": {
+        "type": "array",
+        "items": {
+          "$ref": "#/types/docker-build:index:Registry"
+        }
       }
     },
-    "type": "object",
     "inputProperties": {
       "host": {
         "type": "string",
@@ -1206,11 +1208,10 @@
           "description": "Set the target build stage(s) to build.\n\nIf not specified all targets will be built by default.\n\nEquivalent to Docker's `--target` flag."
         }
       },
-      "type": "object",
       "required": [
-        "contextHash",
-        "digest",
         "push",
+        "digest",
+        "contextHash",
         "ref"
       ],
       "inputProperties": {
@@ -1370,11 +1371,10 @@
           "description": "The tag to apply to the index."
         }
       },
-      "type": "object",
       "required": [
-        "ref",
+        "tag",
         "sources",
-        "tag"
+        "ref"
       ],
       "inputProperties": {
         "push": {
@@ -1399,8 +1399,8 @@
         }
       },
       "requiredInputs": [
-        "sources",
-        "tag"
+        "tag",
+        "sources"
       ]
     }
   }
