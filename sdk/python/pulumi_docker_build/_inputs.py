@@ -72,32 +72,27 @@ __all__ = [
     'SSHArgsDict',
 ]
 
-MYPY = False
+class BuildContextArgsDict(TypedDict):
+    location: pulumi.Input[_builtins.str]
+    """
+    Resources to use for build context.
 
-if not MYPY:
-    class BuildContextArgsDict(TypedDict):
-        location: pulumi.Input[_builtins.str]
-        """
-        Resources to use for build context.
+    The location can be:
+    * A relative or absolute path to a local directory (`.`, `./app`,
+      `/app`, etc.).
+    * A remote URL of a Git repository, tarball, or plain text file
+      (`https://github.com/user/myrepo.git`, `http://server/context.tar.gz`,
+      etc.).
+    """
+    named: NotRequired[pulumi.Input[Mapping[str, pulumi.Input['ContextArgsDict']]]]
+    """
+    Additional build contexts to use.
 
-        The location can be:
-        * A relative or absolute path to a local directory (`.`, `./app`,
-          `/app`, etc.).
-        * A remote URL of a Git repository, tarball, or plain text file
-          (`https://github.com/user/myrepo.git`, `http://server/context.tar.gz`,
-          etc.).
-        """
-        named: NotRequired[pulumi.Input[Mapping[str, pulumi.Input['ContextArgsDict']]]]
-        """
-        Additional build contexts to use.
+    These contexts are accessed with `FROM name` or `--from=name`
+    statements when using Dockerfile 1.4+ syntax.
 
-        These contexts are accessed with `FROM name` or `--from=name`
-        statements when using Dockerfile 1.4+ syntax.
-
-        Values can be local paths, HTTP URLs, or  `docker-image://` images.
-        """
-elif False:
-    BuildContextArgsDict: TypeAlias = Mapping[str, Any]
+    Values can be local paths, HTTP URLs, or  `docker-image://` images.
+    """
 
 @pulumi.input_type
 class BuildContextArgs:
@@ -161,19 +156,16 @@ class BuildContextArgs:
         pulumi.set(self, "named", value)
 
 
-if not MYPY:
-    class BuilderConfigArgsDict(TypedDict):
-        name: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Name of an existing buildx builder to use.
+class BuilderConfigArgsDict(TypedDict):
+    name: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Name of an existing buildx builder to use.
 
-        Only `docker-container`, `kubernetes`, or `remote` drivers are
-        supported. The legacy `docker` driver is not supported.
+    Only `docker-container`, `kubernetes`, or `remote` drivers are
+    supported. The legacy `docker` driver is not supported.
 
-        Equivalent to Docker's `--builder` flag.
-        """
-elif False:
-    BuilderConfigArgsDict: TypeAlias = Mapping[str, Any]
+    Equivalent to Docker's `--builder` flag.
+    """
 
 @pulumi.input_type
 class BuilderConfigArgs:
@@ -208,22 +200,19 @@ class BuilderConfigArgs:
         pulumi.set(self, "name", value)
 
 
-if not MYPY:
-    class CacheFromAzureBlobArgsDict(TypedDict):
-        name: pulumi.Input[_builtins.str]
-        """
-        The name of the cache image.
-        """
-        account_url: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Base URL of the storage account.
-        """
-        secret_access_key: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Blob storage account key.
-        """
-elif False:
-    CacheFromAzureBlobArgsDict: TypeAlias = Mapping[str, Any]
+class CacheFromAzureBlobArgsDict(TypedDict):
+    name: pulumi.Input[_builtins.str]
+    """
+    The name of the cache image.
+    """
+    account_url: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Base URL of the storage account.
+    """
+    secret_access_key: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Blob storage account key.
+    """
 
 @pulumi.input_type
 class CacheFromAzureBlobArgs:
@@ -279,23 +268,20 @@ class CacheFromAzureBlobArgs:
         pulumi.set(self, "secret_access_key", value)
 
 
-if not MYPY:
-    class CacheFromGitHubActionsArgsDict(TypedDict):
-        """
-        Recommended for use with GitHub Actions workflows.
+class CacheFromGitHubActionsArgsDict(TypedDict):
+    """
+    Recommended for use with GitHub Actions workflows.
 
-        An action like `crazy-max/ghaction-github-runtime` is recommended to expose
-        appropriate credentials to your GitHub workflow.
-        """
-        scope: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        The scope to use for cache keys. Defaults to `buildkit`.
+    An action like `crazy-max/ghaction-github-runtime` is recommended to expose
+    appropriate credentials to your GitHub workflow.
+    """
+    scope: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    The scope to use for cache keys. Defaults to `buildkit`.
 
-        This should be set if building and caching multiple images in one
-        workflow, otherwise caches will overwrite each other.
-        """
-elif False:
-    CacheFromGitHubActionsArgsDict: TypeAlias = Mapping[str, Any]
+    This should be set if building and caching multiple images in one
+    workflow, otherwise caches will overwrite each other.
+    """
 
 @pulumi.input_type
 class CacheFromGitHubActionsArgs:
@@ -332,18 +318,15 @@ class CacheFromGitHubActionsArgs:
         pulumi.set(self, "scope", value)
 
 
-if not MYPY:
-    class CacheFromLocalArgsDict(TypedDict):
-        src: pulumi.Input[_builtins.str]
-        """
-        Path of the local directory where cache gets imported from.
-        """
-        digest: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Digest of manifest to import.
-        """
-elif False:
-    CacheFromLocalArgsDict: TypeAlias = Mapping[str, Any]
+class CacheFromLocalArgsDict(TypedDict):
+    src: pulumi.Input[_builtins.str]
+    """
+    Path of the local directory where cache gets imported from.
+    """
+    digest: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Digest of manifest to import.
+    """
 
 @pulumi.input_type
 class CacheFromLocalArgs:
@@ -383,14 +366,11 @@ class CacheFromLocalArgs:
         pulumi.set(self, "digest", value)
 
 
-if not MYPY:
-    class CacheFromRegistryArgsDict(TypedDict):
-        ref: pulumi.Input[_builtins.str]
-        """
-        Fully qualified name of the cache image to import.
-        """
-elif False:
-    CacheFromRegistryArgsDict: TypeAlias = Mapping[str, Any]
+class CacheFromRegistryArgsDict(TypedDict):
+    ref: pulumi.Input[_builtins.str]
+    """
+    Fully qualified name of the cache image to import.
+    """
 
 @pulumi.input_type
 class CacheFromRegistryArgs:
@@ -414,50 +394,47 @@ class CacheFromRegistryArgs:
         pulumi.set(self, "ref", value)
 
 
-if not MYPY:
-    class CacheFromS3ArgsDict(TypedDict):
-        bucket: pulumi.Input[_builtins.str]
-        """
-        Name of the S3 bucket.
-        """
-        region: pulumi.Input[_builtins.str]
-        """
-        The geographic location of the bucket. Defaults to `$AWS_REGION`.
-        """
-        access_key_id: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Defaults to `$AWS_ACCESS_KEY_ID`.
-        """
-        blobs_prefix: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Prefix to prepend to blob filenames.
-        """
-        endpoint_url: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Endpoint of the S3 bucket.
-        """
-        manifests_prefix: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Prefix to prepend on manifest filenames.
-        """
-        name: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Name of the cache image.
-        """
-        secret_access_key: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Defaults to `$AWS_SECRET_ACCESS_KEY`.
-        """
-        session_token: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Defaults to `$AWS_SESSION_TOKEN`.
-        """
-        use_path_style: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Uses `bucket` in the URL instead of hostname when `true`.
-        """
-elif False:
-    CacheFromS3ArgsDict: TypeAlias = Mapping[str, Any]
+class CacheFromS3ArgsDict(TypedDict):
+    bucket: pulumi.Input[_builtins.str]
+    """
+    Name of the S3 bucket.
+    """
+    region: pulumi.Input[_builtins.str]
+    """
+    The geographic location of the bucket. Defaults to `$AWS_REGION`.
+    """
+    access_key_id: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Defaults to `$AWS_ACCESS_KEY_ID`.
+    """
+    blobs_prefix: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Prefix to prepend to blob filenames.
+    """
+    endpoint_url: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Endpoint of the S3 bucket.
+    """
+    manifests_prefix: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Prefix to prepend on manifest filenames.
+    """
+    name: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Name of the cache image.
+    """
+    secret_access_key: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Defaults to `$AWS_SECRET_ACCESS_KEY`.
+    """
+    session_token: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Defaults to `$AWS_SESSION_TOKEN`.
+    """
+    use_path_style: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Uses `bucket` in the URL instead of hostname when `true`.
+    """
 
 @pulumi.input_type
 class CacheFromS3Args:
@@ -632,43 +609,40 @@ class CacheFromS3Args:
         pulumi.set(self, "use_path_style", value)
 
 
-if not MYPY:
-    class CacheFromArgsDict(TypedDict):
-        azblob: NotRequired[pulumi.Input['CacheFromAzureBlobArgsDict']]
-        """
-        Upload build caches to Azure's blob storage service.
-        """
-        disabled: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        When `true` this entry will be excluded. Defaults to `false`.
-        """
-        gha: NotRequired[pulumi.Input['CacheFromGitHubActionsArgsDict']]
-        """
-        Recommended for use with GitHub Actions workflows.
+class CacheFromArgsDict(TypedDict):
+    azblob: NotRequired[pulumi.Input['CacheFromAzureBlobArgsDict']]
+    """
+    Upload build caches to Azure's blob storage service.
+    """
+    disabled: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    When `true` this entry will be excluded. Defaults to `false`.
+    """
+    gha: NotRequired[pulumi.Input['CacheFromGitHubActionsArgsDict']]
+    """
+    Recommended for use with GitHub Actions workflows.
 
-        An action like `crazy-max/ghaction-github-runtime` is recommended to
-        expose appropriate credentials to your GitHub workflow.
-        """
-        local: NotRequired[pulumi.Input['CacheFromLocalArgsDict']]
-        """
-        A simple backend which caches images on your local filesystem.
-        """
-        raw: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        A raw string as you would provide it to the Docker CLI (e.g.,
-        `type=inline`).
-        """
-        registry: NotRequired[pulumi.Input['CacheFromRegistryArgsDict']]
-        """
-        Upload build caches to remote registries.
-        """
-        s3: NotRequired[pulumi.Input['CacheFromS3ArgsDict']]
-        """
-        Upload build caches to AWS S3 or an S3-compatible services such as
-        MinIO.
-        """
-elif False:
-    CacheFromArgsDict: TypeAlias = Mapping[str, Any]
+    An action like `crazy-max/ghaction-github-runtime` is recommended to
+    expose appropriate credentials to your GitHub workflow.
+    """
+    local: NotRequired[pulumi.Input['CacheFromLocalArgsDict']]
+    """
+    A simple backend which caches images on your local filesystem.
+    """
+    raw: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    A raw string as you would provide it to the Docker CLI (e.g.,
+    `type=inline`).
+    """
+    registry: NotRequired[pulumi.Input['CacheFromRegistryArgsDict']]
+    """
+    Upload build caches to remote registries.
+    """
+    s3: NotRequired[pulumi.Input['CacheFromS3ArgsDict']]
+    """
+    Upload build caches to AWS S3 or an S3-compatible services such as
+    MinIO.
+    """
 
 @pulumi.input_type
 class CacheFromArgs:
@@ -799,30 +773,27 @@ class CacheFromArgs:
         pulumi.set(self, "s3", value)
 
 
-if not MYPY:
-    class CacheToAzureBlobArgsDict(TypedDict):
-        name: pulumi.Input[_builtins.str]
-        """
-        The name of the cache image.
-        """
-        account_url: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Base URL of the storage account.
-        """
-        ignore_error: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Ignore errors caused by failed cache exports.
-        """
-        mode: NotRequired[pulumi.Input['CacheMode']]
-        """
-        The cache mode to use. Defaults to `min`.
-        """
-        secret_access_key: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Blob storage account key.
-        """
-elif False:
-    CacheToAzureBlobArgsDict: TypeAlias = Mapping[str, Any]
+class CacheToAzureBlobArgsDict(TypedDict):
+    name: pulumi.Input[_builtins.str]
+    """
+    The name of the cache image.
+    """
+    account_url: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Base URL of the storage account.
+    """
+    ignore_error: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Ignore errors caused by failed cache exports.
+    """
+    mode: NotRequired[pulumi.Input['CacheMode']]
+    """
+    The cache mode to use. Defaults to `min`.
+    """
+    secret_access_key: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Blob storage account key.
+    """
 
 @pulumi.input_type
 class CacheToAzureBlobArgs:
@@ -914,31 +885,28 @@ class CacheToAzureBlobArgs:
         pulumi.set(self, "secret_access_key", value)
 
 
-if not MYPY:
-    class CacheToGitHubActionsArgsDict(TypedDict):
-        """
-        Recommended for use with GitHub Actions workflows.
+class CacheToGitHubActionsArgsDict(TypedDict):
+    """
+    Recommended for use with GitHub Actions workflows.
 
-        An action like `crazy-max/ghaction-github-runtime` is recommended to expose
-        appropriate credentials to your GitHub workflow.
-        """
-        ignore_error: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Ignore errors caused by failed cache exports.
-        """
-        mode: NotRequired[pulumi.Input['CacheMode']]
-        """
-        The cache mode to use. Defaults to `min`.
-        """
-        scope: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        The scope to use for cache keys. Defaults to `buildkit`.
+    An action like `crazy-max/ghaction-github-runtime` is recommended to expose
+    appropriate credentials to your GitHub workflow.
+    """
+    ignore_error: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Ignore errors caused by failed cache exports.
+    """
+    mode: NotRequired[pulumi.Input['CacheMode']]
+    """
+    The cache mode to use. Defaults to `min`.
+    """
+    scope: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    The scope to use for cache keys. Defaults to `buildkit`.
 
-        This should be set if building and caching multiple images in one
-        workflow, otherwise caches will overwrite each other.
-        """
-elif False:
-    CacheToGitHubActionsArgsDict: TypeAlias = Mapping[str, Any]
+    This should be set if building and caching multiple images in one
+    workflow, otherwise caches will overwrite each other.
+    """
 
 @pulumi.input_type
 class CacheToGitHubActionsArgs:
@@ -1011,14 +979,11 @@ class CacheToGitHubActionsArgs:
         pulumi.set(self, "scope", value)
 
 
-if not MYPY:
-    class CacheToInlineArgsDict(TypedDict):
-        """
-        Include an inline cache with the exported image.
-        """
-        pass
-elif False:
-    CacheToInlineArgsDict: TypeAlias = Mapping[str, Any]
+class CacheToInlineArgsDict(TypedDict):
+    """
+    Include an inline cache with the exported image.
+    """
+    pass
 
 @pulumi.input_type
 class CacheToInlineArgs:
@@ -1029,34 +994,31 @@ class CacheToInlineArgs:
         pass
 
 
-if not MYPY:
-    class CacheToLocalArgsDict(TypedDict):
-        dest: pulumi.Input[_builtins.str]
-        """
-        Path of the local directory to export the cache.
-        """
-        compression: NotRequired[pulumi.Input['CompressionType']]
-        """
-        The compression type to use.
-        """
-        compression_level: NotRequired[pulumi.Input[_builtins.int]]
-        """
-        Compression level from 0 to 22.
-        """
-        force_compression: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Forcefully apply compression.
-        """
-        ignore_error: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Ignore errors caused by failed cache exports.
-        """
-        mode: NotRequired[pulumi.Input['CacheMode']]
-        """
-        The cache mode to use. Defaults to `min`.
-        """
-elif False:
-    CacheToLocalArgsDict: TypeAlias = Mapping[str, Any]
+class CacheToLocalArgsDict(TypedDict):
+    dest: pulumi.Input[_builtins.str]
+    """
+    Path of the local directory to export the cache.
+    """
+    compression: NotRequired[pulumi.Input['CompressionType']]
+    """
+    The compression type to use.
+    """
+    compression_level: NotRequired[pulumi.Input[_builtins.int]]
+    """
+    Compression level from 0 to 22.
+    """
+    force_compression: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Forcefully apply compression.
+    """
+    ignore_error: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Ignore errors caused by failed cache exports.
+    """
+    mode: NotRequired[pulumi.Input['CacheMode']]
+    """
+    The cache mode to use. Defaults to `min`.
+    """
 
 @pulumi.input_type
 class CacheToLocalArgs:
@@ -1170,49 +1132,46 @@ class CacheToLocalArgs:
         pulumi.set(self, "mode", value)
 
 
-if not MYPY:
-    class CacheToRegistryArgsDict(TypedDict):
-        ref: pulumi.Input[_builtins.str]
-        """
-        Fully qualified name of the cache image to import.
-        """
-        compression: NotRequired[pulumi.Input['CompressionType']]
-        """
-        The compression type to use.
-        """
-        compression_level: NotRequired[pulumi.Input[_builtins.int]]
-        """
-        Compression level from 0 to 22.
-        """
-        force_compression: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Forcefully apply compression.
-        """
-        ignore_error: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Ignore errors caused by failed cache exports.
-        """
-        image_manifest: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Export cache manifest as an OCI-compatible image manifest instead of a
-        manifest list. Requires `ociMediaTypes` to also be `true`.
+class CacheToRegistryArgsDict(TypedDict):
+    ref: pulumi.Input[_builtins.str]
+    """
+    Fully qualified name of the cache image to import.
+    """
+    compression: NotRequired[pulumi.Input['CompressionType']]
+    """
+    The compression type to use.
+    """
+    compression_level: NotRequired[pulumi.Input[_builtins.int]]
+    """
+    Compression level from 0 to 22.
+    """
+    force_compression: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Forcefully apply compression.
+    """
+    ignore_error: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Ignore errors caused by failed cache exports.
+    """
+    image_manifest: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Export cache manifest as an OCI-compatible image manifest instead of a
+    manifest list. Requires `ociMediaTypes` to also be `true`.
 
-        Some registries like AWS ECR will not work with caching if this is
-        `false`.
+    Some registries like AWS ECR will not work with caching if this is
+    `false`.
 
-        Defaults to `false` to match Docker's default behavior.
-        """
-        mode: NotRequired[pulumi.Input['CacheMode']]
-        """
-        The cache mode to use. Defaults to `min`.
-        """
-        oci_media_types: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Whether to use OCI media types in exported manifests. Defaults to
-        `true`.
-        """
-elif False:
-    CacheToRegistryArgsDict: TypeAlias = Mapping[str, Any]
+    Defaults to `false` to match Docker's default behavior.
+    """
+    mode: NotRequired[pulumi.Input['CacheMode']]
+    """
+    The cache mode to use. Defaults to `min`.
+    """
+    oci_media_types: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Whether to use OCI media types in exported manifests. Defaults to
+    `true`.
+    """
 
 @pulumi.input_type
 class CacheToRegistryArgs:
@@ -1376,58 +1335,55 @@ class CacheToRegistryArgs:
         pulumi.set(self, "oci_media_types", value)
 
 
-if not MYPY:
-    class CacheToS3ArgsDict(TypedDict):
-        bucket: pulumi.Input[_builtins.str]
-        """
-        Name of the S3 bucket.
-        """
-        region: pulumi.Input[_builtins.str]
-        """
-        The geographic location of the bucket. Defaults to `$AWS_REGION`.
-        """
-        access_key_id: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Defaults to `$AWS_ACCESS_KEY_ID`.
-        """
-        blobs_prefix: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Prefix to prepend to blob filenames.
-        """
-        endpoint_url: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Endpoint of the S3 bucket.
-        """
-        ignore_error: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Ignore errors caused by failed cache exports.
-        """
-        manifests_prefix: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Prefix to prepend on manifest filenames.
-        """
-        mode: NotRequired[pulumi.Input['CacheMode']]
-        """
-        The cache mode to use. Defaults to `min`.
-        """
-        name: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Name of the cache image.
-        """
-        secret_access_key: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Defaults to `$AWS_SECRET_ACCESS_KEY`.
-        """
-        session_token: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Defaults to `$AWS_SESSION_TOKEN`.
-        """
-        use_path_style: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Uses `bucket` in the URL instead of hostname when `true`.
-        """
-elif False:
-    CacheToS3ArgsDict: TypeAlias = Mapping[str, Any]
+class CacheToS3ArgsDict(TypedDict):
+    bucket: pulumi.Input[_builtins.str]
+    """
+    Name of the S3 bucket.
+    """
+    region: pulumi.Input[_builtins.str]
+    """
+    The geographic location of the bucket. Defaults to `$AWS_REGION`.
+    """
+    access_key_id: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Defaults to `$AWS_ACCESS_KEY_ID`.
+    """
+    blobs_prefix: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Prefix to prepend to blob filenames.
+    """
+    endpoint_url: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Endpoint of the S3 bucket.
+    """
+    ignore_error: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Ignore errors caused by failed cache exports.
+    """
+    manifests_prefix: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Prefix to prepend on manifest filenames.
+    """
+    mode: NotRequired[pulumi.Input['CacheMode']]
+    """
+    The cache mode to use. Defaults to `min`.
+    """
+    name: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Name of the cache image.
+    """
+    secret_access_key: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Defaults to `$AWS_SECRET_ACCESS_KEY`.
+    """
+    session_token: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Defaults to `$AWS_SESSION_TOKEN`.
+    """
+    use_path_style: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Uses `bucket` in the URL instead of hostname when `true`.
+    """
 
 @pulumi.input_type
 class CacheToS3Args:
@@ -1638,49 +1594,46 @@ class CacheToS3Args:
         pulumi.set(self, "use_path_style", value)
 
 
-if not MYPY:
-    class CacheToArgsDict(TypedDict):
-        azblob: NotRequired[pulumi.Input['CacheToAzureBlobArgsDict']]
-        """
-        Push cache to Azure's blob storage service.
-        """
-        disabled: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        When `true` this entry will be excluded. Defaults to `false`.
-        """
-        gha: NotRequired[pulumi.Input['CacheToGitHubActionsArgsDict']]
-        """
-        Recommended for use with GitHub Actions workflows.
+class CacheToArgsDict(TypedDict):
+    azblob: NotRequired[pulumi.Input['CacheToAzureBlobArgsDict']]
+    """
+    Push cache to Azure's blob storage service.
+    """
+    disabled: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    When `true` this entry will be excluded. Defaults to `false`.
+    """
+    gha: NotRequired[pulumi.Input['CacheToGitHubActionsArgsDict']]
+    """
+    Recommended for use with GitHub Actions workflows.
 
-        An action like `crazy-max/ghaction-github-runtime` is recommended to
-        expose appropriate credentials to your GitHub workflow.
-        """
-        inline: NotRequired[pulumi.Input['CacheToInlineArgsDict']]
-        """
-        The inline cache storage backend is the simplest implementation to get
-        started with, but it does not handle multi-stage builds. Consider the
-        `registry` cache backend instead.
-        """
-        local: NotRequired[pulumi.Input['CacheToLocalArgsDict']]
-        """
-        A simple backend which caches imagines on your local filesystem.
-        """
-        raw: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        A raw string as you would provide it to the Docker CLI (e.g.,
-        `type=inline`)
-        """
-        registry: NotRequired[pulumi.Input['CacheToRegistryArgsDict']]
-        """
-        Push caches to remote registries. Incompatible with the `docker` build
-        driver.
-        """
-        s3: NotRequired[pulumi.Input['CacheToS3ArgsDict']]
-        """
-        Push cache to AWS S3 or S3-compatible services such as MinIO.
-        """
-elif False:
-    CacheToArgsDict: TypeAlias = Mapping[str, Any]
+    An action like `crazy-max/ghaction-github-runtime` is recommended to
+    expose appropriate credentials to your GitHub workflow.
+    """
+    inline: NotRequired[pulumi.Input['CacheToInlineArgsDict']]
+    """
+    The inline cache storage backend is the simplest implementation to get
+    started with, but it does not handle multi-stage builds. Consider the
+    `registry` cache backend instead.
+    """
+    local: NotRequired[pulumi.Input['CacheToLocalArgsDict']]
+    """
+    A simple backend which caches imagines on your local filesystem.
+    """
+    raw: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    A raw string as you would provide it to the Docker CLI (e.g.,
+    `type=inline`)
+    """
+    registry: NotRequired[pulumi.Input['CacheToRegistryArgsDict']]
+    """
+    Push caches to remote registries. Incompatible with the `docker` build
+    driver.
+    """
+    s3: NotRequired[pulumi.Input['CacheToS3ArgsDict']]
+    """
+    Push cache to AWS S3 or S3-compatible services such as MinIO.
+    """
 
 @pulumi.input_type
 class CacheToArgs:
@@ -1831,21 +1784,18 @@ class CacheToArgs:
         pulumi.set(self, "s3", value)
 
 
-if not MYPY:
-    class ContextArgsDict(TypedDict):
-        location: pulumi.Input[_builtins.str]
-        """
-        Resources to use for build context.
+class ContextArgsDict(TypedDict):
+    location: pulumi.Input[_builtins.str]
+    """
+    Resources to use for build context.
 
-        The location can be:
-        * A relative or absolute path to a local directory (`.`, `./app`,
-          `/app`, etc.).
-        * A remote URL of a Git repository, tarball, or plain text file
-          (`https://github.com/user/myrepo.git`, `http://server/context.tar.gz`,
-          etc.).
-        """
-elif False:
-    ContextArgsDict: TypeAlias = Mapping[str, Any]
+    The location can be:
+    * A relative or absolute path to a local directory (`.`, `./app`,
+      `/app`, etc.).
+    * A remote URL of a Git repository, tarball, or plain text file
+      (`https://github.com/user/myrepo.git`, `http://server/context.tar.gz`,
+      etc.).
+    """
 
 @pulumi.input_type
 class ContextArgs:
@@ -1883,28 +1833,25 @@ class ContextArgs:
         pulumi.set(self, "location", value)
 
 
-if not MYPY:
-    class DockerfileArgsDict(TypedDict):
-        inline: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Raw Dockerfile contents.
+class DockerfileArgsDict(TypedDict):
+    inline: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Raw Dockerfile contents.
 
-        Conflicts with `location`.
+    Conflicts with `location`.
 
-        Equivalent to invoking Docker with `-f -`.
-        """
-        location: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Location of the Dockerfile to use.
+    Equivalent to invoking Docker with `-f -`.
+    """
+    location: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Location of the Dockerfile to use.
 
-        Can be a relative or absolute path to a local file, or a remote URL.
+    Can be a relative or absolute path to a local file, or a remote URL.
 
-        Defaults to `${context.location}/Dockerfile` if context is on-disk.
+    Defaults to `${context.location}/Dockerfile` if context is on-disk.
 
-        Conflicts with `inline`.
-        """
-elif False:
-    DockerfileArgsDict: TypeAlias = Mapping[str, Any]
+    Conflicts with `inline`.
+    """
 
 @pulumi.input_type
 class DockerfileArgs:
@@ -1965,11 +1912,8 @@ class DockerfileArgs:
         pulumi.set(self, "location", value)
 
 
-if not MYPY:
-    class ExportCacheOnlyArgsDict(TypedDict):
-        pass
-elif False:
-    ExportCacheOnlyArgsDict: TypeAlias = Mapping[str, Any]
+class ExportCacheOnlyArgsDict(TypedDict):
+    pass
 
 @pulumi.input_type
 class ExportCacheOnlyArgs:
@@ -1977,42 +1921,39 @@ class ExportCacheOnlyArgs:
         pass
 
 
-if not MYPY:
-    class ExportDockerArgsDict(TypedDict):
-        annotations: NotRequired[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]
-        """
-        Attach an arbitrary key/value annotation to the image.
-        """
-        compression: NotRequired[pulumi.Input['CompressionType']]
-        """
-        The compression type to use.
-        """
-        compression_level: NotRequired[pulumi.Input[_builtins.int]]
-        """
-        Compression level from 0 to 22.
-        """
-        dest: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        The local export path.
-        """
-        force_compression: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Forcefully apply compression.
-        """
-        names: NotRequired[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]
-        """
-        Specify images names to export. This is overridden if tags are already specified.
-        """
-        oci_media_types: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Use OCI media types in exporter manifests.
-        """
-        tar: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Bundle the output into a tarball layout.
-        """
-elif False:
-    ExportDockerArgsDict: TypeAlias = Mapping[str, Any]
+class ExportDockerArgsDict(TypedDict):
+    annotations: NotRequired[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]
+    """
+    Attach an arbitrary key/value annotation to the image.
+    """
+    compression: NotRequired[pulumi.Input['CompressionType']]
+    """
+    The compression type to use.
+    """
+    compression_level: NotRequired[pulumi.Input[_builtins.int]]
+    """
+    Compression level from 0 to 22.
+    """
+    dest: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    The local export path.
+    """
+    force_compression: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Forcefully apply compression.
+    """
+    names: NotRequired[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]
+    """
+    Specify images names to export. This is overridden if tags are already specified.
+    """
+    oci_media_types: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Use OCI media types in exporter manifests.
+    """
+    tar: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Bundle the output into a tarball layout.
+    """
 
 @pulumi.input_type
 class ExportDockerArgs:
@@ -2159,69 +2100,66 @@ class ExportDockerArgs:
         pulumi.set(self, "tar", value)
 
 
-if not MYPY:
-    class ExportImageArgsDict(TypedDict):
-        annotations: NotRequired[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]
-        """
-        Attach an arbitrary key/value annotation to the image.
-        """
-        compression: NotRequired[pulumi.Input['CompressionType']]
-        """
-        The compression type to use.
-        """
-        compression_level: NotRequired[pulumi.Input[_builtins.int]]
-        """
-        Compression level from 0 to 22.
-        """
-        dangling_name_prefix: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Name image with `prefix@<digest>`, used for anonymous images.
-        """
-        force_compression: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Forcefully apply compression.
-        """
-        insecure: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Allow pushing to an insecure registry.
-        """
-        name_canonical: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Add additional canonical name (`name@<digest>`).
-        """
-        names: NotRequired[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]
-        """
-        Specify images names to export. This is overridden if tags are already specified.
-        """
-        oci_media_types: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Use OCI media types in exporter manifests.
-        """
-        push: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Push after creating the image. Defaults to `false`.
-        """
-        push_by_digest: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Push image without name.
-        """
-        store: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Store resulting images to the worker's image store and ensure all of
-        its blobs are in the content store.
+class ExportImageArgsDict(TypedDict):
+    annotations: NotRequired[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]
+    """
+    Attach an arbitrary key/value annotation to the image.
+    """
+    compression: NotRequired[pulumi.Input['CompressionType']]
+    """
+    The compression type to use.
+    """
+    compression_level: NotRequired[pulumi.Input[_builtins.int]]
+    """
+    Compression level from 0 to 22.
+    """
+    dangling_name_prefix: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Name image with `prefix@<digest>`, used for anonymous images.
+    """
+    force_compression: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Forcefully apply compression.
+    """
+    insecure: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Allow pushing to an insecure registry.
+    """
+    name_canonical: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Add additional canonical name (`name@<digest>`).
+    """
+    names: NotRequired[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]
+    """
+    Specify images names to export. This is overridden if tags are already specified.
+    """
+    oci_media_types: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Use OCI media types in exporter manifests.
+    """
+    push: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Push after creating the image. Defaults to `false`.
+    """
+    push_by_digest: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Push image without name.
+    """
+    store: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Store resulting images to the worker's image store and ensure all of
+    its blobs are in the content store.
 
-        Defaults to `true`.
+    Defaults to `true`.
 
-        Ignored if the worker doesn't have image store (when using OCI workers,
-        for example).
-        """
-        unpack: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Unpack image after creation (for use with containerd). Defaults to
-        `false`.
-        """
-elif False:
-    ExportImageArgsDict: TypeAlias = Mapping[str, Any]
+    Ignored if the worker doesn't have image store (when using OCI workers,
+    for example).
+    """
+    unpack: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Unpack image after creation (for use with containerd). Defaults to
+    `false`.
+    """
 
 @pulumi.input_type
 class ExportImageArgs:
@@ -2462,14 +2400,11 @@ class ExportImageArgs:
         pulumi.set(self, "unpack", value)
 
 
-if not MYPY:
-    class ExportLocalArgsDict(TypedDict):
-        dest: pulumi.Input[_builtins.str]
-        """
-        Output path.
-        """
-elif False:
-    ExportLocalArgsDict: TypeAlias = Mapping[str, Any]
+class ExportLocalArgsDict(TypedDict):
+    dest: pulumi.Input[_builtins.str]
+    """
+    Output path.
+    """
 
 @pulumi.input_type
 class ExportLocalArgs:
@@ -2493,42 +2428,39 @@ class ExportLocalArgs:
         pulumi.set(self, "dest", value)
 
 
-if not MYPY:
-    class ExportOCIArgsDict(TypedDict):
-        annotations: NotRequired[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]
-        """
-        Attach an arbitrary key/value annotation to the image.
-        """
-        compression: NotRequired[pulumi.Input['CompressionType']]
-        """
-        The compression type to use.
-        """
-        compression_level: NotRequired[pulumi.Input[_builtins.int]]
-        """
-        Compression level from 0 to 22.
-        """
-        dest: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        The local export path.
-        """
-        force_compression: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Forcefully apply compression.
-        """
-        names: NotRequired[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]
-        """
-        Specify images names to export. This is overridden if tags are already specified.
-        """
-        oci_media_types: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Use OCI media types in exporter manifests.
-        """
-        tar: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Bundle the output into a tarball layout.
-        """
-elif False:
-    ExportOCIArgsDict: TypeAlias = Mapping[str, Any]
+class ExportOCIArgsDict(TypedDict):
+    annotations: NotRequired[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]
+    """
+    Attach an arbitrary key/value annotation to the image.
+    """
+    compression: NotRequired[pulumi.Input['CompressionType']]
+    """
+    The compression type to use.
+    """
+    compression_level: NotRequired[pulumi.Input[_builtins.int]]
+    """
+    Compression level from 0 to 22.
+    """
+    dest: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    The local export path.
+    """
+    force_compression: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Forcefully apply compression.
+    """
+    names: NotRequired[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]
+    """
+    Specify images names to export. This is overridden if tags are already specified.
+    """
+    oci_media_types: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Use OCI media types in exporter manifests.
+    """
+    tar: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Bundle the output into a tarball layout.
+    """
 
 @pulumi.input_type
 class ExportOCIArgs:
@@ -2675,69 +2607,66 @@ class ExportOCIArgs:
         pulumi.set(self, "tar", value)
 
 
-if not MYPY:
-    class ExportRegistryArgsDict(TypedDict):
-        annotations: NotRequired[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]
-        """
-        Attach an arbitrary key/value annotation to the image.
-        """
-        compression: NotRequired[pulumi.Input['CompressionType']]
-        """
-        The compression type to use.
-        """
-        compression_level: NotRequired[pulumi.Input[_builtins.int]]
-        """
-        Compression level from 0 to 22.
-        """
-        dangling_name_prefix: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Name image with `prefix@<digest>`, used for anonymous images.
-        """
-        force_compression: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Forcefully apply compression.
-        """
-        insecure: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Allow pushing to an insecure registry.
-        """
-        name_canonical: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Add additional canonical name (`name@<digest>`).
-        """
-        names: NotRequired[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]
-        """
-        Specify images names to export. This is overridden if tags are already specified.
-        """
-        oci_media_types: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Use OCI media types in exporter manifests.
-        """
-        push: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Push after creating the image. Defaults to `true`.
-        """
-        push_by_digest: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Push image without name.
-        """
-        store: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Store resulting images to the worker's image store and ensure all of
-        its blobs are in the content store.
+class ExportRegistryArgsDict(TypedDict):
+    annotations: NotRequired[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]
+    """
+    Attach an arbitrary key/value annotation to the image.
+    """
+    compression: NotRequired[pulumi.Input['CompressionType']]
+    """
+    The compression type to use.
+    """
+    compression_level: NotRequired[pulumi.Input[_builtins.int]]
+    """
+    Compression level from 0 to 22.
+    """
+    dangling_name_prefix: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Name image with `prefix@<digest>`, used for anonymous images.
+    """
+    force_compression: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Forcefully apply compression.
+    """
+    insecure: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Allow pushing to an insecure registry.
+    """
+    name_canonical: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Add additional canonical name (`name@<digest>`).
+    """
+    names: NotRequired[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]
+    """
+    Specify images names to export. This is overridden if tags are already specified.
+    """
+    oci_media_types: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Use OCI media types in exporter manifests.
+    """
+    push: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Push after creating the image. Defaults to `true`.
+    """
+    push_by_digest: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Push image without name.
+    """
+    store: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Store resulting images to the worker's image store and ensure all of
+    its blobs are in the content store.
 
-        Defaults to `true`.
+    Defaults to `true`.
 
-        Ignored if the worker doesn't have image store (when using OCI workers,
-        for example).
-        """
-        unpack: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        Unpack image after creation (for use with containerd). Defaults to
-        `false`.
-        """
-elif False:
-    ExportRegistryArgsDict: TypeAlias = Mapping[str, Any]
+    Ignored if the worker doesn't have image store (when using OCI workers,
+    for example).
+    """
+    unpack: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Unpack image after creation (for use with containerd). Defaults to
+    `false`.
+    """
 
 @pulumi.input_type
 class ExportRegistryArgs:
@@ -2980,14 +2909,11 @@ class ExportRegistryArgs:
         pulumi.set(self, "unpack", value)
 
 
-if not MYPY:
-    class ExportTarArgsDict(TypedDict):
-        dest: pulumi.Input[_builtins.str]
-        """
-        Output path.
-        """
-elif False:
-    ExportTarArgsDict: TypeAlias = Mapping[str, Any]
+class ExportTarArgsDict(TypedDict):
+    dest: pulumi.Input[_builtins.str]
+    """
+    Output path.
+    """
 
 @pulumi.input_type
 class ExportTarArgs:
@@ -3011,48 +2937,45 @@ class ExportTarArgs:
         pulumi.set(self, "dest", value)
 
 
-if not MYPY:
-    class ExportArgsDict(TypedDict):
-        cacheonly: NotRequired[pulumi.Input['ExportCacheOnlyArgsDict']]
-        """
-        A no-op export. Helpful for silencing the 'no exports' warning if you
-        just want to populate caches.
-        """
-        disabled: NotRequired[pulumi.Input[_builtins.bool]]
-        """
-        When `true` this entry will be excluded. Defaults to `false`.
-        """
-        docker: NotRequired[pulumi.Input['ExportDockerArgsDict']]
-        """
-        Export as a Docker image layout.
-        """
-        image: NotRequired[pulumi.Input['ExportImageArgsDict']]
-        """
-        Outputs the build result into a container image format.
-        """
-        local: NotRequired[pulumi.Input['ExportLocalArgsDict']]
-        """
-        Export to a local directory as files and directories.
-        """
-        oci: NotRequired[pulumi.Input['ExportOCIArgsDict']]
-        """
-        Identical to the Docker exporter but uses OCI media types by default.
-        """
-        raw: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        A raw string as you would provide it to the Docker CLI (e.g.,
-        `type=docker`)
-        """
-        registry: NotRequired[pulumi.Input['ExportRegistryArgsDict']]
-        """
-        Identical to the Image exporter, but pushes by default.
-        """
-        tar: NotRequired[pulumi.Input['ExportTarArgsDict']]
-        """
-        Export to a local directory as a tarball.
-        """
-elif False:
-    ExportArgsDict: TypeAlias = Mapping[str, Any]
+class ExportArgsDict(TypedDict):
+    cacheonly: NotRequired[pulumi.Input['ExportCacheOnlyArgsDict']]
+    """
+    A no-op export. Helpful for silencing the 'no exports' warning if you
+    just want to populate caches.
+    """
+    disabled: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    When `true` this entry will be excluded. Defaults to `false`.
+    """
+    docker: NotRequired[pulumi.Input['ExportDockerArgsDict']]
+    """
+    Export as a Docker image layout.
+    """
+    image: NotRequired[pulumi.Input['ExportImageArgsDict']]
+    """
+    Outputs the build result into a container image format.
+    """
+    local: NotRequired[pulumi.Input['ExportLocalArgsDict']]
+    """
+    Export to a local directory as files and directories.
+    """
+    oci: NotRequired[pulumi.Input['ExportOCIArgsDict']]
+    """
+    Identical to the Docker exporter but uses OCI media types by default.
+    """
+    raw: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    A raw string as you would provide it to the Docker CLI (e.g.,
+    `type=docker`)
+    """
+    registry: NotRequired[pulumi.Input['ExportRegistryArgsDict']]
+    """
+    Identical to the Image exporter, but pushes by default.
+    """
+    tar: NotRequired[pulumi.Input['ExportTarArgsDict']]
+    """
+    Export to a local directory as a tarball.
+    """
 
 @pulumi.input_type
 class ExportArgs:
@@ -3209,22 +3132,19 @@ class ExportArgs:
         pulumi.set(self, "tar", value)
 
 
-if not MYPY:
-    class RegistryArgsDict(TypedDict):
-        address: pulumi.Input[_builtins.str]
-        """
-        The registry's address (e.g. "docker.io").
-        """
-        password: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Password or token for the registry.
-        """
-        username: NotRequired[pulumi.Input[_builtins.str]]
-        """
-        Username for the registry.
-        """
-elif False:
-    RegistryArgsDict: TypeAlias = Mapping[str, Any]
+class RegistryArgsDict(TypedDict):
+    address: pulumi.Input[_builtins.str]
+    """
+    The registry's address (e.g. "docker.io").
+    """
+    password: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Password or token for the registry.
+    """
+    username: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Username for the registry.
+    """
 
 @pulumi.input_type
 class RegistryArgs:
@@ -3280,28 +3200,25 @@ class RegistryArgs:
         pulumi.set(self, "username", value)
 
 
-if not MYPY:
-    class SSHArgsDict(TypedDict):
-        id: pulumi.Input[_builtins.str]
-        """
-        Useful for distinguishing different servers that are part of the same
-        build.
+class SSHArgsDict(TypedDict):
+    id: pulumi.Input[_builtins.str]
+    """
+    Useful for distinguishing different servers that are part of the same
+    build.
 
-        A value of `default` is appropriate if only dealing with a single host.
-        """
-        paths: NotRequired[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]
-        """
-        SSH agent socket or private keys to expose to the build under the given
-        identifier.
+    A value of `default` is appropriate if only dealing with a single host.
+    """
+    paths: NotRequired[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]
+    """
+    SSH agent socket or private keys to expose to the build under the given
+    identifier.
 
-        Defaults to `[$SSH_AUTH_SOCK]`.
+    Defaults to `[$SSH_AUTH_SOCK]`.
 
-        Note that your keys are **not** automatically added when using an
-        agent. Run `ssh-add -l` locally to confirm which public keys are
-        visible to the agent; these will be exposed to your build.
-        """
-elif False:
-    SSHArgsDict: TypeAlias = Mapping[str, Any]
+    Note that your keys are **not** automatically added when using an
+    agent. Run `ssh-add -l` locally to confirm which public keys are
+    visible to the agent; these will be exposed to your build.
+    """
 
 @pulumi.input_type
 class SSHArgs:
