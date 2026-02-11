@@ -182,6 +182,7 @@ bin/${PROVIDER}: $(shell find ./provider -name '*.go') go.mod
 	(cd provider && go build -o ../bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION_GENERIC}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
 
 bin/pulumi-gen-${PACK}: # Required by CI
+	@mkdir -p bin
 	touch bin/pulumi-gen-${PACK}
 
 go.mod: $(shell find . -name '*.go')
@@ -257,6 +258,7 @@ AZURE_SIGNING_KEY_VAULT_URI ?=
 SKIP_SIGNING ?=
 
 bin/jsign-6.0.jar:
+	@mkdir -p bin
 	wget https://github.com/ebourg/jsign/releases/download/6.0/jsign-6.0.jar --output-document=bin/jsign-6.0.jar
 
 sign-goreleaser-exe-amd64: GORELEASER_ARCH := amd64_v1
