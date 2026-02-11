@@ -18,11 +18,11 @@ import (
 	"context"
 	"fmt"
 
+	csgen "github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3/codegen"
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	pschema "github.com/pulumi/pulumi-go-provider/middleware/schema"
 	"github.com/pulumi/pulumi-java/pkg/codegen/java"
-	csgen "github.com/pulumi/pulumi/pkg/v3/codegen/dotnet"
 	gogen "github.com/pulumi/pulumi/pkg/v3/codegen/go"
 	tsgen "github.com/pulumi/pulumi/pkg/v3/codegen/nodejs"
 	pygen "github.com/pulumi/pulumi/pkg/v3/codegen/python"
