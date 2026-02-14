@@ -398,7 +398,15 @@ func (c *cli) exec(ctx context.Context, args, extraEnv []string) error {
 	cmd.Stdin = c.In()
 	cmd.Env = append(runCmd.Env, extraEnv...) //nolint:gocritic // We are intentionally assigning from runCmd to cmd
 
-	return cmd.Run()
+	// Run the command and include stderr in error if it fails
+	if err := cmd.Run(); err != nil {
+		// Include stderr content in the error message if available
+		if c.err.Len() > 0 {
+			return fmt.Errorf("%w: %s", err, c.err.String())
+		}
+		return err
+	}
+	return nil
 }
 
 // attrcsv transforms key/values into a CSV: key1=value1,key2=value2,...
