@@ -608,6 +608,15 @@ export class Image extends pulumi.CustomResource {
      */
     declare public readonly exports: pulumi.Output<outputs.Export[] | undefined>;
     /**
+     * A list of secret names to ignore when calculating diffs.
+     *
+     * These secrets will not be considered when calculating diffs, even if they
+     * are changed. Note: only applicable if the secret is present in both the old and the new state.
+     *
+     * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+     */
+    declare public readonly ignoreSecretsInDiffCalculation: pulumi.Output<string[] | undefined>;
+    /**
      * Attach arbitrary key/value metadata to the image.
      *
      * Equivalent to Docker's `--label` flag.
@@ -742,6 +751,7 @@ export class Image extends pulumi.CustomResource {
             resourceInputs["dockerfile"] = args?.dockerfile;
             resourceInputs["exec"] = args?.exec;
             resourceInputs["exports"] = args?.exports;
+            resourceInputs["ignoreSecretsInDiffCalculation"] = args?.ignoreSecretsInDiffCalculation;
             resourceInputs["labels"] = args?.labels;
             resourceInputs["load"] = args?.load;
             resourceInputs["network"] = (args?.network) ?? "default";
@@ -770,6 +780,7 @@ export class Image extends pulumi.CustomResource {
             resourceInputs["dockerfile"] = undefined /*out*/;
             resourceInputs["exec"] = undefined /*out*/;
             resourceInputs["exports"] = undefined /*out*/;
+            resourceInputs["ignoreSecretsInDiffCalculation"] = undefined /*out*/;
             resourceInputs["labels"] = undefined /*out*/;
             resourceInputs["load"] = undefined /*out*/;
             resourceInputs["network"] = undefined /*out*/;
@@ -888,6 +899,15 @@ export interface ImageArgs {
      * Equivalent to Docker's `--output` flag.
      */
     exports?: pulumi.Input<pulumi.Input<inputs.ExportArgs>[]>;
+    /**
+     * A list of secret names to ignore when calculating diffs.
+     *
+     * These secrets will not be considered when calculating diffs, even if they
+     * are changed. Note: only applicable if the secret is present in both the old and the new state.
+     *
+     * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+     */
+    ignoreSecretsInDiffCalculation?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * Attach arbitrary key/value metadata to the image.
      *
