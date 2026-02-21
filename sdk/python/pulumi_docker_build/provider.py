@@ -24,6 +24,7 @@ class ProviderArgs:
                  registries: Optional[pulumi.Input[Sequence[pulumi.Input['RegistryArgs']]]] = None):
         """
         The set of arguments for constructing a Provider resource.
+
         :param pulumi.Input[_builtins.str] host: The build daemon's address.
         """
         if host is None:
@@ -66,6 +67,7 @@ class Provider(pulumi.ProviderResource):
                  __props__=None):
         """
         Create a Docker-build resource with the given unique name, props, and options.
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.str] host: The build daemon's address.
@@ -78,6 +80,7 @@ class Provider(pulumi.ProviderResource):
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
         Create a Docker-build resource with the given unique name, props, and options.
+
         :param str resource_name: The name of the resource.
         :param ProviderArgs args: The arguments to use to populate this resource's properties.
         :param pulumi.ResourceOptions opts: Options for the resource.
