@@ -98,13 +98,13 @@ func (h *host) builderFor(ctx context.Context, build Build) (*cachedBuilder, err
 	if err != nil && build.ShouldExec() && strings.HasPrefix(opts.Builder, "cloud-") {
 		//nolint:revive // Human-readable.
 		err = errors.Join(err,
-			errors.New("Make sure you're logged in to Docker (`docker login`) if you're trying to use a cloud builder."),
-			errors.New("Make sure you have the correct buildx plugin installed (https://github.com/docker/buildx-desktop)."),
+			errors.New("Make sure you're logged in to Docker (`docker login`) if you're trying to use a cloud builder"),     //nolint:lll,staticcheck
+			errors.New("Make sure you have the correct buildx plugin installed (https://github.com/docker/buildx-desktop)"), //nolint:lll,staticcheck
 		)
 	}
 	if err != nil && build.ShouldExec() {
 		//nolint:revive // Human-readable.
-		err = errors.Join(err, errors.New(
+		err = errors.Join(err, errors.New( //nolint:staticcheck
 			"Make sure your buildx plugin is executable (`docker buildx version`)"),
 		)
 	}
@@ -176,8 +176,8 @@ func (h *host) builderFor(ctx context.Context, build Build) (*cachedBuilder, err
 	if err != nil && !build.ShouldExec() {
 		if strings.Contains(err.Error(), "failed to find driver") {
 			//nolint:revive // Human-readable.
-			err = errors.Join(err, errors.New(
-				"Use `exec: true` if you're trying to use Docker Build Cloud or other custom drivers.",
+			err = errors.Join(err, errors.New( //nolint:staticcheck
+				"Use `exec: true` if you're trying to use Docker Build Cloud or other custom drivers",
 			))
 		}
 		return nil, fmt.Errorf("loading nodes: %w", err)

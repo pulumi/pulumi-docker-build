@@ -170,7 +170,7 @@ func hashFile(
 	if fileMode.IsDir() {
 		return nil
 	}
-	if !(fileMode.IsRegular() || fileMode.Type() == os.ModeSymlink) {
+	if !fileMode.IsRegular() && fileMode.Type() != os.ModeSymlink {
 		return nil
 	}
 

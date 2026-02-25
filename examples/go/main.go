@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi/config"
+
+	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 )
 
 func main() {
