@@ -8,15 +8,17 @@ import (
 	"path"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/pulumi/providertest"
 	"github.com/pulumi/providertest/providers"
 	"github.com/pulumi/providertest/pulumitest"
 	"github.com/pulumi/providertest/pulumitest/assertpreview"
 	"github.com/pulumi/providertest/pulumitest/opttest"
-	"github.com/pulumi/pulumi-docker-build/provider"
 	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 	pulumirpc "github.com/pulumi/pulumi/sdk/v3/proto/go"
-	"github.com/stretchr/testify/require"
+
+	"github.com/pulumi/pulumi-docker-build/provider"
 )
 
 func TestYAMLExample(t *testing.T) {

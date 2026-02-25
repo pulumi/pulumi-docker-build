@@ -8,8 +8,9 @@ import (
 	"path"
 	"testing"
 
-	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 	"github.com/stretchr/testify/require"
+
+	"github.com/pulumi/pulumi/pkg/v3/testing/integration"
 )
 
 func TestPythonExample(t *testing.T) {
