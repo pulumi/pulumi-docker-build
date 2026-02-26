@@ -306,6 +306,7 @@ class CacheFromGitHubActions(dict):
 
         An action like `crazy-max/ghaction-github-runtime` is recommended to expose
         appropriate credentials to your GitHub workflow.
+
         :param _builtins.str scope: The scope to use for cache keys. Defaults to `buildkit`.
                
                This should be set if building and caching multiple images in one
@@ -780,6 +781,7 @@ class CacheToGitHubActions(dict):
 
         An action like `crazy-max/ghaction-github-runtime` is recommended to expose
         appropriate credentials to your GitHub workflow.
+
         :param _builtins.bool ignore_error: Ignore errors caused by failed cache exports.
         :param 'CacheMode' mode: The cache mode to use. Defaults to `min`.
         :param _builtins.str scope: The scope to use for cache keys. Defaults to `buildkit`.
