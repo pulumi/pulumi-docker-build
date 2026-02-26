@@ -5,7 +5,7 @@ go 1.24.7
 toolchain go1.24.13
 
 require (
-	github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild v0.0.12
+	github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild v0.0.15
 	github.com/pulumi/pulumi/sdk/v3 v3.209.0
 )
 
@@ -76,8 +76,7 @@ require (
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
-	github.com/zclconf/go-cty v1.16.2 // indirect
-	go.opentelemetry.io/otel/sdk v1.36.0 // indirect
+	github.com/zclconf/go-cty v1.16.3 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/crypto v0.45.0 // indirect
 	golang.org/x/exp v0.0.0-20250718183923-645b1fa84792 // indirect
