@@ -46,6 +46,7 @@ class ImageArgs:
                  target: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a Image resource.
+
         :param pulumi.Input[_builtins.bool] push: When `true` the build will automatically include a `registry` export.
                
                Defaults to `false`.
@@ -918,6 +919,7 @@ class Image(pulumi.CustomResource):
             push=False)
         ```
 
+
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] add_hosts: Custom `host:ip` mappings to use during the build.
@@ -1355,6 +1357,7 @@ class Image(pulumi.CustomResource):
             }],
             push=False)
         ```
+
 
         :param str resource_name: The name of the resource.
         :param ImageArgs args: The arguments to use to populate this resource's properties.
