@@ -33,6 +33,7 @@ class ImageArgs:
                  dockerfile: Optional[pulumi.Input['DockerfileArgs']] = None,
                  exec_: Optional[pulumi.Input[_builtins.bool]] = None,
                  exports: Optional[pulumi.Input[Sequence[pulumi.Input['ExportArgs']]]] = None,
+                 ignore_secrets_in_diff_calculation: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  labels: Optional[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
                  load: Optional[pulumi.Input[_builtins.bool]] = None,
                  network: Optional[pulumi.Input['NetworkMode']] = None,
@@ -117,6 +118,12 @@ class ImageArgs:
                0.13 or later.
                
                Equivalent to Docker's `--output` flag.
+        :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] ignore_secrets_in_diff_calculation: A list of secret names to ignore when calculating diffs.
+               
+               These secrets will not be considered when calculating diffs, even if they
+               are changed. Note: only applicable if the secret is present in both the old and the new state.
+               
+               This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
         :param pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]] labels: Attach arbitrary key/value metadata to the image.
                
                Equivalent to Docker's `--label` flag.
@@ -193,6 +200,8 @@ class ImageArgs:
             pulumi.set(__self__, "exec_", exec_)
         if exports is not None:
             pulumi.set(__self__, "exports", exports)
+        if ignore_secrets_in_diff_calculation is not None:
+            pulumi.set(__self__, "ignore_secrets_in_diff_calculation", ignore_secrets_in_diff_calculation)
         if labels is not None:
             pulumi.set(__self__, "labels", labels)
         if load is not None:
@@ -410,6 +419,23 @@ class ImageArgs:
         pulumi.set(self, "exports", value)
 
     @_builtins.property
+    @pulumi.getter(name="ignoreSecretsInDiffCalculation")
+    def ignore_secrets_in_diff_calculation(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]:
+        """
+        A list of secret names to ignore when calculating diffs.
+
+        These secrets will not be considered when calculating diffs, even if they
+        are changed. Note: only applicable if the secret is present in both the old and the new state.
+
+        This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+        """
+        return pulumi.get(self, "ignore_secrets_in_diff_calculation")
+
+    @ignore_secrets_in_diff_calculation.setter
+    def ignore_secrets_in_diff_calculation(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]):
+        pulumi.set(self, "ignore_secrets_in_diff_calculation", value)
+
+    @_builtins.property
     @pulumi.getter
     def labels(self) -> Optional[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]]:
         """
@@ -599,6 +625,7 @@ class Image(pulumi.CustomResource):
                  dockerfile: Optional[pulumi.Input[Union['DockerfileArgs', 'DockerfileArgsDict']]] = None,
                  exec_: Optional[pulumi.Input[_builtins.bool]] = None,
                  exports: Optional[pulumi.Input[Sequence[pulumi.Input[Union['ExportArgs', 'ExportArgsDict']]]]] = None,
+                 ignore_secrets_in_diff_calculation: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  labels: Optional[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
                  load: Optional[pulumi.Input[_builtins.bool]] = None,
                  network: Optional[pulumi.Input['NetworkMode']] = None,
@@ -987,6 +1014,12 @@ class Image(pulumi.CustomResource):
                0.13 or later.
                
                Equivalent to Docker's `--output` flag.
+        :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] ignore_secrets_in_diff_calculation: A list of secret names to ignore when calculating diffs.
+               
+               These secrets will not be considered when calculating diffs, even if they
+               are changed. Note: only applicable if the secret is present in both the old and the new state.
+               
+               This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
         :param pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]] labels: Attach arbitrary key/value metadata to the image.
                
                Equivalent to Docker's `--label` flag.
@@ -1384,6 +1417,7 @@ class Image(pulumi.CustomResource):
                  dockerfile: Optional[pulumi.Input[Union['DockerfileArgs', 'DockerfileArgsDict']]] = None,
                  exec_: Optional[pulumi.Input[_builtins.bool]] = None,
                  exports: Optional[pulumi.Input[Sequence[pulumi.Input[Union['ExportArgs', 'ExportArgsDict']]]]] = None,
+                 ignore_secrets_in_diff_calculation: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  labels: Optional[pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
                  load: Optional[pulumi.Input[_builtins.bool]] = None,
                  network: Optional[pulumi.Input['NetworkMode']] = None,
@@ -1417,6 +1451,7 @@ class Image(pulumi.CustomResource):
             __props__.__dict__["dockerfile"] = dockerfile
             __props__.__dict__["exec_"] = exec_
             __props__.__dict__["exports"] = exports
+            __props__.__dict__["ignore_secrets_in_diff_calculation"] = ignore_secrets_in_diff_calculation
             __props__.__dict__["labels"] = labels
             __props__.__dict__["load"] = load
             if network is None:
@@ -1470,6 +1505,7 @@ class Image(pulumi.CustomResource):
         __props__.__dict__["dockerfile"] = None
         __props__.__dict__["exec_"] = None
         __props__.__dict__["exports"] = None
+        __props__.__dict__["ignore_secrets_in_diff_calculation"] = None
         __props__.__dict__["labels"] = None
         __props__.__dict__["load"] = None
         __props__.__dict__["network"] = None
@@ -1643,6 +1679,19 @@ class Image(pulumi.CustomResource):
         Equivalent to Docker's `--output` flag.
         """
         return pulumi.get(self, "exports")
+
+    @_builtins.property
+    @pulumi.getter(name="ignoreSecretsInDiffCalculation")
+    def ignore_secrets_in_diff_calculation(self) -> pulumi.Output[Optional[Sequence[_builtins.str]]]:
+        """
+        A list of secret names to ignore when calculating diffs.
+
+        These secrets will not be considered when calculating diffs, even if they
+        are changed. Note: only applicable if the secret is present in both the old and the new state.
+
+        This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+        """
+        return pulumi.get(self, "ignore_secrets_in_diff_calculation")
 
     @_builtins.property
     @pulumi.getter
