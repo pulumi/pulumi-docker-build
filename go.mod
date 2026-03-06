@@ -17,8 +17,8 @@ require (
 	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.101.2
 	github.com/pulumi/pulumi-go-provider v1.3.0
 	github.com/pulumi/pulumi-java/pkg v1.21.2
-	github.com/pulumi/pulumi/pkg/v3 v3.225.0
-	github.com/pulumi/pulumi/sdk/v3 v3.225.0
+	github.com/pulumi/pulumi/pkg/v3 v3.225.1
+	github.com/pulumi/pulumi/sdk/v3 v3.225.1
 	github.com/regclient/regclient v0.7.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.14.0
