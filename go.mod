@@ -16,7 +16,7 @@ require (
 	github.com/pulumi/providertest v0.7.0
 	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.105.0
 	github.com/pulumi/pulumi-go-provider v1.3.2
-	github.com/pulumi/pulumi-java/pkg v1.22.0
+	github.com/pulumi/pulumi-java v1.26.0
 	github.com/pulumi/pulumi/pkg/v3 v3.234.0
 	github.com/pulumi/pulumi/sdk/v3 v3.234.0
 	github.com/regclient/regclient v0.7.1
@@ -117,7 +117,6 @@ require (
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/erikgeiser/coninput v0.0.0-20211004153227-1c3628e74d0f // indirect
-	github.com/fatih/color v1.17.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/fvbommel/sortorder v1.0.1 // indirect
@@ -311,7 +310,6 @@ require (
 	k8s.io/kube-openapi v0.0.0-20240228011516-70dd3763d340 // indirect
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8 // indirect
 	lukechampine.com/frand v1.5.1 // indirect
-	mvdan.cc/gofumpt v0.6.0 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
