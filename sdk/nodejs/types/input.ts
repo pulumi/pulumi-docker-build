@@ -28,7 +28,7 @@ export interface BuildContextArgs {
      *
      * Values can be local paths, HTTP URLs, or  `docker-image://` images.
      */
-    named?: pulumi.Input<{[key: string]: pulumi.Input<inputs.ContextArgs>}>;
+    named?: pulumi.Input<{[key: string]: pulumi.Input<inputs.ContextArgs>} | undefined>;
 }
 
 export interface BuilderConfigArgs {
@@ -40,43 +40,43 @@ export interface BuilderConfigArgs {
      *
      * Equivalent to Docker's `--builder` flag.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
 }
 
 export interface CacheFromArgs {
     /**
      * Upload build caches to Azure's blob storage service.
      */
-    azblob?: pulumi.Input<inputs.CacheFromAzureBlobArgs>;
+    azblob?: pulumi.Input<inputs.CacheFromAzureBlobArgs | undefined>;
     /**
      * When `true` this entry will be excluded. Defaults to `false`.
      */
-    disabled?: pulumi.Input<boolean>;
+    disabled?: pulumi.Input<boolean | undefined>;
     /**
      * Recommended for use with GitHub Actions workflows.
      *
      * An action like `crazy-max/ghaction-github-runtime` is recommended to
      * expose appropriate credentials to your GitHub workflow.
      */
-    gha?: pulumi.Input<inputs.CacheFromGitHubActionsArgs>;
+    gha?: pulumi.Input<inputs.CacheFromGitHubActionsArgs | undefined>;
     /**
      * A simple backend which caches images on your local filesystem.
      */
-    local?: pulumi.Input<inputs.CacheFromLocalArgs>;
+    local?: pulumi.Input<inputs.CacheFromLocalArgs | undefined>;
     /**
      * A raw string as you would provide it to the Docker CLI (e.g.,
      * `type=inline`).
      */
-    raw?: pulumi.Input<string>;
+    raw?: pulumi.Input<string | undefined>;
     /**
      * Upload build caches to remote registries.
      */
-    registry?: pulumi.Input<inputs.CacheFromRegistryArgs>;
+    registry?: pulumi.Input<inputs.CacheFromRegistryArgs | undefined>;
     /**
      * Upload build caches to AWS S3 or an S3-compatible services such as
      * MinIO.
      */
-    s3?: pulumi.Input<inputs.CacheFromS3Args>;
+    s3?: pulumi.Input<inputs.CacheFromS3Args | undefined>;
 }
 /**
  * cacheFromArgsProvideDefaults sets the appropriate defaults for CacheFromArgs
@@ -84,8 +84,8 @@ export interface CacheFromArgs {
 export function cacheFromArgsProvideDefaults(val: CacheFromArgs): CacheFromArgs {
     return {
         ...val,
-        gha: (val.gha ? pulumi.output(val.gha).apply(inputs.cacheFromGitHubActionsArgsProvideDefaults) : undefined),
-        s3: (val.s3 ? pulumi.output(val.s3).apply(inputs.cacheFromS3ArgsProvideDefaults) : undefined),
+        gha: pulumi.output(val.gha).apply(v => v === undefined ? undefined : inputs.cacheFromGitHubActionsArgsProvideDefaults(v)),
+        s3: pulumi.output(val.s3).apply(v => v === undefined ? undefined : inputs.cacheFromS3ArgsProvideDefaults(v)),
     };
 }
 
@@ -93,7 +93,7 @@ export interface CacheFromAzureBlobArgs {
     /**
      * Base URL of the storage account.
      */
-    accountUrl?: pulumi.Input<string>;
+    accountUrl?: pulumi.Input<string | undefined>;
     /**
      * The name of the cache image.
      */
@@ -101,7 +101,7 @@ export interface CacheFromAzureBlobArgs {
     /**
      * Blob storage account key.
      */
-    secretAccessKey?: pulumi.Input<string>;
+    secretAccessKey?: pulumi.Input<string | undefined>;
 }
 
 /**
@@ -117,7 +117,7 @@ export interface CacheFromGitHubActionsArgs {
      * This should be set if building and caching multiple images in one
      * workflow, otherwise caches will overwrite each other.
      */
-    scope?: pulumi.Input<string>;
+    scope?: pulumi.Input<string | undefined>;
 }
 /**
  * cacheFromGitHubActionsArgsProvideDefaults sets the appropriate defaults for CacheFromGitHubActionsArgs
@@ -133,7 +133,7 @@ export interface CacheFromLocalArgs {
     /**
      * Digest of manifest to import.
      */
-    digest?: pulumi.Input<string>;
+    digest?: pulumi.Input<string | undefined>;
     /**
      * Path of the local directory where cache gets imported from.
      */
@@ -151,11 +151,11 @@ export interface CacheFromS3Args {
     /**
      * Defaults to `$AWS_ACCESS_KEY_ID`.
      */
-    accessKeyId?: pulumi.Input<string>;
+    accessKeyId?: pulumi.Input<string | undefined>;
     /**
      * Prefix to prepend to blob filenames.
      */
-    blobsPrefix?: pulumi.Input<string>;
+    blobsPrefix?: pulumi.Input<string | undefined>;
     /**
      * Name of the S3 bucket.
      */
@@ -163,15 +163,15 @@ export interface CacheFromS3Args {
     /**
      * Endpoint of the S3 bucket.
      */
-    endpointUrl?: pulumi.Input<string>;
+    endpointUrl?: pulumi.Input<string | undefined>;
     /**
      * Prefix to prepend on manifest filenames.
      */
-    manifestsPrefix?: pulumi.Input<string>;
+    manifestsPrefix?: pulumi.Input<string | undefined>;
     /**
      * Name of the cache image.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
     /**
      * The geographic location of the bucket. Defaults to `$AWS_REGION`.
      */
@@ -179,15 +179,15 @@ export interface CacheFromS3Args {
     /**
      * Defaults to `$AWS_SECRET_ACCESS_KEY`.
      */
-    secretAccessKey?: pulumi.Input<string>;
+    secretAccessKey?: pulumi.Input<string | undefined>;
     /**
      * Defaults to `$AWS_SESSION_TOKEN`.
      */
-    sessionToken?: pulumi.Input<string>;
+    sessionToken?: pulumi.Input<string | undefined>;
     /**
      * Uses `bucket` in the URL instead of hostname when `true`.
      */
-    usePathStyle?: pulumi.Input<boolean>;
+    usePathStyle?: pulumi.Input<boolean | undefined>;
 }
 /**
  * cacheFromS3ArgsProvideDefaults sets the appropriate defaults for CacheFromS3Args
@@ -206,42 +206,42 @@ export interface CacheToArgs {
     /**
      * Push cache to Azure's blob storage service.
      */
-    azblob?: pulumi.Input<inputs.CacheToAzureBlobArgs>;
+    azblob?: pulumi.Input<inputs.CacheToAzureBlobArgs | undefined>;
     /**
      * When `true` this entry will be excluded. Defaults to `false`.
      */
-    disabled?: pulumi.Input<boolean>;
+    disabled?: pulumi.Input<boolean | undefined>;
     /**
      * Recommended for use with GitHub Actions workflows.
      *
      * An action like `crazy-max/ghaction-github-runtime` is recommended to
      * expose appropriate credentials to your GitHub workflow.
      */
-    gha?: pulumi.Input<inputs.CacheToGitHubActionsArgs>;
+    gha?: pulumi.Input<inputs.CacheToGitHubActionsArgs | undefined>;
     /**
      * The inline cache storage backend is the simplest implementation to get
      * started with, but it does not handle multi-stage builds. Consider the
      * `registry` cache backend instead.
      */
-    inline?: pulumi.Input<inputs.CacheToInlineArgs>;
+    inline?: pulumi.Input<inputs.CacheToInlineArgs | undefined>;
     /**
      * A simple backend which caches imagines on your local filesystem.
      */
-    local?: pulumi.Input<inputs.CacheToLocalArgs>;
+    local?: pulumi.Input<inputs.CacheToLocalArgs | undefined>;
     /**
      * A raw string as you would provide it to the Docker CLI (e.g.,
      * `type=inline`)
      */
-    raw?: pulumi.Input<string>;
+    raw?: pulumi.Input<string | undefined>;
     /**
      * Push caches to remote registries. Incompatible with the `docker` build
      * driver.
      */
-    registry?: pulumi.Input<inputs.CacheToRegistryArgs>;
+    registry?: pulumi.Input<inputs.CacheToRegistryArgs | undefined>;
     /**
      * Push cache to AWS S3 or S3-compatible services such as MinIO.
      */
-    s3?: pulumi.Input<inputs.CacheToS3Args>;
+    s3?: pulumi.Input<inputs.CacheToS3Args | undefined>;
 }
 /**
  * cacheToArgsProvideDefaults sets the appropriate defaults for CacheToArgs
@@ -249,11 +249,11 @@ export interface CacheToArgs {
 export function cacheToArgsProvideDefaults(val: CacheToArgs): CacheToArgs {
     return {
         ...val,
-        azblob: (val.azblob ? pulumi.output(val.azblob).apply(inputs.cacheToAzureBlobArgsProvideDefaults) : undefined),
-        gha: (val.gha ? pulumi.output(val.gha).apply(inputs.cacheToGitHubActionsArgsProvideDefaults) : undefined),
-        local: (val.local ? pulumi.output(val.local).apply(inputs.cacheToLocalArgsProvideDefaults) : undefined),
-        registry: (val.registry ? pulumi.output(val.registry).apply(inputs.cacheToRegistryArgsProvideDefaults) : undefined),
-        s3: (val.s3 ? pulumi.output(val.s3).apply(inputs.cacheToS3ArgsProvideDefaults) : undefined),
+        azblob: pulumi.output(val.azblob).apply(v => v === undefined ? undefined : inputs.cacheToAzureBlobArgsProvideDefaults(v)),
+        gha: pulumi.output(val.gha).apply(v => v === undefined ? undefined : inputs.cacheToGitHubActionsArgsProvideDefaults(v)),
+        local: pulumi.output(val.local).apply(v => v === undefined ? undefined : inputs.cacheToLocalArgsProvideDefaults(v)),
+        registry: pulumi.output(val.registry).apply(v => v === undefined ? undefined : inputs.cacheToRegistryArgsProvideDefaults(v)),
+        s3: pulumi.output(val.s3).apply(v => v === undefined ? undefined : inputs.cacheToS3ArgsProvideDefaults(v)),
     };
 }
 
@@ -261,15 +261,15 @@ export interface CacheToAzureBlobArgs {
     /**
      * Base URL of the storage account.
      */
-    accountUrl?: pulumi.Input<string>;
+    accountUrl?: pulumi.Input<string | undefined>;
     /**
      * Ignore errors caused by failed cache exports.
      */
-    ignoreError?: pulumi.Input<boolean>;
+    ignoreError?: pulumi.Input<boolean | undefined>;
     /**
      * The cache mode to use. Defaults to `min`.
      */
-    mode?: pulumi.Input<enums.CacheMode>;
+    mode?: pulumi.Input<enums.CacheMode | undefined>;
     /**
      * The name of the cache image.
      */
@@ -277,7 +277,7 @@ export interface CacheToAzureBlobArgs {
     /**
      * Blob storage account key.
      */
-    secretAccessKey?: pulumi.Input<string>;
+    secretAccessKey?: pulumi.Input<string | undefined>;
 }
 /**
  * cacheToAzureBlobArgsProvideDefaults sets the appropriate defaults for CacheToAzureBlobArgs
@@ -300,18 +300,18 @@ export interface CacheToGitHubActionsArgs {
     /**
      * Ignore errors caused by failed cache exports.
      */
-    ignoreError?: pulumi.Input<boolean>;
+    ignoreError?: pulumi.Input<boolean | undefined>;
     /**
      * The cache mode to use. Defaults to `min`.
      */
-    mode?: pulumi.Input<enums.CacheMode>;
+    mode?: pulumi.Input<enums.CacheMode | undefined>;
     /**
      * The scope to use for cache keys. Defaults to `buildkit`.
      *
      * This should be set if building and caching multiple images in one
      * workflow, otherwise caches will overwrite each other.
      */
-    scope?: pulumi.Input<string>;
+    scope?: pulumi.Input<string | undefined>;
 }
 /**
  * cacheToGitHubActionsArgsProvideDefaults sets the appropriate defaults for CacheToGitHubActionsArgs
@@ -335,11 +335,11 @@ export interface CacheToLocalArgs {
     /**
      * The compression type to use.
      */
-    compression?: pulumi.Input<enums.CompressionType>;
+    compression?: pulumi.Input<enums.CompressionType | undefined>;
     /**
      * Compression level from 0 to 22.
      */
-    compressionLevel?: pulumi.Input<number>;
+    compressionLevel?: pulumi.Input<number | undefined>;
     /**
      * Path of the local directory to export the cache.
      */
@@ -347,15 +347,15 @@ export interface CacheToLocalArgs {
     /**
      * Forcefully apply compression.
      */
-    forceCompression?: pulumi.Input<boolean>;
+    forceCompression?: pulumi.Input<boolean | undefined>;
     /**
      * Ignore errors caused by failed cache exports.
      */
-    ignoreError?: pulumi.Input<boolean>;
+    ignoreError?: pulumi.Input<boolean | undefined>;
     /**
      * The cache mode to use. Defaults to `min`.
      */
-    mode?: pulumi.Input<enums.CacheMode>;
+    mode?: pulumi.Input<enums.CacheMode | undefined>;
 }
 /**
  * cacheToLocalArgsProvideDefaults sets the appropriate defaults for CacheToLocalArgs
@@ -375,19 +375,19 @@ export interface CacheToRegistryArgs {
     /**
      * The compression type to use.
      */
-    compression?: pulumi.Input<enums.CompressionType>;
+    compression?: pulumi.Input<enums.CompressionType | undefined>;
     /**
      * Compression level from 0 to 22.
      */
-    compressionLevel?: pulumi.Input<number>;
+    compressionLevel?: pulumi.Input<number | undefined>;
     /**
      * Forcefully apply compression.
      */
-    forceCompression?: pulumi.Input<boolean>;
+    forceCompression?: pulumi.Input<boolean | undefined>;
     /**
      * Ignore errors caused by failed cache exports.
      */
-    ignoreError?: pulumi.Input<boolean>;
+    ignoreError?: pulumi.Input<boolean | undefined>;
     /**
      * Export cache manifest as an OCI-compatible image manifest instead of a
      * manifest list. Requires `ociMediaTypes` to also be `true`.
@@ -397,16 +397,16 @@ export interface CacheToRegistryArgs {
      *
      * Defaults to `false` to match Docker's default behavior.
      */
-    imageManifest?: pulumi.Input<boolean>;
+    imageManifest?: pulumi.Input<boolean | undefined>;
     /**
      * The cache mode to use. Defaults to `min`.
      */
-    mode?: pulumi.Input<enums.CacheMode>;
+    mode?: pulumi.Input<enums.CacheMode | undefined>;
     /**
      * Whether to use OCI media types in exported manifests. Defaults to
      * `true`.
      */
-    ociMediaTypes?: pulumi.Input<boolean>;
+    ociMediaTypes?: pulumi.Input<boolean | undefined>;
     /**
      * Fully qualified name of the cache image to import.
      */
@@ -432,11 +432,11 @@ export interface CacheToS3Args {
     /**
      * Defaults to `$AWS_ACCESS_KEY_ID`.
      */
-    accessKeyId?: pulumi.Input<string>;
+    accessKeyId?: pulumi.Input<string | undefined>;
     /**
      * Prefix to prepend to blob filenames.
      */
-    blobsPrefix?: pulumi.Input<string>;
+    blobsPrefix?: pulumi.Input<string | undefined>;
     /**
      * Name of the S3 bucket.
      */
@@ -444,23 +444,23 @@ export interface CacheToS3Args {
     /**
      * Endpoint of the S3 bucket.
      */
-    endpointUrl?: pulumi.Input<string>;
+    endpointUrl?: pulumi.Input<string | undefined>;
     /**
      * Ignore errors caused by failed cache exports.
      */
-    ignoreError?: pulumi.Input<boolean>;
+    ignoreError?: pulumi.Input<boolean | undefined>;
     /**
      * Prefix to prepend on manifest filenames.
      */
-    manifestsPrefix?: pulumi.Input<string>;
+    manifestsPrefix?: pulumi.Input<string | undefined>;
     /**
      * The cache mode to use. Defaults to `min`.
      */
-    mode?: pulumi.Input<enums.CacheMode>;
+    mode?: pulumi.Input<enums.CacheMode | undefined>;
     /**
      * Name of the cache image.
      */
-    name?: pulumi.Input<string>;
+    name?: pulumi.Input<string | undefined>;
     /**
      * The geographic location of the bucket. Defaults to `$AWS_REGION`.
      */
@@ -468,15 +468,15 @@ export interface CacheToS3Args {
     /**
      * Defaults to `$AWS_SECRET_ACCESS_KEY`.
      */
-    secretAccessKey?: pulumi.Input<string>;
+    secretAccessKey?: pulumi.Input<string | undefined>;
     /**
      * Defaults to `$AWS_SESSION_TOKEN`.
      */
-    sessionToken?: pulumi.Input<string>;
+    sessionToken?: pulumi.Input<string | undefined>;
     /**
      * Uses `bucket` in the URL instead of hostname when `true`.
      */
-    usePathStyle?: pulumi.Input<boolean>;
+    usePathStyle?: pulumi.Input<boolean | undefined>;
 }
 /**
  * cacheToS3ArgsProvideDefaults sets the appropriate defaults for CacheToS3Args
@@ -515,7 +515,7 @@ export interface DockerfileArgs {
      *
      * Equivalent to invoking Docker with `-f -`.
      */
-    inline?: pulumi.Input<string>;
+    inline?: pulumi.Input<string | undefined>;
     /**
      * Location of the Dockerfile to use.
      *
@@ -525,7 +525,7 @@ export interface DockerfileArgs {
      *
      * Conflicts with `inline`.
      */
-    location?: pulumi.Input<string>;
+    location?: pulumi.Input<string | undefined>;
 }
 
 export interface ExportArgs {
@@ -533,40 +533,40 @@ export interface ExportArgs {
      * A no-op export. Helpful for silencing the 'no exports' warning if you
      * just want to populate caches.
      */
-    cacheonly?: pulumi.Input<inputs.ExportCacheOnlyArgs>;
+    cacheonly?: pulumi.Input<inputs.ExportCacheOnlyArgs | undefined>;
     /**
      * When `true` this entry will be excluded. Defaults to `false`.
      */
-    disabled?: pulumi.Input<boolean>;
+    disabled?: pulumi.Input<boolean | undefined>;
     /**
      * Export as a Docker image layout.
      */
-    docker?: pulumi.Input<inputs.ExportDockerArgs>;
+    docker?: pulumi.Input<inputs.ExportDockerArgs | undefined>;
     /**
      * Outputs the build result into a container image format.
      */
-    image?: pulumi.Input<inputs.ExportImageArgs>;
+    image?: pulumi.Input<inputs.ExportImageArgs | undefined>;
     /**
      * Export to a local directory as files and directories.
      */
-    local?: pulumi.Input<inputs.ExportLocalArgs>;
+    local?: pulumi.Input<inputs.ExportLocalArgs | undefined>;
     /**
      * Identical to the Docker exporter but uses OCI media types by default.
      */
-    oci?: pulumi.Input<inputs.ExportOCIArgs>;
+    oci?: pulumi.Input<inputs.ExportOCIArgs | undefined>;
     /**
      * A raw string as you would provide it to the Docker CLI (e.g.,
      * `type=docker`)
      */
-    raw?: pulumi.Input<string>;
+    raw?: pulumi.Input<string | undefined>;
     /**
      * Identical to the Image exporter, but pushes by default.
      */
-    registry?: pulumi.Input<inputs.ExportRegistryArgs>;
+    registry?: pulumi.Input<inputs.ExportRegistryArgs | undefined>;
     /**
      * Export to a local directory as a tarball.
      */
-    tar?: pulumi.Input<inputs.ExportTarArgs>;
+    tar?: pulumi.Input<inputs.ExportTarArgs | undefined>;
 }
 /**
  * exportArgsProvideDefaults sets the appropriate defaults for ExportArgs
@@ -574,10 +574,10 @@ export interface ExportArgs {
 export function exportArgsProvideDefaults(val: ExportArgs): ExportArgs {
     return {
         ...val,
-        docker: (val.docker ? pulumi.output(val.docker).apply(inputs.exportDockerArgsProvideDefaults) : undefined),
-        image: (val.image ? pulumi.output(val.image).apply(inputs.exportImageArgsProvideDefaults) : undefined),
-        oci: (val.oci ? pulumi.output(val.oci).apply(inputs.exportOCIArgsProvideDefaults) : undefined),
-        registry: (val.registry ? pulumi.output(val.registry).apply(inputs.exportRegistryArgsProvideDefaults) : undefined),
+        docker: pulumi.output(val.docker).apply(v => v === undefined ? undefined : inputs.exportDockerArgsProvideDefaults(v)),
+        image: pulumi.output(val.image).apply(v => v === undefined ? undefined : inputs.exportImageArgsProvideDefaults(v)),
+        oci: pulumi.output(val.oci).apply(v => v === undefined ? undefined : inputs.exportOCIArgsProvideDefaults(v)),
+        registry: pulumi.output(val.registry).apply(v => v === undefined ? undefined : inputs.exportRegistryArgsProvideDefaults(v)),
     };
 }
 
@@ -588,35 +588,35 @@ export interface ExportDockerArgs {
     /**
      * Attach an arbitrary key/value annotation to the image.
      */
-    annotations?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    annotations?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
      * The compression type to use.
      */
-    compression?: pulumi.Input<enums.CompressionType>;
+    compression?: pulumi.Input<enums.CompressionType | undefined>;
     /**
      * Compression level from 0 to 22.
      */
-    compressionLevel?: pulumi.Input<number>;
+    compressionLevel?: pulumi.Input<number | undefined>;
     /**
      * The local export path.
      */
-    dest?: pulumi.Input<string>;
+    dest?: pulumi.Input<string | undefined>;
     /**
      * Forcefully apply compression.
      */
-    forceCompression?: pulumi.Input<boolean>;
+    forceCompression?: pulumi.Input<boolean | undefined>;
     /**
      * Specify images names to export. This is overridden if tags are already specified.
      */
-    names?: pulumi.Input<pulumi.Input<string>[]>;
+    names?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * Use OCI media types in exporter manifests.
      */
-    ociMediaTypes?: pulumi.Input<boolean>;
+    ociMediaTypes?: pulumi.Input<boolean | undefined>;
     /**
      * Bundle the output into a tarball layout.
      */
-    tar?: pulumi.Input<boolean>;
+    tar?: pulumi.Input<boolean | undefined>;
 }
 /**
  * exportDockerArgsProvideDefaults sets the appropriate defaults for ExportDockerArgs
@@ -636,47 +636,47 @@ export interface ExportImageArgs {
     /**
      * Attach an arbitrary key/value annotation to the image.
      */
-    annotations?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    annotations?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
      * The compression type to use.
      */
-    compression?: pulumi.Input<enums.CompressionType>;
+    compression?: pulumi.Input<enums.CompressionType | undefined>;
     /**
      * Compression level from 0 to 22.
      */
-    compressionLevel?: pulumi.Input<number>;
+    compressionLevel?: pulumi.Input<number | undefined>;
     /**
      * Name image with `prefix@<digest>`, used for anonymous images.
      */
-    danglingNamePrefix?: pulumi.Input<string>;
+    danglingNamePrefix?: pulumi.Input<string | undefined>;
     /**
      * Forcefully apply compression.
      */
-    forceCompression?: pulumi.Input<boolean>;
+    forceCompression?: pulumi.Input<boolean | undefined>;
     /**
      * Allow pushing to an insecure registry.
      */
-    insecure?: pulumi.Input<boolean>;
+    insecure?: pulumi.Input<boolean | undefined>;
     /**
      * Add additional canonical name (`name@<digest>`).
      */
-    nameCanonical?: pulumi.Input<boolean>;
+    nameCanonical?: pulumi.Input<boolean | undefined>;
     /**
      * Specify images names to export. This is overridden if tags are already specified.
      */
-    names?: pulumi.Input<pulumi.Input<string>[]>;
+    names?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * Use OCI media types in exporter manifests.
      */
-    ociMediaTypes?: pulumi.Input<boolean>;
+    ociMediaTypes?: pulumi.Input<boolean | undefined>;
     /**
      * Push after creating the image. Defaults to `false`.
      */
-    push?: pulumi.Input<boolean>;
+    push?: pulumi.Input<boolean | undefined>;
     /**
      * Push image without name.
      */
-    pushByDigest?: pulumi.Input<boolean>;
+    pushByDigest?: pulumi.Input<boolean | undefined>;
     /**
      * Store resulting images to the worker's image store and ensure all of
      * its blobs are in the content store.
@@ -686,12 +686,12 @@ export interface ExportImageArgs {
      * Ignored if the worker doesn't have image store (when using OCI workers,
      * for example).
      */
-    store?: pulumi.Input<boolean>;
+    store?: pulumi.Input<boolean | undefined>;
     /**
      * Unpack image after creation (for use with containerd). Defaults to
      * `false`.
      */
-    unpack?: pulumi.Input<boolean>;
+    unpack?: pulumi.Input<boolean | undefined>;
 }
 /**
  * exportImageArgsProvideDefaults sets the appropriate defaults for ExportImageArgs
@@ -718,35 +718,35 @@ export interface ExportOCIArgs {
     /**
      * Attach an arbitrary key/value annotation to the image.
      */
-    annotations?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    annotations?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
      * The compression type to use.
      */
-    compression?: pulumi.Input<enums.CompressionType>;
+    compression?: pulumi.Input<enums.CompressionType | undefined>;
     /**
      * Compression level from 0 to 22.
      */
-    compressionLevel?: pulumi.Input<number>;
+    compressionLevel?: pulumi.Input<number | undefined>;
     /**
      * The local export path.
      */
-    dest?: pulumi.Input<string>;
+    dest?: pulumi.Input<string | undefined>;
     /**
      * Forcefully apply compression.
      */
-    forceCompression?: pulumi.Input<boolean>;
+    forceCompression?: pulumi.Input<boolean | undefined>;
     /**
      * Specify images names to export. This is overridden if tags are already specified.
      */
-    names?: pulumi.Input<pulumi.Input<string>[]>;
+    names?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * Use OCI media types in exporter manifests.
      */
-    ociMediaTypes?: pulumi.Input<boolean>;
+    ociMediaTypes?: pulumi.Input<boolean | undefined>;
     /**
      * Bundle the output into a tarball layout.
      */
-    tar?: pulumi.Input<boolean>;
+    tar?: pulumi.Input<boolean | undefined>;
 }
 /**
  * exportOCIArgsProvideDefaults sets the appropriate defaults for ExportOCIArgs
@@ -766,47 +766,47 @@ export interface ExportRegistryArgs {
     /**
      * Attach an arbitrary key/value annotation to the image.
      */
-    annotations?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    annotations?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
      * The compression type to use.
      */
-    compression?: pulumi.Input<enums.CompressionType>;
+    compression?: pulumi.Input<enums.CompressionType | undefined>;
     /**
      * Compression level from 0 to 22.
      */
-    compressionLevel?: pulumi.Input<number>;
+    compressionLevel?: pulumi.Input<number | undefined>;
     /**
      * Name image with `prefix@<digest>`, used for anonymous images.
      */
-    danglingNamePrefix?: pulumi.Input<string>;
+    danglingNamePrefix?: pulumi.Input<string | undefined>;
     /**
      * Forcefully apply compression.
      */
-    forceCompression?: pulumi.Input<boolean>;
+    forceCompression?: pulumi.Input<boolean | undefined>;
     /**
      * Allow pushing to an insecure registry.
      */
-    insecure?: pulumi.Input<boolean>;
+    insecure?: pulumi.Input<boolean | undefined>;
     /**
      * Add additional canonical name (`name@<digest>`).
      */
-    nameCanonical?: pulumi.Input<boolean>;
+    nameCanonical?: pulumi.Input<boolean | undefined>;
     /**
      * Specify images names to export. This is overridden if tags are already specified.
      */
-    names?: pulumi.Input<pulumi.Input<string>[]>;
+    names?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * Use OCI media types in exporter manifests.
      */
-    ociMediaTypes?: pulumi.Input<boolean>;
+    ociMediaTypes?: pulumi.Input<boolean | undefined>;
     /**
      * Push after creating the image. Defaults to `true`.
      */
-    push?: pulumi.Input<boolean>;
+    push?: pulumi.Input<boolean | undefined>;
     /**
      * Push image without name.
      */
-    pushByDigest?: pulumi.Input<boolean>;
+    pushByDigest?: pulumi.Input<boolean | undefined>;
     /**
      * Store resulting images to the worker's image store and ensure all of
      * its blobs are in the content store.
@@ -816,12 +816,12 @@ export interface ExportRegistryArgs {
      * Ignored if the worker doesn't have image store (when using OCI workers,
      * for example).
      */
-    store?: pulumi.Input<boolean>;
+    store?: pulumi.Input<boolean | undefined>;
     /**
      * Unpack image after creation (for use with containerd). Defaults to
      * `false`.
      */
-    unpack?: pulumi.Input<boolean>;
+    unpack?: pulumi.Input<boolean | undefined>;
 }
 /**
  * exportRegistryArgsProvideDefaults sets the appropriate defaults for ExportRegistryArgs
@@ -853,11 +853,11 @@ export interface RegistryArgs {
     /**
      * Password or token for the registry.
      */
-    password?: pulumi.Input<string>;
+    password?: pulumi.Input<string | undefined>;
     /**
      * Username for the registry.
      */
-    username?: pulumi.Input<string>;
+    username?: pulumi.Input<string | undefined>;
 }
 
 export interface SSHArgs {
@@ -878,5 +878,5 @@ export interface SSHArgs {
      * agent. Run `ssh-add -l` locally to confirm which public keys are
      * visible to the agent; these will be exposed to your build.
      */
-    paths?: pulumi.Input<pulumi.Input<string>[]>;
+    paths?: pulumi.Input<pulumi.Input<string>[] | undefined>;
 }

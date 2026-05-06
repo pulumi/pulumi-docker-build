@@ -798,7 +798,7 @@ export interface ImageArgs {
      *
      * Equivalent to Docker's `--add-host` flag.
      */
-    addHosts?: pulumi.Input<pulumi.Input<string>[]>;
+    addHosts?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * `ARG` names and values to set during the build.
      *
@@ -810,7 +810,7 @@ export interface ImageArgs {
      *
      * Equivalent to Docker's `--build-arg` flag.
      */
-    buildArgs?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    buildArgs?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
      * Setting this to `false` will always skip image builds during previews,
      * and setting it to `true` will always build images during previews.
@@ -824,35 +824,35 @@ export interface ImageArgs {
      * Defaults to `true` as a safeguard against broken images merging as part
      * of CI pipelines.
      */
-    buildOnPreview?: pulumi.Input<boolean>;
+    buildOnPreview?: pulumi.Input<boolean | undefined>;
     /**
      * Builder configuration.
      */
-    builder?: pulumi.Input<inputs.BuilderConfigArgs>;
+    builder?: pulumi.Input<inputs.BuilderConfigArgs | undefined>;
     /**
      * Cache export configuration.
      *
      * Equivalent to Docker's `--cache-from` flag.
      */
-    cacheFrom?: pulumi.Input<pulumi.Input<inputs.CacheFromArgs>[]>;
+    cacheFrom?: pulumi.Input<pulumi.Input<inputs.CacheFromArgs>[] | undefined>;
     /**
      * Cache import configuration.
      *
      * Equivalent to Docker's `--cache-to` flag.
      */
-    cacheTo?: pulumi.Input<pulumi.Input<inputs.CacheToArgs>[]>;
+    cacheTo?: pulumi.Input<pulumi.Input<inputs.CacheToArgs>[] | undefined>;
     /**
      * Build context settings. Defaults to the current directory.
      *
      * Equivalent to Docker's `PATH | URL | -` positional argument.
      */
-    context?: pulumi.Input<inputs.BuildContextArgs>;
+    context?: pulumi.Input<inputs.BuildContextArgs | undefined>;
     /**
      * Dockerfile settings.
      *
      * Equivalent to Docker's `--file` flag.
      */
-    dockerfile?: pulumi.Input<inputs.DockerfileArgs>;
+    dockerfile?: pulumi.Input<inputs.DockerfileArgs | undefined>;
     /**
      * Use `exec` mode to build this image.
      *
@@ -875,7 +875,7 @@ export interface ImageArgs {
      * are temporarily written to disk in order to provide them to the
      * `docker-buildx` binary.
      */
-    exec?: pulumi.Input<boolean>;
+    exec?: pulumi.Input<boolean | undefined>;
     /**
      * Controls where images are persisted after building.
      *
@@ -887,13 +887,13 @@ export interface ImageArgs {
      *
      * Equivalent to Docker's `--output` flag.
      */
-    exports?: pulumi.Input<pulumi.Input<inputs.ExportArgs>[]>;
+    exports?: pulumi.Input<pulumi.Input<inputs.ExportArgs>[] | undefined>;
     /**
      * Attach arbitrary key/value metadata to the image.
      *
      * Equivalent to Docker's `--label` flag.
      */
-    labels?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    labels?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
      * When `true` the build will automatically include a `docker` export.
      *
@@ -901,7 +901,7 @@ export interface ImageArgs {
      *
      * Equivalent to Docker's `--load` flag.
      */
-    load?: pulumi.Input<boolean>;
+    load?: pulumi.Input<boolean | undefined>;
     /**
      * Set the network mode for `RUN` instructions. Defaults to `default`.
      *
@@ -909,25 +909,25 @@ export interface ImageArgs {
      *
      * Equivalent to Docker's `--network` flag.
      */
-    network?: pulumi.Input<enums.NetworkMode>;
+    network?: pulumi.Input<enums.NetworkMode | undefined>;
     /**
      * Do not import cache manifests when building the image.
      *
      * Equivalent to Docker's `--no-cache` flag.
      */
-    noCache?: pulumi.Input<boolean>;
+    noCache?: pulumi.Input<boolean | undefined>;
     /**
      * Set target platform(s) for the build. Defaults to the host's platform.
      *
      * Equivalent to Docker's `--platform` flag.
      */
-    platforms?: pulumi.Input<pulumi.Input<enums.Platform>[]>;
+    platforms?: pulumi.Input<pulumi.Input<enums.Platform>[] | undefined>;
     /**
      * Always pull referenced images.
      *
      * Equivalent to Docker's `--pull` flag.
      */
-    pull?: pulumi.Input<boolean>;
+    pull?: pulumi.Input<boolean | undefined>;
     /**
      * When `true` the build will automatically include a `registry` export.
      *
@@ -945,7 +945,7 @@ export interface ImageArgs {
      *
      * Similar to `docker login`.
      */
-    registries?: pulumi.Input<pulumi.Input<inputs.RegistryArgs>[]>;
+    registries?: pulumi.Input<pulumi.Input<inputs.RegistryArgs>[] | undefined>;
     /**
      * A mapping of secret names to their corresponding values.
      *
@@ -957,13 +957,13 @@ export interface ImageArgs {
      *
      * Similar to Docker's `--secret` flag.
      */
-    secrets?: pulumi.Input<{[key: string]: pulumi.Input<string>}>;
+    secrets?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
     /**
      * SSH agent socket or keys to expose to the build.
      *
      * Equivalent to Docker's `--ssh` flag.
      */
-    ssh?: pulumi.Input<pulumi.Input<inputs.SSHArgs>[]>;
+    ssh?: pulumi.Input<pulumi.Input<inputs.SSHArgs>[] | undefined>;
     /**
      * Name and optionally a tag (format: `name:tag`).
      *
@@ -972,7 +972,7 @@ export interface ImageArgs {
      *
      * Equivalent to Docker's `--tag` flag.
      */
-    tags?: pulumi.Input<pulumi.Input<string>[]>;
+    tags?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * Set the target build stage(s) to build.
      *
@@ -980,5 +980,5 @@ export interface ImageArgs {
      *
      * Equivalent to Docker's `--target` flag.
      */
-    target?: pulumi.Input<string>;
+    target?: pulumi.Input<string | undefined>;
 }

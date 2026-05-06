@@ -178,13 +178,13 @@ export interface IndexArgs {
      *
      * Defaults to `true`.
      */
-    push?: pulumi.Input<boolean>;
+    push?: pulumi.Input<boolean | undefined>;
     /**
      * Authentication for the registry where the tagged index will be pushed.
      *
      * Credentials can also be included with the provider's configuration.
      */
-    registry?: pulumi.Input<inputs.RegistryArgs>;
+    registry?: pulumi.Input<inputs.RegistryArgs | undefined>;
     /**
      * Existing images to include in the index.
      */
