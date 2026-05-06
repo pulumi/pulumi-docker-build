@@ -53,6 +53,6 @@ export interface ProviderArgs {
     /**
      * The build daemon's address.
      */
-    host?: pulumi.Input<string>;
-    registries?: pulumi.Input<pulumi.Input<inputs.RegistryArgs>[]>;
+    host?: pulumi.Input<string | undefined>;
+    registries?: pulumi.Input<pulumi.Input<inputs.RegistryArgs>[] | undefined>;
 }
