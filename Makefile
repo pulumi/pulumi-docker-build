@@ -189,7 +189,7 @@ go.mod: $(shell find . -name '*.go')
 go.sum: go.mod
 
 sdk: $(shell mkdir -p sdk)
-sdk: sdk/python sdk/nodejs sdk/java sdk/python sdk/go sdk/dotnet
+sdk: sdk/python sdk/nodejs sdk/java sdk/go sdk/dotnet
 
 # Folders can't be used for up-to-date checks as they will be marked as up-to-date even if the step fails - leading to a broken state.
 .PHONY: sdk/*
