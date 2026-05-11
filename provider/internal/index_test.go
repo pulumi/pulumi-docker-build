@@ -24,6 +24,7 @@ import (
 	"go.uber.org/mock/gomock"
 
 	provider "github.com/pulumi/pulumi-go-provider"
+	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi-go-provider/integration"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/mapper"
@@ -234,4 +235,27 @@ func TestIndexDiff(t *testing.T) {
 			assert.Equal(t, tt.wantChanges, resp.HasChanges, resp.DetailedDiff)
 		})
 	}
+}
+
+func TestIndexDelete(t *testing.T) {
+	t.Parallel()
+	t.Run("manifest already deleted (404)", func(t *testing.T) {
+		t.Parallel()
+		ctrl := gomock.NewController(t)
+		client := NewMockClient(ctrl)
+		client.EXPECT().
+			ManifestDelete(gomock.Any(), "docker.io/pulumi/test:manifest").
+			Return(errNotFound{})
+
+		i := &Index{clientF: mockClientF(client)}
+
+		_, err := i.Delete(t.Context(), infer.DeleteRequest[IndexState]{
+			ID: "foo",
+			State: IndexState{
+				IndexArgs: IndexArgs{Tag: "docker.io/pulumi/test:manifest"},
+				Ref:       "docker.io/pulumi/test:manifest",
+			},
+		})
+		assert.NoError(t, err)
+	})
 }
