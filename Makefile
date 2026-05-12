@@ -58,7 +58,7 @@ test_all:: test_provider test_examples
 gen_examples:
 
 examples: $(shell mkdir -p examples)
-examples: sdk examples/yaml examples/go examples/nodejs examples/python examples/dotnet examples/java
+examples: sdk examples/yaml examples/go examples/nodejs examples/python examples/dotnet examples/java examples/hcl
 
 examples/yaml:
 	rm -rf ${WORKING_DIR}/examples/yaml/app
@@ -83,6 +83,9 @@ examples/dotnet: bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 examples/java: bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
 	$(call example,java)
 	@git checkout examples/java/pom.xml
+
+examples/hcl: bin/${PROVIDER} ${WORKING_DIR}/examples/yaml/Pulumi.yaml
+	$(call example,hcl)
 
 define pulumi_login
     export PULUMI_CONFIG_PASSPHRASE=asdfqwerty1234; \
