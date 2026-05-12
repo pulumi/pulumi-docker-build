@@ -199,7 +199,9 @@ func processYaml(path, mdDir string) error {
 			}
 			yaml := string(yamlContent)
 
-			exampleStrings = append(exampleStrings, markdownExample(description, typescript, python, csharp, golang, yaml, hcl, java))
+			exampleStrings = append(exampleStrings, markdownExample(
+				description, typescript, python, csharp, golang, yaml, hcl, java,
+			))
 
 			return true, nil
 		}()
