@@ -312,7 +312,7 @@ import * as utilities from "./utilities";
  *     }],
  *     tags: ["docker.io/pulumi/pulumi:3.107.0"],
  * });
- * export const ref = myImage.ref;
+ * export const ref = image.ref;
  * ```
  * ### Caching
  *
