@@ -28,9 +28,9 @@ import (
 	_ "github.com/docker/buildx/driver/kubernetes"
 	_ "github.com/docker/buildx/driver/remote"
 
+	"github.com/containerd/errdefs"
 	"github.com/distribution/reference"
 	controllerapi "github.com/docker/buildx/controller/pb"
-	"github.com/docker/docker/errdefs"
 	"github.com/moby/buildkit/exporter/containerimage/exptypes"
 	"github.com/moby/buildkit/session"
 	"github.com/moby/buildkit/session/secrets/secretsprovider"

@@ -19,11 +19,11 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"strings"
 
 	// For examples/docs.
 	_ "embed"
 
+	"github.com/containerd/errdefs"
 	"github.com/regclient/regclient/types/errs"
 
 	provider "github.com/pulumi/pulumi-go-provider"
@@ -223,7 +223,7 @@ func (i *Index) Read(
 	provider.GetLogger(ctx).Debug("reading index with tag " + input.Tag)
 
 	digest, err := cli.ManifestInspect(ctx, input.Tag)
-	if errors.Is(err, errs.ErrNotFound) {
+	if errdefs.IsNotFound(err) {
 		// A remote tag was expected but isn't there -- delete the resource.
 		return infer.ReadResponse[IndexArgs, IndexState]{ID: "", Inputs: input, State: state}, nil
 	}
@@ -304,9 +304,7 @@ func (i *Index) Delete(
 	}
 
 	err = cli.ManifestDelete(ctx, state.Ref)
-	// TODO: Upstream buildx swallows the error types we'd like to test for
-	// here.
-	if err != nil && strings.Contains(err.Error(), "No such manifest:") {
+	if errdefs.IsNotFound(err) {
 		return infer.DeleteResponse{}, nil
 	}
 	return infer.DeleteResponse{}, err

@@ -1,6 +1,12 @@
 ## Unreleased
 
-## Changed
+### Fixed
+
+- Fixes a regression where a 404 status code during deletion wasn't considered deleted. (https://github.com/pulumi/pulumi-docker-build/issues/849)
+
+## 0.0.15 (2025-10-17)
+
+### Changed
 
 - Arguments `CacheFromGitHubActions.URL` and `CacheFromGitHubActions.Token` have been removed. If the previous behaviour is desired, set the `ACTIONS_CACHE_URL` and `ACTIONS_RUNTIME_TOKEN` environment variables. (https://github.com/pulumi/pulumi-docker-build/issues/75)
 

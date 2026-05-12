@@ -24,6 +24,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/containerd/errdefs"
 	"github.com/distribution/reference"
 	buildx "github.com/docker/buildx/build"
 	"github.com/docker/buildx/builder"
@@ -339,6 +340,9 @@ func (c *cli) ManifestInspect(ctx context.Context, target string) (string, error
 	}
 
 	m, err := rc.ManifestHead(ctx, ref)
+	if errors.Is(err, errs.ErrNotFound) {
+		return "", fmt.Errorf("fetching %q: %w", ref, errdefs.ErrNotFound)
+	}
 	if err != nil {
 		return "", fmt.Errorf("fetching %q: %w", ref, err)
 	}
@@ -357,6 +361,9 @@ func (c *cli) ManifestDelete(ctx context.Context, target string) error {
 	err = rc.ManifestDelete(ctx, ref)
 	if errors.Is(err, errs.ErrHTTPStatus) {
 		provider.GetLogger(ctx).Warning("this registry does not support deletions")
+		return nil
+	}
+	if errors.Is(err, errs.ErrNotFound) {
 		return nil
 	}
 	if err != nil {
