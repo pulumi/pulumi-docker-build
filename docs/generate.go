@@ -81,6 +81,7 @@ func markdownExample(description string,
 	csharp string,
 	golang string,
 	yaml string,
+	hcl string,
 	java string,
 ) string {
 	return fmt.Sprintf("{{%% example %%}}\n### %s\n\n"+
@@ -89,9 +90,10 @@ func markdownExample(description string,
 		"```csharp\n%s```\n"+
 		"```go\n%s```\n"+
 		"```yaml\n%s```\n"+
+		"```hcl\n%s```\n"+
 		"```java\n%s```\n"+
 		"{{%% /example %%}}\n",
-		description, typescript, python, csharp, golang, yaml, java)
+		description, typescript, python, csharp, golang, yaml, hcl, java)
 }
 
 func convert(language, tempDir, programFile string) (string, error) {
@@ -186,6 +188,10 @@ func processYaml(path, mdDir string) error {
 			if err != nil {
 				return false, err
 			}
+			hcl, err := convert("hcl", dir, "program.hcl")
+			if err != nil {
+				return false, err
+			}
 
 			yamlContent, err := os.ReadFile(filepath.Clean(filepath.Join(dir, "Pulumi.yaml")))
 			if err != nil {
@@ -193,7 +199,7 @@ func processYaml(path, mdDir string) error {
 			}
 			yaml := string(yamlContent)
 
-			exampleStrings = append(exampleStrings, markdownExample(description, typescript, python, csharp, golang, yaml, java))
+			exampleStrings = append(exampleStrings, markdownExample(description, typescript, python, csharp, golang, yaml, hcl, java))
 
 			return true, nil
 		}()
