@@ -5,6 +5,7 @@ package examples
 
 import (
 	"os"
+	"os/exec"
 	"path"
 	"testing"
 
@@ -36,6 +37,10 @@ func TestYAMLExample(t *testing.T) {
 }
 
 func TestHCLExample(t *testing.T) {
+	if _, err := exec.LookPath("pulumi-language-hcl"); err != nil {
+		t.Skip("pulumi-language-hcl not found on PATH; install pulumi-labs/pulumi-hcl to run this test")
+	}
+
 	cwd, err := os.Getwd()
 	require.NoError(t, err)
 
