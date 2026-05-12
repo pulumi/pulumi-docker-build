@@ -36,11 +36,6 @@ func TestYAMLExample(t *testing.T) {
 }
 
 func TestHCLExample(t *testing.T) {
-	// integration.ProgramTest does not yet recognize the `hcl` runtime when
-	// preparing the temp project directory, so we skip rather than fail until
-	// the test framework grows HCL support.
-	t.Skip("pulumi integration test framework does not support runtime: hcl yet")
-
 	cwd, err := os.Getwd()
 	require.NoError(t, err)
 
