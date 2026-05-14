@@ -1,5 +1,0 @@
-FROM alpine
-
-RUN apk add openssh-client
-
-RUN --mount=type=ssh ssh-add -l
