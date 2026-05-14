@@ -8,7 +8,7 @@ require (
 	github.com/containerd/errdefs v1.0.0
 	github.com/distribution/reference v0.6.0
 	github.com/docker/buildx v0.22.0
-	github.com/docker/cli v28.0.4+incompatible
+	github.com/docker/cli v29.2.0+incompatible
 	github.com/docker/docker v28.0.1+incompatible
 	github.com/moby/buildkit v0.20.1
 	github.com/moby/patternmatcher v0.6.0
