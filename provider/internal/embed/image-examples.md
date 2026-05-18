@@ -143,7 +143,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/pulumi/pulumi-aws/sdk/v6/go/aws/ecr"
+	"github.com/pulumi/pulumi-aws/sdk/v7/go/aws/ecr"
 	"github.com/pulumi/pulumi-docker-build/sdk/go/dockerbuild"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )
@@ -241,6 +241,54 @@ variables:
         fn::aws:ecr:getAuthorizationToken:
             registryId: ${ecr-repository.registryId}
 ```
+```hcl
+pulumi {
+  required_providers {
+    aws = {
+      source  = "pulumi/aws"
+      version = "7.29.0"
+    }
+    docker-build = {
+      source  = "pulumi/docker-build"
+      version = "0.0.15"
+    }
+  }
+}
+
+data "aws_ecr_getauthorizationtoken" "authToken" {
+  registry_id = aws_ecr_repository.ecr-repository.registry_id
+}
+
+resource "aws_ecr_repository" "ecr-repository" {
+}
+resource "docker-build_image" "my-image" {
+  cache_from {
+    registry = {
+      ref ="${aws_ecr_repository.ecr-repository.repository_url}:cache"
+    }
+  }
+  cache_to {
+    registry = {
+      image_manifest  = true
+      oci_media_types = true
+      ref             ="${aws_ecr_repository.ecr-repository.repository_url}:cache"
+    }
+  }
+  context = {
+    location = "./app"
+  }
+  push = true
+  registries {
+    address  = aws_ecr_repository.ecr-repository.repository_url
+    password = data.aws_ecr_getauthorizationtoken.authToken.password
+    username = data.aws_ecr_getauthorizationtoken.authToken.user_name
+  }
+  tags = ["${aws_ecr_repository.ecr-repository.repository_url}:latest"]
+}
+output "ref" {
+  value = docker-build_image.my-image.ref
+}
+```
 ```java
 package generated_program;
 
@@ -258,8 +306,8 @@ import com.pulumi.dockerbuild.inputs.CacheToArgs;
 import com.pulumi.dockerbuild.inputs.CacheToRegistryArgs;
 import com.pulumi.dockerbuild.inputs.BuildContextArgs;
 import com.pulumi.dockerbuild.inputs.RegistryArgs;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.io.File;
 import java.nio.file.Files;
@@ -280,14 +328,14 @@ public class App {
         var myImage = new Image("myImage", ImageArgs.builder()
             .cacheFrom(CacheFromArgs.builder()
                 .registry(CacheFromRegistryArgs.builder()
-                    .ref(ecrRepository.repositoryUrl().applyValue(repositoryUrl -> String.format("%s:cache", repositoryUrl)))
+                    .ref(ecrRepository.repositoryUrl().applyValue(_repositoryUrl -> String.format("%s:cache", _repositoryUrl)))
                     .build())
                 .build())
             .cacheTo(CacheToArgs.builder()
                 .registry(CacheToRegistryArgs.builder()
                     .imageManifest(true)
                     .ociMediaTypes(true)
-                    .ref(ecrRepository.repositoryUrl().applyValue(repositoryUrl -> String.format("%s:cache", repositoryUrl)))
+                    .ref(ecrRepository.repositoryUrl().applyValue(_repositoryUrl -> String.format("%s:cache", _repositoryUrl)))
                     .build())
                 .build())
             .context(BuildContextArgs.builder()
@@ -296,10 +344,10 @@ public class App {
             .push(true)
             .registries(RegistryArgs.builder()
                 .address(ecrRepository.repositoryUrl())
-                .password(authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult).applyValue(authToken -> authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult.password())))
-                .username(authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult).applyValue(authToken -> authToken.applyValue(getAuthorizationTokenResult -> getAuthorizationTokenResult.userName())))
+                .password(authToken.applyValue(_authToken -> _authToken.password()))
+                .username(authToken.applyValue(_authToken -> _authToken.userName()))
                 .build())
-            .tags(ecrRepository.repositoryUrl().applyValue(repositoryUrl -> String.format("%s:latest", repositoryUrl)))
+            .tags(ecrRepository.repositoryUrl().applyValue(_repositoryUrl -> String.format("%s:latest", _repositoryUrl)))
             .build());
 
         ctx.export("ref", myImage.ref());
@@ -406,6 +454,24 @@ resources:
         type: docker-build:Image
 runtime: yaml
 ```
+```hcl
+pulumi {
+  required_providers {
+    docker-build = {
+      source  = "pulumi/docker-build"
+      version = "0.0.15"
+    }
+  }
+}
+
+resource "docker-build_image" "image" {
+  context = {
+    location = "app"
+  }
+  platforms = ["plan9/amd64", "plan9/386"]
+  push      = false
+}
+```
 ```java
 package generated_program;
 
@@ -415,8 +481,8 @@ import com.pulumi.core.Output;
 import com.pulumi.dockerbuild.Image;
 import com.pulumi.dockerbuild.ImageArgs;
 import com.pulumi.dockerbuild.inputs.BuildContextArgs;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.io.File;
 import java.nio.file.Files;
@@ -461,7 +527,7 @@ const image = new docker_build.Image("image", {
     }],
     tags: ["docker.io/pulumi/pulumi:3.107.0"],
 });
-export const ref = myImage.ref;
+export const ref = image.ref;
 ```
 ```python
 import pulumi
@@ -478,7 +544,7 @@ image = docker_build.Image("image",
         "username": "pulumibot",
     }],
     tags=["docker.io/pulumi/pulumi:3.107.0"])
-pulumi.export("ref", my_image["ref"])
+pulumi.export("ref", image.ref)
 ```
 ```csharp
 using System.Collections.Generic;
@@ -512,7 +578,7 @@ return await Deployment.RunAsync(() =>
 
     return new Dictionary<string, object?>
     {
-        ["ref"] = myImage.Ref,
+        ["ref"] = image.Ref,
     };
 });
 
@@ -527,7 +593,7 @@ import (
 
 func main() {
 	pulumi.Run(func(ctx *pulumi.Context) error {
-		_, err := dockerbuild.NewImage(ctx, "image", &dockerbuild.ImageArgs{
+		image, err := dockerbuild.NewImage(ctx, "image", &dockerbuild.ImageArgs{
 			Context: &dockerbuild.BuildContextArgs{
 				Location: pulumi.String("app"),
 			},
@@ -546,7 +612,7 @@ func main() {
 		if err != nil {
 			return err
 		}
-		ctx.Export("ref", myImage.Ref)
+		ctx.Export("ref", image.Ref)
 		return nil
 	})
 }
@@ -555,7 +621,7 @@ func main() {
 description: Registry export
 name: registry
 outputs:
-    ref: ${my-image.ref}
+    ref: ${image.ref}
 resources:
     image:
         properties:
@@ -571,6 +637,32 @@ resources:
         type: docker-build:Image
 runtime: yaml
 ```
+```hcl
+pulumi {
+  required_providers {
+    docker-build = {
+      source  = "pulumi/docker-build"
+      version = "0.0.15"
+    }
+  }
+}
+
+resource "docker-build_image" "image" {
+  context = {
+    location = "app"
+  }
+  push = true
+  registries {
+    address  = "docker.io"
+    password = dockerHubPassword
+    username = "pulumibot"
+  }
+  tags = ["docker.io/pulumi/pulumi:3.107.0"]
+}
+output "ref" {
+  value = docker-build_image.image.ref
+}
+```
 ```java
 package generated_program;
 
@@ -581,8 +673,8 @@ import com.pulumi.dockerbuild.Image;
 import com.pulumi.dockerbuild.ImageArgs;
 import com.pulumi.dockerbuild.inputs.BuildContextArgs;
 import com.pulumi.dockerbuild.inputs.RegistryArgs;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.io.File;
 import java.nio.file.Files;
@@ -607,7 +699,7 @@ public class App {
             .tags("docker.io/pulumi/pulumi:3.107.0")
             .build());
 
-        ctx.export("ref", myImage.ref());
+        ctx.export("ref", image.ref());
     }
 }
 ```
@@ -756,6 +848,34 @@ resources:
         type: docker-build:Image
 runtime: yaml
 ```
+```hcl
+pulumi {
+  required_providers {
+    docker-build = {
+      source  = "pulumi/docker-build"
+      version = "0.0.15"
+    }
+  }
+}
+
+resource "docker-build_image" "image" {
+  cache_from {
+    local = {
+      src = "tmp/cache"
+    }
+  }
+  cache_to {
+    local = {
+      dest = "tmp/cache"
+      mode = "max"
+    }
+  }
+  context = {
+    location = "app"
+  }
+  push = false
+}
+```
 ```java
 package generated_program;
 
@@ -769,8 +889,8 @@ import com.pulumi.dockerbuild.inputs.CacheFromLocalArgs;
 import com.pulumi.dockerbuild.inputs.CacheToArgs;
 import com.pulumi.dockerbuild.inputs.CacheToLocalArgs;
 import com.pulumi.dockerbuild.inputs.BuildContextArgs;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.io.File;
 import java.nio.file.Files;
@@ -903,6 +1023,27 @@ resources:
         type: docker-build:Image
 runtime: yaml
 ```
+```hcl
+pulumi {
+  required_providers {
+    docker-build = {
+      source  = "pulumi/docker-build"
+      version = "0.0.15"
+    }
+  }
+}
+
+resource "docker-build_image" "image" {
+  builder = {
+    name = "cloud-builder-name"
+  }
+  context = {
+    location = "app"
+  }
+  exec = true
+  push = false
+}
+```
 ```java
 package generated_program;
 
@@ -913,8 +1054,8 @@ import com.pulumi.dockerbuild.Image;
 import com.pulumi.dockerbuild.ImageArgs;
 import com.pulumi.dockerbuild.inputs.BuilderConfigArgs;
 import com.pulumi.dockerbuild.inputs.BuildContextArgs;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.io.File;
 import java.nio.file.Files;
@@ -1035,6 +1176,26 @@ resources:
         type: docker-build:Image
 runtime: yaml
 ```
+```hcl
+pulumi {
+  required_providers {
+    docker-build = {
+      source  = "pulumi/docker-build"
+      version = "0.0.15"
+    }
+  }
+}
+
+resource "docker-build_image" "image" {
+  build_args = {
+    "SET_ME_TO_TRUE" = "true"
+  }
+  context = {
+    location = "app"
+  }
+  push = false
+}
+```
 ```java
 package generated_program;
 
@@ -1044,8 +1205,8 @@ import com.pulumi.core.Output;
 import com.pulumi.dockerbuild.Image;
 import com.pulumi.dockerbuild.ImageArgs;
 import com.pulumi.dockerbuild.inputs.BuildContextArgs;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.io.File;
 import java.nio.file.Files;
@@ -1153,6 +1314,24 @@ resources:
         type: docker-build:Image
 runtime: yaml
 ```
+```hcl
+pulumi {
+  required_providers {
+    docker-build = {
+      source  = "pulumi/docker-build"
+      version = "0.0.15"
+    }
+  }
+}
+
+resource "docker-build_image" "image" {
+  context = {
+    location = "app"
+  }
+  push   = false
+  target = "build-me"
+}
+```
 ```java
 package generated_program;
 
@@ -1162,8 +1341,8 @@ import com.pulumi.core.Output;
 import com.pulumi.dockerbuild.Image;
 import com.pulumi.dockerbuild.ImageArgs;
 import com.pulumi.dockerbuild.inputs.BuildContextArgs;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.io.File;
 import java.nio.file.Files;
@@ -1291,6 +1470,28 @@ resources:
         type: docker-build:Image
 runtime: yaml
 ```
+```hcl
+pulumi {
+  required_providers {
+    docker-build = {
+      source  = "pulumi/docker-build"
+      version = "0.0.15"
+    }
+  }
+}
+
+resource "docker-build_image" "image" {
+  context = {
+    location = "app"
+    named = {
+      "golang:latest" = {
+        location = "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984"
+      }
+    }
+  }
+  push = false
+}
+```
 ```java
 package generated_program;
 
@@ -1300,8 +1501,8 @@ import com.pulumi.core.Output;
 import com.pulumi.dockerbuild.Image;
 import com.pulumi.dockerbuild.ImageArgs;
 import com.pulumi.dockerbuild.inputs.BuildContextArgs;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.io.File;
 import java.nio.file.Files;
@@ -1316,12 +1517,13 @@ public class App {
         var image = new Image("image", ImageArgs.builder()
             .context(BuildContextArgs.builder()
                 .location("app")
-                .named(Map.of("golang:latest", Map.of("location", "docker-image://golang@sha256:b8e62cf593cdaff36efd90aa3a37de268e6781a2e68c6610940c48f7cdf36984")))
-                .build())
-            .push(false)
-            .build());
+                .named(Map.of("golang:latest", ContextArgs.builder()
+%!v(PANIC=Format method: interface conversion: model.Expression is *model.TemplateExpression, not *model.LiteralValueExpression)))
+                    .build())
+                .push(false)
+                .build());
 
-    }
+        }
 }
 ```
 {{% /example %}}
@@ -1404,6 +1606,23 @@ resources:
         type: docker-build:Image
 runtime: yaml
 ```
+```hcl
+pulumi {
+  required_providers {
+    docker-build = {
+      source  = "pulumi/docker-build"
+      version = "0.0.15"
+    }
+  }
+}
+
+resource "docker-build_image" "image" {
+  context = {
+    location = "https://raw.githubusercontent.com/pulumi/pulumi-docker/api-types/provider/testdata/Dockerfile"
+  }
+  push = false
+}
+```
 ```java
 package generated_program;
 
@@ -1413,8 +1632,8 @@ import com.pulumi.core.Output;
 import com.pulumi.dockerbuild.Image;
 import com.pulumi.dockerbuild.ImageArgs;
 import com.pulumi.dockerbuild.inputs.BuildContextArgs;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.io.File;
 import java.nio.file.Files;
@@ -1539,6 +1758,26 @@ resources:
         type: docker-build:Image
 runtime: yaml
 ```
+```hcl
+pulumi {
+  required_providers {
+    docker-build = {
+      source  = "pulumi/docker-build"
+      version = "0.0.15"
+    }
+  }
+}
+
+resource "docker-build_image" "image" {
+  context = {
+    location = "app"
+  }
+  dockerfile = {
+    inline = "FROM busybox\nCOPY hello.c ./\n"
+  }
+  push = false
+}
+```
 ```java
 package generated_program;
 
@@ -1549,8 +1788,8 @@ import com.pulumi.dockerbuild.Image;
 import com.pulumi.dockerbuild.ImageArgs;
 import com.pulumi.dockerbuild.inputs.BuildContextArgs;
 import com.pulumi.dockerbuild.inputs.DockerfileArgs;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.io.File;
 import java.nio.file.Files;
@@ -1673,6 +1912,26 @@ resources:
         type: docker-build:Image
 runtime: yaml
 ```
+```hcl
+pulumi {
+  required_providers {
+    docker-build = {
+      source  = "pulumi/docker-build"
+      version = "0.0.15"
+    }
+  }
+}
+
+resource "docker-build_image" "image" {
+  context = {
+    location = "https://github.com/docker-library/hello-world.git"
+  }
+  dockerfile = {
+    location = "app/Dockerfile"
+  }
+  push = false
+}
+```
 ```java
 package generated_program;
 
@@ -1683,8 +1942,8 @@ import com.pulumi.dockerbuild.Image;
 import com.pulumi.dockerbuild.ImageArgs;
 import com.pulumi.dockerbuild.inputs.BuildContextArgs;
 import com.pulumi.dockerbuild.inputs.DockerfileArgs;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.io.File;
 import java.nio.file.Files;
@@ -1819,6 +2078,28 @@ resources:
         type: docker-build:Image
 runtime: yaml
 ```
+```hcl
+pulumi {
+  required_providers {
+    docker-build = {
+      source  = "pulumi/docker-build"
+      version = "0.0.15"
+    }
+  }
+}
+
+resource "docker-build_image" "image" {
+  context = {
+    location = "app"
+  }
+  exports {
+    docker = {
+      tar = true
+    }
+  }
+  push = false
+}
+```
 ```java
 package generated_program;
 
@@ -1830,8 +2111,8 @@ import com.pulumi.dockerbuild.ImageArgs;
 import com.pulumi.dockerbuild.inputs.BuildContextArgs;
 import com.pulumi.dockerbuild.inputs.ExportArgs;
 import com.pulumi.dockerbuild.inputs.ExportDockerArgs;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.io.File;
 import java.nio.file.Files;

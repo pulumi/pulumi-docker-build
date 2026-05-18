@@ -780,7 +780,7 @@ class Image(pulumi.CustomResource):
                 "username": "pulumibot",
             }],
             tags=["docker.io/pulumi/pulumi:3.107.0"])
-        pulumi.export("ref", my_image["ref"])
+        pulumi.export("ref", image.ref)
         ```
         ### Caching
         ```python
@@ -1219,7 +1219,7 @@ class Image(pulumi.CustomResource):
                 "username": "pulumibot",
             }],
             tags=["docker.io/pulumi/pulumi:3.107.0"])
-        pulumi.export("ref", my_image["ref"])
+        pulumi.export("ref", image.ref)
         ```
         ### Caching
         ```python

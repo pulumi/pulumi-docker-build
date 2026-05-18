@@ -240,7 +240,7 @@ namespace Pulumi.DockerBuild
     /// 
     ///     return new Dictionary&lt;string, object?&gt;
     ///     {
-    ///         ["ref"] = myImage.Ref,
+    ///         ["ref"] = image.Ref,
     ///     };
     /// });
     /// 

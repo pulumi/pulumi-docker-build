@@ -62,7 +62,7 @@ resources:
           username: pulumibot
           password: ${dockerHubPassword}
 outputs:
-  ref: ${my-image.ref}
+  ref: ${image.ref}
 ---
 name: caching
 runtime: yaml

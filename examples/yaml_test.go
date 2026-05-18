@@ -35,6 +35,20 @@ func TestYAMLExample(t *testing.T) {
 	integration.ProgramTest(t, &test)
 }
 
+func TestHCLExample(t *testing.T) {
+	cwd, err := os.Getwd()
+	require.NoError(t, err)
+
+	test := integration.ProgramTestOptions{
+		Dir: path.Join(cwd, "hcl"),
+		Secrets: map[string]string{
+			"dockerHubPassword": os.Getenv("DOCKER_HUB_PASSWORD"),
+		},
+	}
+
+	integration.ProgramTest(t, &test)
+}
+
 func TestYAMLExampleUpgrade(t *testing.T) {
 	pt := pulumitest.NewPulumiTest(t, "upgrade",
 		opttest.AttachProviderServer("docker-build", providerServerFactory))
