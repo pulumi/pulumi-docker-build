@@ -84,7 +84,7 @@ class BuildContextArgsDict(TypedDict):
       (`https://github.com/user/myrepo.git`, `http://server/context.tar.gz`,
       etc.).
     """
-    named: NotRequired[pulumi.Input[Optional[Mapping[str, pulumi.Input['ContextArgs']]]]]
+    named: NotRequired[pulumi.Input[Optional[Mapping[str, pulumi.Input['ContextArgsDict']]]]]
     """
     Additional build contexts to use.
 
@@ -611,7 +611,7 @@ class CacheFromS3Args:
 
 
 class CacheFromArgsDict(TypedDict):
-    azblob: NotRequired[pulumi.Input[Optional['CacheFromAzureBlobArgs']]]
+    azblob: NotRequired[pulumi.Input[Optional['CacheFromAzureBlobArgsDict']]]
     """
     Upload build caches to Azure's blob storage service.
     """
@@ -619,14 +619,14 @@ class CacheFromArgsDict(TypedDict):
     """
     When `true` this entry will be excluded. Defaults to `false`.
     """
-    gha: NotRequired[pulumi.Input[Optional['CacheFromGitHubActionsArgs']]]
+    gha: NotRequired[pulumi.Input[Optional['CacheFromGitHubActionsArgsDict']]]
     """
     Recommended for use with GitHub Actions workflows.
 
     An action like `crazy-max/ghaction-github-runtime` is recommended to
     expose appropriate credentials to your GitHub workflow.
     """
-    local: NotRequired[pulumi.Input[Optional['CacheFromLocalArgs']]]
+    local: NotRequired[pulumi.Input[Optional['CacheFromLocalArgsDict']]]
     """
     A simple backend which caches images on your local filesystem.
     """
@@ -635,11 +635,11 @@ class CacheFromArgsDict(TypedDict):
     A raw string as you would provide it to the Docker CLI (e.g.,
     `type=inline`).
     """
-    registry: NotRequired[pulumi.Input[Optional['CacheFromRegistryArgs']]]
+    registry: NotRequired[pulumi.Input[Optional['CacheFromRegistryArgsDict']]]
     """
     Upload build caches to remote registries.
     """
-    s3: NotRequired[pulumi.Input[Optional['CacheFromS3Args']]]
+    s3: NotRequired[pulumi.Input[Optional['CacheFromS3ArgsDict']]]
     """
     Upload build caches to AWS S3 or an S3-compatible services such as
     MinIO.
@@ -1597,7 +1597,7 @@ class CacheToS3Args:
 
 
 class CacheToArgsDict(TypedDict):
-    azblob: NotRequired[pulumi.Input[Optional['CacheToAzureBlobArgs']]]
+    azblob: NotRequired[pulumi.Input[Optional['CacheToAzureBlobArgsDict']]]
     """
     Push cache to Azure's blob storage service.
     """
@@ -1605,20 +1605,20 @@ class CacheToArgsDict(TypedDict):
     """
     When `true` this entry will be excluded. Defaults to `false`.
     """
-    gha: NotRequired[pulumi.Input[Optional['CacheToGitHubActionsArgs']]]
+    gha: NotRequired[pulumi.Input[Optional['CacheToGitHubActionsArgsDict']]]
     """
     Recommended for use with GitHub Actions workflows.
 
     An action like `crazy-max/ghaction-github-runtime` is recommended to
     expose appropriate credentials to your GitHub workflow.
     """
-    inline: NotRequired[pulumi.Input[Optional['CacheToInlineArgs']]]
+    inline: NotRequired[pulumi.Input[Optional['CacheToInlineArgsDict']]]
     """
     The inline cache storage backend is the simplest implementation to get
     started with, but it does not handle multi-stage builds. Consider the
     `registry` cache backend instead.
     """
-    local: NotRequired[pulumi.Input[Optional['CacheToLocalArgs']]]
+    local: NotRequired[pulumi.Input[Optional['CacheToLocalArgsDict']]]
     """
     A simple backend which caches imagines on your local filesystem.
     """
@@ -1627,12 +1627,12 @@ class CacheToArgsDict(TypedDict):
     A raw string as you would provide it to the Docker CLI (e.g.,
     `type=inline`)
     """
-    registry: NotRequired[pulumi.Input[Optional['CacheToRegistryArgs']]]
+    registry: NotRequired[pulumi.Input[Optional['CacheToRegistryArgsDict']]]
     """
     Push caches to remote registries. Incompatible with the `docker` build
     driver.
     """
-    s3: NotRequired[pulumi.Input[Optional['CacheToS3Args']]]
+    s3: NotRequired[pulumi.Input[Optional['CacheToS3ArgsDict']]]
     """
     Push cache to AWS S3 or S3-compatible services such as MinIO.
     """
@@ -2940,7 +2940,7 @@ class ExportTarArgs:
 
 
 class ExportArgsDict(TypedDict):
-    cacheonly: NotRequired[pulumi.Input[Optional['ExportCacheOnlyArgs']]]
+    cacheonly: NotRequired[pulumi.Input[Optional['ExportCacheOnlyArgsDict']]]
     """
     A no-op export. Helpful for silencing the 'no exports' warning if you
     just want to populate caches.
@@ -2949,19 +2949,19 @@ class ExportArgsDict(TypedDict):
     """
     When `true` this entry will be excluded. Defaults to `false`.
     """
-    docker: NotRequired[pulumi.Input[Optional['ExportDockerArgs']]]
+    docker: NotRequired[pulumi.Input[Optional['ExportDockerArgsDict']]]
     """
     Export as a Docker image layout.
     """
-    image: NotRequired[pulumi.Input[Optional['ExportImageArgs']]]
+    image: NotRequired[pulumi.Input[Optional['ExportImageArgsDict']]]
     """
     Outputs the build result into a container image format.
     """
-    local: NotRequired[pulumi.Input[Optional['ExportLocalArgs']]]
+    local: NotRequired[pulumi.Input[Optional['ExportLocalArgsDict']]]
     """
     Export to a local directory as files and directories.
     """
-    oci: NotRequired[pulumi.Input[Optional['ExportOCIArgs']]]
+    oci: NotRequired[pulumi.Input[Optional['ExportOCIArgsDict']]]
     """
     Identical to the Docker exporter but uses OCI media types by default.
     """
@@ -2970,11 +2970,11 @@ class ExportArgsDict(TypedDict):
     A raw string as you would provide it to the Docker CLI (e.g.,
     `type=docker`)
     """
-    registry: NotRequired[pulumi.Input[Optional['ExportRegistryArgs']]]
+    registry: NotRequired[pulumi.Input[Optional['ExportRegistryArgsDict']]]
     """
     Identical to the Image exporter, but pushes by default.
     """
-    tar: NotRequired[pulumi.Input[Optional['ExportTarArgs']]]
+    tar: NotRequired[pulumi.Input[Optional['ExportTarArgsDict']]]
     """
     Export to a local directory as a tarball.
     """
