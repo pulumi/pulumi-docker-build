@@ -18,8 +18,8 @@ require (
 	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.106.2
 	github.com/pulumi/pulumi-go-provider v1.3.2
 	github.com/pulumi/pulumi-java v1.27.0
-	github.com/pulumi/pulumi/pkg/v3 v3.239.0
-	github.com/pulumi/pulumi/sdk/v3 v3.239.0
+	github.com/pulumi/pulumi/pkg/v3 v3.241.0
+	github.com/pulumi/pulumi/sdk/v3 v3.241.0
 	github.com/regclient/regclient v0.7.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/afero v1.14.0
@@ -300,7 +300,7 @@ require (
 	google.golang.org/genproto v0.0.0-20240311173647-c811ad7063a7 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20260511170946-3700d4141b60 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260511170946-3700d4141b60 // indirect
-	google.golang.org/grpc v1.81.0 // indirect
+	google.golang.org/grpc v1.81.1 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
