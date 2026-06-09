@@ -15,7 +15,7 @@ require (
 	github.com/muesli/reflow v0.3.0
 	github.com/otiai10/copy v1.14.0
 	github.com/pulumi/providertest v0.7.0
-	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.106.2
+	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.107.0
 	github.com/pulumi/pulumi-go-provider v1.3.2
 	github.com/pulumi/pulumi-java v1.29.0
 	github.com/pulumi/pulumi/pkg/v3 v3.245.0
