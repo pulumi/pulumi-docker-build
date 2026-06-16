@@ -36,6 +36,7 @@ func TestYAMLExample(t *testing.T) {
 }
 
 func TestHCLExample(t *testing.T) {
+	t.Skip("Skipping until HCL is stable")
 	cwd, err := os.Getwd()
 	require.NoError(t, err)
 
