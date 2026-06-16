@@ -55,7 +55,7 @@ jobs:
         owner: ${{ github.repository_owner }}
     - id: version
       name: Set Provider Version
-      uses: pulumi/provider-version-action@3a647064cf4697c7c6352b9a1d9e554450cbe957 # v1.6.1
+      uses: pulumi/provider-version-action@c4f719182e607d0d8322f148f168d3372838e681 # v2.0.0
       with:
         set-env: PROVIDER_VERSION
       env:
@@ -106,7 +106,7 @@ jobs:
       run: make provider
     - name: Check worktree clean
       id: worktreeClean
-      uses: pulumi/git-status-check-action@54000b91124a8dd9fd6a872cb41f5dd246a46e7c # v1.1.1
+      uses: pulumi/git-status-check-action@0d90c81496aa8d6a31d9c6a0d6297feea2f54057 # v2.0.0
       with:
         allowed-changes: |-
           sdk/**/pulumi-plugin.json
@@ -131,7 +131,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
+      uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
       env:
         CODECOV_TOKEN: ${{ steps.esc-secrets.outputs.CODECOV_TOKEN }}
     - if: failure() && github.event_name == 'push'
@@ -181,7 +181,7 @@ jobs:
         owner: ${{ github.repository_owner }}
     - id: version
       name: Set Provider Version
-      uses: pulumi/provider-version-action@3a647064cf4697c7c6352b9a1d9e554450cbe957 # v1.6.1
+      uses: pulumi/provider-version-action@c4f719182e607d0d8322f148f168d3372838e681 # v2.0.0
       with:
         set-env: PROVIDER_VERSION
       env:
@@ -198,7 +198,7 @@ jobs:
       run: make build_${{ matrix.language }}
     - name: Check worktree clean
       id: worktreeClean
-      uses: pulumi/git-status-check-action@54000b91124a8dd9fd6a872cb41f5dd246a46e7c # v1.1.1
+      uses: pulumi/git-status-check-action@0d90c81496aa8d6a31d9c6a0d6297feea2f54057 # v2.0.0
       with:
         allowed-changes: |-
           sdk/**/pulumi-plugin.json
@@ -265,7 +265,7 @@ jobs:
         owner: ${{ github.repository_owner }}
     - id: version
       name: Set Provider Version
-      uses: pulumi/provider-version-action@3a647064cf4697c7c6352b9a1d9e554450cbe957 # v1.6.1
+      uses: pulumi/provider-version-action@c4f719182e607d0d8322f148f168d3372838e681 # v2.0.0
       with:
         set-env: PROVIDER_VERSION
       env:
@@ -368,7 +368,7 @@ jobs:
         owner: ${{ github.repository_owner }}
     - id: version
       name: Set Provider Version
-      uses: pulumi/provider-version-action@3a647064cf4697c7c6352b9a1d9e554450cbe957 # v1.6.1
+      uses: pulumi/provider-version-action@c4f719182e607d0d8322f148f168d3372838e681 # v2.0.0
       with:
         set-env: PROVIDER_VERSION
       env:
@@ -449,7 +449,7 @@ jobs:
         owner: ${{ github.repository_owner }}
     - id: version
       name: Set Provider Version
-      uses: pulumi/provider-version-action@3a647064cf4697c7c6352b9a1d9e554450cbe957 # v1.6.1
+      uses: pulumi/provider-version-action@c4f719182e607d0d8322f148f168d3372838e681 # v2.0.0
       with:
         set-env: PROVIDER_VERSION
       env:
@@ -537,7 +537,7 @@ jobs:
         owner: ${{ github.repository_owner }}
     - id: version
       name: Set Provider Version
-      uses: pulumi/provider-version-action@3a647064cf4697c7c6352b9a1d9e554450cbe957 # v1.6.1
+      uses: pulumi/provider-version-action@c4f719182e607d0d8322f148f168d3372838e681 # v2.0.0
       with:
         set-env: PROVIDER_VERSION
       env:
@@ -578,7 +578,7 @@ jobs:
         lfs: true
     - id: version
       name: Set Provider Version
-      uses: pulumi/provider-version-action@3a647064cf4697c7c6352b9a1d9e554450cbe957 # v1.6.1
+      uses: pulumi/provider-version-action@c4f719182e607d0d8322f148f168d3372838e681 # v2.0.0
       with:
         set-env: PROVIDER_VERSION
       env:
