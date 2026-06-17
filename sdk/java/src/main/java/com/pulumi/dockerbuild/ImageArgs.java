@@ -296,7 +296,7 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
      * These secrets will not be considered when calculating diffs, even if they
      * are changed. Note: only applicable if the secret is present in both the old and the new state.
      * 
-     * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+     * This is useful when you want to avoid unnecessary rebuilds caused by short-lived secrets that change on every run.
      * 
      */
     @Import(name="ignoreSecretsInDiffCalculation")
@@ -308,7 +308,7 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
      * These secrets will not be considered when calculating diffs, even if they
      * are changed. Note: only applicable if the secret is present in both the old and the new state.
      * 
-     * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+     * This is useful when you want to avoid unnecessary rebuilds caused by short-lived secrets that change on every run.
      * 
      */
     public Optional<Output<List<String>>> ignoreSecretsInDiffCalculation() {
@@ -1011,7 +1011,7 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
          * These secrets will not be considered when calculating diffs, even if they
          * are changed. Note: only applicable if the secret is present in both the old and the new state.
          * 
-         * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+         * This is useful when you want to avoid unnecessary rebuilds caused by short-lived secrets that change on every run.
          * 
          * @return builder
          * 
@@ -1027,7 +1027,7 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
          * These secrets will not be considered when calculating diffs, even if they
          * are changed. Note: only applicable if the secret is present in both the old and the new state.
          * 
-         * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+         * This is useful when you want to avoid unnecessary rebuilds caused by short-lived secrets that change on every run.
          * 
          * @return builder
          * 
@@ -1042,7 +1042,7 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
          * These secrets will not be considered when calculating diffs, even if they
          * are changed. Note: only applicable if the secret is present in both the old and the new state.
          * 
-         * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+         * This is useful when you want to avoid unnecessary rebuilds caused by short-lived secrets that change on every run.
          * 
          * @return builder
          * 

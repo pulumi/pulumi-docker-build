@@ -638,7 +638,7 @@ type Image struct {
 	// These secrets will not be considered when calculating diffs, even if they
 	// are changed. Note: only applicable if the secret is present in both the old and the new state.
 	//
-	// This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+	// This is useful when you want to avoid unnecessary rebuilds caused by short-lived secrets that change on every run.
 	IgnoreSecretsInDiffCalculation pulumix.ArrayOutput[string] `pulumi:"ignoreSecretsInDiffCalculation"`
 	// Attach arbitrary key/value metadata to the image.
 	//
@@ -855,7 +855,7 @@ type imageArgs struct {
 	// These secrets will not be considered when calculating diffs, even if they
 	// are changed. Note: only applicable if the secret is present in both the old and the new state.
 	//
-	// This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+	// This is useful when you want to avoid unnecessary rebuilds caused by short-lived secrets that change on every run.
 	IgnoreSecretsInDiffCalculation []string `pulumi:"ignoreSecretsInDiffCalculation"`
 	// Attach arbitrary key/value metadata to the image.
 	//
@@ -1010,7 +1010,7 @@ type ImageArgs struct {
 	// These secrets will not be considered when calculating diffs, even if they
 	// are changed. Note: only applicable if the secret is present in both the old and the new state.
 	//
-	// This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+	// This is useful when you want to avoid unnecessary rebuilds caused by short-lived secrets that change on every run.
 	IgnoreSecretsInDiffCalculation pulumix.Input[[]string]
 	// Attach arbitrary key/value metadata to the image.
 	//
@@ -1255,7 +1255,7 @@ func (o ImageOutput) Exports() pulumix.GArrayOutput[Export, ExportOutput] {
 // These secrets will not be considered when calculating diffs, even if they
 // are changed. Note: only applicable if the secret is present in both the old and the new state.
 //
-// This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+// This is useful when you want to avoid unnecessary rebuilds caused by short-lived secrets that change on every run.
 func (o ImageOutput) IgnoreSecretsInDiffCalculation() pulumix.ArrayOutput[string] {
 	value := pulumix.Apply[Image](o, func(v Image) pulumix.ArrayOutput[string] { return v.IgnoreSecretsInDiffCalculation })
 	unwrapped := pulumix.Flatten[[]string, pulumix.ArrayOutput[string]](value)

@@ -613,7 +613,7 @@ export class Image extends pulumi.CustomResource {
      * These secrets will not be considered when calculating diffs, even if they
      * are changed. Note: only applicable if the secret is present in both the old and the new state.
      *
-     * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+     * This is useful when you want to avoid unnecessary rebuilds caused by short-lived secrets that change on every run.
      */
     declare public readonly ignoreSecretsInDiffCalculation: pulumi.Output<string[] | undefined>;
     /**
@@ -905,9 +905,9 @@ export interface ImageArgs {
      * These secrets will not be considered when calculating diffs, even if they
      * are changed. Note: only applicable if the secret is present in both the old and the new state.
      *
-     * This is useful when you want to avoid unnecessary rebuilds becayse of short-lived secrets change.
+     * This is useful when you want to avoid unnecessary rebuilds caused by short-lived secrets that change on every run.
      */
-    ignoreSecretsInDiffCalculation?: pulumi.Input<pulumi.Input<string>[]>;
+    ignoreSecretsInDiffCalculation?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * Attach arbitrary key/value metadata to the image.
      *
