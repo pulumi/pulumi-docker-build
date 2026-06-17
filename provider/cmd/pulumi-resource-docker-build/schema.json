@@ -1182,23 +1182,23 @@
           },
           "description": "Registry credentials. Required if reading or exporting to private\nrepositories.\n\nCredentials are kept in-memory and do not pollute pre-existing\ncredentials on the host.\n\nSimilar to `docker login`."
         },
-        "secretWriteOnly": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "A mapping of secret names to their corresponding values, like `secrets`,\nbut whose values are excluded from diffs.\n\nChanging a value here does not trigger a rebuild on its own, which is\nuseful for short-lived credentials that rotate on every run. To force the\nbuild to pick up new values, change `secretWriteOnlyVersion`. Adding or\nremoving a key still triggers a rebuild.\n\nThe latest values are always passed to the build whenever one occurs.\n\nModeled on Terraform's write-only arguments. Note: these values are still\nwritten to state until the engine supports true write-only values."
-        },
-        "secretWriteOnlyVersion": {
-          "type": "string",
-          "description": "An arbitrary version identifier for `secretWriteOnly`.\n\nChanging this value triggers a rebuild that picks up the current\n`secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern."
-        },
         "secrets": {
           "type": "object",
           "additionalProperties": {
             "type": "string"
           },
           "description": "A mapping of secret names to their corresponding values.\n\nUnlike the Docker CLI, these can be passed by value and do not need to\nexist on-disk or in environment variables.\n\nBuild arguments and environment variables are persistent in the final\nimage, so you should use this for sensitive values.\n\nSimilar to Docker's `--secret` flag."
+        },
+        "secretsWriteOnly": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "A mapping of secret names to their corresponding values, like `secrets`,\nbut whose values are excluded from diffs.\n\nChanging a value here does not trigger a rebuild on its own, which is\nuseful for short-lived credentials that rotate on every run. To force the\nbuild to pick up new values, change `secretWriteOnlyVersion`. Adding or\nremoving a key still triggers a rebuild.\n\nThe latest values are always passed to the build whenever one occurs.\n\nNote: these values are still written to state, just ignored when diffing."
+        },
+        "secretsWriteOnlyVersion": {
+          "type": "string",
+          "description": "An arbitrary version identifier for `secretWriteOnly`.\n\nChanging this value triggers a rebuild that picks up the current\n`secretWriteOnly` values."
         },
         "ssh": {
           "type": "array",
@@ -1324,23 +1324,23 @@
           },
           "description": "Registry credentials. Required if reading or exporting to private\nrepositories.\n\nCredentials are kept in-memory and do not pollute pre-existing\ncredentials on the host.\n\nSimilar to `docker login`."
         },
-        "secretWriteOnly": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "A mapping of secret names to their corresponding values, like `secrets`,\nbut whose values are excluded from diffs.\n\nChanging a value here does not trigger a rebuild on its own, which is\nuseful for short-lived credentials that rotate on every run. To force the\nbuild to pick up new values, change `secretWriteOnlyVersion`. Adding or\nremoving a key still triggers a rebuild.\n\nThe latest values are always passed to the build whenever one occurs.\n\nModeled on Terraform's write-only arguments. Note: these values are still\nwritten to state until the engine supports true write-only values."
-        },
-        "secretWriteOnlyVersion": {
-          "type": "string",
-          "description": "An arbitrary version identifier for `secretWriteOnly`.\n\nChanging this value triggers a rebuild that picks up the current\n`secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern."
-        },
         "secrets": {
           "type": "object",
           "additionalProperties": {
             "type": "string"
           },
           "description": "A mapping of secret names to their corresponding values.\n\nUnlike the Docker CLI, these can be passed by value and do not need to\nexist on-disk or in environment variables.\n\nBuild arguments and environment variables are persistent in the final\nimage, so you should use this for sensitive values.\n\nSimilar to Docker's `--secret` flag."
+        },
+        "secretsWriteOnly": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "A mapping of secret names to their corresponding values, like `secrets`,\nbut whose values are excluded from diffs.\n\nChanging a value here does not trigger a rebuild on its own, which is\nuseful for short-lived credentials that rotate on every run. To force the\nbuild to pick up new values, change `secretWriteOnlyVersion`. Adding or\nremoving a key still triggers a rebuild.\n\nThe latest values are always passed to the build whenever one occurs.\n\nNote: these values are still written to state, just ignored when diffing."
+        },
+        "secretsWriteOnlyVersion": {
+          "type": "string",
+          "description": "An arbitrary version identifier for `secretWriteOnly`.\n\nChanging this value triggers a rebuild that picks up the current\n`secretWriteOnly` values."
         },
         "ssh": {
           "type": "array",

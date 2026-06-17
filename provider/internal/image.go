@@ -87,30 +87,30 @@ func (i *Image) Annotate(a infer.Annotator) {
 
 // ImageArgs instantiates a new Image.
 type ImageArgs struct {
-	AddHosts               []string          `pulumi:"addHosts,optional"`
-	BuildArgs              map[string]string `pulumi:"buildArgs,optional"`
-	BuildOnPreview         *bool             `pulumi:"buildOnPreview,optional"`
-	Builder                *BuilderConfig    `pulumi:"builder,optional"`
-	CacheFrom              []CacheFrom       `pulumi:"cacheFrom,optional"`
-	CacheTo                []CacheTo         `pulumi:"cacheTo,optional"`
-	Context                *BuildContext     `pulumi:"context,optional"`
-	Dockerfile             *Dockerfile       `pulumi:"dockerfile,optional"`
-	Exports                []Export          `pulumi:"exports,optional"`
-	Labels                 map[string]string `pulumi:"labels,optional"`
-	Load                   bool              `pulumi:"load,optional"`
-	Network                *NetworkMode      `pulumi:"network,optional"`
-	NoCache                bool              `pulumi:"noCache,optional"`
-	Platforms              []Platform        `pulumi:"platforms,optional"`
-	Pull                   bool              `pulumi:"pull,optional"`
-	Push                   bool              `pulumi:"push"`
-	Registries             []Registry        `pulumi:"registries,optional"`
-	Secrets                map[string]string `pulumi:"secrets,optional"`
-	SecretWriteOnly        map[string]string `pulumi:"secretWriteOnly,optional"`
-	SecretWriteOnlyVersion string            `pulumi:"secretWriteOnlyVersion,optional"`
-	SSH                    []SSH             `pulumi:"ssh,optional"`
-	Tags                   []string          `pulumi:"tags,optional"`
-	Target                 string            `pulumi:"target,optional"`
-	Exec                   bool              `pulumi:"exec,optional"`
+	AddHosts                []string          `pulumi:"addHosts,optional"`
+	BuildArgs               map[string]string `pulumi:"buildArgs,optional"`
+	BuildOnPreview          *bool             `pulumi:"buildOnPreview,optional"`
+	Builder                 *BuilderConfig    `pulumi:"builder,optional"`
+	CacheFrom               []CacheFrom       `pulumi:"cacheFrom,optional"`
+	CacheTo                 []CacheTo         `pulumi:"cacheTo,optional"`
+	Context                 *BuildContext     `pulumi:"context,optional"`
+	Dockerfile              *Dockerfile       `pulumi:"dockerfile,optional"`
+	Exports                 []Export          `pulumi:"exports,optional"`
+	Labels                  map[string]string `pulumi:"labels,optional"`
+	Load                    bool              `pulumi:"load,optional"`
+	Network                 *NetworkMode      `pulumi:"network,optional"`
+	NoCache                 bool              `pulumi:"noCache,optional"`
+	Platforms               []Platform        `pulumi:"platforms,optional"`
+	Pull                    bool              `pulumi:"pull,optional"`
+	Push                    bool              `pulumi:"push"`
+	Registries              []Registry        `pulumi:"registries,optional"`
+	Secrets                 map[string]string `pulumi:"secrets,optional"`
+	SecretsWriteOnly        map[string]string `pulumi:"secretsWriteOnly,optional"`
+	SecretsWriteOnlyVersion string            `pulumi:"secretsWriteOnlyVersion,optional"`
+	SSH                     []SSH             `pulumi:"ssh,optional"`
+	Tags                    []string          `pulumi:"tags,optional"`
+	Target                  string            `pulumi:"target,optional"`
+	Exec                    bool              `pulumi:"exec,optional"`
 }
 
 // Annotate describes inputs to the Image resource.
@@ -231,7 +231,7 @@ func (ia *ImageArgs) Annotate(a infer.Annotator) {
 
 		Similar to Docker's "--secret" flag.
 	`))
-	a.Describe(&ia.SecretWriteOnly, dedent(`
+	a.Describe(&ia.SecretsWriteOnly, dedent(`
 		A mapping of secret names to their corresponding values, like "secrets",
 		but whose values are excluded from diffs.
 
@@ -242,14 +242,13 @@ func (ia *ImageArgs) Annotate(a infer.Annotator) {
 
 		The latest values are always passed to the build whenever one occurs.
 
-		Modeled on Terraform's write-only arguments. Note: these values are still
-		written to state until the engine supports true write-only values.
+		Note: these values are still written to state, just ignored when diffing.
 	`))
-	a.Describe(&ia.SecretWriteOnlyVersion, dedent(`
+	a.Describe(&ia.SecretsWriteOnlyVersion, dedent(`
 		An arbitrary version identifier for "secretWriteOnly".
 
 		Changing this value triggers a rebuild that picks up the current
-		"secretWriteOnly" values. Modeled on Terraform's "_wo_version" pattern.
+		"secretWriteOnly" values.
 	`))
 	a.Describe(&ia.SSH, dedent(`
 		SSH agent socket or keys to expose to the build.
@@ -440,8 +439,8 @@ func (ia *ImageArgs) normalize(preview bool) ImageArgs {
 		Tags:           filter(stringKeeper{preview}, ia.Tags...),
 		Target:         ia.Target,
 
-		SecretWriteOnly:        mapKeeper{preview}.keep(ia.SecretWriteOnly),
-		SecretWriteOnlyVersion: ia.SecretWriteOnlyVersion,
+		SecretsWriteOnly:        mapKeeper{preview}.keep(ia.SecretsWriteOnly),
+		SecretsWriteOnlyVersion: ia.SecretsWriteOnlyVersion,
 	}
 
 	// Handle --push/--load shorthand.
@@ -512,13 +511,13 @@ func (b *build) ShouldExec() bool {
 	return b.exec
 }
 
-// diffSecretWriteOnly returns the diff keys triggered by write-only secrets.
+// diffSecretsWriteOnly returns the diff keys triggered by write-only secrets.
 // Value changes to existing keys are ignored so that rotating credentials don't
 // force rebuilds; adding or removing a key is a structural change, and
-// SecretWriteOnlyVersion is the explicit trigger for picking up new values.
-func diffSecretWriteOnly(olds, news ImageArgs) []string {
-	oldKeys := maps.Clone(olds.SecretWriteOnly)
-	newKeys := maps.Clone(news.SecretWriteOnly)
+// SecrestWriteOnlyVersion is the explicit trigger for picking up new values.
+func diffSecretsWriteOnly(olds, news ImageArgs) []string {
+	oldKeys := maps.Clone(olds.SecretsWriteOnly)
+	newKeys := maps.Clone(news.SecretsWriteOnly)
 	for k := range newKeys {
 		if _, ok := oldKeys[k]; ok {
 			delete(oldKeys, k)
@@ -530,23 +529,23 @@ func diffSecretWriteOnly(olds, news ImageArgs) []string {
 	if !reflect.DeepEqual(oldKeys, newKeys) {
 		keys = append(keys, "secretWriteOnly")
 	}
-	if olds.SecretWriteOnlyVersion != news.SecretWriteOnlyVersion {
+	if olds.SecretsWriteOnlyVersion != news.SecretsWriteOnlyVersion {
 		keys = append(keys, "secretWriteOnlyVersion")
 	}
 	return keys
 }
 
-// allSecrets returns the union of Secrets and SecretWriteOnly. Both are passed
+// allSecrets returns the union of Secrets and SecretsWriteOnly. Both are passed
 // to the build; they only differ in how they participate in diffs.
 func (ia ImageArgs) allSecrets() map[string]string {
-	if len(ia.SecretWriteOnly) == 0 {
+	if len(ia.SecretsWriteOnly) == 0 {
 		return ia.Secrets
 	}
 	merged := maps.Clone(ia.Secrets)
 	if merged == nil {
 		merged = map[string]string{}
 	}
-	maps.Copy(merged, ia.SecretWriteOnly)
+	maps.Copy(merged, ia.SecretsWriteOnly)
 	return merged
 }
 
@@ -700,7 +699,7 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 		}
 	}
 
-	for k := range normalized.SecretWriteOnly {
+	for k := range normalized.SecretsWriteOnly {
 		if _, ok := normalized.Secrets[k]; ok {
 			multierr = errors.Join(multierr, newCheckFailure(
 				fmt.Errorf("secret %q is defined in both secrets and secretWriteOnly", k),
@@ -1044,7 +1043,7 @@ func (*Image) Diff(
 	if !reflect.DeepEqual(olds.Secrets, news.Secrets) {
 		diff["secrets"] = update
 	}
-	for _, k := range diffSecretWriteOnly(olds.ImageArgs, news) {
+	for _, k := range diffSecretsWriteOnly(olds.ImageArgs, news) {
 		diff[k] = update
 	}
 	if !reflect.DeepEqual(olds.SSH, news.SSH) {
