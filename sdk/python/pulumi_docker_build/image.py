@@ -40,6 +40,8 @@ class ImageArgs:
                  platforms: pulumi.Input[Optional[Sequence[pulumi.Input['Platform']]]] = None,
                  pull: pulumi.Input[Optional[_builtins.bool]] = None,
                  registries: pulumi.Input[Optional[Sequence[pulumi.Input['RegistryArgs']]]] = None,
+                 secret_write_only: pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
+                 secret_write_only_version: pulumi.Input[Optional[_builtins.str]] = None,
                  secrets: pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
                  ssh: pulumi.Input[Optional[Sequence[pulumi.Input['SSHArgs']]]] = None,
                  tags: pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]] = None,
@@ -146,6 +148,22 @@ class ImageArgs:
                credentials on the host.
                
                Similar to `docker login`.
+        :param pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]] secret_write_only: A mapping of secret names to their corresponding values, like `secrets`,
+               but whose values are excluded from diffs.
+               
+               Changing a value here does not trigger a rebuild on its own, which is
+               useful for short-lived credentials that rotate on every run. To force the
+               build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+               removing a key still triggers a rebuild.
+               
+               The latest values are always passed to the build whenever one occurs.
+               
+               Modeled on Terraform's write-only arguments. Note: these values are still
+               written to state until the engine supports true write-only values.
+        :param pulumi.Input[_builtins.str] secret_write_only_version: An arbitrary version identifier for `secretWriteOnly`.
+               
+               Changing this value triggers a rebuild that picks up the current
+               `secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern.
         :param pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]] secrets: A mapping of secret names to their corresponding values.
                
                Unlike the Docker CLI, these can be passed by value and do not need to
@@ -209,6 +227,10 @@ class ImageArgs:
             pulumi.set(__self__, "pull", pull)
         if registries is not None:
             pulumi.set(__self__, "registries", registries)
+        if secret_write_only is not None:
+            pulumi.set(__self__, "secret_write_only", secret_write_only)
+        if secret_write_only_version is not None:
+            pulumi.set(__self__, "secret_write_only_version", secret_write_only_version)
         if secrets is not None:
             pulumi.set(__self__, "secrets", secrets)
         if ssh is not None:
@@ -516,6 +538,44 @@ class ImageArgs:
         pulumi.set(self, "registries", value)
 
     @_builtins.property
+    @pulumi.getter(name="secretWriteOnly")
+    def secret_write_only(self) -> pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]]:
+        """
+        A mapping of secret names to their corresponding values, like `secrets`,
+        but whose values are excluded from diffs.
+
+        Changing a value here does not trigger a rebuild on its own, which is
+        useful for short-lived credentials that rotate on every run. To force the
+        build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+        removing a key still triggers a rebuild.
+
+        The latest values are always passed to the build whenever one occurs.
+
+        Modeled on Terraform's write-only arguments. Note: these values are still
+        written to state until the engine supports true write-only values.
+        """
+        return pulumi.get(self, "secret_write_only")
+
+    @secret_write_only.setter
+    def secret_write_only(self, value: pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]]):
+        pulumi.set(self, "secret_write_only", value)
+
+    @_builtins.property
+    @pulumi.getter(name="secretWriteOnlyVersion")
+    def secret_write_only_version(self) -> pulumi.Input[Optional[_builtins.str]]:
+        """
+        An arbitrary version identifier for `secretWriteOnly`.
+
+        Changing this value triggers a rebuild that picks up the current
+        `secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern.
+        """
+        return pulumi.get(self, "secret_write_only_version")
+
+    @secret_write_only_version.setter
+    def secret_write_only_version(self, value: pulumi.Input[Optional[_builtins.str]]):
+        pulumi.set(self, "secret_write_only_version", value)
+
+    @_builtins.property
     @pulumi.getter
     def secrets(self) -> pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]]:
         """
@@ -607,6 +667,8 @@ class Image(pulumi.CustomResource):
                  pull: pulumi.Input[Optional[_builtins.bool]] = None,
                  push: pulumi.Input[Optional[_builtins.bool]] = None,
                  registries: pulumi.Input[Optional[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict']]]]] = None,
+                 secret_write_only: pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
+                 secret_write_only_version: pulumi.Input[Optional[_builtins.str]] = None,
                  secrets: pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
                  ssh: pulumi.Input[Optional[Sequence[pulumi.Input[Union['SSHArgs', 'SSHArgsDict']]]]] = None,
                  tags: pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]] = None,
@@ -1021,6 +1083,22 @@ class Image(pulumi.CustomResource):
                credentials on the host.
                
                Similar to `docker login`.
+        :param pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]] secret_write_only: A mapping of secret names to their corresponding values, like `secrets`,
+               but whose values are excluded from diffs.
+               
+               Changing a value here does not trigger a rebuild on its own, which is
+               useful for short-lived credentials that rotate on every run. To force the
+               build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+               removing a key still triggers a rebuild.
+               
+               The latest values are always passed to the build whenever one occurs.
+               
+               Modeled on Terraform's write-only arguments. Note: these values are still
+               written to state until the engine supports true write-only values.
+        :param pulumi.Input[_builtins.str] secret_write_only_version: An arbitrary version identifier for `secretWriteOnly`.
+               
+               Changing this value triggers a rebuild that picks up the current
+               `secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern.
         :param pulumi.Input[Mapping[str, pulumi.Input[_builtins.str]]] secrets: A mapping of secret names to their corresponding values.
                
                Unlike the Docker CLI, these can be passed by value and do not need to
@@ -1392,6 +1470,8 @@ class Image(pulumi.CustomResource):
                  pull: pulumi.Input[Optional[_builtins.bool]] = None,
                  push: pulumi.Input[Optional[_builtins.bool]] = None,
                  registries: pulumi.Input[Optional[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict']]]]] = None,
+                 secret_write_only: pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
+                 secret_write_only_version: pulumi.Input[Optional[_builtins.str]] = None,
                  secrets: pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
                  ssh: pulumi.Input[Optional[Sequence[pulumi.Input[Union['SSHArgs', 'SSHArgsDict']]]]] = None,
                  tags: pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]] = None,
@@ -1429,6 +1509,8 @@ class Image(pulumi.CustomResource):
                 raise TypeError("Missing required property 'push'")
             __props__.__dict__["push"] = push
             __props__.__dict__["registries"] = registries
+            __props__.__dict__["secret_write_only"] = secret_write_only
+            __props__.__dict__["secret_write_only_version"] = secret_write_only_version
             __props__.__dict__["secrets"] = secrets
             __props__.__dict__["ssh"] = ssh
             __props__.__dict__["tags"] = tags
@@ -1479,6 +1561,8 @@ class Image(pulumi.CustomResource):
         __props__.__dict__["push"] = None
         __props__.__dict__["ref"] = None
         __props__.__dict__["registries"] = None
+        __props__.__dict__["secret_write_only"] = None
+        __props__.__dict__["secret_write_only_version"] = None
         __props__.__dict__["secrets"] = None
         __props__.__dict__["ssh"] = None
         __props__.__dict__["tags"] = None
@@ -1754,6 +1838,36 @@ class Image(pulumi.CustomResource):
         Similar to `docker login`.
         """
         return pulumi.get(self, "registries")
+
+    @_builtins.property
+    @pulumi.getter(name="secretWriteOnly")
+    def secret_write_only(self) -> pulumi.Output[Optional[Mapping[str, _builtins.str]]]:
+        """
+        A mapping of secret names to their corresponding values, like `secrets`,
+        but whose values are excluded from diffs.
+
+        Changing a value here does not trigger a rebuild on its own, which is
+        useful for short-lived credentials that rotate on every run. To force the
+        build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+        removing a key still triggers a rebuild.
+
+        The latest values are always passed to the build whenever one occurs.
+
+        Modeled on Terraform's write-only arguments. Note: these values are still
+        written to state until the engine supports true write-only values.
+        """
+        return pulumi.get(self, "secret_write_only")
+
+    @_builtins.property
+    @pulumi.getter(name="secretWriteOnlyVersion")
+    def secret_write_only_version(self) -> pulumi.Output[Optional[_builtins.str]]:
+        """
+        An arbitrary version identifier for `secretWriteOnly`.
+
+        Changing this value triggers a rebuild that picks up the current
+        `secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern.
+        """
+        return pulumi.get(self, "secret_write_only_version")
 
     @_builtins.property
     @pulumi.getter

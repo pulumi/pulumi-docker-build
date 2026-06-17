@@ -1094,12 +1094,110 @@ func TestBuildable(t *testing.T) {
 			},
 			want: true,
 		},
+		{
+			name: "known with secretWriteOnly set",
+			args: ImageArgs{
+				Tags:                   []string{"known"},
+				SecretWriteOnly:        map[string]string{"foo": "bar"},
+				SecretWriteOnlyVersion: "1",
+			},
+			want: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			actual := tt.args.buildable()
 			assert.Equal(t, tt.want, actual)
+		})
+	}
+}
+
+func TestSecretWriteOnly_ReachesBuild(t *testing.T) {
+	t.Parallel()
+	ia := ImageArgs{
+		Context:         &BuildContext{Context: Context{Location: "testdata/noop"}},
+		Secrets:         map[string]string{"plain": "p"},
+		SecretWriteOnly: map[string]string{"wo": "w"},
+	}
+
+	b, err := ia.toBuild(context.Background(), true, false)
+	require.NoError(t, err)
+
+	bb, ok := b.(*build)
+	require.True(t, ok)
+	assert.Equal(t, map[string]string{"plain": "p", "wo": "w"}, bb.secrets)
+
+	ids := []string{}
+	for _, s := range bb.BuildOptions().Secrets {
+		ids = append(ids, s.ID)
+	}
+	assert.ElementsMatch(t, []string{"plain", "wo"}, ids)
+}
+
+func TestSecretWriteOnly_RejectsKeyCollision(t *testing.T) {
+	t.Parallel()
+	ia := ImageArgs{
+		Context:         &BuildContext{Context: Context{Location: "testdata/noop"}},
+		Secrets:         map[string]string{"dup": "a"},
+		SecretWriteOnly: map[string]string{"dup": "b"},
+	}
+
+	_, err := ia.toBuild(context.Background(), true, false)
+	assert.ErrorContains(t, err, "secretWriteOnly")
+}
+
+func TestDiffSecretWriteOnly(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name     string
+		olds     ImageArgs
+		news     ImageArgs
+		wantKeys []string
+	}{
+		{
+			name:     "no write-only secrets",
+			wantKeys: nil,
+		},
+		{
+			name:     "value change to existing key is ignored",
+			olds:     ImageArgs{SecretWriteOnly: map[string]string{"foo": "old"}},
+			news:     ImageArgs{SecretWriteOnly: map[string]string{"foo": "new"}},
+			wantKeys: nil,
+		},
+		{
+			name:     "added key triggers a diff",
+			news:     ImageArgs{SecretWriteOnly: map[string]string{"foo": "bar"}},
+			wantKeys: []string{"secretWriteOnly"},
+		},
+		{
+			name:     "removed key triggers a diff",
+			olds:     ImageArgs{SecretWriteOnly: map[string]string{"foo": "bar"}},
+			wantKeys: []string{"secretWriteOnly"},
+		},
+		{
+			name:     "version bump triggers a diff even when values are unchanged",
+			olds:     ImageArgs{SecretWriteOnly: map[string]string{"foo": "x"}, SecretWriteOnlyVersion: "1"},
+			news:     ImageArgs{SecretWriteOnly: map[string]string{"foo": "x"}, SecretWriteOnlyVersion: "2"},
+			wantKeys: []string{"secretWriteOnlyVersion"},
+		},
+		{
+			name:     "version bump alongside a rotated value reports only the version",
+			olds:     ImageArgs{SecretWriteOnly: map[string]string{"foo": "old"}, SecretWriteOnlyVersion: "1"},
+			news:     ImageArgs{SecretWriteOnly: map[string]string{"foo": "new"}, SecretWriteOnlyVersion: "2"},
+			wantKeys: []string{"secretWriteOnlyVersion"},
+		},
+		{
+			name:     "added key and version bump report both",
+			olds:     ImageArgs{SecretWriteOnlyVersion: "1"},
+			news:     ImageArgs{SecretWriteOnly: map[string]string{"foo": "bar"}, SecretWriteOnlyVersion: "2"},
+			wantKeys: []string{"secretWriteOnly", "secretWriteOnlyVersion"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			assert.ElementsMatch(t, tt.wantKeys, diffSecretWriteOnly(tt.olds, tt.news))
 		})
 	}
 }

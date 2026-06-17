@@ -690,6 +690,24 @@ type Image struct {
 	//
 	// Similar to `docker login`.
 	Registries pulumix.GArrayOutput[Registry, RegistryOutput] `pulumi:"registries"`
+	// A mapping of secret names to their corresponding values, like `secrets`,
+	// but whose values are excluded from diffs.
+	//
+	// Changing a value here does not trigger a rebuild on its own, which is
+	// useful for short-lived credentials that rotate on every run. To force the
+	// build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+	// removing a key still triggers a rebuild.
+	//
+	// The latest values are always passed to the build whenever one occurs.
+	//
+	// Modeled on Terraform's write-only arguments. Note: these values are still
+	// written to state until the engine supports true write-only values.
+	SecretWriteOnly pulumix.MapOutput[string] `pulumi:"secretWriteOnly"`
+	// An arbitrary version identifier for `secretWriteOnly`.
+	//
+	// Changing this value triggers a rebuild that picks up the current
+	// `secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern.
+	SecretWriteOnlyVersion pulumix.Output[*string] `pulumi:"secretWriteOnlyVersion"`
 	// A mapping of secret names to their corresponding values.
 	//
 	// Unlike the Docker CLI, these can be passed by value and do not need to
@@ -885,6 +903,24 @@ type imageArgs struct {
 	//
 	// Similar to `docker login`.
 	Registries []Registry `pulumi:"registries"`
+	// A mapping of secret names to their corresponding values, like `secrets`,
+	// but whose values are excluded from diffs.
+	//
+	// Changing a value here does not trigger a rebuild on its own, which is
+	// useful for short-lived credentials that rotate on every run. To force the
+	// build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+	// removing a key still triggers a rebuild.
+	//
+	// The latest values are always passed to the build whenever one occurs.
+	//
+	// Modeled on Terraform's write-only arguments. Note: these values are still
+	// written to state until the engine supports true write-only values.
+	SecretWriteOnly map[string]string `pulumi:"secretWriteOnly"`
+	// An arbitrary version identifier for `secretWriteOnly`.
+	//
+	// Changing this value triggers a rebuild that picks up the current
+	// `secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern.
+	SecretWriteOnlyVersion *string `pulumi:"secretWriteOnlyVersion"`
 	// A mapping of secret names to their corresponding values.
 	//
 	// Unlike the Docker CLI, these can be passed by value and do not need to
@@ -1033,6 +1069,24 @@ type ImageArgs struct {
 	//
 	// Similar to `docker login`.
 	Registries pulumix.Input[[]*RegistryArgs]
+	// A mapping of secret names to their corresponding values, like `secrets`,
+	// but whose values are excluded from diffs.
+	//
+	// Changing a value here does not trigger a rebuild on its own, which is
+	// useful for short-lived credentials that rotate on every run. To force the
+	// build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+	// removing a key still triggers a rebuild.
+	//
+	// The latest values are always passed to the build whenever one occurs.
+	//
+	// Modeled on Terraform's write-only arguments. Note: these values are still
+	// written to state until the engine supports true write-only values.
+	SecretWriteOnly pulumix.Input[map[string]string]
+	// An arbitrary version identifier for `secretWriteOnly`.
+	//
+	// Changing this value triggers a rebuild that picks up the current
+	// `secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern.
+	SecretWriteOnlyVersion pulumix.Input[*string]
 	// A mapping of secret names to their corresponding values.
 	//
 	// Unlike the Docker CLI, these can be passed by value and do not need to
@@ -1323,6 +1377,33 @@ func (o ImageOutput) Registries() pulumix.GArrayOutput[Registry, RegistryOutput]
 	value := pulumix.Apply[Image](o, func(v Image) pulumix.GArrayOutput[Registry, RegistryOutput] { return v.Registries })
 	unwrapped := pulumix.Flatten[[]Registry, pulumix.GArrayOutput[Registry, RegistryOutput]](value)
 	return pulumix.GArrayOutput[Registry, RegistryOutput]{OutputState: unwrapped.OutputState}
+}
+
+// A mapping of secret names to their corresponding values, like `secrets`,
+// but whose values are excluded from diffs.
+//
+// Changing a value here does not trigger a rebuild on its own, which is
+// useful for short-lived credentials that rotate on every run. To force the
+// build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+// removing a key still triggers a rebuild.
+//
+// The latest values are always passed to the build whenever one occurs.
+//
+// Modeled on Terraform's write-only arguments. Note: these values are still
+// written to state until the engine supports true write-only values.
+func (o ImageOutput) SecretWriteOnly() pulumix.MapOutput[string] {
+	value := pulumix.Apply[Image](o, func(v Image) pulumix.MapOutput[string] { return v.SecretWriteOnly })
+	unwrapped := pulumix.Flatten[map[string]string, pulumix.MapOutput[string]](value)
+	return pulumix.MapOutput[string]{OutputState: unwrapped.OutputState}
+}
+
+// An arbitrary version identifier for `secretWriteOnly`.
+//
+// Changing this value triggers a rebuild that picks up the current
+// `secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern.
+func (o ImageOutput) SecretWriteOnlyVersion() pulumix.Output[*string] {
+	value := pulumix.Apply[Image](o, func(v Image) pulumix.Output[*string] { return v.SecretWriteOnlyVersion })
+	return pulumix.Flatten[*string, pulumix.Output[*string]](value)
 }
 
 // A mapping of secret names to their corresponding values.

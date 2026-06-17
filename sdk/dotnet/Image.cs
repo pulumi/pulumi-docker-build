@@ -725,6 +725,32 @@ namespace Pulumi.DockerBuild
         public Output<ImmutableArray<Outputs.Registry>> Registries { get; private set; } = null!;
 
         /// <summary>
+        /// A mapping of secret names to their corresponding values, like `secrets`,
+        /// but whose values are excluded from diffs.
+        /// 
+        /// Changing a value here does not trigger a rebuild on its own, which is
+        /// useful for short-lived credentials that rotate on every run. To force the
+        /// build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+        /// removing a key still triggers a rebuild.
+        /// 
+        /// The latest values are always passed to the build whenever one occurs.
+        /// 
+        /// Modeled on Terraform's write-only arguments. Note: these values are still
+        /// written to state until the engine supports true write-only values.
+        /// </summary>
+        [Output("secretWriteOnly")]
+        public Output<ImmutableDictionary<string, string>?> SecretWriteOnly { get; private set; } = null!;
+
+        /// <summary>
+        /// An arbitrary version identifier for `secretWriteOnly`.
+        /// 
+        /// Changing this value triggers a rebuild that picks up the current
+        /// `secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern.
+        /// </summary>
+        [Output("secretWriteOnlyVersion")]
+        public Output<string?> SecretWriteOnlyVersion { get; private set; } = null!;
+
+        /// <summary>
         /// A mapping of secret names to their corresponding values.
         /// 
         /// Unlike the Docker CLI, these can be passed by value and do not need to
@@ -1048,6 +1074,38 @@ namespace Pulumi.DockerBuild
             get => _registries ?? (_registries = new InputList<Inputs.RegistryArgs>());
             set => _registries = value;
         }
+
+        [Input("secretWriteOnly")]
+        private InputMap<string>? _secretWriteOnly;
+
+        /// <summary>
+        /// A mapping of secret names to their corresponding values, like `secrets`,
+        /// but whose values are excluded from diffs.
+        /// 
+        /// Changing a value here does not trigger a rebuild on its own, which is
+        /// useful for short-lived credentials that rotate on every run. To force the
+        /// build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+        /// removing a key still triggers a rebuild.
+        /// 
+        /// The latest values are always passed to the build whenever one occurs.
+        /// 
+        /// Modeled on Terraform's write-only arguments. Note: these values are still
+        /// written to state until the engine supports true write-only values.
+        /// </summary>
+        public InputMap<string> SecretWriteOnly
+        {
+            get => _secretWriteOnly ?? (_secretWriteOnly = new InputMap<string>());
+            set => _secretWriteOnly = value;
+        }
+
+        /// <summary>
+        /// An arbitrary version identifier for `secretWriteOnly`.
+        /// 
+        /// Changing this value triggers a rebuild that picks up the current
+        /// `secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern.
+        /// </summary>
+        [Input("secretWriteOnlyVersion")]
+        public Input<string>? SecretWriteOnlyVersion { get; set; }
 
         [Input("secrets")]
         private InputMap<string>? _secrets;

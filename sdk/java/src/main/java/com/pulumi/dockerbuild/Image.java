@@ -1138,6 +1138,62 @@ public class Image extends com.pulumi.resources.CustomResource {
         return Codegen.optional(this.registries);
     }
     /**
+     * A mapping of secret names to their corresponding values, like `secrets`,
+     * but whose values are excluded from diffs.
+     * 
+     * Changing a value here does not trigger a rebuild on its own, which is
+     * useful for short-lived credentials that rotate on every run. To force the
+     * build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+     * removing a key still triggers a rebuild.
+     * 
+     * The latest values are always passed to the build whenever one occurs.
+     * 
+     * Modeled on Terraform&#39;s write-only arguments. Note: these values are still
+     * written to state until the engine supports true write-only values.
+     * 
+     */
+    @Export(name="secretWriteOnly", refs={Map.class,String.class}, tree="[0,1,1]")
+    private Output</* @Nullable */ Map<String,String>> secretWriteOnly;
+
+    /**
+     * @return A mapping of secret names to their corresponding values, like `secrets`,
+     * but whose values are excluded from diffs.
+     * 
+     * Changing a value here does not trigger a rebuild on its own, which is
+     * useful for short-lived credentials that rotate on every run. To force the
+     * build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+     * removing a key still triggers a rebuild.
+     * 
+     * The latest values are always passed to the build whenever one occurs.
+     * 
+     * Modeled on Terraform&#39;s write-only arguments. Note: these values are still
+     * written to state until the engine supports true write-only values.
+     * 
+     */
+    public Output<Optional<Map<String,String>>> secretWriteOnly() {
+        return Codegen.optional(this.secretWriteOnly);
+    }
+    /**
+     * An arbitrary version identifier for `secretWriteOnly`.
+     * 
+     * Changing this value triggers a rebuild that picks up the current
+     * `secretWriteOnly` values. Modeled on Terraform&#39;s `_wo_version` pattern.
+     * 
+     */
+    @Export(name="secretWriteOnlyVersion", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> secretWriteOnlyVersion;
+
+    /**
+     * @return An arbitrary version identifier for `secretWriteOnly`.
+     * 
+     * Changing this value triggers a rebuild that picks up the current
+     * `secretWriteOnly` values. Modeled on Terraform&#39;s `_wo_version` pattern.
+     * 
+     */
+    public Output<Optional<String>> secretWriteOnlyVersion() {
+        return Codegen.optional(this.secretWriteOnlyVersion);
+    }
+    /**
      * A mapping of secret names to their corresponding values.
      * 
      * Unlike the Docker CLI, these can be passed by value and do not need to

@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- Added `secretWriteOnly` and `secretWriteOnlyVersion` arguments. Values in `secretWriteOnly` are excluded from diffs so rotating credentials don't trigger rebuilds; bump `secretWriteOnlyVersion` to force the build to pick up new values. Modeled on Terraform's write-only arguments. (https://github.com/pulumi/pulumi-docker-build/issues/678)
+
 ### Fixed
 
 - Fixes a regression where a 404 status code during deletion wasn't considered deleted. (https://github.com/pulumi/pulumi-docker-build/issues/849)

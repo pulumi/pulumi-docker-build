@@ -683,6 +683,28 @@ export class Image extends pulumi.CustomResource {
      */
     declare public readonly registries: pulumi.Output<outputs.Registry[] | undefined>;
     /**
+     * A mapping of secret names to their corresponding values, like `secrets`,
+     * but whose values are excluded from diffs.
+     *
+     * Changing a value here does not trigger a rebuild on its own, which is
+     * useful for short-lived credentials that rotate on every run. To force the
+     * build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+     * removing a key still triggers a rebuild.
+     *
+     * The latest values are always passed to the build whenever one occurs.
+     *
+     * Modeled on Terraform's write-only arguments. Note: these values are still
+     * written to state until the engine supports true write-only values.
+     */
+    declare public readonly secretWriteOnly: pulumi.Output<{[key: string]: string} | undefined>;
+    /**
+     * An arbitrary version identifier for `secretWriteOnly`.
+     *
+     * Changing this value triggers a rebuild that picks up the current
+     * `secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern.
+     */
+    declare public readonly secretWriteOnlyVersion: pulumi.Output<string | undefined>;
+    /**
      * A mapping of secret names to their corresponding values.
      *
      * Unlike the Docker CLI, these can be passed by value and do not need to
@@ -750,6 +772,8 @@ export class Image extends pulumi.CustomResource {
             resourceInputs["pull"] = args?.pull;
             resourceInputs["push"] = args?.push;
             resourceInputs["registries"] = args?.registries;
+            resourceInputs["secretWriteOnly"] = args?.secretWriteOnly;
+            resourceInputs["secretWriteOnlyVersion"] = args?.secretWriteOnlyVersion;
             resourceInputs["secrets"] = args?.secrets;
             resourceInputs["ssh"] = args?.ssh;
             resourceInputs["tags"] = args?.tags;
@@ -779,6 +803,8 @@ export class Image extends pulumi.CustomResource {
             resourceInputs["push"] = undefined /*out*/;
             resourceInputs["ref"] = undefined /*out*/;
             resourceInputs["registries"] = undefined /*out*/;
+            resourceInputs["secretWriteOnly"] = undefined /*out*/;
+            resourceInputs["secretWriteOnlyVersion"] = undefined /*out*/;
             resourceInputs["secrets"] = undefined /*out*/;
             resourceInputs["ssh"] = undefined /*out*/;
             resourceInputs["tags"] = undefined /*out*/;
@@ -946,6 +972,28 @@ export interface ImageArgs {
      * Similar to `docker login`.
      */
     registries?: pulumi.Input<pulumi.Input<inputs.RegistryArgs>[] | undefined>;
+    /**
+     * A mapping of secret names to their corresponding values, like `secrets`,
+     * but whose values are excluded from diffs.
+     *
+     * Changing a value here does not trigger a rebuild on its own, which is
+     * useful for short-lived credentials that rotate on every run. To force the
+     * build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+     * removing a key still triggers a rebuild.
+     *
+     * The latest values are always passed to the build whenever one occurs.
+     *
+     * Modeled on Terraform's write-only arguments. Note: these values are still
+     * written to state until the engine supports true write-only values.
+     */
+    secretWriteOnly?: pulumi.Input<{[key: string]: pulumi.Input<string>} | undefined>;
+    /**
+     * An arbitrary version identifier for `secretWriteOnly`.
+     *
+     * Changing this value triggers a rebuild that picks up the current
+     * `secretWriteOnly` values. Modeled on Terraform's `_wo_version` pattern.
+     */
+    secretWriteOnlyVersion?: pulumi.Input<string | undefined>;
     /**
      * A mapping of secret names to their corresponding values.
      *

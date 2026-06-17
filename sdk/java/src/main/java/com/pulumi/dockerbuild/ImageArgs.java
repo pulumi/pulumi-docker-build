@@ -463,6 +463,64 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
+     * A mapping of secret names to their corresponding values, like `secrets`,
+     * but whose values are excluded from diffs.
+     * 
+     * Changing a value here does not trigger a rebuild on its own, which is
+     * useful for short-lived credentials that rotate on every run. To force the
+     * build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+     * removing a key still triggers a rebuild.
+     * 
+     * The latest values are always passed to the build whenever one occurs.
+     * 
+     * Modeled on Terraform&#39;s write-only arguments. Note: these values are still
+     * written to state until the engine supports true write-only values.
+     * 
+     */
+    @Import(name="secretWriteOnly")
+    private @Nullable Output<Map<String,String>> secretWriteOnly;
+
+    /**
+     * @return A mapping of secret names to their corresponding values, like `secrets`,
+     * but whose values are excluded from diffs.
+     * 
+     * Changing a value here does not trigger a rebuild on its own, which is
+     * useful for short-lived credentials that rotate on every run. To force the
+     * build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+     * removing a key still triggers a rebuild.
+     * 
+     * The latest values are always passed to the build whenever one occurs.
+     * 
+     * Modeled on Terraform&#39;s write-only arguments. Note: these values are still
+     * written to state until the engine supports true write-only values.
+     * 
+     */
+    public Optional<Output<Map<String,String>>> secretWriteOnly() {
+        return Optional.ofNullable(this.secretWriteOnly);
+    }
+
+    /**
+     * An arbitrary version identifier for `secretWriteOnly`.
+     * 
+     * Changing this value triggers a rebuild that picks up the current
+     * `secretWriteOnly` values. Modeled on Terraform&#39;s `_wo_version` pattern.
+     * 
+     */
+    @Import(name="secretWriteOnlyVersion")
+    private @Nullable Output<String> secretWriteOnlyVersion;
+
+    /**
+     * @return An arbitrary version identifier for `secretWriteOnly`.
+     * 
+     * Changing this value triggers a rebuild that picks up the current
+     * `secretWriteOnly` values. Modeled on Terraform&#39;s `_wo_version` pattern.
+     * 
+     */
+    public Optional<Output<String>> secretWriteOnlyVersion() {
+        return Optional.ofNullable(this.secretWriteOnlyVersion);
+    }
+
+    /**
      * A mapping of secret names to their corresponding values.
      * 
      * Unlike the Docker CLI, these can be passed by value and do not need to
@@ -581,6 +639,8 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
         this.pull = $.pull;
         this.push = $.push;
         this.registries = $.registries;
+        this.secretWriteOnly = $.secretWriteOnly;
+        this.secretWriteOnlyVersion = $.secretWriteOnlyVersion;
         this.secrets = $.secrets;
         this.ssh = $.ssh;
         this.tags = $.tags;
@@ -1225,6 +1285,76 @@ public final class ImageArgs extends com.pulumi.resources.ResourceArgs {
          */
         public Builder registries(RegistryArgs... registries) {
             return registries(List.of(registries));
+        }
+
+        /**
+         * @param secretWriteOnly A mapping of secret names to their corresponding values, like `secrets`,
+         * but whose values are excluded from diffs.
+         * 
+         * Changing a value here does not trigger a rebuild on its own, which is
+         * useful for short-lived credentials that rotate on every run. To force the
+         * build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+         * removing a key still triggers a rebuild.
+         * 
+         * The latest values are always passed to the build whenever one occurs.
+         * 
+         * Modeled on Terraform&#39;s write-only arguments. Note: these values are still
+         * written to state until the engine supports true write-only values.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder secretWriteOnly(@Nullable Output<Map<String,String>> secretWriteOnly) {
+            $.secretWriteOnly = secretWriteOnly;
+            return this;
+        }
+
+        /**
+         * @param secretWriteOnly A mapping of secret names to their corresponding values, like `secrets`,
+         * but whose values are excluded from diffs.
+         * 
+         * Changing a value here does not trigger a rebuild on its own, which is
+         * useful for short-lived credentials that rotate on every run. To force the
+         * build to pick up new values, change `secretWriteOnlyVersion`. Adding or
+         * removing a key still triggers a rebuild.
+         * 
+         * The latest values are always passed to the build whenever one occurs.
+         * 
+         * Modeled on Terraform&#39;s write-only arguments. Note: these values are still
+         * written to state until the engine supports true write-only values.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder secretWriteOnly(Map<String,String> secretWriteOnly) {
+            return secretWriteOnly(Output.of(secretWriteOnly));
+        }
+
+        /**
+         * @param secretWriteOnlyVersion An arbitrary version identifier for `secretWriteOnly`.
+         * 
+         * Changing this value triggers a rebuild that picks up the current
+         * `secretWriteOnly` values. Modeled on Terraform&#39;s `_wo_version` pattern.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder secretWriteOnlyVersion(@Nullable Output<String> secretWriteOnlyVersion) {
+            $.secretWriteOnlyVersion = secretWriteOnlyVersion;
+            return this;
+        }
+
+        /**
+         * @param secretWriteOnlyVersion An arbitrary version identifier for `secretWriteOnly`.
+         * 
+         * Changing this value triggers a rebuild that picks up the current
+         * `secretWriteOnly` values. Modeled on Terraform&#39;s `_wo_version` pattern.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder secretWriteOnlyVersion(String secretWriteOnlyVersion) {
+            return secretWriteOnlyVersion(Output.of(secretWriteOnlyVersion));
         }
 
         /**
