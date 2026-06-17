@@ -750,6 +750,87 @@ func TestImageDiff(t *testing.T) {
 			wantChanges: true,
 		},
 		{
+			name: "diff if secrets change but ignoreSecretsInDiffCalculation is set",
+			state: func(_ *testing.T, s ImageState) ImageState {
+				s.Secrets = map[string]string{"foo": "old_bar"}
+				s.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				return s
+			},
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
+				a.Secrets = map[string]string{"foo": "new_bar"}
+				a.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				return a
+			},
+			wantChanges: false,
+		},
+		{
+			name: "diff if secrets change but ignoreSecretsInDiffCalculation is set for another secret",
+			state: func(_ *testing.T, s ImageState) ImageState {
+				s.Secrets = map[string]string{"foo": "old_bar"}
+				s.IgnoreSecretsInDiffCalculation = []string{"not_foo"}
+				return s
+			},
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
+				a.Secrets = map[string]string{"foo": "new_bar"}
+				a.IgnoreSecretsInDiffCalculation = []string{"not_foo"}
+				return a
+			},
+			wantChanges: true,
+		},
+		{
+			name: "diff if secrets change but ignoreSecretsInDiffCalculation is set and secret is added",
+			state: func(_ *testing.T, s ImageState) ImageState {
+				s.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				return s
+			},
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
+				a.Secrets = map[string]string{"foo": "bar"}
+				a.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				return a
+			},
+			wantChanges: true,
+		},
+		{
+			name: "diff if secrets change but ignoreSecretsInDiffCalculation is set and secret is removed",
+			state: func(_ *testing.T, s ImageState) ImageState {
+				s.Secrets = map[string]string{"foo": "bar"}
+				s.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				return s
+			},
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
+				a.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				return a
+			},
+			wantChanges: true,
+		},
+		{
+			name: "diff if an ignored secret and a non-ignored secret both change",
+			state: func(_ *testing.T, s ImageState) ImageState {
+				s.Secrets = map[string]string{"foo": "old_foo", "bar": "old_bar"}
+				s.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				return s
+			},
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
+				a.Secrets = map[string]string{"foo": "new_foo", "bar": "new_bar"}
+				a.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				return a
+			},
+			wantChanges: true,
+		},
+		{
+			name: "no diff if only ignoreSecretsInDiffCalculation changes",
+			state: func(_ *testing.T, s ImageState) ImageState {
+				s.Secrets = map[string]string{"foo": "bar"}
+				return s
+			},
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
+				a.Secrets = map[string]string{"foo": "bar"}
+				a.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				return a
+			},
+			wantChanges: false,
+		},
+		{
 			name: "diff if local export doesn't exist",
 			state: func(_ *testing.T, state ImageState) ImageState {
 				state.Exports = []Export{
@@ -1091,6 +1172,15 @@ func TestBuildable(t *testing.T) {
 						Password: "bar",
 					},
 				},
+			},
+			want: true,
+		},
+		{
+			name: "known with ignoreSecretsInDiffCalculation set",
+			args: ImageArgs{
+				Tags:                           []string{"known"},
+				Secrets:                        map[string]string{"foo": "bar"},
+				IgnoreSecretsInDiffCalculation: []string{"foo"},
 			},
 			want: true,
 		},

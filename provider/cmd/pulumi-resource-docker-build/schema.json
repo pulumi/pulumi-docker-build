@@ -1136,6 +1136,13 @@
           },
           "description": "Controls where images are persisted after building.\n\nImages are only stored in the local cache unless `exports` are\nexplicitly configured.\n\nExporting to multiple destinations requires a daemon running BuildKit\n0.13 or later.\n\nEquivalent to Docker's `--output` flag."
         },
+        "ignoreSecretsInDiffCalculation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of secret names to ignore when calculating diffs.\n\nThese secrets will not be considered when calculating diffs, even if they\nare changed. Note: only applicable if the secret is present in both the old and the new state.\n\nThis is useful when you want to avoid unnecessary rebuilds caused by short-lived secrets that change on every run."
+        },
         "labels": {
           "type": "object",
           "additionalProperties": {
@@ -1270,6 +1277,13 @@
             "$ref": "#/types/docker-build:index:Export"
           },
           "description": "Controls where images are persisted after building.\n\nImages are only stored in the local cache unless `exports` are\nexplicitly configured.\n\nExporting to multiple destinations requires a daemon running BuildKit\n0.13 or later.\n\nEquivalent to Docker's `--output` flag."
+        },
+        "ignoreSecretsInDiffCalculation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of secret names to ignore when calculating diffs.\n\nThese secrets will not be considered when calculating diffs, even if they\nare changed. Note: only applicable if the secret is present in both the old and the new state.\n\nThis is useful when you want to avoid unnecessary rebuilds caused by short-lived secrets that change on every run."
         },
         "labels": {
           "type": "object",
