@@ -804,6 +804,33 @@ func TestImageDiff(t *testing.T) {
 			wantChanges: true,
 		},
 		{
+			name: "diff if an ignored secret and a non-ignored secret both change",
+			state: func(_ *testing.T, s ImageState) ImageState {
+				s.Secrets = map[string]string{"foo": "old_foo", "bar": "old_bar"}
+				s.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				return s
+			},
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
+				a.Secrets = map[string]string{"foo": "new_foo", "bar": "new_bar"}
+				a.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				return a
+			},
+			wantChanges: true,
+		},
+		{
+			name: "no diff if only ignoreSecretsInDiffCalculation changes",
+			state: func(_ *testing.T, s ImageState) ImageState {
+				s.Secrets = map[string]string{"foo": "bar"}
+				return s
+			},
+			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
+				a.Secrets = map[string]string{"foo": "bar"}
+				a.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				return a
+			},
+			wantChanges: false,
+		},
+		{
 			name: "diff if local export doesn't exist",
 			state: func(_ *testing.T, state ImageState) ImageState {
 				state.Exports = []Export{
