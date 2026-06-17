@@ -4,13 +4,13 @@
 
 - Fixes a regression where a 404 status code during deletion wasn't considered deleted. (https://github.com/pulumi/pulumi-docker-build/issues/849)
 - Fixed `exec: true` builds failing with `exit status 125` due to malformed buildx arguments. (https://github.com/pulumi/pulumi-docker-build/issues/656)
+- Argument `IgnoreSecretsInDiffCalculation` has been added to avoid unnecessary rebuilds in case short-lived secrets change. (https://github.com/pulumi/pulumi-docker-build/issues/678)
 
 ## 0.0.15 (2025-10-17)
 
 ### Changed
 
 - Arguments `CacheFromGitHubActions.URL` and `CacheFromGitHubActions.Token` have been removed. If the previous behaviour is desired, set the `ACTIONS_CACHE_URL` and `ACTIONS_RUNTIME_TOKEN` environment variables. (https://github.com/pulumi/pulumi-docker-build/issues/75)
-- Argument `IgnoreSecretsInDiffCalculation` has been added to avoid unnecessary rebuilds in case short-lived secrets change. (https://github.com/pulumi/pulumi-docker-build/issues/678)
 
 ## 0.0.14 (2025-09-30)
 
