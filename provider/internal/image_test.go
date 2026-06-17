@@ -1148,6 +1148,15 @@ func TestBuildable(t *testing.T) {
 			},
 			want: true,
 		},
+		{
+			name: "known with ignoreSecretsInDiffCalculation set",
+			args: ImageArgs{
+				Tags:                           []string{"known"},
+				Secrets:                        map[string]string{"foo": "bar"},
+				IgnoreSecretsInDiffCalculation: []string{"foo"},
+			},
+			want: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -426,6 +426,8 @@ func (ia *ImageArgs) normalize(preview bool) ImageArgs {
 		Secrets:        mapKeeper{preview}.keep(ia.Secrets),
 		Tags:           filter(stringKeeper{preview}, ia.Tags...),
 		Target:         ia.Target,
+
+		IgnoreSecretsInDiffCalculation: ia.IgnoreSecretsInDiffCalculation,
 	}
 
 	// Handle --push/--load shorthand.
