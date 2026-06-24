@@ -1464,13 +1464,15 @@ class Image(pulumi.CustomResource):
                 raise TypeError("Missing required property 'push'")
             __props__.__dict__["push"] = push
             __props__.__dict__["registries"] = registries
-            __props__.__dict__["secrets"] = secrets
+            __props__.__dict__["secrets"] = None if secrets is None else pulumi.Output.secret(secrets)
             __props__.__dict__["ssh"] = ssh
             __props__.__dict__["tags"] = tags
             __props__.__dict__["target"] = target
             __props__.__dict__["context_hash"] = None
             __props__.__dict__["digest"] = None
             __props__.__dict__["ref"] = None
+        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["secrets"])
+        opts = pulumi.ResourceOptions.merge(opts, secret_opts)
         super(Image, __self__).__init__(
             'docker-build:index:Image',
             resource_name,

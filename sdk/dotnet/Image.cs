@@ -801,6 +801,10 @@ namespace Pulumi.DockerBuild
             var defaultOptions = new CustomResourceOptions
             {
                 Version = Utilities.Version,
+                AdditionalSecretOutputs =
+                {
+                    "secrets",
+                },
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
             // Override the ID if one was specified for consistency with other language SDKs.
@@ -1094,7 +1098,11 @@ namespace Pulumi.DockerBuild
         public InputMap<string> Secrets
         {
             get => _secrets ?? (_secrets = new InputMap<string>());
-            set => _secrets = value;
+            set
+            {
+                var emptySecret = Output.CreateSecret(ImmutableDictionary.Create<string, string>());
+                _secrets = Output.All(value, emptySecret).Apply(v => v[0]);
+            }
         }
 
         [Input("ssh")]
