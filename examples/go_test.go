@@ -25,6 +25,7 @@ func TestGoExample(t *testing.T) {
 		Secrets: map[string]string{
 			"dockerHubPassword": os.Getenv("DOCKER_HUB_PASSWORD"),
 		},
+		ExtraRuntimeValidation: assertSecretsInputIsSecret,
 	}
 
 	integration.ProgramTest(t, &test)
