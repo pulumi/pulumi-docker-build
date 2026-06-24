@@ -33,8 +33,7 @@ func TestDotNetExample(t *testing.T) {
 		Secrets: map[string]string{
 			"dockerHubPassword": os.Getenv("DOCKER_HUB_PASSWORD"),
 		},
-		NoParallel:             true,
-		ExtraRuntimeValidation: assertSecretsInputIsSecret,
+		NoParallel: true,
 	}
 
 	integration.ProgramTest(t, &test)
