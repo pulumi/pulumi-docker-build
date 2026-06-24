@@ -1194,7 +1194,8 @@
           "additionalProperties": {
             "type": "string"
           },
-          "description": "A mapping of secret names to their corresponding values.\n\nUnlike the Docker CLI, these can be passed by value and do not need to\nexist on-disk or in environment variables.\n\nBuild arguments and environment variables are persistent in the final\nimage, so you should use this for sensitive values.\n\nSimilar to Docker's `--secret` flag."
+          "description": "A mapping of secret names to their corresponding values.\n\nUnlike the Docker CLI, these can be passed by value and do not need to\nexist on-disk or in environment variables.\n\nBuild arguments and environment variables are persistent in the final\nimage, so you should use this for sensitive values.\n\nSimilar to Docker's `--secret` flag.",
+          "secret": true
         },
         "ssh": {
           "type": "array",
@@ -1332,7 +1333,8 @@
           "additionalProperties": {
             "type": "string"
           },
-          "description": "A mapping of secret names to their corresponding values.\n\nUnlike the Docker CLI, these can be passed by value and do not need to\nexist on-disk or in environment variables.\n\nBuild arguments and environment variables are persistent in the final\nimage, so you should use this for sensitive values.\n\nSimilar to Docker's `--secret` flag."
+          "description": "A mapping of secret names to their corresponding values.\n\nUnlike the Docker CLI, these can be passed by value and do not need to\nexist on-disk or in environment variables.\n\nBuild arguments and environment variables are persistent in the final\nimage, so you should use this for sensitive values.\n\nSimilar to Docker's `--secret` flag.",
+          "secret": true
         },
         "ssh": {
           "type": "array",

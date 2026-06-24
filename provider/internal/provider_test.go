@@ -16,6 +16,7 @@ package internal
 
 import (
 	"context"
+	"encoding/json"
 	"testing"
 
 	"github.com/blang/semver"
@@ -64,6 +65,34 @@ func TestSchema(t *testing.T) {
 
 	_, err := s.GetSchema(provider.GetSchemaRequest{Version: 0})
 	assert.NoError(t, err)
+}
+
+// TestSecretsIsSecret verifies that ImageArgs.Secrets is marked as a secret in
+// the schema, preventing accidental removal of the annotation.
+func TestSecretsIsSecret(t *testing.T) {
+	t.Parallel()
+
+	s := newServer(t.Context(), t, nil)
+
+	resp, err := s.GetSchema(provider.GetSchemaRequest{Version: 0})
+	require.NoError(t, err)
+
+	var schema struct {
+		Resources map[string]struct {
+			InputProperties map[string]struct {
+				Secret bool `json:"secret"`
+			} `json:"inputProperties"`
+		} `json:"resources"`
+	}
+	require.NoError(t, json.Unmarshal([]byte(resp.Schema), &schema))
+
+	image, ok := schema.Resources["docker-build:index:Image"]
+	require.True(t, ok, "docker-build:index:Image resource not found in schema")
+
+	secrets, ok := image.InputProperties["secrets"]
+	require.True(t, ok, "secrets input property not found in schema")
+
+	assert.True(t, secrets.Secret, "secrets input property must be marked as secret")
 }
 
 type annotator struct{}

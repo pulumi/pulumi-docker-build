@@ -742,6 +742,14 @@ func NewImage(ctx *pulumi.Context,
 	if args.Network == nil {
 		args.Network = pulumix.Ptr(NetworkMode("default"))
 	}
+	if args.Secrets != nil {
+		untypedSecretValue := pulumi.ToSecret(args.Secrets.ToOutput(ctx.Context()).Untyped())
+		args.Secrets = pulumix.MustConvertTyped[map[string]string](untypedSecretValue)
+	}
+	secrets := pulumi.AdditionalSecretOutputs([]string{
+		"secrets",
+	})
+	opts = append(opts, secrets)
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource Image
 	err := ctx.RegisterResource("docker-build:index:Image", name, args, &resource, opts...)

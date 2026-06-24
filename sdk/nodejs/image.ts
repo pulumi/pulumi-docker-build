@@ -760,7 +760,7 @@ export class Image extends pulumi.CustomResource {
             resourceInputs["pull"] = args?.pull;
             resourceInputs["push"] = args?.push;
             resourceInputs["registries"] = args?.registries;
-            resourceInputs["secrets"] = args?.secrets;
+            resourceInputs["secrets"] = args?.secrets ? pulumi.secret(args.secrets) : undefined;
             resourceInputs["ssh"] = args?.ssh;
             resourceInputs["tags"] = args?.tags;
             resourceInputs["target"] = args?.target;
@@ -796,6 +796,8 @@ export class Image extends pulumi.CustomResource {
             resourceInputs["target"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
+        const secretOpts = { additionalSecretOutputs: ["secrets"] };
+        opts = pulumi.mergeOptions(opts, secretOpts);
         super(Image.__pulumiType, name, resourceInputs, opts);
     }
 }

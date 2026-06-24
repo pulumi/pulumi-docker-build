@@ -104,7 +104,7 @@ type ImageArgs struct {
 	Pull                           bool              `pulumi:"pull,optional"`
 	Push                           bool              `pulumi:"push"`
 	Registries                     []Registry        `pulumi:"registries,optional"`
-	Secrets                        map[string]string `pulumi:"secrets,optional"`
+	Secrets                        map[string]string `pulumi:"secrets,optional" provider:"secret"`
 	IgnoreSecretsInDiffCalculation []string          `pulumi:"ignoreSecretsInDiffCalculation,optional"`
 	SSH                            []SSH             `pulumi:"ssh,optional"`
 	Tags                           []string          `pulumi:"tags,optional"`
