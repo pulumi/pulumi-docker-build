@@ -29,6 +29,7 @@ import (
 	"github.com/moby/buildkit/client"
 	"github.com/moby/buildkit/exporter/containerimage/exptypes"
 	"github.com/regclient/regclient/types/descriptor"
+	"github.com/regclient/regclient/types/errs"
 	"github.com/regclient/regclient/types/platform"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -401,6 +402,47 @@ func TestRead(t *testing.T) {
 
 	require.NoError(t, err)
 	assert.Equal(t, []string{tag}, resp.State.Tags)
+}
+
+// Read deletes state only on a definitive not-found, not on auth/network errors.
+func TestReadInspectError(t *testing.T) {
+	t.Parallel()
+	tag := "docker.io/pulumi/pulumitest"
+	digest := "sha256:3be99cafdcd80a8e620da56bdc215acab6213bb608d3d492c0ba1807128786a1"
+	ref := fmt.Sprintf("%s:latest@%s", tag, digest)
+
+	newImage := func(inspectErr error) (*Image, infer.ReadRequest[ImageArgs, ImageState]) {
+		ctrl := gomock.NewController(t)
+		client := NewMockClient(ctrl)
+		client.EXPECT().Inspect(gomock.Any(), ref).Return(nil, inspectErr)
+		args := ImageArgs{
+			Exports: []Export{{Raw: "type=registry"}},
+			Tags:    []string{tag},
+		}
+		return &Image{clientF: mockClientF(client)}, infer.ReadRequest[ImageArgs, ImageState]{
+			ID:     "my-image",
+			Inputs: args, // deletion guard reads Inputs.Tags
+			State:  ImageState{ImageArgs: args, Digest: digest},
+		}
+	}
+
+	t.Run("indeterminate error preserves state", func(t *testing.T) {
+		t.Parallel()
+		// Stands in for ECR's HTTP 403 expired-token and any transient failure.
+		i, req := newImage(errors.New("authorization token has expired"))
+		resp, err := i.Read(t.Context(), req)
+		require.NoError(t, err)
+		assert.Equal(t, "my-image", resp.ID, "resource must not be deleted on an indeterminate error")
+		assert.Equal(t, []string{tag}, resp.State.Tags)
+	})
+
+	t.Run("not found deletes resource", func(t *testing.T) {
+		t.Parallel()
+		i, req := newImage(errs.ErrNotFound)
+		resp, err := i.Read(t.Context(), req)
+		require.NoError(t, err)
+		assert.Empty(t, resp.ID, "a genuine not-found must still delete the resource")
+	})
 }
 
 func TestImageDiff(t *testing.T) {
