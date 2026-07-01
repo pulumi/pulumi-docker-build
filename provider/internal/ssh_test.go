@@ -30,7 +30,7 @@ func TestValidateSSH(t *testing.T) {
 	}{
 		{
 			name:    "invalid path",
-			ssh:     SSH{ID: "foo", Paths: []string{"/not/real"}},
+			ssh:     SSH{ID: fooName, Paths: []string{"/not/real"}},
 			wantErr: "/not/real: no such file or directory",
 		},
 	}

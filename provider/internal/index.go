@@ -325,10 +325,10 @@ func (i *Index) Diff(
 	replace := provider.PropertyDiff{Kind: provider.UpdateReplace}
 
 	if olds.Tag != news.Tag {
-		diff["tag"] = replace
+		diff[tagKey] = replace
 	}
 	if !reflect.DeepEqual(olds.Sources, news.Sources) {
-		diff["sources"] = update
+		diff[sourcesKey] = update
 	}
 	if olds.Registry != nil && news.Registry != nil {
 		if olds.Registry.Address != news.Registry.Address {
@@ -343,7 +343,7 @@ func (i *Index) Diff(
 	}
 	if (olds.Registry == nil && news.Registry != nil) ||
 		(olds.Registry != nil && news.Registry == nil) {
-		diff["registry"] = update
+		diff[registryLiteral] = update
 	}
 	// Intentionally ignore changes to registry.password
 

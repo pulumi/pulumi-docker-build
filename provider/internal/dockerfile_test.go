@@ -48,14 +48,14 @@ func TestValidateDockerfile(t *testing.T) {
 			d: Dockerfile{
 				Location: "testdata/Dockerfile.invalid",
 			},
-			wantErr: "unknown instruction: RUNN",
+			wantErr: unknownInstructionRUNN,
 		},
 		{
 			name: "invalid syntax inline",
 			d: Dockerfile{
 				Inline: "RUNN it",
 			},
-			wantErr: "unknown instruction: RUNN",
+			wantErr: unknownInstructionRUNN,
 		},
 		{
 			name: "invalid syntax inline with default syntax directive",
@@ -63,12 +63,12 @@ func TestValidateDockerfile(t *testing.T) {
 				Inline: `# syntax=docker/dockerfile:1
 				RUNN it`,
 			},
-			wantErr: "unknown instruction: RUNN",
+			wantErr: unknownInstructionRUNN,
 		},
 		{
 			name: "valid syntax inline",
 			d: Dockerfile{
-				Inline: "FROM scratch",
+				Inline: fromScratch,
 			},
 		},
 		{
@@ -99,7 +99,7 @@ COPY --parents ./package.json ./package-lock.json ./apps/*/package.json ./packag
 		},
 		{
 			name:    "over-specified",
-			d:       Dockerfile{Location: ".", Inline: "FROM scratch"},
+			d:       Dockerfile{Location: ".", Inline: fromScratch},
 			wantErr: `only specify "file" or "inline", not both`,
 		},
 	}

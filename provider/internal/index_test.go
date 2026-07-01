@@ -48,14 +48,14 @@ func TestIndexLifecycle(t *testing.T) {
 			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
-						"tag": property.New(
+						tagKey: property.New(
 							"docker.io/pulumibot/buildkit-e2e:manifest-unit",
 						),
-						"sources": property.New([]property.Value{
+						sourcesKey: property.New([]property.Value{
 							property.New("docker.io/pulumibot/buildkit-e2e:arm64"),
 							property.New("docker.io/pulumibot/buildkit-e2e:amd64"),
 						}),
-						"push": property.New(false),
+						pushKey: property.New(false),
 					}),
 				}
 			},
@@ -67,18 +67,18 @@ func TestIndexLifecycle(t *testing.T) {
 			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
-						"tag": property.New(
+						tagKey: property.New(
 							"docker.io/pulumibot/buildkit-e2e:manifest",
 						),
-						"sources": property.New([]property.Value{
+						sourcesKey: property.New([]property.Value{
 							property.New("docker.io/pulumibot/buildkit-e2e:arm64"),
 							property.New("docker.io/pulumibot/buildkit-e2e:amd64"),
 						}),
-						"push": property.New(true),
-						"registry": property.New(map[string]property.Value{
-							"address":  property.New("docker.io"),
-							"username": property.New("pulumibot"),
-							"password": property.New(os.Getenv("DOCKER_HUB_PASSWORD")).WithSecret(true),
+						pushKey: property.New(true),
+						registryLiteral: property.New(map[string]property.Value{
+							addressKey:  property.New(dockerIO),
+							usernameKey: property.New("pulumibot"),
+							passwordKey: property.New(os.Getenv("DOCKER_HUB_PASSWORD")).WithSecret(true),
 						}),
 					}),
 				}
@@ -97,18 +97,18 @@ func TestIndexLifecycle(t *testing.T) {
 			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
-						"tag": property.New(
+						tagKey: property.New(
 							"docker.io/pulumibot/buildkit-e2e:manifest",
 						),
-						"sources": property.New([]property.Value{
+						sourcesKey: property.New([]property.Value{
 							property.New("docker.io/pulumibot/buildkit-e2e:arm64"),
 							property.New("docker.io/pulumibot/buildkit-e2e:amd64"),
 						}),
-						"push": property.New(true),
-						"registry": property.New(map[string]property.Value{
-							"address":  property.New("docker.io"),
-							"username": property.New("pulumibot"),
-							"password": property.New(os.Getenv("DOCKER_HUB_PASSWORD")).WithSecret(true),
+						pushKey: property.New(true),
+						registryLiteral: property.New(map[string]property.Value{
+							addressKey:  property.New(dockerIO),
+							usernameKey: property.New("pulumibot"),
+							passwordKey: property.New(os.Getenv("DOCKER_HUB_PASSWORD")).WithSecret(true),
 						}),
 					}),
 				}
@@ -168,16 +168,16 @@ func TestIndexDiff(t *testing.T) {
 			name: "no diff if registry password changes",
 			state: func(_ *testing.T, s IndexState) IndexState {
 				s.Registry = &Registry{
-					Address:  "foo",
-					Username: "foo",
-					Password: "foo",
+					Address:  fooName,
+					Username: fooName,
+					Password: fooName,
 				}
 				return s
 			},
 			inputs: func(_ *testing.T, a IndexArgs) IndexArgs {
 				a.Registry = &Registry{
-					Address:  "foo",
-					Username: "foo",
+					Address:  fooName,
+					Username: fooName,
 					Password: "DIFFERENT PASSWORD",
 				}
 				return a
@@ -188,7 +188,7 @@ func TestIndexDiff(t *testing.T) {
 			name:  "diff if registry added",
 			state: func(*testing.T, IndexState) IndexState { return baseState },
 			inputs: func(_ *testing.T, a IndexArgs) IndexArgs {
-				a.Registry = &Registry{Address: "foo.com", Username: "foo", Password: "foo"}
+				a.Registry = &Registry{Address: "foo.com", Username: fooName, Password: fooName}
 				return a
 			},
 			wantChanges: true,
@@ -197,17 +197,17 @@ func TestIndexDiff(t *testing.T) {
 			name: "diff if registry user changes",
 			state: func(_ *testing.T, s IndexState) IndexState {
 				s.Registry = &Registry{
-					Address:  "foo",
-					Username: "foo",
-					Password: "foo",
+					Address:  fooName,
+					Username: fooName,
+					Password: fooName,
 				}
 				return s
 			},
 			inputs: func(_ *testing.T, a IndexArgs) IndexArgs {
 				a.Registry = &Registry{
 					Address:  "DIFFERENT USER",
-					Username: "foo",
-					Password: "foo",
+					Username: fooName,
+					Password: fooName,
 				}
 				return a
 			},
@@ -250,7 +250,7 @@ func TestIndexDelete(t *testing.T) {
 		i := &Index{clientF: mockClientF(client)}
 
 		_, err := i.Delete(t.Context(), infer.DeleteRequest[IndexState]{
-			ID: "foo",
+			ID: fooName,
 			State: IndexState{
 				IndexArgs: IndexArgs{Tag: "docker.io/pulumi/test:manifest"},
 				Ref:       "docker.io/pulumi/test:manifest",

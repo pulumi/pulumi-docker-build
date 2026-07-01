@@ -54,13 +54,13 @@ func TestCacheString(t *testing.T) {
 			want: "type=s3,bucket=bucket-foo,name=myname,endpoint_url=https://some.endpoint,blobs_prefix=blob-prefix,manifests_prefix=manifest-prefix,use_path_type=true,access_key_id=access-key-id,secret_access_key=secret-key,session_token=session",
 		},
 		{
-			name:  "gha",
+			name:  cacheTypeGHA,
 			given: CacheTo{GHA: &CacheToGitHubActions{}},
 			arrange: func(t *testing.T) {
 				t.Setenv("ACTIONS_CACHE_URL", "")
 				t.Setenv("ACTIONS_RUNTIME_TOKEN", "")
 			},
-			want: "type=gha",
+			want: typeGHA,
 		},
 		{
 			name: "gha-default-envs",
@@ -99,19 +99,19 @@ func TestCacheString(t *testing.T) {
 			want:  "type=local,dest=/foo/bar",
 		},
 		{
-			name:  "inline",
+			name:  inlineName,
 			given: CacheTo{Inline: &CacheToInline{}},
 			want:  "type=inline",
 		},
 		{
-			name:  "raw",
-			given: CacheTo{Raw: Raw("type=gha")},
-			want:  "type=gha",
+			name:  rawKey,
+			given: CacheTo{Raw: Raw(typeGHA)},
+			want:  typeGHA,
 		},
 		{
 			name: "compression",
 			given: CacheTo{Local: &CacheToLocal{
-				Dest: "/foo",
+				Dest: fooDest,
 				CacheWithCompression: CacheWithCompression{
 					Compression:      &gzip,
 					CompressionLevel: 100,
@@ -133,7 +133,7 @@ func TestCacheString(t *testing.T) {
 			name: "oci",
 			given: CacheTo{
 				Registry: &CacheToRegistry{
-					CacheFromRegistry: CacheFromRegistry{Ref: "docker.io/foo/bar:baz"},
+					CacheFromRegistry: CacheFromRegistry{Ref: dockerIOTaggedRef},
 					CacheWithOCI: CacheWithOCI{
 						OCI:           pulumi.BoolRef(true),
 						ImageManifest: pulumi.BoolRef(true),
@@ -145,7 +145,7 @@ func TestCacheString(t *testing.T) {
 		{
 			name: "disabled-to",
 			given: CacheTo{
-				Raw:      Raw("type=gha"),
+				Raw:      Raw(typeGHA),
 				Disabled: true,
 			},
 			want: "",
