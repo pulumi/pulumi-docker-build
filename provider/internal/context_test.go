@@ -336,40 +336,40 @@ func TestDockerIgnore(t *testing.T) {
 	}{
 		{
 			name:       "Dockerfile with root dockerignore",
-			dockerfile: "./foo/Dockerfile",
+			dockerfile: fooDockerfilePath,
 			fs: map[string]string{
-				".dockerignore": "rootignore",
+				dockerignoreName: rootIgnore,
 			},
-			want: []string{"rootignore"},
+			want: []string{rootIgnore},
 		},
 		{
 			name:       "Dockerfile with root dockerignore and custom dockerignore",
-			dockerfile: "./foo/Dockerfile",
+			dockerfile: fooDockerfilePath,
 			fs: map[string]string{
-				"foo/Dockerfile.dockerignore": "customignore",
-				".dockerignore":               "rootignore",
+				"foo/Dockerfile.dockerignore": customIgnore,
+				dockerignoreName:              rootIgnore,
 			},
-			want: []string{"customignore"},
+			want: []string{customIgnore},
 		},
 		{
 			name:       "Dockerfile with root dockerignore and relative context",
-			dockerfile: "./foo/Dockerfile",
+			dockerfile: fooDockerfilePath,
 			context:    "../",
 			fs: map[string]string{
-				"../.dockerignore": "rootignore",
+				"../.dockerignore": rootIgnore,
 			},
-			want: []string{"rootignore"},
+			want: []string{rootIgnore},
 		},
 		{
 			name:       "Dockerfile without root dockerignore",
-			dockerfile: "./foo/Dockerfile",
+			dockerfile: fooDockerfilePath,
 			want:       nil,
 		},
 		{
 			name:       "Dockerfile with invalid root dockerignore",
-			dockerfile: "./foo/Dockerfile",
+			dockerfile: fooDockerfilePath,
 			fs: map[string]string{
-				".dockerignore": strings.Repeat("*", bufio.MaxScanTokenSize),
+				dockerignoreName: strings.Repeat("*", bufio.MaxScanTokenSize),
 			},
 			wantErr: bufio.ErrTooLong,
 		},
@@ -382,26 +382,26 @@ func TestDockerIgnore(t *testing.T) {
 			name:       "custom.Dockerfile with custom dockerignore and without root dockerignore",
 			dockerfile: "./foo/custom.Dockerfile",
 			fs: map[string]string{
-				"foo/custom.Dockerfile.dockerignore": "customignore",
+				"foo/custom.Dockerfile.dockerignore": customIgnore,
 			},
-			want: []string{"customignore"},
+			want: []string{customIgnore},
 		},
 		{
 			name:       "custom.Dockerfile with custom dockerignore and with root dockerignore",
 			dockerfile: "foo/custom.Dockerfile",
 			fs: map[string]string{
-				"foo/custom.Dockerfile.dockerignore": "customignore",
-				".dockerignore":                      "rootignore",
+				"foo/custom.Dockerfile.dockerignore": customIgnore,
+				dockerignoreName:                     rootIgnore,
 			},
-			want: []string{"customignore"},
+			want: []string{customIgnore},
 		},
 		{
 			name:       "custom.Dockerfile without custom dockerignore and with root dockerignore",
 			dockerfile: "foo/custom.Dockerfile",
 			fs: map[string]string{
-				".dockerignore": "rootignore",
+				dockerignoreName: rootIgnore,
 			},
-			want: []string{"rootignore"},
+			want: []string{rootIgnore},
 		},
 	}
 

@@ -87,8 +87,8 @@ func TestImageLifecycle(t *testing.T) {
 			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
-						"push": property.New(false),
-						"tags": property.New(
+						pushKey: property.New(false),
+						tagsKey: property.New(
 							[]property.Value{
 								property.New("docker.io/pulumibot/buildkit-e2e"),
 								property.New("docker.io/pulumibot/buildkit-e2e:main"),
@@ -97,19 +97,19 @@ func TestImageLifecycle(t *testing.T) {
 						"platforms": property.New(
 							[]property.Value{
 								property.New("linux/arm64"),
-								property.New("linux/amd64"),
+								property.New(platformLinuxAMD64),
 							},
 						),
-						"context": property.New(map[string]property.Value{
-							"location": property.New("testdata/noop"),
+						contextKey: property.New(map[string]property.Value{
+							locationKey: property.New(testdataNoop),
 						}),
 						"dockerfile": property.New(map[string]property.Value{
-							"location": property.New("testdata/noop/Dockerfile"),
+							locationKey: property.New("testdata/noop/Dockerfile"),
 						}),
-						"exports": property.New(
+						exportsKey: property.New(
 							[]property.Value{
 								property.New(map[string]property.Value{
-									"raw": property.New("type=registry"),
+									rawKey: property.New(typeRegistry),
 								},
 								),
 							},
@@ -117,9 +117,9 @@ func TestImageLifecycle(t *testing.T) {
 						"registries": property.New(
 							[]property.Value{
 								property.New(map[string]property.Value{
-									"address":  property.New("fakeaddress"),
-									"username": property.New("fakeuser"),
-									"password": property.New("password").WithSecret(true),
+									addressKey:  property.New("fakeaddress"),
+									usernameKey: property.New("fakeuser"),
+									passwordKey: property.New(passwordKey).WithSecret(true),
 								}),
 							},
 						),
@@ -133,15 +133,15 @@ func TestImageLifecycle(t *testing.T) {
 			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
-						"push": property.New(false),
-						"tags": property.New([]property.Value{}),
-						"context": property.New(map[string]property.Value{
-							"location": property.New("testdata/noop"),
+						pushKey: property.New(false),
+						tagsKey: property.New([]property.Value{}),
+						contextKey: property.New(map[string]property.Value{
+							locationKey: property.New(testdataNoop),
 						}),
-						"exports": property.New(
+						exportsKey: property.New(
 							[]property.Value{
 								property.New(map[string]property.Value{
-									"raw": property.New("type=registry"),
+									rawKey: property.New(typeRegistry),
 								}),
 							},
 						),
@@ -162,14 +162,14 @@ func TestImageLifecycle(t *testing.T) {
 			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
-						"push": property.New(false),
-						"tags": property.New(
+						pushKey: property.New(false),
+						tagsKey: property.New(
 							[]property.Value{property.New("invalid-exports")},
 						),
-						"exports": property.New(
+						exportsKey: property.New(
 							[]property.Value{
 								property.New(map[string]property.Value{
-									"raw": property.New("type="),
+									rawKey: property.New("type="),
 								}),
 							},
 						),
@@ -195,12 +195,12 @@ func TestImageLifecycle(t *testing.T) {
 			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
-						"push": property.New(false),
-						"tags": property.New(
-							[]property.Value{property.New("foo")},
+						pushKey: property.New(false),
+						tagsKey: property.New(
+							[]property.Value{property.New(fooName)},
 						),
-						"context": property.New(map[string]property.Value{
-							"location": property.New("testdata/noop"),
+						contextKey: property.New(map[string]property.Value{
+							locationKey: property.New(testdataNoop),
 						}),
 					}),
 					ExpectFailure: true,
@@ -222,12 +222,12 @@ func TestImageLifecycle(t *testing.T) {
 			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
-						"push": property.New(false),
-						"tags": property.New(
-							[]property.Value{property.New("foo")},
+						pushKey: property.New(false),
+						tagsKey: property.New(
+							[]property.Value{property.New(fooName)},
 						),
-						"context": property.New(map[string]property.Value{
-							"location": property.New("testdata/noop"),
+						contextKey: property.New(map[string]property.Value{
+							locationKey: property.New(testdataNoop),
 						}),
 					}),
 					ExpectFailure: true,
@@ -255,21 +255,21 @@ func TestImageLifecycle(t *testing.T) {
 			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
-						"push": property.New(false),
-						"tags": property.New(
+						pushKey: property.New(false),
+						tagsKey: property.New(
 							[]property.Value{
 								property.New("default-dockerfile"),
 							},
 						),
-						"context": property.New(map[string]property.Value{
-							"location": property.New("testdata/noop"),
+						contextKey: property.New(map[string]property.Value{
+							locationKey: property.New(testdataNoop),
 						}),
 					}),
 					Hook: func(_, output property.Map) {
 						dockerfile := output.Get("dockerfile")
 						require.NotNil(t, dockerfile)
 						require.True(t, dockerfile.IsMap())
-						location := dockerfile.AsMap().Get("location")
+						location := dockerfile.AsMap().Get(locationKey)
 						require.True(t, location.IsString())
 						assert.Equal(t, "testdata/noop/Dockerfile", location.AsString())
 					},
@@ -297,22 +297,22 @@ func TestImageLifecycle(t *testing.T) {
 			op: func(_ *testing.T) integration.Operation {
 				return integration.Operation{
 					Inputs: property.NewMap(map[string]property.Value{
-						"push": property.New(false),
-						"tags": property.New(
+						pushKey: property.New(false),
+						tagsKey: property.New(
 							[]property.Value{
 								property.New("inline-dockerfile"),
 							},
 						),
 						"buildOnPreview": property.New(true),
 						"dockerfile": property.New(map[string]property.Value{
-							"inline": property.New("FROM alpine:latest"),
+							inlineName: property.New("FROM alpine:latest"),
 						}),
 					}),
 					Hook: func(_, output property.Map) {
-						context := output.Get("context")
+						context := output.Get(contextKey)
 						require.NotNil(t, context)
 						require.True(t, context.IsMap())
-						location := context.AsMap().Get("location")
+						location := context.AsMap().Get(locationKey)
 						require.True(t, location.IsString())
 						assert.Equal(t, ".", location.AsString())
 					},
@@ -392,7 +392,7 @@ func TestRead(t *testing.T) {
 		ID: "my-image",
 		State: ImageState{
 			ImageArgs: ImageArgs{
-				Exports: []Export{{Raw: "type=registry"}},
+				Exports: []Export{{Raw: typeRegistry}},
 				Tags:    []string{tag},
 			},
 			Digest: digest,
@@ -412,7 +412,7 @@ func TestImageDiff(t *testing.T) {
 	require.NoError(t, err)
 	baseArgs := ImageArgs{
 		Context:    &BuildContext{Context: Context{Location: emptyDir}},
-		Dockerfile: &Dockerfile{Location: "testdata/noop"},
+		Dockerfile: &Dockerfile{Location: testdataNoop},
 		Tags:       []string{},
 	}
 	baseState := ImageState{
@@ -437,16 +437,16 @@ func TestImageDiff(t *testing.T) {
 			name: "no diff if registry password changes",
 			state: func(_ *testing.T, s ImageState) ImageState {
 				s.Registries = []Registry{{
-					Address:  "foo",
-					Username: "foo",
-					Password: "foo",
+					Address:  fooName,
+					Username: fooName,
+					Password: fooName,
 				}}
 				return s
 			},
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Registries = []Registry{{
-					Address:  "foo",
-					Username: "foo",
+					Address:  fooName,
+					Username: fooName,
 					Password: "DIFFERENT PASSWORD",
 				}}
 				return a
@@ -504,17 +504,17 @@ func TestImageDiff(t *testing.T) {
 			name: "diff if registry user changes",
 			state: func(_ *testing.T, s ImageState) ImageState {
 				s.Registries = []Registry{{
-					Address:  "foo",
-					Username: "foo",
-					Password: "foo",
+					Address:  fooName,
+					Username: fooName,
+					Password: fooName,
 				}}
 				return s
 			},
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Registries = []Registry{{
 					Address:  "DIFFERENT USER",
-					Username: "foo",
-					Password: "foo",
+					Username: fooName,
+					Password: fooName,
 				}}
 				return a
 			},
@@ -525,7 +525,7 @@ func TestImageDiff(t *testing.T) {
 			state: func(*testing.T, ImageState) ImageState { return baseState },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.BuildArgs = map[string]string{
-					"foo": "bar",
+					fooName: barName,
 				}
 				return a
 			},
@@ -582,7 +582,7 @@ func TestImageDiff(t *testing.T) {
 			name:  "diff if ssh changes",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
 			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
-				ia.SSH = []SSH{{ID: "default"}}
+				ia.SSH = []SSH{{ID: defaultSSHID}}
 				return ia
 			},
 			wantChanges: true,
@@ -627,7 +627,7 @@ func TestImageDiff(t *testing.T) {
 			name:  "diff if named context changes",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Context = &BuildContext{Named: NamedContexts{"foo": Context{Location: "bar"}}}
+				a.Context = &BuildContext{Named: NamedContexts{fooName: Context{Location: barName}}}
 				return a
 			},
 			wantChanges: true,
@@ -654,7 +654,7 @@ func TestImageDiff(t *testing.T) {
 			name:  "diff if dockerfile inline changes",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Dockerfile = &Dockerfile{Inline: "FROM scratch"}
+				a.Dockerfile = &Dockerfile{Inline: fromScratch}
 				return a
 			},
 			wantChanges: true,
@@ -663,7 +663,7 @@ func TestImageDiff(t *testing.T) {
 			name:  "diff if platforms change",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Platforms = []Platform{"linux/amd64"}
+				a.Platforms = []Platform{platformLinuxAMD64}
 				return a
 			},
 			wantChanges: true,
@@ -681,7 +681,7 @@ func TestImageDiff(t *testing.T) {
 			name:  "diff if builder changes",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Builder = &BuilderConfig{Name: "foo"}
+				a.Builder = &BuilderConfig{Name: fooName}
 				return a
 			},
 			wantChanges: true,
@@ -690,7 +690,7 @@ func TestImageDiff(t *testing.T) {
 			name:  "diff if tags change",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Tags = []string{"foo"}
+				a.Tags = []string{fooName}
 				return a
 			},
 			wantChanges: true,
@@ -699,7 +699,7 @@ func TestImageDiff(t *testing.T) {
 			name:  "diff if exports change",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Exports = []Export{{Raw: "foo"}}
+				a.Exports = []Export{{Raw: fooName}}
 				return a
 			},
 			wantChanges: true,
@@ -708,7 +708,7 @@ func TestImageDiff(t *testing.T) {
 			name:  "diff if target changes",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Target = "foo"
+				a.Target = fooName
 				return a
 			},
 			wantChanges: true,
@@ -735,7 +735,7 @@ func TestImageDiff(t *testing.T) {
 			name:  "diff if labels change",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Labels = map[string]string{"foo": "bar"}
+				a.Labels = map[string]string{fooName: barName}
 				return a
 			},
 			wantChanges: true,
@@ -744,7 +744,7 @@ func TestImageDiff(t *testing.T) {
 			name:  "diff if secrets change",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Secrets = map[string]string{"foo": "bar"}
+				a.Secrets = map[string]string{fooName: barName}
 				return a
 			},
 			wantChanges: true,
@@ -752,13 +752,13 @@ func TestImageDiff(t *testing.T) {
 		{
 			name: "diff if secrets change but ignoreSecretsInDiffCalculation is set",
 			state: func(_ *testing.T, s ImageState) ImageState {
-				s.Secrets = map[string]string{"foo": "old_bar"}
-				s.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				s.Secrets = map[string]string{fooName: oldBar}
+				s.IgnoreSecretsInDiffCalculation = []string{fooName}
 				return s
 			},
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Secrets = map[string]string{"foo": "new_bar"}
-				a.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				a.Secrets = map[string]string{fooName: newBar}
+				a.IgnoreSecretsInDiffCalculation = []string{fooName}
 				return a
 			},
 			wantChanges: false,
@@ -766,12 +766,12 @@ func TestImageDiff(t *testing.T) {
 		{
 			name: "diff if secrets change but ignoreSecretsInDiffCalculation is set for another secret",
 			state: func(_ *testing.T, s ImageState) ImageState {
-				s.Secrets = map[string]string{"foo": "old_bar"}
+				s.Secrets = map[string]string{fooName: oldBar}
 				s.IgnoreSecretsInDiffCalculation = []string{"not_foo"}
 				return s
 			},
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Secrets = map[string]string{"foo": "new_bar"}
+				a.Secrets = map[string]string{fooName: newBar}
 				a.IgnoreSecretsInDiffCalculation = []string{"not_foo"}
 				return a
 			},
@@ -780,12 +780,12 @@ func TestImageDiff(t *testing.T) {
 		{
 			name: "diff if secrets change but ignoreSecretsInDiffCalculation is set and secret is added",
 			state: func(_ *testing.T, s ImageState) ImageState {
-				s.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				s.IgnoreSecretsInDiffCalculation = []string{fooName}
 				return s
 			},
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Secrets = map[string]string{"foo": "bar"}
-				a.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				a.Secrets = map[string]string{fooName: barName}
+				a.IgnoreSecretsInDiffCalculation = []string{fooName}
 				return a
 			},
 			wantChanges: true,
@@ -793,12 +793,12 @@ func TestImageDiff(t *testing.T) {
 		{
 			name: "diff if secrets change but ignoreSecretsInDiffCalculation is set and secret is removed",
 			state: func(_ *testing.T, s ImageState) ImageState {
-				s.Secrets = map[string]string{"foo": "bar"}
-				s.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				s.Secrets = map[string]string{fooName: barName}
+				s.IgnoreSecretsInDiffCalculation = []string{fooName}
 				return s
 			},
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				a.IgnoreSecretsInDiffCalculation = []string{fooName}
 				return a
 			},
 			wantChanges: true,
@@ -806,13 +806,13 @@ func TestImageDiff(t *testing.T) {
 		{
 			name: "diff if an ignored secret and a non-ignored secret both change",
 			state: func(_ *testing.T, s ImageState) ImageState {
-				s.Secrets = map[string]string{"foo": "old_foo", "bar": "old_bar"}
-				s.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				s.Secrets = map[string]string{fooName: "old_foo", barName: oldBar}
+				s.IgnoreSecretsInDiffCalculation = []string{fooName}
 				return s
 			},
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Secrets = map[string]string{"foo": "new_foo", "bar": "new_bar"}
-				a.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				a.Secrets = map[string]string{fooName: "new_foo", barName: newBar}
+				a.IgnoreSecretsInDiffCalculation = []string{fooName}
 				return a
 			},
 			wantChanges: true,
@@ -820,12 +820,12 @@ func TestImageDiff(t *testing.T) {
 		{
 			name: "no diff if only ignoreSecretsInDiffCalculation changes",
 			state: func(_ *testing.T, s ImageState) ImageState {
-				s.Secrets = map[string]string{"foo": "bar"}
+				s.Secrets = map[string]string{fooName: barName}
 				return s
 			},
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
-				a.Secrets = map[string]string{"foo": "bar"}
-				a.IgnoreSecretsInDiffCalculation = []string{"foo"}
+				a.Secrets = map[string]string{fooName: barName}
+				a.IgnoreSecretsInDiffCalculation = []string{fooName}
 				return a
 			},
 			wantChanges: false,
@@ -834,13 +834,13 @@ func TestImageDiff(t *testing.T) {
 			name: "diff if local export doesn't exist",
 			state: func(_ *testing.T, state ImageState) ImageState {
 				state.Exports = []Export{
-					{Local: &ExportLocal{Dest: "not-real"}},
+					{Local: &ExportLocal{Dest: notReal}},
 				}
 				return state
 			},
 			inputs: func(_ *testing.T, args ImageArgs) ImageArgs {
 				args.Exports = []Export{
-					{Local: &ExportLocal{Dest: "not-real"}},
+					{Local: &ExportLocal{Dest: notReal}},
 				}
 				return args
 			},
@@ -850,13 +850,13 @@ func TestImageDiff(t *testing.T) {
 			name: "diff if tar export doesn't exist",
 			state: func(_ *testing.T, state ImageState) ImageState {
 				state.Exports = []Export{
-					{Tar: &ExportTar{ExportLocal: ExportLocal{Dest: "not-real"}}},
+					{Tar: &ExportTar{ExportLocal: ExportLocal{Dest: notReal}}},
 				}
 				return state
 			},
 			inputs: func(_ *testing.T, args ImageArgs) ImageArgs {
 				args.Exports = []Export{
-					{Tar: &ExportTar{ExportLocal: ExportLocal{Dest: "not-real"}}},
+					{Tar: &ExportTar{ExportLocal: ExportLocal{Dest: notReal}}},
 				}
 				return args
 			},
@@ -912,19 +912,19 @@ func TestValidateImageArgs(t *testing.T) {
 	t.Run("buildOnPreview", func(t *testing.T) {
 		t.Parallel()
 		args := ImageArgs{
-			Context: &BuildContext{Context: Context{Location: "testdata/noop"}},
+			Context: &BuildContext{Context: Context{Location: testdataNoop}},
 			Tags:    []string{"my-tag"},
 			Exports: []Export{{Registry: &ExportRegistry{ExportImage{Push: pulumi.BoolRef(true)}}}},
 		}
 		actual, err := args.validate(true, true)
 		assert.NoError(t, err)
-		assert.Equal(t, "image", actual.Exports[0].Type)
-		assert.Equal(t, "false", actual.Exports[0].Attrs["push"])
+		assert.Equal(t, exportTypeImage, actual.Exports[0].Type)
+		assert.Equal(t, falseLiteral, actual.Exports[0].Attrs[pushKey])
 
 		actual, err = args.validate(true, false)
 		assert.NoError(t, err)
-		assert.Equal(t, "image", actual.Exports[0].Type)
-		assert.Equal(t, "true", actual.Exports[0].Attrs["push"])
+		assert.Equal(t, exportTypeImage, actual.Exports[0].Type)
+		assert.Equal(t, "true", actual.Exports[0].Attrs[pushKey])
 	})
 
 	t.Run("unknowns", func(t *testing.T) {
@@ -937,8 +937,8 @@ func TestValidateImageArgs(t *testing.T) {
 		// - not allow invalid zero values in non-preview operations.
 		unknowns := ImageArgs{
 			BuildArgs: map[string]string{
-				"known": "value",
-				"":      "",
+				knownKey: "value",
+				"":       "",
 			},
 			Builder:    nil,
 			CacheFrom:  []CacheFrom{{GHA: &CacheFromGitHubActions{}}, {Raw: ""}},
@@ -946,7 +946,7 @@ func TestValidateImageArgs(t *testing.T) {
 			Context:    nil,
 			Exports:    []Export{{Raw: ""}},
 			Dockerfile: nil,
-			Platforms:  []Platform{"linux/amd64", ""},
+			Platforms:  []Platform{platformLinuxAMD64, ""},
 			Registries: []Registry{
 				{
 					Address:  "",
@@ -954,7 +954,7 @@ func TestValidateImageArgs(t *testing.T) {
 					Username: "",
 				},
 			},
-			Tags: []string{"known", ""},
+			Tags: []string{knownKey, ""},
 		}
 
 		_, err := unknowns.validate(true, true)
@@ -968,10 +968,10 @@ func TestValidateImageArgs(t *testing.T) {
 	t.Run("disabled caches", func(t *testing.T) {
 		t.Parallel()
 		args := ImageArgs{
-			Context:   &BuildContext{Context: Context{Location: "testdata/noop"}},
-			CacheFrom: []CacheFrom{{Raw: "type=registry", Disabled: true}},
-			CacheTo:   []CacheTo{{Raw: "type=registry", Disabled: true}},
-			Exports:   []Export{{Raw: "type=registry", Disabled: true}},
+			Context:   &BuildContext{Context: Context{Location: testdataNoop}},
+			CacheFrom: []CacheFrom{{Raw: typeRegistry, Disabled: true}},
+			CacheTo:   []CacheTo{{Raw: typeRegistry, Disabled: true}},
+			Exports:   []Export{{Raw: typeRegistry, Disabled: true}},
 		}
 
 		opts, err := args.validate(true, true)
@@ -998,32 +998,32 @@ func TestValidateImageArgs(t *testing.T) {
 			{
 				name: "gha environment",
 				envs: map[string]string{
-					"ACTIONS_CACHE_URL":        "test-cache-url",
-					"ACTIONS_RUNTIME_TOKEN":    "test-runtime-token",
-					"ACTIONS_RESULTS_URL":      "test-results-url",
+					"ACTIONS_CACHE_URL":        testCacheURL,
+					"ACTIONS_RUNTIME_TOKEN":    testRuntimeToken,
+					"ACTIONS_RESULTS_URL":      testResultsURL,
 					"ACTIONS_CACHE_SERVICE_V2": "true",
 				},
 				args: ImageArgs{
-					Context:   &BuildContext{Context: Context{Location: "testdata/noop"}},
+					Context:   &BuildContext{Context: Context{Location: testdataNoop}},
 					CacheFrom: []CacheFrom{{GHA: &CacheFromGitHubActions{}}},
 					CacheTo: []CacheTo{{GHA: &CacheToGitHubActions{
 						CacheFromGitHubActions: CacheFromGitHubActions{},
 					}}},
 				},
 				wantCacheFrom: &pb.CacheOptionsEntry{
-					Type: "gha",
+					Type: cacheTypeGHA,
 					Attrs: map[string]string{
-						"token":  "test-runtime-token",
-						"url":    "test-cache-url",
-						"url_v2": "test-results-url",
+						"token":  testRuntimeToken,
+						"url":    testCacheURL,
+						"url_v2": testResultsURL,
 					},
 				},
 				wantCacheTo: &pb.CacheOptionsEntry{
-					Type: "gha",
+					Type: cacheTypeGHA,
 					Attrs: map[string]string{
-						"token":  "test-runtime-token",
-						"url":    "test-cache-url",
-						"url_v2": "test-results-url",
+						"token":  testRuntimeToken,
+						"url":    testCacheURL,
+						"url_v2": testResultsURL,
 					},
 				},
 			},
@@ -1034,7 +1034,7 @@ func TestValidateImageArgs(t *testing.T) {
 					"ACTIONS_RUNTIME_TOKEN": "",
 				},
 				args: ImageArgs{
-					Context:   &BuildContext{Context: Context{Location: "testdata/noop"}},
+					Context:   &BuildContext{Context: Context{Location: testdataNoop}},
 					CacheFrom: []CacheFrom{{GHA: &CacheFromGitHubActions{}}},
 					CacheTo: []CacheTo{{GHA: &CacheToGitHubActions{
 						CacheFromGitHubActions: CacheFromGitHubActions{},
@@ -1073,7 +1073,7 @@ func TestValidateImageArgs(t *testing.T) {
 	t.Run("multiple exports pre-0.13", func(t *testing.T) {
 		t.Parallel()
 		args := ImageArgs{
-			Exports: []Export{{Raw: "type=local"}, {Raw: "type=tar"}},
+			Exports: []Export{{Raw: "type=local"}, {Raw: typeTar}},
 		}
 		_, err := args.validate(false, false)
 		assert.ErrorContains(t, err, "multiple exports require a v0.13 buildkit daemon or newer")
@@ -1083,8 +1083,8 @@ func TestValidateImageArgs(t *testing.T) {
 		t.Parallel()
 		args := ImageArgs{
 			Exports:   []Export{{Tar: &ExportTar{}, Local: &ExportLocal{}}},
-			CacheTo:   []CacheTo{{Raw: "type=tar", Local: &CacheToLocal{Dest: "/foo"}}},
-			CacheFrom: []CacheFrom{{Raw: "type=tar", Registry: &CacheFromRegistry{}}},
+			CacheTo:   []CacheTo{{Raw: typeTar, Local: &CacheToLocal{Dest: fooDest}}},
+			CacheFrom: []CacheFrom{{Raw: typeTar, Registry: &CacheFromRegistry{}}},
 		}
 		_, err := args.validate(true, false)
 		assert.ErrorContains(t, err, "exports should only specify one export type")
@@ -1125,7 +1125,7 @@ func TestBuildable(t *testing.T) {
 		{
 			name: "unknown exports",
 			args: ImageArgs{
-				Tags:    []string{"known"},
+				Tags:    []string{knownKey},
 				Exports: []Export{{Raw: ""}},
 			},
 			want: false,
@@ -1133,12 +1133,12 @@ func TestBuildable(t *testing.T) {
 		{
 			name: "unknown registry",
 			args: ImageArgs{
-				Tags:    []string{"known"},
+				Tags:    []string{knownKey},
 				Exports: []Export{{Docker: &ExportDocker{}}},
 				Registries: []Registry{
 					{
-						Address:  "docker.io",
-						Username: "foo",
+						Address:  dockerIO,
+						Username: fooName,
 						Password: "",
 					},
 				},
@@ -1148,14 +1148,14 @@ func TestBuildable(t *testing.T) {
 		{
 			name: "known tags",
 			args: ImageArgs{
-				Tags: []string{"known"},
+				Tags: []string{knownKey},
 			},
 			want: true,
 		},
 		{
 			name: "known exports",
 			args: ImageArgs{
-				Tags:    []string{"known"},
+				Tags:    []string{knownKey},
 				Exports: []Export{{Registry: &ExportRegistry{}}},
 			},
 			want: true,
@@ -1163,13 +1163,13 @@ func TestBuildable(t *testing.T) {
 		{
 			name: "known registry",
 			args: ImageArgs{
-				Tags:    []string{"known"},
+				Tags:    []string{knownKey},
 				Exports: []Export{{Registry: &ExportRegistry{}}},
 				Registries: []Registry{
 					{
-						Address:  "docker.io",
-						Username: "foo",
-						Password: "bar",
+						Address:  dockerIO,
+						Username: fooName,
+						Password: barName,
 					},
 				},
 			},
@@ -1178,9 +1178,9 @@ func TestBuildable(t *testing.T) {
 		{
 			name: "known with ignoreSecretsInDiffCalculation set",
 			args: ImageArgs{
-				Tags:                           []string{"known"},
-				Secrets:                        map[string]string{"foo": "bar"},
-				IgnoreSecretsInDiffCalculation: []string{"foo"},
+				Tags:                           []string{knownKey},
+				Secrets:                        map[string]string{fooName: barName},
+				IgnoreSecretsInDiffCalculation: []string{fooName},
 			},
 			want: true,
 		},
@@ -1199,26 +1199,26 @@ func TestToBuild(t *testing.T) {
 	Max := Max
 
 	ia := ImageArgs{
-		Tags:      []string{"foo", "bar"},
-		Platforms: []Platform{"linux/amd64"},
-		Context:   &BuildContext{Context: Context{Location: "testdata/noop"}},
+		Tags:      []string{fooName, barName},
+		Platforms: []Platform{platformLinuxAMD64},
+		Context:   &BuildContext{Context: Context{Location: testdataNoop}},
 		CacheTo: []CacheTo{
 			{GHA: &CacheToGitHubActions{CacheWithMode: CacheWithMode{&Max}}},
 			{
 				Registry: &CacheToRegistry{
-					CacheFromRegistry: CacheFromRegistry{Ref: "docker.io/foo/bar"},
+					CacheFromRegistry: CacheFromRegistry{Ref: dockerIORef},
 				},
 			},
 			{
 				Registry: &CacheToRegistry{
-					CacheFromRegistry: CacheFromRegistry{Ref: "docker.io/foo/bar:baz"},
+					CacheFromRegistry: CacheFromRegistry{Ref: dockerIOTaggedRef},
 				},
 			},
 		},
 		CacheFrom: []CacheFrom{
-			{S3: &CacheFromS3{Name: "bar"}},
-			{Registry: &CacheFromRegistry{Ref: "docker.io/foo/bar"}},
-			{Registry: &CacheFromRegistry{Ref: "docker.io/foo/bar:baz"}},
+			{S3: &CacheFromS3{Name: barName}},
+			{Registry: &CacheFromRegistry{Ref: dockerIORef}},
+			{Registry: &CacheFromRegistry{Ref: dockerIOTaggedRef}},
 		},
 	}
 

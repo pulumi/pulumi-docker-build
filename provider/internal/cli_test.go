@@ -33,7 +33,7 @@ func TestExec(t *testing.T) {
 	cli, err := wrap(h)
 	require.NoError(t, err)
 
-	err = cli.exec(t.Context(), []string{"buildx", "version"}, nil)
+	err = cli.exec(t.Context(), []string{buildxName, "version"}, nil)
 	assert.NoError(t, err)
 
 	out, err := io.ReadAll(cli.r)
@@ -50,27 +50,32 @@ func TestWrappedAuth(t *testing.T) {
 
 	h := &host{
 		auths: map[string]types.AuthConfig{
+			//nolint:gosec // G101: test fixture, not a real credential.
 			ecr: {
 				Username:      "host-aws-user",
 				Password:      "host-aws-password",
 				ServerAddress: ecr,
 			},
-			"https://misc": { // Legacy config includes http/https scheme.
+			// Legacy config includes http/https scheme.
+			//nolint:gosec // G101: test fixture, not a real credential.
+			"https://misc": {
 				Username:      "host-misc-user",
 				Password:      "host-misc-password",
-				ServerAddress: "misc",
+				ServerAddress: miscName,
 			},
 		},
 	}
 
 	registries := []Registry{
+		//nolint:gosec // G101: test fixture, not a real credential.
 		{
-			Address:  "1234.dkr.ecr.us-west-2.amazonaws.com",
+			Address:  awsECRAddress,
 			Username: "resource-aws-user",
 			Password: "resource-aws-password",
 		},
+		//nolint:gosec // G101: test fixture, not a real credential.
 		{
-			Address:  "docker.io",
+			Address:  dockerIO,
 			Username: "resource-dockerhub-user",
 			Password: "resource-dockerhub-password",
 		},
@@ -83,20 +88,23 @@ func TestWrappedAuth(t *testing.T) {
 	require.NoError(t, err)
 
 	expected := map[string]types.AuthConfig{
-		"1234.dkr.ecr.us-west-2.amazonaws.com": {
+		//nolint:gosec // G101: test fixture, not a real credential.
+		awsECRAddress: {
 			Username:      "resource-aws-user",
 			Password:      "resource-aws-password",
-			ServerAddress: "1234.dkr.ecr.us-west-2.amazonaws.com",
+			ServerAddress: awsECRAddress,
 		},
+		//nolint:gosec // G101: test fixture, not a real credential.
 		config.DockerRegistryAuth: {
 			Username:      "resource-dockerhub-user",
 			Password:      "resource-dockerhub-password",
 			ServerAddress: config.DockerRegistryDNS,
 		},
-		"misc": {
+		//nolint:gosec // G101: test fixture, not a real credential.
+		miscName: {
 			Username:      "host-misc-user",
 			Password:      "host-misc-password",
-			ServerAddress: "misc",
+			ServerAddress: miscName,
 		},
 	}
 	assert.Equal(t, expected, cli.auths)

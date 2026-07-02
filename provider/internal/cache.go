@@ -175,7 +175,7 @@ func (c *CacheFromGitHubActions) String() string {
 	if c == nil {
 		return ""
 	}
-	parts := []string{"type=gha"}
+	parts := []string{typeGHA}
 	if c.Scope != "" {
 		parts = append(parts, "scope="+c.Scope)
 	}
@@ -470,11 +470,18 @@ func (c CacheFrom) validate(_ bool) (*controllerapi.CacheOptionsEntry, error) {
 	return pb, nil
 }
 
+const (
+	// cacheTypeGHA is the buildx cache backend type for GitHub Actions.
+	cacheTypeGHA = "gha"
+	// typeGHA is the buildx "type=gha" cache attribute.
+	typeGHA = "type=gha"
+)
+
 // isActive checks if the GitHub token is set in the cache entry.
 // If it is not a GHA cache entry, it will return true.
 // This is to maintain backwards compatibility with the old buildx behaviour.
 func isActive(ci *controllerapi.CacheOptionsEntry) bool {
-	if ci.Type != "gha" {
+	if ci.Type != cacheTypeGHA {
 		return true
 	}
 	return ci.Attrs["token"] != "" && (ci.Attrs["url"] != "" || ci.Attrs["url_v2"] != "")

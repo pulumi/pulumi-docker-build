@@ -29,7 +29,21 @@ import (
 )
 
 const (
-	trueLiteral = "true"
+	trueLiteral  = "true"
+	falseLiteral = "false"
+
+	// exportTypeImage is the buildkit exporter type for images.
+	exportTypeImage = "image"
+	// registryLiteral is the "registry" export type / property name.
+	registryLiteral = "registry"
+	// typeRegistry is the buildkit "type=registry" exporter shorthand.
+	typeRegistry = "type=registry"
+
+	// Attribute and property keys shared across outputs and diffs.
+	pushKey    = "push"
+	tagsKey    = "tags"
+	tagKey     = "tag"
+	sourcesKey = "sources"
 )
 
 var (
@@ -118,7 +132,7 @@ func (e Export) pushed() bool {
 		if err != nil {
 			return false
 		}
-		return exp[0].Attrs["push"] == trueLiteral
+		return exp[0].Attrs[pushKey] == trueLiteral
 	}
 	if e.Registry != nil {
 		return e.Registry.Push == nil || *e.Registry.Push
@@ -183,10 +197,10 @@ func parseExports(inp []string) ([]*controllerapi.ExportEntry, error) {
 			return nil, errors.New("type is required for output")
 		}
 
-		if out.Type == "registry" {
+		if out.Type == registryLiteral {
 			out.Type = client.ExporterImage
-			if _, ok := out.Attrs["push"]; !ok {
-				out.Attrs["push"] = trueLiteral
+			if _, ok := out.Attrs[pushKey]; !ok {
+				out.Attrs[pushKey] = trueLiteral
 			}
 		}
 
@@ -220,8 +234,8 @@ func (e Export) validate(preview bool, tags []string) (*controllerapi.ExportEntr
 	}
 
 	// Don't perform registry pushes during previews.
-	if exp.Type == "image" {
-		exp.Attrs["push"] = "false"
+	if exp.Type == exportTypeImage {
+		exp.Attrs[pushKey] = falseLiteral
 	}
 	return exp, nil
 }
@@ -409,7 +423,7 @@ func (e *ExportRegistry) String() string {
 	if e == nil {
 		return ""
 	}
-	return strings.Replace(e.ExportImage.String(), "type=image", "type=registry", 1)
+	return strings.Replace(e.ExportImage.String(), "type=image", typeRegistry, 1)
 }
 
 // ExportLocal writes the final image to disk.
@@ -570,5 +584,5 @@ func (e *ExportWithAnnotations) Annotate(a infer.Annotator) {
 func isRegistryPush(export *controllerapi.ExportEntry) bool {
 	// "type=registry" is shorthand for "type=image,push=true" so we only need
 	// to check "image" types.
-	return export.Type == "image" && export.Attrs["push"] == "true"
+	return export.Type == exportTypeImage && export.Attrs[pushKey] == trueLiteral
 }

@@ -43,7 +43,7 @@ func TestAuth(t *testing.T) {
 		user = u
 	}
 	password := os.Getenv("DOCKER_HUB_PASSWORD")
-	address := "docker.io"
+	address := dockerIO
 
 	cli := testcli(t, true, Registry{
 		Address:  address,
@@ -90,7 +90,7 @@ func TestBuild(t *testing.T) {
 	tmpdir := t.TempDir()
 	Max := Max
 
-	exampleContext := &BuildContext{Context: Context{Location: "../../examples/app"}}
+	exampleContext := &BuildContext{Context: Context{Location: exampleAppContext}}
 
 	tests := []struct {
 		name string
@@ -118,7 +118,7 @@ func TestBuild(t *testing.T) {
 				Push:    true,
 			},
 			auths: []Registry{{
-				Address:  "docker.io",
+				Address:  dockerIO,
 				Username: "pulumibot",
 				Password: os.Getenv("DOCKER_HUB_PASSWORD"),
 			}},
@@ -169,7 +169,7 @@ func TestBuild(t *testing.T) {
 				Dockerfile: &Dockerfile{
 					Location: "../../examples/app/Dockerfile.sshMount",
 				},
-				SSH: []SSH{{ID: "default"}},
+				SSH: []SSH{{ID: defaultSSHID}},
 			},
 		},
 		{
@@ -180,7 +180,7 @@ func TestBuild(t *testing.T) {
 					Location: "../../examples/app/Dockerfile.secrets",
 				},
 				Secrets: map[string]string{
-					"password": "hunter2",
+					passwordKey: "hunter2",
 				},
 				NoCache: true,
 			},
@@ -190,7 +190,7 @@ func TestBuild(t *testing.T) {
 			args: ImageArgs{
 				Context: exampleContext,
 				Labels: map[string]string{
-					"description": "foo",
+					"description": fooName,
 				},
 			},
 		},
@@ -209,7 +209,7 @@ func TestBuild(t *testing.T) {
 			args: ImageArgs{
 				Context: &BuildContext{
 					Context: Context{
-						Location: "../../examples/app",
+						Location: exampleAppContext,
 					},
 					Named: NamedContexts{
 						"golang:latest": Context{
@@ -249,7 +249,7 @@ func TestBuild(t *testing.T) {
 			},
 		},
 		{
-			name: "inline",
+			name: inlineName,
 			args: ImageArgs{
 				Context: exampleContext,
 				Dockerfile: &Dockerfile{
@@ -333,7 +333,7 @@ func TestNormalizeReference(t *testing.T) {
 		wantErr string
 	}{
 		{
-			ref:  "foo",
+			ref:  fooName,
 			want: "docker.io/library/foo:latest",
 		},
 		{
@@ -376,7 +376,7 @@ func TestBuildError(t *testing.T) {
 		),
 	)
 
-	exampleContext := &BuildContext{Context: Context{Location: "../../examples/app"}}
+	exampleContext := &BuildContext{Context: Context{Location: exampleAppContext}}
 
 	args := ImageArgs{
 		Context: exampleContext,
@@ -410,7 +410,7 @@ func TestBuildError(t *testing.T) {
 func TestBuildExecError(t *testing.T) {
 	t.Parallel()
 
-	exampleContext := &BuildContext{Context: Context{Location: "../../examples/app"}}
+	exampleContext := &BuildContext{Context: Context{Location: exampleAppContext}}
 
 	args := ImageArgs{
 		Context: exampleContext,

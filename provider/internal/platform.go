@@ -28,6 +28,9 @@ var _ = (infer.Enum[Platform])((*Platform)(nil))
 // Platform is an enum capturing all available OS/architecture targets.
 type Platform string
 
+// platformLinuxAMD64 is the most commonly referenced platform value.
+const platformLinuxAMD64 = "linux/amd64"
+
 // Values returns all valid Platform values for SDK generation.
 func (Platform) Values() []infer.EnumValue[Platform] {
 	return []infer.EnumValue[Platform]{
@@ -40,7 +43,7 @@ func (Platform) Values() []infer.EnumValue[Platform] {
 		{Value: "freebsd/amd64"},
 		{Value: "freebsd/arm"},
 		{Value: "linux/386"},
-		{Value: "linux/amd64"},
+		{Value: platformLinuxAMD64},
 		{Value: "linux/arm"},
 		{Value: "linux/arm64"},
 		{Value: "linux/mips64"},
