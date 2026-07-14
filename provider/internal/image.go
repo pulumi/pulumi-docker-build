@@ -433,7 +433,7 @@ func (ia *ImageArgs) normalize(preview bool) ImageArgs {
 
 	// Handle --push/--load shorthand.
 	if normalized.Push {
-		normalized.Exports = append(normalized.Exports, Export{Raw: "type=registry"})
+		normalized.Exports = append(normalized.Exports, Export{Raw: typeRegistry})
 	}
 	if normalized.Load {
 		normalized.Exports = append(normalized.Exports, Export{Raw: "type=docker"})
@@ -545,7 +545,7 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 				multierr,
 				newCheckFailure(
 					errors.New("simultaneous push and load requires a v0.13 buildkit daemon or newer"),
-					"push",
+					pushKey,
 				),
 			)
 		}
@@ -991,7 +991,7 @@ func (*Image) Diff(
 		diff["pull"] = update
 	}
 	if !reflect.DeepEqual(olds.Push, news.Push) {
-		diff["push"] = update
+		diff[pushKey] = update
 	}
 	oldSecretsCopy := maps.Clone(olds.Secrets)
 	newsSecretsCopy := maps.Clone(news.Secrets)
@@ -1010,7 +1010,7 @@ func (*Image) Diff(
 		diff["ssh"] = update
 	}
 	if !reflect.DeepEqual(olds.Tags, news.Tags) {
-		diff["tags"] = update
+		diff[tagsKey] = update
 	}
 	if !reflect.DeepEqual(olds.Target, news.Target) {
 		diff["target"] = update

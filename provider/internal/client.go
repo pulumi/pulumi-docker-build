@@ -224,9 +224,11 @@ func (c *cli) Build(
 		return nil, err
 	}
 
+	// buildx's default build target name (unrelated to NetworkMode.Default).
+	const defaultTarget = "default"
 	target := opts.Target
 	if target == "" {
-		target = "default"
+		target = defaultTarget
 	}
 	payload := map[string]buildx.Options{
 		target: {

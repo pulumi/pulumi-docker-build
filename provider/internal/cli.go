@@ -46,6 +46,9 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/contract"
 )
 
+// buildxName is the name of the buildx CLI plugin subcommand.
+const buildxName = "buildx"
+
 // cli wraps a DockerCLI instance with scoped auth credentials. It satisfies
 // the Cli interface so it can be used with Docker's cobra.Commands directly.
 //
@@ -237,7 +240,7 @@ func (c *cli) execBuild(ctx context.Context, b Build) (*client.SolveResponse, er
 	// build, like the digest.
 	metadata := filepath.Clean(filepath.Join(tmp, "metadata.json"))
 	args := []string{
-		"buildx",
+		buildxName,
 		"build",
 		"--progress", "plain",
 		"--metadata-file", metadata,

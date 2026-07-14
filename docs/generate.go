@@ -46,9 +46,11 @@ func main() {
 		yamlPath = filepath.Join(cwd, yamlPath)
 	}
 
+	//nolint:gosec // G703: mdPath is a build-time CLI argument, not user input.
 	if err := os.MkdirAll(mdPath, 0o750); err != nil {
 		panic(err)
 	}
+	//nolint:gosec // G703: mdPath is a build-time CLI argument, not user input.
 	fileInfo, err := os.Lstat(mdPath)
 	if err != nil || !fileInfo.IsDir() {
 		fmt.Fprintf(os.Stderr, "Expect markdown destination %q to be a directory\n", mdPath)

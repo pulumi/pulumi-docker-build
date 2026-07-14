@@ -39,26 +39,26 @@ func TestValidateExport(t *testing.T) {
 		{
 			name:      "raw - no push on preview",
 			preview:   true,
-			e:         Export{Raw: "type=registry"},
-			givenTags: []string{"docker.io/foo/bar"},
+			e:         Export{Raw: typeRegistry},
+			givenTags: []string{dockerIORef},
 			wantExp: &controllerapi.ExportEntry{
-				Type:  "image",
-				Attrs: map[string]string{"push": "false"},
+				Type:  exportTypeImage,
+				Attrs: map[string]string{pushKey: falseLiteral},
 			},
 		},
 		{
 			name:    "raw - push requires tags",
-			e:       Export{Raw: "type=registry"},
+			e:       Export{Raw: typeRegistry},
 			wantErr: "tag or export name is needed",
 		},
 		{
 			name:      "registry - no push on preview",
 			preview:   true,
 			e:         Export{Registry: &ExportRegistry{}},
-			givenTags: []string{"docker.io/foo/bar"},
+			givenTags: []string{dockerIORef},
 			wantExp: &controllerapi.ExportEntry{
-				Type:  "image",
-				Attrs: map[string]string{"push": "false"},
+				Type:  exportTypeImage,
+				Attrs: map[string]string{pushKey: falseLiteral},
 			},
 		},
 		{
@@ -68,7 +68,7 @@ func TestValidateExport(t *testing.T) {
 		},
 		{
 			name:    "over-specified",
-			e:       Export{Raw: "type=registry", Registry: &ExportRegistry{}},
+			e:       Export{Raw: typeRegistry, Registry: &ExportRegistry{}},
 			wantErr: "specify one export type",
 		},
 	}
@@ -100,7 +100,7 @@ func TestExportString(t *testing.T) {
 	}{
 		{
 			name:  "tar",
-			given: Export{Tar: &ExportTar{ExportLocal: ExportLocal{Dest: "/foo"}}},
+			given: Export{Tar: &ExportTar{ExportLocal: ExportLocal{Dest: fooDest}}},
 			want:  "type=tar,dest=/foo",
 		},
 		{
@@ -131,7 +131,7 @@ func TestExportString(t *testing.T) {
 			want: "type=registry,push=false",
 		},
 		{
-			name: "image",
+			name: exportTypeImage,
 			given: Export{
 				Image: &ExportImage{
 					Push:               pulumi.BoolRef(true),
@@ -149,7 +149,7 @@ func TestExportString(t *testing.T) {
 			given: Export{OCI: &ExportOCI{
 				ExportDocker: ExportDocker{
 					ExportWithNames: ExportWithNames{
-						Names: []string{"foo", "bar"},
+						Names: []string{fooName, barName},
 					},
 				},
 			}},
@@ -160,15 +160,15 @@ func TestExportString(t *testing.T) {
 			given: Export{Docker: &ExportDocker{
 				ExportWithAnnotations: ExportWithAnnotations{
 					Annotations: map[string]string{
-						"foo": "bar",
-						"boo": "baz",
+						fooName: barName,
+						"boo":   "baz",
 					},
 				},
 			}},
 			want: "type=docker,annotation.boo=baz,annotation.foo=bar",
 		},
 		{
-			name:  "raw",
+			name:  rawKey,
 			given: Export{Raw: Raw("type=docker")},
 			want:  "type=docker",
 		},
@@ -203,7 +203,7 @@ func TestExportPushed(t *testing.T) {
 	}{
 		{
 			name: "raw registry",
-			e:    Export{Raw: "type=registry"},
+			e:    Export{Raw: typeRegistry},
 			want: true,
 		},
 		{
