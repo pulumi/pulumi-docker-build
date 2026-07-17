@@ -35,6 +35,7 @@ import (
 	"github.com/moby/buildkit/exporter/containerimage/exptypes"
 	"github.com/moby/buildkit/session"
 	"github.com/moby/buildkit/session/secrets/secretsprovider"
+	"github.com/regclient/regclient/types/errs"
 	"github.com/regclient/regclient/types/ref"
 
 	provider "github.com/pulumi/pulumi-go-provider"
@@ -839,6 +840,17 @@ func (i *Image) Read(
 		// Does a tag with this digest exist?
 		descriptors, err := cli.Inspect(ctx, ref)
 		if err != nil {
+			// Only not-found means the tag is gone. Other errors (auth,
+			// network) are indeterminate, skip rather than delete state.
+			if !errdefs.IsNotFound(err) && !errors.Is(err, errs.ErrNotFound) {
+				provider.GetLogger(ctx).Warning(
+					"unable to verify image tags, leaving state unchanged: " + err.Error())
+				return infer.ReadResponse[ImageArgs, ImageState]{
+					ID:     req.ID,
+					Inputs: input,
+					State:  state,
+				}, nil
+			}
 			provider.GetLogger(ctx).Warning(err.Error())
 			continue
 		}
