@@ -29,18 +29,19 @@ import (
 	buildx "github.com/docker/buildx/build"
 	"github.com/docker/buildx/builder"
 	"github.com/docker/buildx/commands"
-	controllerapi "github.com/docker/buildx/controller/pb"
+	"github.com/docker/buildx/util/buildflags"
 	"github.com/docker/buildx/util/confutil"
 	"github.com/docker/buildx/util/dockerutil"
+	"github.com/docker/buildx/util/dockerutil/dockerconfig"
 	"github.com/docker/buildx/util/platformutil"
 	"github.com/docker/buildx/util/progress"
 	"github.com/docker/cli/cli/command"
 	"github.com/docker/cli/cli/flags"
-	"github.com/docker/docker/api/types/image"
 	"github.com/moby/buildkit/client"
 	"github.com/moby/buildkit/session"
 	"github.com/moby/buildkit/session/auth/authprovider"
 	"github.com/moby/buildkit/util/progress/progressui"
+	mobyclient "github.com/moby/moby/client"
 	"github.com/regclient/regclient/types/descriptor"
 	"github.com/regclient/regclient/types/errs"
 	"github.com/regclient/regclient/types/manifest"
@@ -94,9 +95,38 @@ func mockClientF(c Client) clientF {
 	}
 }
 
+// BuildOptions is the provider's intermediate representation of a build
+// request. It was previously the buildx `controller/pb.BuildOptions` proto,
+// but that package was removed in buildx v0.31 when the controller was
+// dropped. We keep our own struct (using the buildflags option types that
+// replaced the proto sub-messages) so the rest of the provider is insulated
+// from buildx's internal churn.
+type BuildOptions struct {
+	BuildArgs      map[string]string
+	Builder        string
+	CacheFrom      []*buildflags.CacheOptionsEntry
+	CacheTo        []*buildflags.CacheOptionsEntry
+	ContextPath    string
+	DockerfileName string
+	ExportLoad     bool
+	ExportPush     bool
+	Exports        []*buildflags.ExportEntry
+	ExtraHosts     []string
+	Labels         map[string]string
+	NamedContexts  map[string]string
+	NetworkMode    string
+	NoCache        bool
+	Platforms      []string
+	Pull           bool
+	Secrets        []*buildflags.Secret
+	SSH            []*buildflags.SSH
+	Tags           []string
+	Target         string
+}
+
 // Build encapsulates all of the user-provider build parameters and options.
 type Build interface {
-	BuildOptions() controllerapi.BuildOptions
+	BuildOptions() BuildOptions
 	Inline() string
 	ShouldExec() bool
 	Secrets() session.Attachable
@@ -104,10 +134,11 @@ type Build interface {
 
 var _ Client = (*cli)(nil)
 
-func newDockerCLI(config *Config) (*command.DockerCli, error) {
+func newDockerCLI(config *Config, ops ...command.CLIOption) (*command.DockerCli, error) {
 	cli, err := command.NewDockerCli(
-		command.WithDefaultContextStoreConfig(),
-		command.WithContentTrustFromEnv(),
+		append([]command.CLIOption{
+			command.WithDefaultContextStoreConfig(),
+		}, ops...)...,
 	)
 	if err != nil {
 		return nil, err
@@ -219,7 +250,7 @@ func (c *cli) Build(
 		namedContexts[name] = buildx.NamedContext{Path: v}
 	}
 
-	ssh, err := controllerapi.CreateSSH(opts.SSH)
+	ssh, err := buildx.CreateSSH(opts.SSH)
 	if err != nil {
 		return nil, err
 	}
@@ -258,7 +289,9 @@ func (c *cli) Build(
 
 			Session: []session.Attachable{
 				ssh,
-				authprovider.NewDockerAuthProvider(authprovider.DockerAuthProviderConfig{ConfigFile: c.ConfigFile()}),
+				authprovider.NewDockerAuthProvider(authprovider.DockerAuthProviderConfig{
+					AuthConfigProvider: dockerconfig.LoadAuthConfig(c),
+				}),
 				build.Secrets(),
 			},
 		},
@@ -323,7 +356,7 @@ func (c *cli) ManifestCreate(ctx context.Context, push bool, target string, refs
 
 	args = append(args, refs...)
 
-	cmd := commands.NewRootCmd(os.Args[0], false, c)
+	cmd := commands.NewRootCmd(os.Args[0], false, c.dockerCli)
 
 	cmd.SetArgs(args)
 	cmd.SetErr(c.Err())
@@ -399,7 +432,7 @@ func (c *cli) Inspect(ctx context.Context, r string) ([]descriptor.Descriptor, e
 // support the DELETE API yet, so this operation is not guaranteed to work.
 func (c *cli) Delete(ctx context.Context, r string) error {
 	// Attempt to delete the ref locally if it exists.
-	_, _ = c.Client().ImageRemove(ctx, r, image.RemoveOptions{
+	_, _ = c.Client().ImageRemove(ctx, r, mobyclient.ImageRemoveOptions{
 		Force: true, // Needed in case the image has multiple tags.
 	})
 

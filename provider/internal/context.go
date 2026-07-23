@@ -29,7 +29,7 @@ import (
 	"slices"
 	"syscall"
 
-	buildx "github.com/docker/buildx/build"
+	"github.com/docker/buildx/util/urlutil"
 	"github.com/moby/patternmatcher/ignorefile"
 	"github.com/spf13/afero"
 	"github.com/tonistiigi/fsutil"
@@ -117,7 +117,7 @@ func (bc *BuildContext) validate(preview bool, d *Dockerfile) (*Dockerfile, *Con
 		c.Location = "."
 	}
 
-	if buildx.IsRemoteURL(c.Location) {
+	if urlutil.IsRemoteURL(c.Location) {
 		// We assume remote URLs are always valid.
 		return d, c, nil
 	}

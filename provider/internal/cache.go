@@ -20,7 +20,7 @@ import (
 	"os"
 	"strings"
 
-	controllerapi "github.com/docker/buildx/controller/pb"
+	buildx "github.com/docker/buildx/build"
 	"github.com/docker/buildx/util/buildflags"
 
 	"github.com/pulumi/pulumi-go-provider/infer"
@@ -448,7 +448,7 @@ func (c CacheFrom) String() string {
 	return join(c.Local, c.Registry, c.GHA, c.AZBlob, c.S3, c.Raw)
 }
 
-func (c CacheFrom) validate(_ bool) (*controllerapi.CacheOptionsEntry, error) {
+func (c CacheFrom) validate(_ bool) (*buildflags.CacheOptionsEntry, error) {
 	if strings.Count(c.String(), "type=") > 1 {
 		return nil, errors.New("cacheFrom should only specify one cache type")
 	}
@@ -462,12 +462,7 @@ func (c CacheFrom) validate(_ bool) (*controllerapi.CacheOptionsEntry, error) {
 		return nil, nil
 	}
 
-	pb := parsed[0].ToPB()
-	if !isActive(pb) {
-		pb = nil
-	}
-
-	return pb, nil
+	return resolveCache(parsed), nil
 }
 
 const (
@@ -477,14 +472,19 @@ const (
 	typeGHA = "type=gha"
 )
 
-// isActive checks if the GitHub token is set in the cache entry.
-// If it is not a GHA cache entry, it will return true.
-// This is to maintain backwards compatibility with the old buildx behaviour.
-func isActive(ci *controllerapi.CacheOptionsEntry) bool {
-	if ci.Type != cacheTypeGHA {
-		return true
+// resolveCache applies buildx's build-time credential and URL injection (for
+// GHA and S3/AWS backends) and its inactive-entry filtering to a freshly
+// parsed cache entry, returning the resolved entry or nil if buildx would drop
+// it. buildx moved this logic out of parsing and into CreateCaches when it
+// removed the controller/pb package (v0.31); running it here keeps our stored
+// options carrying the resolved URLs/tokens, matching the old ToPB() behaviour
+// (and our previous GHA "is active" check).
+func resolveCache(parsed buildflags.CacheOptions) *buildflags.CacheOptionsEntry {
+	created := buildx.CreateCaches(parsed)
+	if len(created) == 0 {
+		return nil
 	}
-	return ci.Attrs["token"] != "" && (ci.Attrs["url"] != "" || ci.Attrs["url_v2"] != "")
+	return &buildflags.CacheOptionsEntry{Type: created[0].Type, Attrs: created[0].Attrs}
 }
 
 // CacheToInline embeds cache information directly into an image.
@@ -679,7 +679,7 @@ func (c CacheTo) String() string {
 	return join(c.Inline, c.Local, c.Registry, c.GHA, c.AZBlob, c.S3, c.Raw)
 }
 
-func (c CacheTo) validate(_ bool) (*controllerapi.CacheOptionsEntry, error) {
+func (c CacheTo) validate(_ bool) (*buildflags.CacheOptionsEntry, error) {
 	if strings.Count(c.String(), "type=") > 1 {
 		return nil, errors.New("cacheTo should only specify one cache type")
 	}
@@ -693,12 +693,7 @@ func (c CacheTo) validate(_ bool) (*controllerapi.CacheOptionsEntry, error) {
 		return nil, nil
 	}
 
-	pb := parsed[0].ToPB()
-	if !isActive(pb) {
-		pb = nil
-	}
-
-	return pb, nil
+	return resolveCache(parsed), nil
 }
 
 // CacheMode controls the complexity of exported cache manifests.

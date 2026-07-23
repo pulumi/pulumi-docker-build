@@ -29,8 +29,8 @@ import (
 	"github.com/docker/buildx/util/confutil"
 	"github.com/docker/buildx/util/dockerutil"
 	"github.com/docker/buildx/util/progress"
-	"github.com/docker/docker/api/types/registry"
 	"github.com/moby/buildkit/client"
+	mobyclient "github.com/moby/moby/client"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -52,7 +52,7 @@ func TestAuth(t *testing.T) {
 	})
 
 	_, err := cli.Client().
-		RegistryLogin(context.Background(), registry.AuthConfig{ServerAddress: address})
+		RegistryLogin(context.Background(), mobyclient.RegistryLoginOptions{ServerAddress: address})
 	assert.NoError(t, err)
 }
 
@@ -479,7 +479,7 @@ func testcli(t *testing.T, ping bool, auths ...Registry) *cli {
 	require.NoError(t, err)
 
 	if ping {
-		_, err := cli.Client().Ping(context.Background())
+		_, err := cli.Client().Ping(context.Background(), mobyclient.PingOptions{})
 		if err != nil {
 			t.Skip(err)
 		}

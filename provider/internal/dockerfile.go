@@ -22,7 +22,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	buildx "github.com/docker/buildx/build"
+	"github.com/docker/buildx/util/urlutil"
 	"github.com/moby/buildkit/frontend/dockerfile/instructions"
 	"github.com/moby/buildkit/frontend/dockerfile/parser"
 
@@ -64,7 +64,7 @@ func (d *Dockerfile) validate(preview bool, c *Context) error {
 	}
 
 	if d.Location != "" {
-		if buildx.IsRemoteURL(d.Location) {
+		if urlutil.IsRemoteURL(d.Location) {
 			return nil
 		}
 		abs, err := filepath.Abs(d.Location)
@@ -89,7 +89,7 @@ func (d *Dockerfile) validate(preview bool, c *Context) error {
 		return nil
 	}
 
-	if !preview && c != nil && !buildx.IsRemoteURL(c.Location) {
+	if !preview && c != nil && !urlutil.IsRemoteURL(c.Location) {
 		return newCheckFailure(errors.New("missing 'location' or 'inline'"), "dockerfile")
 	}
 

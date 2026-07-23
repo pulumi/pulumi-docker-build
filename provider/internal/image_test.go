@@ -25,7 +25,7 @@ import (
 	_ "github.com/docker/buildx/driver/docker-container"
 
 	"github.com/distribution/reference"
-	pb "github.com/docker/buildx/controller/pb"
+	"github.com/docker/buildx/util/buildflags"
 	"github.com/moby/buildkit/client"
 	"github.com/moby/buildkit/exporter/containerimage/exptypes"
 	"github.com/regclient/regclient/types/descriptor"
@@ -525,10 +525,13 @@ func TestImageDiff(t *testing.T) {
 			name:  "diff if build context changes",
 			state: func(*testing.T, ImageState) ImageState { return baseState },
 			inputs: func(t *testing.T, a ImageArgs) ImageArgs {
-				tmp := filepath.Join(a.Context.Location, "tmp")
-				err := os.WriteFile(tmp, []byte{}, 0o600)
+				// Use a dedicated context dir rather than writing into the
+				// shared emptyDir, which races with the other parallel
+				// subtests hashing that same directory.
+				dir := t.TempDir()
+				err := os.WriteFile(filepath.Join(dir, "tmp"), []byte{}, 0o600)
 				require.NoError(t, err)
-				t.Cleanup(func() { _ = os.Remove(tmp) })
+				a.Context = &BuildContext{Context: Context{Location: dir}}
 				return a
 			},
 			wantChanges: true,
@@ -1034,8 +1037,8 @@ func TestValidateImageArgs(t *testing.T) {
 			name          string
 			envs          map[string]string
 			args          ImageArgs
-			wantCacheFrom *pb.CacheOptionsEntry
-			wantCacheTo   *pb.CacheOptionsEntry
+			wantCacheFrom *buildflags.CacheOptionsEntry
+			wantCacheTo   *buildflags.CacheOptionsEntry
 		}{
 			{
 				name: "gha environment",
@@ -1052,7 +1055,7 @@ func TestValidateImageArgs(t *testing.T) {
 						CacheFromGitHubActions: CacheFromGitHubActions{},
 					}}},
 				},
-				wantCacheFrom: &pb.CacheOptionsEntry{
+				wantCacheFrom: &buildflags.CacheOptionsEntry{
 					Type: cacheTypeGHA,
 					Attrs: map[string]string{
 						"token":  testRuntimeToken,
@@ -1060,7 +1063,7 @@ func TestValidateImageArgs(t *testing.T) {
 						"url_v2": testResultsURL,
 					},
 				},
-				wantCacheTo: &pb.CacheOptionsEntry{
+				wantCacheTo: &buildflags.CacheOptionsEntry{
 					Type: cacheTypeGHA,
 					Attrs: map[string]string{
 						"token":  testRuntimeToken,

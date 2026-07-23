@@ -57,6 +57,12 @@ const buildxName = "buildx"
 type cli struct {
 	command.Cli
 
+	// dockerCli is the concrete *command.DockerCli underlying the embedded
+	// command.Cli. buildx's commands.NewRootCmd requires the concrete type
+	// (as of buildx v0.31), so we retain a typed reference here. Its streams
+	// are wired to the same pipe/buffer as the In/Out/Err overrides below.
+	dockerCli *command.DockerCli
+
 	auths map[string]cfgtypes.AuthConfig
 	host  *host
 
@@ -76,12 +82,32 @@ type Cli interface {
 // auth. Repeated auth for the same host will take precedence over earlier
 // credentials.
 func wrap(host *host, registries ...Registry) (*cli, error) {
-	// We need to create a new DockerCLI instance because we don't want the
-	// auth changes we make to the ConfigFile to leak to the host.
-	docker, err := newDockerCLI(host.config)
+	r, w, err := os.Pipe()
 	if err != nil {
 		return nil, err
 	}
+
+	wrapped := &cli{
+		host:    host,
+		r:       r,
+		w:       w,
+		builder: defaultBuilder{},
+	}
+
+	// We need to create a new DockerCLI instance because we don't want the
+	// auth changes we make to the ConfigFile to leak to the host. Its streams
+	// are wired to the same pipe/buffer as our In/Out/Err overrides so output
+	// from buildx commands (which use the concrete DockerCli) is captured.
+	docker, err := newDockerCLI(host.config,
+		command.WithInputStream(io.NopCloser(strings.NewReader(""))),
+		command.WithOutputStream(w),
+		command.WithErrorStream(&wrapped.err),
+	)
+	if err != nil {
+		return nil, err
+	}
+	wrapped.Cli = docker
+	wrapped.dockerCli = docker
 
 	auths := map[string]cfgtypes.AuthConfig{}
 	for k, v := range host.auths {
@@ -95,9 +121,9 @@ func wrap(host *host, registries ...Registry) (*cli, error) {
 		}
 	}
 
-	for _, r := range registries {
+	for _, reg := range registries {
 		// HostNewName takes care of DockerHub's special-casing for us.
-		h := config.HostNewName(credentials.ConvertToHostname(r.Address))
+		h := config.HostNewName(credentials.ConvertToHostname(reg.Address))
 		key := h.CredHost
 		if key == "" {
 			key = h.Hostname
@@ -105,8 +131,8 @@ func wrap(host *host, registries ...Registry) (*cli, error) {
 
 		auths[key] = cfgtypes.AuthConfig{
 			ServerAddress: h.Hostname,
-			Username:      r.Username,
-			Password:      r.Password,
+			Username:      reg.Username,
+			Password:      reg.Password,
 		}
 	}
 
@@ -117,19 +143,7 @@ func wrap(host *host, registries ...Registry) (*cli, error) {
 	cfg.CredentialHelpers = nil
 	cfg.CredentialsStore = ""
 
-	r, w, err := os.Pipe()
-	if err != nil {
-		return nil, err
-	}
-
-	wrapped := &cli{
-		Cli:     docker,
-		host:    host,
-		auths:   auths,
-		r:       r,
-		w:       w,
-		builder: defaultBuilder{},
-	}
+	wrapped.auths = auths
 
 	return wrapped, nil
 }
@@ -377,7 +391,7 @@ func (c *cli) exec(ctx context.Context, args, extraEnv []string) error {
 	}
 	name := args[0]
 
-	root := commands.NewRootCmd(name, false, c)
+	root := commands.NewRootCmd(name, false, c.dockerCli)
 	plug, err := manager.GetPlugin(name, c, root)
 	if err != nil {
 		return err

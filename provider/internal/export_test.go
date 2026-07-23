@@ -17,7 +17,6 @@ package internal
 import (
 	"testing"
 
-	controllerapi "github.com/docker/buildx/controller/pb"
 	"github.com/docker/buildx/util/buildflags"
 	"github.com/stretchr/testify/assert"
 
@@ -33,7 +32,7 @@ func TestValidateExport(t *testing.T) {
 		givenTags []string
 		preview   bool
 
-		wantExp *controllerapi.ExportEntry
+		wantExp *buildflags.ExportEntry
 		wantErr string
 	}{
 		{
@@ -41,7 +40,7 @@ func TestValidateExport(t *testing.T) {
 			preview:   true,
 			e:         Export{Raw: typeRegistry},
 			givenTags: []string{dockerIORef},
-			wantExp: &controllerapi.ExportEntry{
+			wantExp: &buildflags.ExportEntry{
 				Type:  exportTypeImage,
 				Attrs: map[string]string{pushKey: falseLiteral},
 			},
@@ -56,7 +55,7 @@ func TestValidateExport(t *testing.T) {
 			preview:   true,
 			e:         Export{Registry: &ExportRegistry{}},
 			givenTags: []string{dockerIORef},
-			wantExp: &controllerapi.ExportEntry{
+			wantExp: &buildflags.ExportEntry{
 				Type:  exportTypeImage,
 				Attrs: map[string]string{pushKey: falseLiteral},
 			},
