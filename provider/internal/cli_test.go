@@ -20,18 +20,9 @@ import (
 	"testing"
 
 	"github.com/docker/cli/cli/config/types"
-	"github.com/moby/buildkit/session/auth/authprovider"
 	"github.com/regclient/regclient/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-)
-
-//nolint:gosec // G101: test fixtures, not real credentials.
-const (
-	resourceAWSUser           = "resource-aws-user"
-	resourceAWSPassword       = "resource-aws-password"
-	resourceDockerHubUser     = "resource-dockerhub-user"
-	resourceDockerHubPassword = "resource-dockerhub-password"
 )
 
 func TestExec(t *testing.T) {
@@ -79,14 +70,14 @@ func TestWrappedAuth(t *testing.T) {
 		//nolint:gosec // G101: test fixture, not a real credential.
 		{
 			Address:  awsECRAddress,
-			Username: resourceAWSUser,
-			Password: resourceAWSPassword,
+			Username: "resource-aws-user",
+			Password: "resource-aws-password",
 		},
 		//nolint:gosec // G101: test fixture, not a real credential.
 		{
 			Address:  dockerIO,
-			Username: resourceDockerHubUser,
-			Password: resourceDockerHubPassword,
+			Username: "resource-dockerhub-user",
+			Password: "resource-dockerhub-password",
 		},
 	}
 
@@ -99,14 +90,14 @@ func TestWrappedAuth(t *testing.T) {
 	expected := map[string]types.AuthConfig{
 		//nolint:gosec // G101: test fixture, not a real credential.
 		awsECRAddress: {
-			Username:      resourceAWSUser,
-			Password:      resourceAWSPassword,
+			Username:      "resource-aws-user",
+			Password:      "resource-aws-password",
 			ServerAddress: awsECRAddress,
 		},
 		//nolint:gosec // G101: test fixture, not a real credential.
 		config.DockerRegistryAuth: {
-			Username:      resourceDockerHubUser,
-			Password:      resourceDockerHubPassword,
+			Username:      "resource-dockerhub-user",
+			Password:      "resource-dockerhub-password",
 			ServerAddress: config.DockerRegistryDNS,
 		},
 		//nolint:gosec // G101: test fixture, not a real credential.
@@ -123,51 +114,4 @@ func TestWrappedAuth(t *testing.T) {
 	realhostRefreshed, err := newHost(context.Background(), nil)
 	require.NoError(t, err)
 	assert.Equal(t, realhost.auths, realhostRefreshed.auths)
-}
-
-// TestSandboxedAuthProvider ensures the AuthConfigProvider we hand to buildkit
-// resolves credentials solely from our in-memory (sandboxed) config, including
-// DockerHub's configfile-key mapping. This guards the isolation wrap()
-// documents: unlike buildx's dockerconfig.LoadAuthConfig, it must not consult
-// ambient on-disk buildx config.
-func TestSandboxedAuthProvider(t *testing.T) {
-	t.Parallel()
-
-	registries := []Registry{
-		//nolint:gosec // G101: test fixture, not a real credential.
-		{
-			Address:  awsECRAddress,
-			Username: resourceAWSUser,
-			Password: resourceAWSPassword,
-		},
-		//nolint:gosec // G101: test fixture, not a real credential.
-		{
-			Address:  dockerIO,
-			Username: resourceDockerHubUser,
-			Password: resourceDockerHubPassword,
-		},
-	}
-
-	c, err := wrap(&host{auths: map[string]types.AuthConfig{}}, registries...)
-	require.NoError(t, err)
-
-	provide := sandboxedAuthProvider(c)
-
-	// DockerHub resolves via the configfile-key mapping.
-	hub, err := provide(context.Background(), authprovider.DockerHubRegistryHost, nil, nil)
-	require.NoError(t, err)
-	assert.Equal(t, resourceDockerHubUser, hub.Username)
-	assert.Equal(t, resourceDockerHubPassword, hub.Password)
-
-	// A scoped registry resolves to its in-memory credential.
-	ecr, err := provide(context.Background(), awsECRAddress, nil, nil)
-	require.NoError(t, err)
-	assert.Equal(t, resourceAWSUser, ecr.Username)
-	assert.Equal(t, resourceAWSPassword, ecr.Password)
-
-	// An unknown host yields no credential (nothing leaks in from elsewhere).
-	unknown, err := provide(context.Background(), "unknown.example.com", nil, nil)
-	require.NoError(t, err)
-	assert.Empty(t, unknown.Username)
-	assert.Empty(t, unknown.Password)
 }

@@ -95,9 +95,7 @@ func wrap(host *host, registries ...Registry) (*cli, error) {
 	}
 
 	// We need to create a new DockerCLI instance because we don't want the
-	// auth changes we make to the ConfigFile to leak to the host. Its streams
-	// are wired to the same pipe/buffer as our In/Out/Err overrides so output
-	// from buildx commands (which use the concrete DockerCli) is captured.
+	// auth changes we make to the ConfigFile to leak to the host.
 	docker, err := newDockerCLI(host.config,
 		command.WithInputStream(io.NopCloser(strings.NewReader(""))),
 		command.WithOutputStream(w),

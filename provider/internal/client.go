@@ -35,7 +35,6 @@ import (
 	"github.com/docker/buildx/util/platformutil"
 	"github.com/docker/buildx/util/progress"
 	"github.com/docker/cli/cli/command"
-	cfgtypes "github.com/docker/cli/cli/config/types"
 	"github.com/docker/cli/cli/flags"
 	"github.com/moby/buildkit/client"
 	"github.com/moby/buildkit/session"
@@ -133,28 +132,6 @@ type Build interface {
 }
 
 var _ Client = (*cli)(nil)
-
-// sandboxedAuthProvider returns an AuthConfigProvider that resolves registry
-// credentials solely from the CLI's in-memory config file, which wrap() has
-// populated with our scoped credentials and stripped of credential helpers.
-//
-// We deliberately avoid buildx's dockerconfig.LoadAuthConfig here: in addition
-// to the default config it scans on-disk buildx config directories for
-// per-registry config files and lets those override the default. That would
-// let ambient host credentials leak past the isolation wrap() sets up, so we
-// mirror the old ConfigFile-only lookup (including DockerHub's key mapping)
-// that buildkit's DockerAuthProviderConfig.ConfigFile field used to provide.
-func sandboxedAuthProvider(c command.Cli) authprovider.AuthConfigProvider {
-	return func(
-		_ context.Context, host string, _ []string, _ authprovider.ExpireCachedAuthCheck,
-	) (cfgtypes.AuthConfig, error) {
-		hostKey := host
-		if host == authprovider.DockerHubRegistryHost {
-			hostKey = authprovider.DockerHubConfigfileKey
-		}
-		return c.ConfigFile().GetAuthConfig(hostKey)
-	}
-}
 
 func newDockerCLI(config *Config, ops ...command.CLIOption) (*command.DockerCli, error) {
 	cli, err := command.NewDockerCli(
@@ -312,7 +289,9 @@ func (c *cli) Build(
 			Session: []session.Attachable{
 				ssh,
 				authprovider.NewDockerAuthProvider(authprovider.DockerAuthProviderConfig{
-					AuthConfigProvider: sandboxedAuthProvider(c),
+					// ConfigFile-only lookup; buildx's dockerconfig variant also
+					// scans on-disk config dirs, breaking wrap()'s isolation.
+					AuthConfigProvider: authprovider.LoadAuthConfig(c.ConfigFile()),
 				}),
 				build.Secrets(),
 			},
