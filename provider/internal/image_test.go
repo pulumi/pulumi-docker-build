@@ -1088,6 +1088,32 @@ func TestValidateImageArgs(t *testing.T) {
 				wantCacheFrom: nil,
 				wantCacheTo:   nil,
 			},
+			{
+				name: "s3 environment",
+				envs: map[string]string{
+					// Env creds resolve first in the AWS chain, so
+					// addAwsCredentials injects these without reaching IMDS.
+					"AWS_ACCESS_KEY_ID":         "test-access-key",
+					"AWS_SECRET_ACCESS_KEY":     "test-secret-key", //nolint:gosec // test fixture, not a real credential.
+					"AWS_SESSION_TOKEN":         "test-session-token",
+					"AWS_EC2_METADATA_DISABLED": "true", // never touch IMDS
+				},
+				args: ImageArgs{
+					Context:   &BuildContext{Context: Context{Location: testdataNoop}},
+					CacheFrom: []CacheFrom{{S3: &CacheFromS3{Bucket: "my-bucket", Name: barName}}},
+				},
+				wantCacheFrom: &buildflags.CacheOptionsEntry{
+					Type: "s3",
+					Attrs: map[string]string{
+						"bucket":            "my-bucket",
+						"name":              barName,
+						"access_key_id":     "test-access-key",
+						"secret_access_key": "test-secret-key",
+						"session_token":     "test-session-token",
+					},
+				},
+				wantCacheTo: nil,
+			},
 		}
 
 		for _, tt := range tests {
