@@ -447,19 +447,14 @@ func TestReadInspectError(t *testing.T) {
 
 func TestImageDiff(t *testing.T) {
 	t.Parallel()
-	emptyDir := t.TempDir()
 	host := Host
 
-	hash, err := hashBuildContext(emptyDir, "", nil)
-	require.NoError(t, err)
 	baseArgs := ImageArgs{
-		Context:    &BuildContext{Context: Context{Location: emptyDir}},
 		Dockerfile: &Dockerfile{Location: testdataNoop},
 		Tags:       []string{},
 	}
 	baseState := ImageState{
-		ContextHash: hash,
-		ImageArgs:   baseArgs,
+		ImageArgs: baseArgs,
 	}
 
 	tests := []struct {
@@ -471,8 +466,8 @@ func TestImageDiff(t *testing.T) {
 	}{
 		{
 			name:        "no diff if build context is unchanged",
-			state:       func(*testing.T, ImageState) ImageState { return baseState },
-			inputs:      func(*testing.T, ImageArgs) ImageArgs { return baseArgs },
+			state:       func(_ *testing.T, s ImageState) ImageState { return s },
+			inputs:      func(_ *testing.T, a ImageArgs) ImageArgs { return a },
 			wantChanges: false,
 		},
 		{
@@ -522,23 +517,18 @@ func TestImageDiff(t *testing.T) {
 			wantChanges: true,
 		},
 		{
-			name:  "diff if build context changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			name:  "diff if build context changes (same location, changed contents)",
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(t *testing.T, a ImageArgs) ImageArgs {
-				// Use a dedicated context dir rather than writing into the
-				// shared emptyDir, which races with the other parallel
-				// subtests hashing that same directory.
-				dir := t.TempDir()
-				err := os.WriteFile(filepath.Join(dir, "tmp"), []byte{}, 0o600)
+				err := os.WriteFile(filepath.Join(a.Context.Location, "tmp"), []byte{}, 0o600)
 				require.NoError(t, err)
-				a.Context = &BuildContext{Context: Context{Location: dir}}
 				return a
 			},
 			wantChanges: true,
 		},
 		{
 			name:  "diff if registry added",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Registries = []Registry{{}}
 				return a
@@ -567,7 +557,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if buildArgs changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.BuildArgs = map[string]string{
 					fooName: barName,
@@ -578,7 +568,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if pull changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				ia.Pull = true
 				return ia
@@ -587,7 +577,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if load changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				ia.Load = true
 				return ia
@@ -596,7 +586,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if push changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				ia.Push = true
 				return ia
@@ -605,7 +595,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if buildOnPreview doesn't change",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				val := true
 				ia.BuildOnPreview = &val
@@ -615,7 +605,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if buildOnPreview changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				val := false
 				ia.BuildOnPreview = &val
@@ -625,7 +615,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if ssh changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				ia.SSH = []SSH{{ID: defaultSSHID}}
 				return ia
@@ -634,7 +624,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if hosts change",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, ia ImageArgs) ImageArgs {
 				ia.AddHosts = []string{"localhost"}
 				return ia
@@ -643,7 +633,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if cacheFrom changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.CacheFrom = []CacheFrom{{Raw: "a"}}
 				return a
@@ -652,7 +642,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if cacheTo changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.CacheTo = []CacheTo{{Raw: "a"}}
 				return a
@@ -661,7 +651,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if context changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Context = &BuildContext{Context: Context{Location: "testdata/ignores"}}
 				return a
@@ -670,7 +660,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if named context changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Context = &BuildContext{Named: NamedContexts{fooName: Context{Location: barName}}}
 				return a
@@ -679,7 +669,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if network changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Network = &host
 				return a
@@ -688,7 +678,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if dockerfile location changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Dockerfile = &Dockerfile{Location: "testdata/ignores/basedir/Dockerfile"}
 				return a
@@ -697,7 +687,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if dockerfile inline changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Dockerfile = &Dockerfile{Inline: fromScratch}
 				return a
@@ -706,7 +696,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if platforms change",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Platforms = []Platform{platformLinuxAMD64}
 				return a
@@ -715,7 +705,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if pull changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Pull = true
 				return a
@@ -724,7 +714,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if builder changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Builder = &BuilderConfig{Name: fooName}
 				return a
@@ -733,7 +723,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if tags change",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Tags = []string{fooName}
 				return a
@@ -742,7 +732,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if exports change",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Exports = []Export{{Raw: fooName}}
 				return a
@@ -751,7 +741,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if target changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Target = fooName
 				return a
@@ -760,7 +750,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if pulling",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Pull = true
 				return a
@@ -769,7 +759,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if noCache changes",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.NoCache = true
 				return a
@@ -778,7 +768,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if labels change",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Labels = map[string]string{fooName: barName}
 				return a
@@ -787,7 +777,7 @@ func TestImageDiff(t *testing.T) {
 		},
 		{
 			name:  "diff if secrets change",
-			state: func(*testing.T, ImageState) ImageState { return baseState },
+			state: func(_ *testing.T, s ImageState) ImageState { return s },
 			inputs: func(_ *testing.T, a ImageArgs) ImageArgs {
 				a.Secrets = map[string]string{fooName: barName}
 				return a
@@ -918,10 +908,20 @@ func TestImageDiff(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		baseState := baseState
-		baseArgs := baseArgs
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
+			// Per-subtest context dir so parallel subtests never share one.
+			dir := t.TempDir()
+			hash, err := hashBuildContext(dir, "", nil)
+			require.NoError(t, err)
+
+			baseState := baseState
+			baseState.Context = &BuildContext{Context: Context{Location: dir}}
+			baseState.ContextHash = hash
+			baseArgs := baseArgs
+			baseArgs.Context = &BuildContext{Context: Context{Location: dir}}
+
 			resp, err := s.Diff(provider.DiffRequest{
 				Urn:    _fakeURN,
 				State:  encode(t, tt.state(t, baseState)),
