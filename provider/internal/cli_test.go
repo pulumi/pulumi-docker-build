@@ -17,9 +17,13 @@ package internal
 import (
 	"context"
 	"io"
+	"path/filepath"
 	"testing"
 
+	dockerconfig "github.com/docker/cli/cli/config"
+	"github.com/docker/cli/cli/config/configfile"
 	"github.com/docker/cli/cli/config/types"
+	mobyclient "github.com/moby/moby/client"
 	"github.com/regclient/regclient/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -114,4 +118,88 @@ func TestWrappedAuth(t *testing.T) {
 	realhostRefreshed, err := newHost(context.Background(), nil)
 	require.NoError(t, err)
 	assert.Equal(t, realhost.auths, realhostRefreshed.auths)
+}
+
+// TestManifestCreateDoesNotLeakHostAuth is a regression test for a
+// credential-isolation break in buildx v0.31+: commands.NewRootCmd's
+// non-plugin PersistentPreRunE now calls dockerCli.Initialize(), which
+// unconditionally reloads $DOCKER_CONFIG/config.json into cli.configFile,
+// discarding wrap()'s in-memory, scoped AuthConfigs. Once that happens,
+// buildx's auth provider (storeutil.GetImageConfig ->
+// dockerconfig.LoadAuthConfig) reads whatever's left in ConfigFile(), so an
+// Index resource's ManifestCreate call can silently authenticate with
+// whatever's in the ambient host Docker config instead of the credentials
+// the Index resource was scoped to.
+//
+// This mirrors TestWrappedAuth, but populates an actual on-disk
+// $DOCKER_CONFIG (like a real `docker login`'d host or credential helper
+// would) with credentials that differ from the ones we scope the operation
+// to, then exercises ManifestCreate -- rather than just asserting on
+// wrap()'s output -- since ManifestCreate is what triggers the second,
+// leaking Initialize() call.
+//
+//nolint:paralleltest // Mutates the process-global docker/cli config directory.
+func TestManifestCreateDoesNotLeakHostAuth(t *testing.T) {
+	// Simulate an ambient host Docker config, e.g. from `docker login` or an
+	// ECR/GCR credential helper, with different credentials than what we
+	// scope this operation to.
+	tmp := t.TempDir()
+	hostCfg := configfile.New(filepath.Join(tmp, "config.json"))
+	hostCfg.AuthConfigs = map[string]types.AuthConfig{
+		//nolint:gosec // G101: test fixture, not a real credential.
+		awsECRAddress: {
+			Username:      "ambient-host-user",
+			Password:      "ambient-host-password",
+			ServerAddress: awsECRAddress,
+		},
+	}
+	require.NoError(t, hostCfg.Save())
+
+	// Point $DOCKER_CONFIG at our fake ambient host config for the duration
+	// of this test, and restore it afterwards.
+	orig := dockerconfig.Dir()
+	dockerconfig.SetDir(tmp)
+	t.Cleanup(func() { dockerconfig.SetDir(orig) })
+
+	h, err := newHost(context.Background(), nil)
+	require.NoError(t, err)
+
+	registries := []Registry{
+		//nolint:gosec // G101: test fixture, not a real credential.
+		{
+			Address:  awsECRAddress,
+			Username: "scoped-user",
+			Password: "scoped-password",
+		},
+	}
+
+	c, err := wrap(h, registries...)
+	require.NoError(t, err)
+
+	if _, err := c.Client().Ping(context.Background(), mobyclient.PingOptions{}); err != nil {
+		t.Skip(err)
+	}
+
+	// Sanity check: wrap() scoped the credential as expected, same as
+	// TestWrappedAuth.
+	before, err := c.ConfigFile().GetAuthConfig(awsECRAddress)
+	require.NoError(t, err)
+	assert.Equal(t, "scoped-user", before.Username)
+
+	// ManifestCreate will ultimately fail because these refs don't exist,
+	// but commands.NewRootCmd's PersistentPreRunE (and thus
+	// dockerCli.Initialize()) always runs first regardless of that later
+	// failure -- so we don't need the refs to resolve for the regression to
+	// manifest.
+	_ = c.ManifestCreate(context.Background(), false, /* push */
+		"127.0.0.1:1/target:latest", "127.0.0.1:1/source:latest")
+
+	after, err := c.ConfigFile().GetAuthConfig(awsECRAddress)
+	require.NoError(t, err)
+
+	// This is the crux of the regression: ManifestCreate must not allow the
+	// ambient host's config to replace the credentials wrap() scoped this
+	// operation to.
+	assert.Equal(t, "scoped-user", after.Username,
+		"ManifestCreate must not let ambient host credentials silently replace wrap()'s sandboxed credentials")
 }
