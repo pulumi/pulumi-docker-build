@@ -40,6 +40,7 @@ import (
 	"github.com/regclient/regclient"
 	"github.com/regclient/regclient/config"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
@@ -136,14 +137,51 @@ func wrap(host *host, registries ...Registry) (*cli, error) {
 
 	// Override our config's auth and disable any credential helpers. Auth
 	// lookups will now only return whatever we have in memory.
-	cfg := docker.ConfigFile()
-	cfg.AuthConfigs = auths
-	cfg.CredentialHelpers = nil
-	cfg.CredentialsStore = ""
-
 	wrapped.auths = auths
+	wrapped.applyAuthSandbox()
 
 	return wrapped, nil
+}
+
+// applyAuthSandbox restricts the CLI's config file to the in-memory scoped
+// credentials and disables any credential helpers/stores, so auth lookups can
+// never reach the host. wrap() applies this once at construction. It must be
+// re-applied after buildx's NewRootCmd runs dockerCli.Initialize() (see
+// manifestCmd), which reloads the host config and would otherwise discard the
+// sandbox.
+func (c *cli) applyAuthSandbox() {
+	cfg := c.ConfigFile()
+	cfg.AuthConfigs = c.auths
+	cfg.CredentialHelpers = nil
+	cfg.CredentialsStore = ""
+}
+
+// manifestCmd builds the buildx imagetools root command for the given args.
+//
+// buildx v0.31+ makes NewRootCmd's non-plugin PersistentPreRunE call
+// dockerCli.Initialize(), which unconditionally reloads the host's Docker
+// config (config.LoadDefaultConfigFile) and replaces the sandboxed, scoped
+// credentials wrap() installed. Left unchecked, the subsequent `imagetools
+// create` push would authenticate with the host's ambient credentials instead
+// of the resource's scoped registries. We wrap PersistentPreRunE to re-apply
+// the sandbox after Initialize runs, restoring wrap()'s isolation before any
+// auth is resolved.
+func (c *cli) manifestCmd(args []string) *cobra.Command {
+	cmd := commands.NewRootCmd(os.Args[0], false, c.dockerCli)
+
+	initialize := cmd.PersistentPreRunE
+	cmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {
+		if initialize != nil {
+			if err := initialize(cmd, args); err != nil {
+				return err
+			}
+		}
+		c.applyAuthSandbox()
+		return nil
+	}
+
+	cmd.SetArgs(args)
+	return cmd
 }
 
 func (c *cli) In() *streams.In {

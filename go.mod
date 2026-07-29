@@ -23,6 +23,7 @@ require (
 	github.com/regclient/regclient v0.7.1
 	github.com/sirupsen/logrus v1.9.4
 	github.com/spf13/afero v1.15.0
+	github.com/spf13/cobra v1.10.2
 	github.com/stretchr/testify v1.11.1
 	github.com/tonistiigi/fsutil v0.0.0-20260609091201-0257b3308df4
 	github.com/tonistiigi/go-csvvalue v0.0.0-20240814133006-030d3b2625d0
@@ -313,7 +314,6 @@ require (
 	github.com/sigstore/sigstore-go v1.2.1 // indirect
 	github.com/sigstore/timestamp-authority/v2 v2.1.2 // indirect
 	github.com/skeema/knownhosts v1.3.1 // indirect
-	github.com/spf13/cobra v1.10.2 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
 	github.com/spiffe/go-spiffe/v2 v2.6.0 // indirect
 	github.com/tchap/go-patricia/v2 v2.3.3 // indirect

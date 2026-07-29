@@ -21,14 +21,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/containerd/errdefs"
 	"github.com/distribution/reference"
 	buildx "github.com/docker/buildx/build"
 	"github.com/docker/buildx/builder"
-	"github.com/docker/buildx/commands"
 	"github.com/docker/buildx/util/buildflags"
 	"github.com/docker/buildx/util/confutil"
 	"github.com/docker/buildx/util/dockerutil"
@@ -357,9 +355,7 @@ func (c *cli) ManifestCreate(ctx context.Context, push bool, target string, refs
 
 	args = append(args, refs...)
 
-	cmd := commands.NewRootCmd(os.Args[0], false, c.dockerCli)
-
-	cmd.SetArgs(args)
+	cmd := c.manifestCmd(args)
 	cmd.SetErr(c.Err())
 	cmd.SetOut(c.Out())
 
