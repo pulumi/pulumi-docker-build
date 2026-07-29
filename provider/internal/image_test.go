@@ -1096,7 +1096,7 @@ func TestValidateImageArgs(t *testing.T) {
 					"AWS_ACCESS_KEY_ID":         "test-access-key",
 					"AWS_SECRET_ACCESS_KEY":     "test-secret-key", //nolint:gosec // test fixture, not a real credential.
 					"AWS_SESSION_TOKEN":         "test-session-token",
-					"AWS_EC2_METADATA_DISABLED": "true", // never touch IMDS
+					"AWS_EC2_METADATA_DISABLED": trueLiteral, // never touch IMDS
 				},
 				args: ImageArgs{
 					Context:   &BuildContext{Context: Context{Location: testdataNoop}},
