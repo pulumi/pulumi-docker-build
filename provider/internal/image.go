@@ -31,7 +31,7 @@ import (
 
 	"github.com/containerd/errdefs"
 	"github.com/distribution/reference"
-	controllerapi "github.com/docker/buildx/controller/pb"
+	"github.com/docker/buildx/util/buildflags"
 	"github.com/moby/buildkit/exporter/containerimage/exptypes"
 	"github.com/moby/buildkit/session"
 	"github.com/moby/buildkit/session/secrets/secretsprovider"
@@ -473,14 +473,14 @@ func (ia *ImageArgs) shouldBuildOnPreview() bool {
 }
 
 type build struct {
-	opts    controllerapi.BuildOptions
+	opts    BuildOptions
 	secrets map[string]string
 	inline  string
 	exec    bool
 }
 
-func (b *build) BuildOptions() controllerapi.BuildOptions {
-	return b.opts //nolint:govet // copylocks - not serialized.
+func (b *build) BuildOptions() BuildOptions {
+	return b.opts
 }
 
 func (b *build) Inline() string {
@@ -522,7 +522,7 @@ func (ia ImageArgs) toBuild(
 	}
 
 	return &build{
-		opts:    opts, //nolint:govet // copylocks - not serialized.
+		opts:    opts,
 		inline:  ia.Dockerfile.Inline,
 		secrets: ia.Secrets,
 		exec:    ia.Exec,
@@ -531,7 +531,7 @@ func (ia ImageArgs) toBuild(
 
 // validate confirms the ImageArgs are valid and returns BuildOptions
 // appropriate for passing to builders.
-func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controllerapi.BuildOptions, error) {
+func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (BuildOptions, error) {
 	var multierr error
 
 	if !supportsMultipleExports {
@@ -574,7 +574,7 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 	// cause validation errors.
 	normalized := ia.normalize(preview)
 
-	exports := []*controllerapi.ExportEntry{}
+	exports := []*buildflags.ExportEntry{}
 	for idx, e := range normalized.Exports {
 		if e.Disabled {
 			continue
@@ -601,7 +601,7 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 		}
 	}
 
-	cacheFrom := []*controllerapi.CacheOptionsEntry{}
+	cacheFrom := []*buildflags.CacheOptionsEntry{}
 	for idx, c := range normalized.CacheFrom {
 		if c.String() == "" {
 			continue // Disabled or unknown/preview.
@@ -616,7 +616,7 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 		}
 	}
 
-	cacheTo := []*controllerapi.CacheOptionsEntry{}
+	cacheTo := []*buildflags.CacheOptionsEntry{}
 	for idx, c := range normalized.CacheTo {
 		if c.String() == "" {
 			continue // Disabled or unknown/preview.
@@ -631,7 +631,7 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 		}
 	}
 
-	ssh := []*controllerapi.SSH{}
+	ssh := []*buildflags.SSH{}
 	for idx, s := range normalized.SSH {
 		ss, err := s.validate()
 		if err != nil {
@@ -649,11 +649,11 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 		}
 	}
 
-	secrets := []*controllerapi.Secret{}
+	secrets := []*buildflags.Secret{}
 	for k, v := range normalized.Secrets {
 		// We abuse the pb.Secret proto by stuffing the secret's value in
 		// Env. We never serialize this proto so this is tolerable.
-		secrets = append(secrets, &controllerapi.Secret{
+		secrets = append(secrets, &buildflags.Secret{
 			ID:  k,
 			Env: v,
 		})
@@ -664,7 +664,7 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 		builder = *normalized.Builder
 	}
 
-	opts := controllerapi.BuildOptions{
+	opts := BuildOptions{
 		BuildArgs:      normalized.BuildArgs,
 		Builder:        builder.Name,
 		CacheFrom:      cacheFrom,
@@ -685,7 +685,7 @@ func (ia *ImageArgs) validate(supportsMultipleExports, preview bool) (controller
 		Target:         normalized.Target,
 	}
 
-	return opts, multierr //nolint:govet // copylocks - not serialized.
+	return opts, multierr
 }
 
 // Create builds an image using buildkit.

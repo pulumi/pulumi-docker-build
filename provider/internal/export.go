@@ -21,7 +21,7 @@ import (
 	"slices"
 	"strings"
 
-	controllerapi "github.com/docker/buildx/controller/pb"
+	"github.com/docker/buildx/util/buildflags"
 	"github.com/moby/buildkit/client"
 	"github.com/tonistiigi/go-csvvalue"
 
@@ -148,11 +148,11 @@ func (e Export) pushed() bool {
 // the latest buildx while maintaining the old behaviour.
 //
 // TODO: Remove this fork and update existing logic/tests.
-func parseExports(inp []string) ([]*controllerapi.ExportEntry, error) {
+func parseExports(inp []string) ([]*buildflags.ExportEntry, error) {
 	if len(inp) == 0 {
 		return nil, nil
 	}
-	outs := make([]*controllerapi.ExportEntry, 0, len(inp))
+	outs := make([]*buildflags.ExportEntry, 0, len(inp))
 
 	for _, s := range inp {
 		fields, err := csvvalue.Fields(s, nil)
@@ -160,18 +160,18 @@ func parseExports(inp []string) ([]*controllerapi.ExportEntry, error) {
 			return nil, err
 		}
 
-		out := controllerapi.ExportEntry{
+		out := buildflags.ExportEntry{
 			Attrs: map[string]string{},
 		}
 		if len(fields) == 1 && fields[0] == s && !strings.HasPrefix(s, "type=") {
 			if s != "-" {
-				outs = append(outs, &controllerapi.ExportEntry{
+				outs = append(outs, &buildflags.ExportEntry{
 					Type:        client.ExporterLocal,
 					Destination: s,
 				})
 				continue
 			}
-			out = controllerapi.ExportEntry{
+			out = buildflags.ExportEntry{
 				Type:        client.ExporterTar,
 				Destination: s,
 			}
@@ -214,7 +214,7 @@ func parseExports(inp []string) ([]*controllerapi.ExportEntry, error) {
 	return outs, nil
 }
 
-func (e Export) validate(preview bool, tags []string) (*controllerapi.ExportEntry, error) {
+func (e Export) validate(preview bool, tags []string) (*buildflags.ExportEntry, error) {
 	if strings.Count(e.String(), "type=") > 1 {
 		return nil, errors.New("exports should only specify one export type")
 	}
@@ -581,7 +581,7 @@ func (e *ExportWithAnnotations) Annotate(a infer.Annotator) {
 
 // isRegistryPush returns true if the ExportEntry results in an image pushed to
 // a registry.
-func isRegistryPush(export *controllerapi.ExportEntry) bool {
+func isRegistryPush(export *buildflags.ExportEntry) bool {
 	// "type=registry" is shorthand for "type=image,push=true" so we only need
 	// to check "image" types.
 	return export.Type == exportTypeImage && export.Attrs[pushKey] == trueLiteral

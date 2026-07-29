@@ -40,6 +40,7 @@ import (
 	"github.com/regclient/regclient"
 	"github.com/regclient/regclient/config"
 	"github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
 
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/resource"
@@ -56,6 +57,12 @@ const buildxName = "buildx"
 // host's existing auth.
 type cli struct {
 	command.Cli
+
+	// dockerCli is the concrete *command.DockerCli underlying the embedded
+	// command.Cli. buildx's commands.NewRootCmd requires the concrete type
+	// (as of buildx v0.31), so we retain a typed reference here. Its streams
+	// are wired to the same pipe/buffer as the In/Out/Err overrides below.
+	dockerCli *command.DockerCli
 
 	auths map[string]cfgtypes.AuthConfig
 	host  *host
@@ -76,12 +83,30 @@ type Cli interface {
 // auth. Repeated auth for the same host will take precedence over earlier
 // credentials.
 func wrap(host *host, registries ...Registry) (*cli, error) {
-	// We need to create a new DockerCLI instance because we don't want the
-	// auth changes we make to the ConfigFile to leak to the host.
-	docker, err := newDockerCLI(host.config)
+	r, w, err := os.Pipe()
 	if err != nil {
 		return nil, err
 	}
+
+	wrapped := &cli{
+		host:    host,
+		r:       r,
+		w:       w,
+		builder: defaultBuilder{},
+	}
+
+	// We need to create a new DockerCLI instance because we don't want the
+	// auth changes we make to the ConfigFile to leak to the host.
+	docker, err := newDockerCLI(host.config,
+		command.WithInputStream(io.NopCloser(strings.NewReader(""))),
+		command.WithOutputStream(w),
+		command.WithErrorStream(&wrapped.err),
+	)
+	if err != nil {
+		return nil, err
+	}
+	wrapped.Cli = docker
+	wrapped.dockerCli = docker
 
 	auths := map[string]cfgtypes.AuthConfig{}
 	for k, v := range host.auths {
@@ -95,9 +120,9 @@ func wrap(host *host, registries ...Registry) (*cli, error) {
 		}
 	}
 
-	for _, r := range registries {
+	for _, reg := range registries {
 		// HostNewName takes care of DockerHub's special-casing for us.
-		h := config.HostNewName(credentials.ConvertToHostname(r.Address))
+		h := config.HostNewName(credentials.ConvertToHostname(reg.Address))
 		key := h.CredHost
 		if key == "" {
 			key = h.Hostname
@@ -105,33 +130,58 @@ func wrap(host *host, registries ...Registry) (*cli, error) {
 
 		auths[key] = cfgtypes.AuthConfig{
 			ServerAddress: h.Hostname,
-			Username:      r.Username,
-			Password:      r.Password,
+			Username:      reg.Username,
+			Password:      reg.Password,
 		}
 	}
 
 	// Override our config's auth and disable any credential helpers. Auth
 	// lookups will now only return whatever we have in memory.
-	cfg := docker.ConfigFile()
-	cfg.AuthConfigs = auths
-	cfg.CredentialHelpers = nil
-	cfg.CredentialsStore = ""
-
-	r, w, err := os.Pipe()
-	if err != nil {
-		return nil, err
-	}
-
-	wrapped := &cli{
-		Cli:     docker,
-		host:    host,
-		auths:   auths,
-		r:       r,
-		w:       w,
-		builder: defaultBuilder{},
-	}
+	wrapped.auths = auths
+	wrapped.applyAuthSandbox()
 
 	return wrapped, nil
+}
+
+// applyAuthSandbox restricts the CLI's config file to the in-memory scoped
+// credentials and disables any credential helpers/stores, so auth lookups can
+// never reach the host. wrap() applies this once at construction. It must be
+// re-applied after buildx's NewRootCmd runs dockerCli.Initialize() (see
+// manifestCmd), which reloads the host config and would otherwise discard the
+// sandbox.
+func (c *cli) applyAuthSandbox() {
+	cfg := c.ConfigFile()
+	cfg.AuthConfigs = c.auths
+	cfg.CredentialHelpers = nil
+	cfg.CredentialsStore = ""
+}
+
+// manifestCmd builds the buildx imagetools root command for the given args.
+//
+// buildx v0.31+ makes NewRootCmd's non-plugin PersistentPreRunE call
+// dockerCli.Initialize(), which unconditionally reloads the host's Docker
+// config (config.LoadDefaultConfigFile) and replaces the sandboxed, scoped
+// credentials wrap() installed. Left unchecked, the subsequent `imagetools
+// create` push would authenticate with the host's ambient credentials instead
+// of the resource's scoped registries. We wrap PersistentPreRunE to re-apply
+// the sandbox after Initialize runs, restoring wrap()'s isolation before any
+// auth is resolved.
+func (c *cli) manifestCmd(args []string) *cobra.Command {
+	cmd := commands.NewRootCmd(os.Args[0], false, c.dockerCli)
+
+	initialize := cmd.PersistentPreRunE
+	cmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {
+		if initialize != nil {
+			if err := initialize(cmd, args); err != nil {
+				return err
+			}
+		}
+		c.applyAuthSandbox()
+		return nil
+	}
+
+	cmd.SetArgs(args)
+	return cmd
 }
 
 func (c *cli) In() *streams.In {
@@ -377,7 +427,7 @@ func (c *cli) exec(ctx context.Context, args, extraEnv []string) error {
 	}
 	name := args[0]
 
-	root := commands.NewRootCmd(name, false, c)
+	root := commands.NewRootCmd(name, false, c.dockerCli)
 	plug, err := manager.GetPlugin(name, c, root)
 	if err != nil {
 		return err

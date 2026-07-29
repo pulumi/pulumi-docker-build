@@ -15,7 +15,6 @@ import (
 
 	buildx "github.com/docker/buildx/build"
 	builder "github.com/docker/buildx/builder"
-	pb "github.com/docker/buildx/controller/pb"
 	confutil "github.com/docker/buildx/util/confutil"
 	dockerutil "github.com/docker/buildx/util/dockerutil"
 	progress "github.com/docker/buildx/util/progress"
@@ -362,6 +361,68 @@ func (c *MockClientSupportsMultipleExportsCall) DoAndReturn(f func() bool) *Mock
 	return c
 }
 
+// MockregistryGetter is a mock of registryGetter interface.
+type MockregistryGetter struct {
+	ctrl     *gomock.Controller
+	recorder *MockregistryGetterMockRecorder
+	isgomock struct{}
+}
+
+// MockregistryGetterMockRecorder is the mock recorder for MockregistryGetter.
+type MockregistryGetterMockRecorder struct {
+	mock *MockregistryGetter
+}
+
+// NewMockregistryGetter creates a new mock instance.
+func NewMockregistryGetter(ctrl *gomock.Controller) *MockregistryGetter {
+	mock := &MockregistryGetter{ctrl: ctrl}
+	mock.recorder = &MockregistryGetterMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockregistryGetter) EXPECT() *MockregistryGetterMockRecorder {
+	return m.recorder
+}
+
+// GetRegistries mocks base method.
+func (m *MockregistryGetter) GetRegistries() []Registry {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetRegistries")
+	ret0, _ := ret[0].([]Registry)
+	return ret0
+}
+
+// GetRegistries indicates an expected call of GetRegistries.
+func (mr *MockregistryGetterMockRecorder) GetRegistries() *MockregistryGetterGetRegistriesCall {
+	mr.mock.ctrl.T.Helper()
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRegistries", reflect.TypeOf((*MockregistryGetter)(nil).GetRegistries))
+	return &MockregistryGetterGetRegistriesCall{Call: call}
+}
+
+// MockregistryGetterGetRegistriesCall wrap *gomock.Call
+type MockregistryGetterGetRegistriesCall struct {
+	*gomock.Call
+}
+
+// Return rewrite *gomock.Call.Return
+func (c *MockregistryGetterGetRegistriesCall) Return(arg0 []Registry) *MockregistryGetterGetRegistriesCall {
+	c.Call = c.Call.Return(arg0)
+	return c
+}
+
+// Do rewrite *gomock.Call.Do
+func (c *MockregistryGetterGetRegistriesCall) Do(f func() []Registry) *MockregistryGetterGetRegistriesCall {
+	c.Call = c.Call.Do(f)
+	return c
+}
+
+// DoAndReturn rewrite *gomock.Call.DoAndReturn
+func (c *MockregistryGetterGetRegistriesCall) DoAndReturn(f func() []Registry) *MockregistryGetterGetRegistriesCall {
+	c.Call = c.Call.DoAndReturn(f)
+	return c
+}
+
 // MockBuild is a mock of Build interface.
 type MockBuild struct {
 	ctrl     *gomock.Controller
@@ -387,10 +448,10 @@ func (m *MockBuild) EXPECT() *MockBuildMockRecorder {
 }
 
 // BuildOptions mocks base method.
-func (m *MockBuild) BuildOptions() pb.BuildOptions {
+func (m *MockBuild) BuildOptions() BuildOptions {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BuildOptions")
-	ret0, _ := ret[0].(pb.BuildOptions)
+	ret0, _ := ret[0].(BuildOptions)
 	return ret0
 }
 
@@ -407,19 +468,19 @@ type MockBuildBuildOptionsCall struct {
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *MockBuildBuildOptionsCall) Return(arg0 pb.BuildOptions) *MockBuildBuildOptionsCall {
+func (c *MockBuildBuildOptionsCall) Return(arg0 BuildOptions) *MockBuildBuildOptionsCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockBuildBuildOptionsCall) Do(f func() pb.BuildOptions) *MockBuildBuildOptionsCall {
+func (c *MockBuildBuildOptionsCall) Do(f func() BuildOptions) *MockBuildBuildOptionsCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockBuildBuildOptionsCall) DoAndReturn(f func() pb.BuildOptions) *MockBuildBuildOptionsCall {
+func (c *MockBuildBuildOptionsCall) DoAndReturn(f func() BuildOptions) *MockBuildBuildOptionsCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

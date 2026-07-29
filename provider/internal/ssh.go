@@ -17,7 +17,7 @@ package internal
 import (
 	"strings"
 
-	controllerapi "github.com/docker/buildx/controller/pb"
+	buildx "github.com/docker/buildx/build"
 	"github.com/docker/buildx/util/buildflags"
 
 	"github.com/pulumi/pulumi-go-provider/infer"
@@ -65,7 +65,7 @@ func (s SSH) String() string {
 	return r
 }
 
-func (s SSH) validate() (*controllerapi.SSH, error) {
+func (s SSH) validate() (*buildflags.SSH, error) {
 	parsed, err := buildflags.ParseSSHSpecs([]string{s.String()})
 	if err != nil {
 		return nil, err
@@ -74,6 +74,6 @@ func (s SSH) validate() (*controllerapi.SSH, error) {
 		return nil, nil
 	}
 
-	_, err = controllerapi.CreateSSH([]*controllerapi.SSH{{ID: s.ID, Paths: s.Paths}})
+	_, err = buildx.CreateSSH([]*buildflags.SSH{{ID: s.ID, Paths: s.Paths}})
 	return parsed[0], err
 }
