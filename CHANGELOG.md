@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Changed
+
+- Upgraded pulumi/pulumi to v3.256.0. (https://github.com/pulumi/pulumi-docker-build/pull/982)
+
 ### Fixed
 
 - `Image` is no longer deleted from state when a registry read fails with a non-404 error (expired credentials, auth failure, or transient network error) during refresh. (https://github.com/pulumi/pulumi-docker-build/pull/930)
