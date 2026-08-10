@@ -946,7 +946,6 @@ class Image(pulumi.CustomResource):
             push=False)
         ```
 
-
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] add_hosts: Custom `host:ip` mappings to use during the build.
@@ -1390,7 +1389,6 @@ class Image(pulumi.CustomResource):
             }],
             push=False)
         ```
-
 
         :param str resource_name: The name of the resource.
         :param ImageArgs args: The arguments to use to populate this resource's properties.
