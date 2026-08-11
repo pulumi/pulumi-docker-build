@@ -180,7 +180,6 @@ class Index(pulumi.CustomResource):
         pulumi.export("ref", index.ref)
         ```
 
-
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
         :param pulumi.Input[_builtins.bool] push: If true, push the index to the target registry.
@@ -267,7 +266,6 @@ class Index(pulumi.CustomResource):
             tag="docker.io/pulumi/pulumi:3.107.0")
         pulumi.export("ref", index.ref)
         ```
-
 
         :param str resource_name: The name of the resource.
         :param IndexArgs args: The arguments to use to populate this resource's properties.
