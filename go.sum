@@ -174,8 +174,8 @@ github.com/clipperhouse/displaywidth v0.11.0 h1:lBc6kY44VFw+TDx4I8opi/EtL9m20WSE
 github.com/clipperhouse/displaywidth v0.11.0/go.mod h1:bkrFNkf81G8HyVqmKGxsPufD3JhNl3dSqnGhOoSD/o0=
 github.com/clipperhouse/uax29/v2 v2.7.0 h1:+gs4oBZ2gPfVrKPthwbMzWZDaAFPGYK72F0NJv2v7Vk=
 github.com/clipperhouse/uax29/v2 v2.7.0/go.mod h1:EFJ2TJMRUaplDxHKj1qAEhCtQPW2tJSwu5BF98AuoVM=
-github.com/cloudflare/circl v1.6.3 h1:9GPOhQGF9MCYUeXyMYlqTR6a5gTrgR/fBLXvUgtVcg8=
-github.com/cloudflare/circl v1.6.3/go.mod h1:2eXP6Qfat4O/Yhh8BznvKnJ+uzEoTQ6jVKJRn81BiS4=
+github.com/cloudflare/circl v1.6.5 h1:O64F26HEqNhznd/hrC5KZXVKYuKM2rx4deZDTc4ihQA=
+github.com/cloudflare/circl v1.6.5/go.mod h1:h5LNyxAc5nTue9DS5jT+48en2PSDYt3zdGnz5OstK6c=
 github.com/cncf/xds/go v0.0.0-20260202195803-dba9d589def2 h1:aBangftG7EVZoUb69Os8IaYg++6uMOdKK83QtkkvJik=
 github.com/cncf/xds/go v0.0.0-20260202195803-dba9d589def2/go.mod h1:qwXFYgsP6T7XnJtbKlf1HP8AjxZZyzxMmc+Lq5GjlU4=
 github.com/codahale/rfc6979 v0.0.0-20141003034818-6a90f24967eb h1:EDmT6Q9Zs+SbUoc7Ik9EfrFqcylYqgPZ9ANSbTAntnE=
@@ -714,8 +714,8 @@ github.com/pulumi/inflector v0.2.1 h1:bqyiish3tq//vLeLiEstSFE5K7RNjy/ce47ed4QATu
 github.com/pulumi/inflector v0.2.1/go.mod h1:HUFCjcPTz96YtTuUlwG3i3EZG4WlniBvR9bd+iJxCUY=
 github.com/pulumi/providertest v0.7.0 h1:nXydemrnkJfil6sd8AtvO81gJOTzYc1wFfgtco4zWDc=
 github.com/pulumi/providertest v0.7.0/go.mod h1:R7nigJF1sE3yUtNQSozNSfsUl/gK4xIDW0Mxmacl6IY=
-github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.111.0 h1:WisZ3KxurIjT3CzZ0XfDoxVRKN4rKFofc7Nk/pgY5Mo=
-github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.111.0/go.mod h1:l4SvcCEwJ1TqIIAgaXFRW9l013uU142c9bBK/wAIXGM=
+github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.111.1 h1:4XIALK6ci8zX1y7LJuKrOINjrQNB/sZXzoo9V1dMb2E=
+github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.111.1/go.mod h1:ABBfL+B6Hj0w9yfdE4QD7dwQCTkW6NB+U7Rbm13XD/o=
 github.com/pulumi/pulumi-go-provider v1.5.0 h1:xsqbkdrbSWGKp4KcdKJJfzD0MuqDDR8X0PAc8FOdAF8=
 github.com/pulumi/pulumi-go-provider v1.5.0/go.mod h1:Aa9+QSfufi0VMM/dJLLqFf7M6CWThMV8/slOcoD3JVU=
 github.com/pulumi/pulumi-java v1.36.0 h1:GGUMCftNU/KF4hPkaemEOD4RC3Yt8FVNdxyMhH72NqA=
