@@ -9,7 +9,7 @@ require (
 	github.com/distribution/reference v0.6.0
 	github.com/docker/buildx v0.35.0
 	github.com/docker/cli v29.5.3+incompatible
-	github.com/moby/buildkit v0.31.0
+	github.com/moby/buildkit v0.31.1
 	github.com/moby/moby/client v0.5.0
 	github.com/moby/patternmatcher v0.6.1
 	github.com/muesli/reflow v0.3.0
