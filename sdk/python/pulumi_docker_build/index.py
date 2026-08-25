@@ -337,7 +337,7 @@ class Index(pulumi.CustomResource):
 
     @_builtins.property
     @pulumi.getter
-    def push(self) -> pulumi.Output[Optional[_builtins.bool]]:
+    def push(self) -> pulumi.Output[_builtins.bool]:
         """
         If true, push the index to the target registry.
 

@@ -1049,6 +1049,9 @@
         }
       }
     },
+    "required": [
+      "host"
+    ],
     "inputProperties": {
       "host": {
         "type": "string",
@@ -1217,6 +1220,8 @@
         }
       },
       "required": [
+        "buildOnPreview",
+        "network",
         "push",
         "digest",
         "contextHash",
@@ -1390,6 +1395,7 @@
       "required": [
         "tag",
         "sources",
+        "push",
         "ref"
       ],
       "inputProperties": {

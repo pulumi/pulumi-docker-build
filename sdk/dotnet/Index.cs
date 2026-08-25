@@ -141,7 +141,7 @@ namespace Pulumi.DockerBuild
         /// Defaults to `true`.
         /// </summary>
         [Output("push")]
-        public Output<bool?> Push { get; private set; } = null!;
+        public Output<bool> Push { get; private set; } = null!;
 
         /// <summary>
         /// The pushed tag with digest.

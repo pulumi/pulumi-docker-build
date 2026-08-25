@@ -527,7 +527,7 @@ export class Image extends pulumi.CustomResource {
      * Defaults to `true` as a safeguard against broken images merging as part
      * of CI pipelines.
      */
-    declare public readonly buildOnPreview: pulumi.Output<boolean | undefined>;
+    declare public readonly buildOnPreview: pulumi.Output<boolean>;
     /**
      * Builder configuration.
      */
@@ -637,7 +637,7 @@ export class Image extends pulumi.CustomResource {
      *
      * Equivalent to Docker's `--network` flag.
      */
-    declare public readonly network: pulumi.Output<enums.NetworkMode | undefined>;
+    declare public readonly network: pulumi.Output<enums.NetworkMode>;
     /**
      * Do not import cache manifests when building the image.
      *

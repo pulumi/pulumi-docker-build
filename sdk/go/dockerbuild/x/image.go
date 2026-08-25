@@ -571,7 +571,7 @@ type Image struct {
 	//
 	// Defaults to `true` as a safeguard against broken images merging as part
 	// of CI pipelines.
-	BuildOnPreview pulumix.Output[*bool] `pulumi:"buildOnPreview"`
+	BuildOnPreview pulumix.Output[bool] `pulumi:"buildOnPreview"`
 	// Builder configuration.
 	Builder pulumix.GPtrOutput[BuilderConfig, BuilderConfigOutput] `pulumi:"builder"`
 	// Cache export configuration.
@@ -655,7 +655,7 @@ type Image struct {
 	// For custom networks, configure your builder with `--driver-opt network=...`.
 	//
 	// Equivalent to Docker's `--network` flag.
-	Network pulumix.Output[*NetworkMode] `pulumi:"network"`
+	Network pulumix.Output[NetworkMode] `pulumi:"network"`
 	// Do not import cache manifests when building the image.
 	//
 	// Equivalent to Docker's `--no-cache` flag.
@@ -1150,9 +1150,9 @@ func (o ImageOutput) BuildArgs() pulumix.MapOutput[string] {
 //
 // Defaults to `true` as a safeguard against broken images merging as part
 // of CI pipelines.
-func (o ImageOutput) BuildOnPreview() pulumix.Output[*bool] {
-	value := pulumix.Apply[Image](o, func(v Image) pulumix.Output[*bool] { return v.BuildOnPreview })
-	return pulumix.Flatten[*bool, pulumix.Output[*bool]](value)
+func (o ImageOutput) BuildOnPreview() pulumix.Output[bool] {
+	value := pulumix.Apply[Image](o, func(v Image) pulumix.Output[bool] { return v.BuildOnPreview })
+	return pulumix.Flatten[bool, pulumix.Output[bool]](value)
 }
 
 // Builder configuration.
@@ -1294,9 +1294,9 @@ func (o ImageOutput) Load() pulumix.Output[*bool] {
 // For custom networks, configure your builder with `--driver-opt network=...`.
 //
 // Equivalent to Docker's `--network` flag.
-func (o ImageOutput) Network() pulumix.Output[*NetworkMode] {
-	value := pulumix.Apply[Image](o, func(v Image) pulumix.Output[*NetworkMode] { return v.Network })
-	return pulumix.Flatten[*NetworkMode, pulumix.Output[*NetworkMode]](value)
+func (o ImageOutput) Network() pulumix.Output[NetworkMode] {
+	value := pulumix.Apply[Image](o, func(v Image) pulumix.Output[NetworkMode] { return v.Network })
+	return pulumix.Flatten[NetworkMode, pulumix.Output[NetworkMode]](value)
 }
 
 // Do not import cache manifests when building the image.

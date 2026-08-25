@@ -25,7 +25,7 @@ export class Provider extends pulumi.ProviderResource {
     /**
      * The build daemon's address.
      */
-    declare public readonly host: pulumi.Output<string | undefined>;
+    declare public readonly host: pulumi.Output<string>;
 
     /**
      * Create a Provider resource with the given unique name, arguments, and options.
