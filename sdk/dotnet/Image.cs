@@ -532,7 +532,7 @@ namespace Pulumi.DockerBuild
         /// of CI pipelines.
         /// </summary>
         [Output("buildOnPreview")]
-        public Output<bool?> BuildOnPreview { get; private set; } = null!;
+        public Output<bool> BuildOnPreview { get; private set; } = null!;
 
         /// <summary>
         /// Builder configuration.
@@ -668,7 +668,7 @@ namespace Pulumi.DockerBuild
         /// Equivalent to Docker's `--network` flag.
         /// </summary>
         [Output("network")]
-        public Output<Pulumi.DockerBuild.NetworkMode?> Network { get; private set; } = null!;
+        public Output<Pulumi.DockerBuild.NetworkMode> Network { get; private set; } = null!;
 
         /// <summary>
         /// Do not import cache manifests when building the image.

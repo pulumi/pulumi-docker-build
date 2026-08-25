@@ -16,7 +16,7 @@ namespace Pulumi.DockerBuild
         /// The build daemon's address.
         /// </summary>
         [Output("host")]
-        public Output<string?> Host { get; private set; } = null!;
+        public Output<string> Host { get; private set; } = null!;
 
 
         /// <summary>
