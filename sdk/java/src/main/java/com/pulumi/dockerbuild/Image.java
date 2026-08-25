@@ -702,7 +702,7 @@ public class Image extends com.pulumi.resources.CustomResource {
      * 
      */
     @Export(name="buildOnPreview", refs={Boolean.class}, tree="[0]")
-    private Output</* @Nullable */ Boolean> buildOnPreview;
+    private Output<Boolean> buildOnPreview;
 
     /**
      * @return Setting this to `false` will always skip image builds during previews,
@@ -718,8 +718,8 @@ public class Image extends com.pulumi.resources.CustomResource {
      * of CI pipelines.
      * 
      */
-    public Output<Optional<Boolean>> buildOnPreview() {
-        return Codegen.optional(this.buildOnPreview);
+    public Output<Boolean> buildOnPreview() {
+        return this.buildOnPreview;
     }
     /**
      * Builder configuration.
@@ -1006,7 +1006,7 @@ public class Image extends com.pulumi.resources.CustomResource {
      * 
      */
     @Export(name="network", refs={NetworkMode.class}, tree="[0]")
-    private Output</* @Nullable */ NetworkMode> network;
+    private Output<NetworkMode> network;
 
     /**
      * @return Set the network mode for `RUN` instructions. Defaults to `default`.
@@ -1016,8 +1016,8 @@ public class Image extends com.pulumi.resources.CustomResource {
      * Equivalent to Docker&#39;s `--network` flag.
      * 
      */
-    public Output<Optional<NetworkMode>> network() {
-        return Codegen.optional(this.network);
+    public Output<NetworkMode> network() {
+        return this.network;
     }
     /**
      * Do not import cache manifests when building the image.

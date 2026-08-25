@@ -129,7 +129,7 @@ public class Index extends com.pulumi.resources.CustomResource {
      * 
      */
     @Export(name="push", refs={Boolean.class}, tree="[0]")
-    private Output</* @Nullable */ Boolean> push;
+    private Output<Boolean> push;
 
     /**
      * @return If true, push the index to the target registry.
@@ -137,8 +137,8 @@ public class Index extends com.pulumi.resources.CustomResource {
      * Defaults to `true`.
      * 
      */
-    public Output<Optional<Boolean>> push() {
-        return Codegen.optional(this.push);
+    public Output<Boolean> push() {
+        return this.push;
     }
     /**
      * The pushed tag with digest.
