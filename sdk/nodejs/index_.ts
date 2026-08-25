@@ -113,7 +113,7 @@ export class Index extends pulumi.CustomResource {
      *
      * Defaults to `true`.
      */
-    declare public readonly push: pulumi.Output<boolean | undefined>;
+    declare public readonly push: pulumi.Output<boolean>;
     /**
      * The pushed tag with digest.
      *
