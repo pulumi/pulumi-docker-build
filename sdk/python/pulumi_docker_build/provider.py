@@ -119,7 +119,7 @@ class Provider(pulumi.ProviderResource):
 
     @_builtins.property
     @pulumi.getter
-    def host(self) -> pulumi.Output[Optional[_builtins.str]]:
+    def host(self) -> pulumi.Output[_builtins.str]:
         """
         The build daemon's address.
         """

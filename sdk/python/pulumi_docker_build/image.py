@@ -1549,7 +1549,7 @@ class Image(pulumi.CustomResource):
 
     @_builtins.property
     @pulumi.getter(name="buildOnPreview")
-    def build_on_preview(self) -> pulumi.Output[Optional[_builtins.bool]]:
+    def build_on_preview(self) -> pulumi.Output[_builtins.bool]:
         """
         Setting this to `false` will always skip image builds during previews,
         and setting it to `true` will always build images during previews.
@@ -1717,7 +1717,7 @@ class Image(pulumi.CustomResource):
 
     @_builtins.property
     @pulumi.getter
-    def network(self) -> pulumi.Output[Optional['NetworkMode']]:
+    def network(self) -> pulumi.Output['NetworkMode']:
         """
         Set the network mode for `RUN` instructions. Defaults to `default`.
 
