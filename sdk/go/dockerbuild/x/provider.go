@@ -16,7 +16,7 @@ type Provider struct {
 	pulumi.ProviderResourceState
 
 	// The build daemon's address.
-	Host pulumix.Output[*string] `pulumi:"host"`
+	Host pulumix.Output[string] `pulumi:"host"`
 }
 
 // NewProvider registers a new resource with the given unique name, arguments, and options.
@@ -78,9 +78,9 @@ func (o ProviderOutput) ToOutput(ctx context.Context) pulumix.Output[Provider] {
 }
 
 // The build daemon's address.
-func (o ProviderOutput) Host() pulumix.Output[*string] {
-	value := pulumix.Apply[Provider](o, func(v Provider) pulumix.Output[*string] { return v.Host })
-	return pulumix.Flatten[*string, pulumix.Output[*string]](value)
+func (o ProviderOutput) Host() pulumix.Output[string] {
+	value := pulumix.Apply[Provider](o, func(v Provider) pulumix.Output[string] { return v.Host })
+	return pulumix.Flatten[string, pulumix.Output[string]](value)
 }
 
 func init() {
