@@ -66,7 +66,7 @@ class Provider(pulumi.ProviderResource):
                  registries: pulumi.Input[Optional[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict']]]]] = None,
                  __props__=None):
         """
-        Create a Docker-build resource with the given unique name, props, and options.
+        Create a DockerBuild resource with the given unique name, props, and options.
 
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
@@ -79,7 +79,7 @@ class Provider(pulumi.ProviderResource):
                  args: Optional[ProviderArgs] = None,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        Create a Docker-build resource with the given unique name, props, and options.
+        Create a DockerBuild resource with the given unique name, props, and options.
 
         :param str resource_name: The name of the resource.
         :param ProviderArgs args: The arguments to use to populate this resource's properties.
