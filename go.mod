@@ -17,7 +17,7 @@ require (
 	github.com/pulumi/providertest v0.7.0
 	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.113.0
 	github.com/pulumi/pulumi-go-provider v1.6.0
-	github.com/pulumi/pulumi-java v1.36.2
+	github.com/pulumi/pulumi-java v1.36.3
 	github.com/pulumi/pulumi/pkg/v3 v3.260.0
 	github.com/pulumi/pulumi/sdk/v3 v3.260.0
 	github.com/regclient/regclient v0.11.5
@@ -367,7 +367,7 @@ require (
 	go.yaml.in/yaml/v4 v4.0.0-rc.4 // indirect
 	gocloud.dev v0.46.1-0.20260810195832-b5401c07b5f1 // indirect
 	gocloud.dev/secrets/hashivault v0.46.0 // indirect
-	golang.org/x/mod v0.39.0 // indirect
+	golang.org/x/mod v0.40.0 // indirect
 	golang.org/x/net v0.58.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
 	golang.org/x/sync v0.22.0 // indirect
