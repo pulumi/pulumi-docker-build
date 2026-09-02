@@ -436,10 +436,10 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@pulumi/pulumi@3.260.0":
-  version "3.260.0"
-  resolved "https://registry.yarnpkg.com/@pulumi/pulumi/-/pulumi-3.260.0.tgz#19a2651821d4efcab257e1b24d05ffb894023d01"
-  integrity sha512-lLDISSiEToYj1/bT3dmzju9gyLrP7EcVHKo3IZ6pQY2uMfApyAeabOapDFJlrWvQedtpqIKBR7y5nNm6M91gJg==
+"@pulumi/pulumi@3.261.0":
+  version "3.261.0"
+  resolved "https://registry.yarnpkg.com/@pulumi/pulumi/-/pulumi-3.261.0.tgz#7596eb3c49420a8d588e94075262abaa3a118e8f"
+  integrity sha512-gZDiCmaBKxXpIagOytLTOc/GOWYMj/8OgW/X78RN7ngv7+N550+tWIu9dETPrz7NmWVWfeXdjGeRmH+GxuaPxg==
   dependencies:
     "@grpc/grpc-js" "^1.10.1"
     "@logdna/tail-file" "^2.0.6"
