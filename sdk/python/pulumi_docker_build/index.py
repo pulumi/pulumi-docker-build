@@ -106,7 +106,7 @@ class Index(pulumi.CustomResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  push: pulumi.Input[Optional[_builtins.bool]] = None,
-                 registry: pulumi.Input[Optional[Union['RegistryArgs', 'RegistryArgsDict']]] = None,
+                 registry: pulumi.Input[Optional[Union['RegistryArgs', 'RegistryArgsDict', 'outputs.Registry']]] = None,
                  sources: pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  tag: pulumi.Input[Optional[_builtins.str]] = None,
                  __props__=None):
@@ -185,7 +185,7 @@ class Index(pulumi.CustomResource):
         :param pulumi.Input[_builtins.bool] push: If true, push the index to the target registry.
                
                Defaults to `true`.
-        :param pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict']] registry: Authentication for the registry where the tagged index will be pushed.
+        :param pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict', 'outputs.Registry']] registry: Authentication for the registry where the tagged index will be pushed.
                
                Credentials can also be included with the provider's configuration.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] sources: Existing images to include in the index.
@@ -283,7 +283,7 @@ class Index(pulumi.CustomResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  push: pulumi.Input[Optional[_builtins.bool]] = None,
-                 registry: pulumi.Input[Optional[Union['RegistryArgs', 'RegistryArgsDict']]] = None,
+                 registry: pulumi.Input[Optional[Union['RegistryArgs', 'RegistryArgsDict', 'outputs.Registry']]] = None,
                  sources: pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  tag: pulumi.Input[Optional[_builtins.str]] = None,
                  __props__=None):

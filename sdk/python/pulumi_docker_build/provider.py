@@ -13,6 +13,7 @@ if sys.version_info >= (3, 11):
 else:
     from typing_extensions import NotRequired, TypedDict, TypeAlias
 from . import _utilities
+from . import outputs
 from ._inputs import *
 
 __all__ = ['ProviderArgs', 'Provider']
@@ -63,7 +64,7 @@ class Provider(pulumi.ProviderResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  host: pulumi.Input[Optional[_builtins.str]] = None,
-                 registries: pulumi.Input[Optional[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict']]]]] = None,
+                 registries: pulumi.Input[Optional[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict', 'outputs.Registry']]]]] = None,
                  __props__=None):
         """
         Create a DockerBuild resource with the given unique name, props, and options.
@@ -97,7 +98,7 @@ class Provider(pulumi.ProviderResource):
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
                  host: pulumi.Input[Optional[_builtins.str]] = None,
-                 registries: pulumi.Input[Optional[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict']]]]] = None,
+                 registries: pulumi.Input[Optional[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict', 'outputs.Registry']]]]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
