@@ -618,13 +618,13 @@ class Image(pulumi.CustomResource):
                  add_hosts: pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  build_args: pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
                  build_on_preview: pulumi.Input[Optional[_builtins.bool]] = None,
-                 builder: pulumi.Input[Optional[Union['BuilderConfigArgs', 'BuilderConfigArgsDict']]] = None,
-                 cache_from: pulumi.Input[Optional[Sequence[pulumi.Input[Union['CacheFromArgs', 'CacheFromArgsDict']]]]] = None,
-                 cache_to: pulumi.Input[Optional[Sequence[pulumi.Input[Union['CacheToArgs', 'CacheToArgsDict']]]]] = None,
-                 context: pulumi.Input[Optional[Union['BuildContextArgs', 'BuildContextArgsDict']]] = None,
-                 dockerfile: pulumi.Input[Optional[Union['DockerfileArgs', 'DockerfileArgsDict']]] = None,
+                 builder: pulumi.Input[Optional[Union['BuilderConfigArgs', 'BuilderConfigArgsDict', 'outputs.BuilderConfig']]] = None,
+                 cache_from: pulumi.Input[Optional[Sequence[pulumi.Input[Union['CacheFromArgs', 'CacheFromArgsDict', 'outputs.CacheFrom']]]]] = None,
+                 cache_to: pulumi.Input[Optional[Sequence[pulumi.Input[Union['CacheToArgs', 'CacheToArgsDict', 'outputs.CacheTo']]]]] = None,
+                 context: pulumi.Input[Optional[Union['BuildContextArgs', 'BuildContextArgsDict', 'outputs.BuildContext']]] = None,
+                 dockerfile: pulumi.Input[Optional[Union['DockerfileArgs', 'DockerfileArgsDict', 'outputs.Dockerfile']]] = None,
                  exec_: pulumi.Input[Optional[_builtins.bool]] = None,
-                 exports: pulumi.Input[Optional[Sequence[pulumi.Input[Union['ExportArgs', 'ExportArgsDict']]]]] = None,
+                 exports: pulumi.Input[Optional[Sequence[pulumi.Input[Union['ExportArgs', 'ExportArgsDict', 'outputs.Export']]]]] = None,
                  ignore_secrets_in_diff_calculation: pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  labels: pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
                  load: pulumi.Input[Optional[_builtins.bool]] = None,
@@ -633,9 +633,9 @@ class Image(pulumi.CustomResource):
                  platforms: pulumi.Input[Optional[Sequence[pulumi.Input['Platform']]]] = None,
                  pull: pulumi.Input[Optional[_builtins.bool]] = None,
                  push: pulumi.Input[Optional[_builtins.bool]] = None,
-                 registries: pulumi.Input[Optional[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict']]]]] = None,
+                 registries: pulumi.Input[Optional[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict', 'outputs.Registry']]]]] = None,
                  secrets: pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
-                 ssh: pulumi.Input[Optional[Sequence[pulumi.Input[Union['SSHArgs', 'SSHArgsDict']]]]] = None,
+                 ssh: pulumi.Input[Optional[Sequence[pulumi.Input[Union['SSHArgs', 'SSHArgsDict', 'outputs.SSH']]]]] = None,
                  tags: pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  target: pulumi.Input[Optional[_builtins.str]] = None,
                  __props__=None):
@@ -971,17 +971,17 @@ class Image(pulumi.CustomResource):
                
                Defaults to `true` as a safeguard against broken images merging as part
                of CI pipelines.
-        :param pulumi.Input[Union['BuilderConfigArgs', 'BuilderConfigArgsDict']] builder: Builder configuration.
-        :param pulumi.Input[Sequence[pulumi.Input[Union['CacheFromArgs', 'CacheFromArgsDict']]]] cache_from: Cache export configuration.
+        :param pulumi.Input[Union['BuilderConfigArgs', 'BuilderConfigArgsDict', 'outputs.BuilderConfig']] builder: Builder configuration.
+        :param pulumi.Input[Sequence[pulumi.Input[Union['CacheFromArgs', 'CacheFromArgsDict', 'outputs.CacheFrom']]]] cache_from: Cache export configuration.
                
                Equivalent to Docker's `--cache-from` flag.
-        :param pulumi.Input[Sequence[pulumi.Input[Union['CacheToArgs', 'CacheToArgsDict']]]] cache_to: Cache import configuration.
+        :param pulumi.Input[Sequence[pulumi.Input[Union['CacheToArgs', 'CacheToArgsDict', 'outputs.CacheTo']]]] cache_to: Cache import configuration.
                
                Equivalent to Docker's `--cache-to` flag.
-        :param pulumi.Input[Union['BuildContextArgs', 'BuildContextArgsDict']] context: Build context settings. Defaults to the current directory.
+        :param pulumi.Input[Union['BuildContextArgs', 'BuildContextArgsDict', 'outputs.BuildContext']] context: Build context settings. Defaults to the current directory.
                
                Equivalent to Docker's `PATH | URL | -` positional argument.
-        :param pulumi.Input[Union['DockerfileArgs', 'DockerfileArgsDict']] dockerfile: Dockerfile settings.
+        :param pulumi.Input[Union['DockerfileArgs', 'DockerfileArgsDict', 'outputs.Dockerfile']] dockerfile: Dockerfile settings.
                
                Equivalent to Docker's `--file` flag.
         :param pulumi.Input[_builtins.bool] exec_: Use `exec` mode to build this image.
@@ -1004,7 +1004,7 @@ class Image(pulumi.CustomResource):
                to surface fine-grained errors and warnings. Additionally credentials
                are temporarily written to disk in order to provide them to the
                `docker-buildx` binary.
-        :param pulumi.Input[Sequence[pulumi.Input[Union['ExportArgs', 'ExportArgsDict']]]] exports: Controls where images are persisted after building.
+        :param pulumi.Input[Sequence[pulumi.Input[Union['ExportArgs', 'ExportArgsDict', 'outputs.Export']]]] exports: Controls where images are persisted after building.
                
                Images are only stored in the local cache unless `exports` are
                explicitly configured.
@@ -1046,7 +1046,7 @@ class Image(pulumi.CustomResource):
                Defaults to `false`.
                
                Equivalent to Docker's `--push` flag.
-        :param pulumi.Input[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict']]]] registries: Registry credentials. Required if reading or exporting to private
+        :param pulumi.Input[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict', 'outputs.Registry']]]] registries: Registry credentials. Required if reading or exporting to private
                repositories.
                
                Credentials are kept in-memory and do not pollute pre-existing
@@ -1062,7 +1062,7 @@ class Image(pulumi.CustomResource):
                image, so you should use this for sensitive values.
                
                Similar to Docker's `--secret` flag.
-        :param pulumi.Input[Sequence[pulumi.Input[Union['SSHArgs', 'SSHArgsDict']]]] ssh: SSH agent socket or keys to expose to the build.
+        :param pulumi.Input[Sequence[pulumi.Input[Union['SSHArgs', 'SSHArgsDict', 'outputs.SSH']]]] ssh: SSH agent socket or keys to expose to the build.
                
                Equivalent to Docker's `--ssh` flag.
         :param pulumi.Input[Sequence[pulumi.Input[_builtins.str]]] tags: Name and optionally a tag (format: `name:tag`).
@@ -1408,13 +1408,13 @@ class Image(pulumi.CustomResource):
                  add_hosts: pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  build_args: pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
                  build_on_preview: pulumi.Input[Optional[_builtins.bool]] = None,
-                 builder: pulumi.Input[Optional[Union['BuilderConfigArgs', 'BuilderConfigArgsDict']]] = None,
-                 cache_from: pulumi.Input[Optional[Sequence[pulumi.Input[Union['CacheFromArgs', 'CacheFromArgsDict']]]]] = None,
-                 cache_to: pulumi.Input[Optional[Sequence[pulumi.Input[Union['CacheToArgs', 'CacheToArgsDict']]]]] = None,
-                 context: pulumi.Input[Optional[Union['BuildContextArgs', 'BuildContextArgsDict']]] = None,
-                 dockerfile: pulumi.Input[Optional[Union['DockerfileArgs', 'DockerfileArgsDict']]] = None,
+                 builder: pulumi.Input[Optional[Union['BuilderConfigArgs', 'BuilderConfigArgsDict', 'outputs.BuilderConfig']]] = None,
+                 cache_from: pulumi.Input[Optional[Sequence[pulumi.Input[Union['CacheFromArgs', 'CacheFromArgsDict', 'outputs.CacheFrom']]]]] = None,
+                 cache_to: pulumi.Input[Optional[Sequence[pulumi.Input[Union['CacheToArgs', 'CacheToArgsDict', 'outputs.CacheTo']]]]] = None,
+                 context: pulumi.Input[Optional[Union['BuildContextArgs', 'BuildContextArgsDict', 'outputs.BuildContext']]] = None,
+                 dockerfile: pulumi.Input[Optional[Union['DockerfileArgs', 'DockerfileArgsDict', 'outputs.Dockerfile']]] = None,
                  exec_: pulumi.Input[Optional[_builtins.bool]] = None,
-                 exports: pulumi.Input[Optional[Sequence[pulumi.Input[Union['ExportArgs', 'ExportArgsDict']]]]] = None,
+                 exports: pulumi.Input[Optional[Sequence[pulumi.Input[Union['ExportArgs', 'ExportArgsDict', 'outputs.Export']]]]] = None,
                  ignore_secrets_in_diff_calculation: pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  labels: pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
                  load: pulumi.Input[Optional[_builtins.bool]] = None,
@@ -1423,9 +1423,9 @@ class Image(pulumi.CustomResource):
                  platforms: pulumi.Input[Optional[Sequence[pulumi.Input['Platform']]]] = None,
                  pull: pulumi.Input[Optional[_builtins.bool]] = None,
                  push: pulumi.Input[Optional[_builtins.bool]] = None,
-                 registries: pulumi.Input[Optional[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict']]]]] = None,
+                 registries: pulumi.Input[Optional[Sequence[pulumi.Input[Union['RegistryArgs', 'RegistryArgsDict', 'outputs.Registry']]]]] = None,
                  secrets: pulumi.Input[Optional[Mapping[str, pulumi.Input[_builtins.str]]]] = None,
-                 ssh: pulumi.Input[Optional[Sequence[pulumi.Input[Union['SSHArgs', 'SSHArgsDict']]]]] = None,
+                 ssh: pulumi.Input[Optional[Sequence[pulumi.Input[Union['SSHArgs', 'SSHArgsDict', 'outputs.SSH']]]]] = None,
                  tags: pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]] = None,
                  target: pulumi.Input[Optional[_builtins.str]] = None,
                  __props__=None):
