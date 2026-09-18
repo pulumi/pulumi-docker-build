@@ -240,11 +240,15 @@ func hashBuildContext(
 	for _, key := range keys {
 		namedContext := namedContexts[key]
 		if isLocalDir(fs, namedContext) {
-			fs, err := rootFS(namedContext, excludes)
+			namedExcludes, err := getIgnorePatterns(fs, "", namedContext)
 			if err != nil {
 				return "", err
 			}
-			if _, err := hashPath(h, fs); err != nil {
+			namedFS, err := rootFS(namedContext, namedExcludes)
+			if err != nil {
+				return "", err
+			}
+			if _, err := hashPath(h, namedFS); err != nil {
 				return "", err
 			}
 		}
@@ -301,11 +305,13 @@ func hashDockerfile(h hash.Hash, path string) error {
 // context for the given Dockerfile, if any such patterns exist.
 //
 // Precedence is given to Dockerfile-specific ignore-files as per
-// https://docs.docker.com/build/building/context/#filename-and-location.
+// https://docs.docker.com/build/building/context/#filename-and-location. When
+// dockerfilePath is empty, only the context root's .dockerignore is considered.
 func getIgnorePatterns(fs afero.Fs, dockerfilePath, contextRoot string) ([]string, error) {
-	paths := []string{
+	paths := []string{}
+	if dockerfilePath != "" {
 		// Prefer <Dockerfile>.dockerignore if it's present.
-		dockerfilePath + ".dockerignore",
+		paths = append(paths, dockerfilePath+".dockerignore")
 	}
 
 	if isLocalDir(fs, contextRoot) {

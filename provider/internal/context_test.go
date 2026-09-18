@@ -135,6 +135,68 @@ func TestHashIgnoresFile(t *testing.T) {
 	assert.Equal(t, result, baseResult)
 }
 
+func TestHashNamedContextDoesNotUsePrimaryIgnorePatterns(t *testing.T) {
+	t.Parallel()
+
+	primaryDir := t.TempDir()
+	namedDir := t.TempDir()
+	dockerfile := filepath.Join(primaryDir, _dockerfile)
+	namedFile := filepath.Join(namedDir, "included.txt")
+
+	require.NoError(t, os.WriteFile(dockerfile, nil, 0o600))
+	require.NoError(t, os.WriteFile(filepath.Join(primaryDir, ".dockerignore"), []byte("*\n"), 0o600))
+	require.NoError(t, os.WriteFile(namedFile, []byte("before"), 0o600))
+
+	baselineResult, err := hashBuildContext(
+		primaryDir,
+		dockerfile,
+		map[string]string{"named": namedDir},
+	)
+	require.NoError(t, err)
+
+	require.NoError(t, os.WriteFile(namedFile, []byte("after"), 0o600))
+	modifiedResult, err := hashBuildContext(
+		primaryDir,
+		dockerfile,
+		map[string]string{"named": namedDir},
+	)
+	require.NoError(t, err)
+
+	assert.NotEqual(t, baselineResult, modifiedResult,
+		"primary ignore patterns must not hide changes in a named context")
+}
+
+func TestHashNamedContextUsesItsOwnIgnorePatterns(t *testing.T) {
+	t.Parallel()
+
+	primaryDir := t.TempDir()
+	namedDir := t.TempDir()
+	dockerfile := filepath.Join(primaryDir, _dockerfile)
+	includedFile := filepath.Join(namedDir, "included.txt")
+	ignoredFile := filepath.Join(namedDir, "ignored.txt")
+	namedContexts := map[string]string{"named": namedDir}
+
+	require.NoError(t, os.WriteFile(dockerfile, nil, 0o600))
+	require.NoError(t, os.WriteFile(filepath.Join(namedDir, ".dockerignore"), []byte("ignored.txt\n"), 0o600))
+	require.NoError(t, os.WriteFile(includedFile, []byte("included-before"), 0o600))
+	require.NoError(t, os.WriteFile(ignoredFile, []byte("ignored-before"), 0o600))
+
+	baselineResult, err := hashBuildContext(primaryDir, dockerfile, namedContexts)
+	require.NoError(t, err)
+
+	require.NoError(t, os.WriteFile(ignoredFile, []byte("ignored-after"), 0o600))
+	ignoredResult, err := hashBuildContext(primaryDir, dockerfile, namedContexts)
+	require.NoError(t, err)
+	assert.Equal(t, baselineResult, ignoredResult,
+		"changes ignored by the named context must not affect the hash")
+
+	require.NoError(t, os.WriteFile(includedFile, []byte("included-after"), 0o600))
+	includedResult, err := hashBuildContext(primaryDir, dockerfile, namedContexts)
+	require.NoError(t, err)
+	assert.NotEqual(t, baselineResult, includedResult,
+		"changes included by the named context must affect the hash")
+}
+
 // Tests that we handle .dockerignore exclusions such as "!foo/*/bar".
 //
 // See:
@@ -341,6 +403,15 @@ func TestDockerIgnore(t *testing.T) {
 				dockerignoreName: rootIgnore,
 			},
 			want: []string{rootIgnore},
+		},
+		{
+			name:    "context without Dockerfile uses its root dockerignore",
+			context: "named",
+			fs: map[string]string{
+				dockerignoreName:            rootIgnore,
+				"named/" + dockerignoreName: customIgnore,
+			},
+			want: []string{customIgnore},
 		},
 		{
 			name:       "Dockerfile with root dockerignore and custom dockerignore",
