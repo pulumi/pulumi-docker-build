@@ -16,6 +16,7 @@ package internal
 
 import (
 	"bufio"
+	gofs "io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -277,6 +278,50 @@ func TestHashFilemodeMatters(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.NotEqual(t, result, baseResult)
+}
+
+func TestHashIgnoresUmaskDerivedPermissions(t *testing.T) {
+	t.Parallel()
+	// git records only 100644/100755, so a checkout's group/other permission bits come from the
+	// umask of whoever materialized the files: umask 022 yields 0644, umask 002 yields 0664. Two
+	// checkouts of the same commit must therefore hash identically, or contextHash reports a
+	// change that no commit can explain and the diff never converges.
+	write := func(t *testing.T, mode gofs.FileMode) string {
+		t.Helper()
+		dir := t.TempDir()
+		dockerfile := filepath.Join(dir, "Dockerfile")
+		require.NoError(t, os.WriteFile(dockerfile, []byte("FROM scratch\nCOPY app.txt /\n"), mode))
+		require.NoError(t, os.WriteFile(filepath.Join(dir, "app.txt"), []byte("content"), mode))
+		// os.WriteFile is subject to the process umask, so set the modes explicitly.
+		require.NoError(t, os.Chmod(dockerfile, mode))
+		require.NoError(t, os.Chmod(filepath.Join(dir, "app.txt"), mode))
+		h, err := hashBuildContext(dir, dockerfile, nil)
+		require.NoError(t, err)
+		return h
+	}
+
+	umask022 := write(t, 0o644)
+	umask002 := write(t, 0o664)
+	assert.Equal(t, umask022, umask002,
+		"group-writable checkout must hash the same as a umask-022 checkout")
+}
+
+func TestHashDockerfileErrorIsNotSwallowed(t *testing.T) {
+	t.Parallel()
+	// A Dockerfile that stats as a local file but cannot be read must surface an error. Returning
+	// an empty hash with a nil error makes every subsequent Diff see a changed contextHash.
+	dir := t.TempDir()
+	dockerfile := filepath.Join(dir, "Dockerfile")
+	require.NoError(t, os.WriteFile(dockerfile, []byte("FROM scratch\n"), 0o644))
+	require.NoError(t, os.Chmod(dockerfile, 0o000))
+	t.Cleanup(func() { _ = os.Chmod(dockerfile, 0o644) })
+
+	if _, err := os.ReadFile(dockerfile); err == nil {
+		t.Skip("running as a user that bypasses file permissions")
+	}
+
+	_, err := hashBuildContext(dir, dockerfile, nil)
+	assert.Error(t, err, "an unreadable Dockerfile must not hash to an empty string with nil error")
 }
 
 func TestHashDeepSymlinks(t *testing.T) {

@@ -2,6 +2,8 @@
 
 ### Fixed
 
+- `contextHash` no longer depends on the umask of whoever checked out the build context. Permission bits other than the executable bit are normalised before hashing, so two checkouts of the same commit produce the same hash instead of reporting a `contextHash` change on every preview. (https://github.com/pulumi/pulumi-docker-build/pull/979)
+- A Dockerfile that stats as a local file but cannot be read now returns an error rather than an empty hash and a nil error. (https://github.com/pulumi/pulumi-docker-build/pull/979)
 - `Image` is no longer deleted from state when a registry read fails with a non-404 error (expired credentials, auth failure, or transient network error) during refresh. (https://github.com/pulumi/pulumi-docker-build/pull/930)
 - Fixes a regression where a 404 status code during deletion wasn't considered deleted. (https://github.com/pulumi/pulumi-docker-build/issues/849)
 - Fixed `exec: true` builds failing with `exit status 125` due to malformed buildx arguments. (https://github.com/pulumi/pulumi-docker-build/issues/656)
