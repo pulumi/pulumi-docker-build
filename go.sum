@@ -727,10 +727,10 @@ github.com/pulumi/pulumi-go-provider v1.7.0 h1:wrkDxqcHQTO3CjAjDqjBfYxQCMUNaYLbK
 github.com/pulumi/pulumi-go-provider v1.7.0/go.mod h1:FIiR3Z9U1Qqk/qAGkctluJDFqMK9NWhj9qDJ9+AIVzs=
 github.com/pulumi/pulumi-java v1.37.3 h1:ZtDOaTXda6Df3/bmIfUFnjfiDCZVczBzMqH6uBFMC/Y=
 github.com/pulumi/pulumi-java v1.37.3/go.mod h1:iyL7Oc2qxBAYX7DImDoBXwPc3Odq5gwgXz3l2XdXXJw=
-github.com/pulumi/pulumi/pkg/v3 v3.266.0 h1:QacwmwRo4qigsRcqV/bmEfjCcKOF555vTBBzlH98lGQ=
-github.com/pulumi/pulumi/pkg/v3 v3.266.0/go.mod h1:7+TltU1SOa2UdLlnVh/cwqDq5GxdYmkzIsq2K4gWGZc=
-github.com/pulumi/pulumi/sdk/v3 v3.266.0 h1:ht9Nr2eCj/FzyXmo5ZcI4kETIlokHNVSEVfw23KvBeE=
-github.com/pulumi/pulumi/sdk/v3 v3.266.0/go.mod h1:zRkd7bKRwqeIpHxGeACXBJXNGe/kz+RINyMtmY4GtE8=
+github.com/pulumi/pulumi/pkg/v3 v3.267.0 h1:lFbVPP44E/GP64PJh/HpJgWIbg9wUGKvo2ytZXwXJUE=
+github.com/pulumi/pulumi/pkg/v3 v3.267.0/go.mod h1:ESsKsvW4Hu98Wyb4cwvs2ydqnnFa23Vx+o7y8ov18H4=
+github.com/pulumi/pulumi/sdk/v3 v3.267.0 h1:fannfwJKxGwybpCgflADIVE3ZqYtdNFpXdRU9tfAWgw=
+github.com/pulumi/pulumi/sdk/v3 v3.267.0/go.mod h1:zRkd7bKRwqeIpHxGeACXBJXNGe/kz+RINyMtmY4GtE8=
 github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9 h1:bsUq1dX0N8AOIL7EB/X911+m4EHsnWEHeJ0c+3TTBrg=
 github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
 github.com/regclient/regclient v0.11.5 h1:OHRsXO0F3qHGfa4HEUv+EkMH9NXNcCTBKjNzyC/UhIA=
@@ -954,8 +954,8 @@ go.opentelemetry.io/otel/sdk/metric v1.46.0 h1:0piZ26EG4RBfebb2jhDH6ERCYHoVWduc3
 go.opentelemetry.io/otel/sdk/metric v1.46.0/go.mod h1:I1PbKrdVc8Qu8HYVDNtqVIwLwjNrhsV/uFuxfwg8mO4=
 go.opentelemetry.io/otel/trace v1.46.0 h1:OULy7ccdJnZtJ0UDYFOIGaCmiWzJ8Vi2G/Rsu60qs1c=
 go.opentelemetry.io/otel/trace v1.46.0/go.mod h1:J7GAXweO77XSFkB/rmAqk9D6ihszhFjLU+d9WuUxDLI=
-go.opentelemetry.io/proto/otlp v1.11.0 h1:5rrYs0Ykyj50sdU/JU0x8etU+LubXWb+gED6TbEdMIk=
-go.opentelemetry.io/proto/otlp v1.11.0/go.mod h1:SmVizdCOAm3XBtG1g1NnOdhW6jtddT72hLMhv8VwA8E=
+go.opentelemetry.io/proto/otlp v1.11.1 h1:SCrPqH9NE5CmBrOqpjNCiT0X5mGwMyGERXdogfR7Yjw=
+go.opentelemetry.io/proto/otlp v1.11.1/go.mod h1:wq8W4aSf6bOy8RZyESOeQFr9Pu7wydWX/TY4sgvrTPg=
 go.opentelemetry.io/proto/slim/otlp v1.11.0 h1:zB37f+f99+y6UIZR4h7UpwbXd5kFNyip35U7GaJ/Jik=
 go.opentelemetry.io/proto/slim/otlp v1.11.0/go.mod h1:mI3DeND+VXZuA4keqFPKDJ3BklwveYm1JqBcEWKDEOM=
 go.opentelemetry.io/proto/slim/otlp/collector/profiles/v1development v0.4.0 h1:mt+DWtks0biKnz0jXMpDbxWN0CHJi6OJDKe4GcREkcs=

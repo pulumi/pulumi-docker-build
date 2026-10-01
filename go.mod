@@ -18,8 +18,8 @@ require (
 	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.114.1
 	github.com/pulumi/pulumi-go-provider v1.7.0
 	github.com/pulumi/pulumi-java v1.37.3
-	github.com/pulumi/pulumi/pkg/v3 v3.266.0
-	github.com/pulumi/pulumi/sdk/v3 v3.266.0
+	github.com/pulumi/pulumi/pkg/v3 v3.267.0
+	github.com/pulumi/pulumi/sdk/v3 v3.267.0
 	github.com/regclient/regclient v0.11.5
 	github.com/sirupsen/logrus v1.9.4
 	github.com/spf13/afero v1.15.0
@@ -360,7 +360,7 @@ require (
 	go.opentelemetry.io/otel/log v0.22.0 // indirect
 	go.opentelemetry.io/otel/sdk/log v0.22.0 // indirect
 	go.opentelemetry.io/otel/sdk/metric v1.46.0 // indirect
-	go.opentelemetry.io/proto/otlp v1.11.0 // indirect
+	go.opentelemetry.io/proto/otlp v1.11.1 // indirect
 	go.uber.org/atomic v1.12.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.yaml.in/yaml/v2 v2.4.4 // indirect
