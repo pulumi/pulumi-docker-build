@@ -126,6 +126,7 @@ func convert(language, tempDir, programFile string) (string, error) {
 }
 
 func processYaml(path, mdDir string) error {
+	//nolint:gosec // G703: path is derived from a build-time CLI argument, not user input.
 	yamlFile, err := os.Open(filepath.Clean(path))
 	if err != nil {
 		return err
@@ -215,6 +216,7 @@ func processYaml(path, mdDir string) error {
 		}
 	}
 	_, _ = fmt.Fprintf(os.Stdout, "Writing %s\n", filepath.Join(mdDir, md))
+	//nolint:gosec // G703: mdDir is derived from a build-time CLI argument, not user input.
 	f, err := os.OpenFile(filepath.Clean(filepath.Join(mdDir, md)), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0o600)
 	if err != nil {
 		return err
