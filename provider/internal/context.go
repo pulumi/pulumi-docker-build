@@ -160,6 +160,20 @@ func (bc *BuildContext) Annotate(a infer.Annotator) {
 	`))
 }
 
+// portableMode reduces a file mode to the parts a build can act on: the file type and the
+// executable bit. The remaining permission bits are not a property of the source -- git records
+// only 100644/100755, so on checkout they come from the umask of whoever materialized the file
+// (umask 022 yields 0644, umask 002 yields 0664). Including them makes contextHash depend on the
+// machine rather than the content, so two checkouts of the same commit disagree forever. See the
+// portability note in hashBuildContext's docs.
+func portableMode(mode gofs.FileMode) gofs.FileMode {
+	perm := gofs.FileMode(0o644)
+	if mode&0o111 != 0 {
+		perm = 0o755
+	}
+	return (mode & ^gofs.ModePerm) | perm
+}
+
 // hashFile hashes a file's contents and accumulates it into the provider Hash.
 func hashFile(
 	h hash.Hash,
@@ -190,7 +204,7 @@ func hashFile(
 	}
 
 	h.Write([]byte(filepath.ToSlash(path.Clean(relativePath))))
-	h.Write([]byte(fileMode.String()))
+	h.Write([]byte(portableMode(fileMode).String()))
 
 	return nil
 }
@@ -217,9 +231,8 @@ func hashBuildContext(
 	}
 
 	if isLocalFile(fs, dockerfilePath) {
-		err := hashDockerfile(h, dockerfilePath)
-		if err != nil {
-			return "", nil
+		if err := hashDockerfile(h, dockerfilePath); err != nil {
+			return "", err
 		}
 	}
 
