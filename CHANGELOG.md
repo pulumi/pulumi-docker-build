@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Changed
+
+- Updated the Go toolchain used to build the provider to 1.26.10. (https://github.com/pulumi/pulumi-docker-build/issues/1091)
+
 ### Fixed
 
 - `Image` is no longer deleted from state when a registry read fails with a non-404 error (expired credentials, auth failure, or transient network error) during refresh. (https://github.com/pulumi/pulumi-docker-build/pull/930)
