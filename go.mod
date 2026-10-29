@@ -1,6 +1,6 @@
 module github.com/pulumi/pulumi-docker-build
 
-go 1.26.6
+go 1.26.10
 
 require (
 	github.com/aws/aws-sdk-go v1.55.8
