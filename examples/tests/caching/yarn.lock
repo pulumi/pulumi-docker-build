@@ -215,10 +215,10 @@
   dependencies:
     "@opentelemetry/api" "^1.3.0"
 
-"@opentelemetry/api@^1.3.0", "@opentelemetry/api@^1.9":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.9.0.tgz#d03eba68273dc0f7509e2a3d5cba21eae10379fe"
-  integrity sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==
+"@opentelemetry/api@^1.3.0", "@opentelemetry/api@~1.9":
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-1.9.1.tgz#c1b0346de336ba55af2d5a7970882037baedec05"
+  integrity sha512-gLyJlPHPZYdAk1JENA9LeHejZe1Ti77/pTeFm/nMXmQH/HFZlcS/O2XJB+L8fkbrNSqhdtlvjBVjxwUYanNH5Q==
 
 "@opentelemetry/context-async-hooks@2.10.0":
   version "2.10.0"
@@ -436,15 +436,15 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@pulumi/pulumi@3.273.0":
-  version "3.273.0"
-  resolved "https://registry.yarnpkg.com/@pulumi/pulumi/-/pulumi-3.273.0.tgz#a5cdba20eef642cd0d021704e0d21a18bdf340e9"
-  integrity sha512-Yh2k0Kry4u5LM730KUO5HZFnqHdlW9ypoQ8zgO0Tqam1G6urFXjIUTUaLxvWrdsm6gKCoyVS6CPdeOGcV+Msvg==
+"@pulumi/pulumi@3.274.0":
+  version "3.274.0"
+  resolved "https://registry.yarnpkg.com/@pulumi/pulumi/-/pulumi-3.274.0.tgz#c9da421ab7a190872fd2feb78a81598e15e482f9"
+  integrity sha512-y8R/BryUgfxaE/6jdJV+TO1yq/wFluTJidsTEMSAEli4tLudNmf4QCGNFhj8fQX97G4xBDuFgF/OUDTYi9UMXw==
   dependencies:
     "@grpc/grpc-js" "^1.10.1"
     "@logdna/tail-file" "^2.0.6"
     "@npmcli/arborist" "^9.0.0"
-    "@opentelemetry/api" "^1.9"
+    "@opentelemetry/api" "~1.9"
     "@opentelemetry/core" "^2.9"
     "@opentelemetry/exporter-trace-otlp-grpc" "^0.220"
     "@opentelemetry/exporter-zipkin" "^2.9"
