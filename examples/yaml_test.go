@@ -60,7 +60,6 @@ func assertSecretsInputIsSecret(t *testing.T, stack integration.RuntimeValidatio
 }
 
 func TestHCLExample(t *testing.T) {
-	t.Skip("Skipping until HCL is stable")
 	cwd, err := os.Getwd()
 	require.NoError(t, err)
 
