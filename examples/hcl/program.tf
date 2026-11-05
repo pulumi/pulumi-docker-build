@@ -1,4 +1,4 @@
-pulumi {
+terraform {
   required_providers {
     docker-build = {
       source  = "pulumi/docker-build"

@@ -242,7 +242,7 @@ variables:
             registryId: ${ecr-repository.registryId}
 ```
 ```hcl
-pulumi {
+terraform {
   required_providers {
     aws = {
       source  = "pulumi/aws"
@@ -455,7 +455,7 @@ resources:
 runtime: yaml
 ```
 ```hcl
-pulumi {
+terraform {
   required_providers {
     docker-build = {
       source  = "pulumi/docker-build"
@@ -638,7 +638,7 @@ resources:
 runtime: yaml
 ```
 ```hcl
-pulumi {
+terraform {
   required_providers {
     docker-build = {
       source  = "pulumi/docker-build"
@@ -849,7 +849,7 @@ resources:
 runtime: yaml
 ```
 ```hcl
-pulumi {
+terraform {
   required_providers {
     docker-build = {
       source  = "pulumi/docker-build"
@@ -1024,7 +1024,7 @@ resources:
 runtime: yaml
 ```
 ```hcl
-pulumi {
+terraform {
   required_providers {
     docker-build = {
       source  = "pulumi/docker-build"
@@ -1177,7 +1177,7 @@ resources:
 runtime: yaml
 ```
 ```hcl
-pulumi {
+terraform {
   required_providers {
     docker-build = {
       source  = "pulumi/docker-build"
@@ -1315,7 +1315,7 @@ resources:
 runtime: yaml
 ```
 ```hcl
-pulumi {
+terraform {
   required_providers {
     docker-build = {
       source  = "pulumi/docker-build"
@@ -1471,7 +1471,7 @@ resources:
 runtime: yaml
 ```
 ```hcl
-pulumi {
+terraform {
   required_providers {
     docker-build = {
       source  = "pulumi/docker-build"
@@ -1607,7 +1607,7 @@ resources:
 runtime: yaml
 ```
 ```hcl
-pulumi {
+terraform {
   required_providers {
     docker-build = {
       source  = "pulumi/docker-build"
@@ -1759,7 +1759,7 @@ resources:
 runtime: yaml
 ```
 ```hcl
-pulumi {
+terraform {
   required_providers {
     docker-build = {
       source  = "pulumi/docker-build"
@@ -1913,7 +1913,7 @@ resources:
 runtime: yaml
 ```
 ```hcl
-pulumi {
+terraform {
   required_providers {
     docker-build = {
       source  = "pulumi/docker-build"
@@ -2079,7 +2079,7 @@ resources:
 runtime: yaml
 ```
 ```hcl
-pulumi {
+terraform {
   required_providers {
     docker-build = {
       source  = "pulumi/docker-build"
