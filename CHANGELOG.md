@@ -10,6 +10,7 @@
 - Fixes a regression where a 404 status code during deletion wasn't considered deleted. (https://github.com/pulumi/pulumi-docker-build/issues/849)
 - Fixed `exec: true` builds failing with `exit status 125` due to malformed buildx arguments. (https://github.com/pulumi/pulumi-docker-build/issues/656)
 - The `secrets` input is now correctly marked as a Pulumi secret in state. (https://github.com/pulumi/pulumi-docker-build/pull/919)
+- The HCL examples in the docs now run with the current Pulumi HCL plugin. (https://github.com/pulumi/pulumi-docker-build/issues/1090)
 
 ## 0.0.15 (2025-10-17)
 
