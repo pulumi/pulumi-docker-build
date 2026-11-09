@@ -335,6 +335,12 @@ class Index(pulumi.CustomResource):
         __props__.__dict__["tag"] = None
         return Index(resource_name, opts=opts, __props__=__props__)
 
+    @staticmethod
+    def exists(id: pulumi.Input[str],
+            opts: Optional[pulumi.ResourceOptions] = None) -> pulumi.Output[bool]:
+        __props__: dict = {}
+        return pulumi.runtime.exists_resource(None, 'docker-build:index:Index', id, __props__, opts or pulumi.ResourceOptions())
+
     @_builtins.property
     @pulumi.getter
     def push(self) -> pulumi.Output[_builtins.bool]:
