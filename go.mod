@@ -18,8 +18,8 @@ require (
 	github.com/pulumi/pulumi-dotnet/pulumi-language-dotnet/v3 v3.118.0
 	github.com/pulumi/pulumi-go-provider v1.8.0
 	github.com/pulumi/pulumi-java v1.40.0
-	github.com/pulumi/pulumi/pkg/v3 v3.274.1
-	github.com/pulumi/pulumi/sdk/v3 v3.274.1
+	github.com/pulumi/pulumi/pkg/v3 v3.275.0
+	github.com/pulumi/pulumi/sdk/v3 v3.275.0
 	github.com/regclient/regclient v0.11.5
 	github.com/sirupsen/logrus v1.9.4
 	github.com/spf13/afero v1.15.0
@@ -248,7 +248,7 @@ require (
 	github.com/prometheus/procfs v0.20.1 // indirect
 	github.com/pulumi/appdash v0.0.0-20231130102222-75f619a67231 // indirect
 	github.com/pulumi/inflector v0.2.1 // indirect
-	github.com/pulumi/pulumi-cloud-sdk/go v1.20261110.0 // indirect
+	github.com/pulumi/pulumi-cloud-sdk/go v1.20261111.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
