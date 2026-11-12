@@ -6,6 +6,7 @@
 
 ### Fixed
 
+- Previews no longer fail when an `Image` references a builder that no longer exists. The preview build is skipped with a warning, and updates fail with an actionable error. (https://github.com/pulumi/pulumi-docker-build/issues/279)
 - `Image` is no longer deleted from state when a registry read fails with a non-404 error (expired credentials, auth failure, or transient network error) during refresh. (https://github.com/pulumi/pulumi-docker-build/pull/930)
 - Fixes a regression where a 404 status code during deletion wasn't considered deleted. (https://github.com/pulumi/pulumi-docker-build/issues/849)
 - Fixed `exec: true` builds failing with `exit status 125` due to malformed buildx arguments. (https://github.com/pulumi/pulumi-docker-build/issues/656)
