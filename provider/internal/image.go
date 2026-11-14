@@ -755,6 +755,10 @@ func (i *Image) Create(
 	}
 
 	result, err := cli.Build(ctx, build)
+	if err != nil && req.DryRun && errors.As(err, &builderNotFoundError{}) {
+		provider.GetLogger(ctx).Warning("Skipping preview build: " + err.Error())
+		return infer.CreateResponse[ImageState]{ID: id, Output: state}, nil
+	}
 	if err != nil {
 		return infer.CreateResponse[ImageState]{ID: id, Output: state}, err
 	}
