@@ -672,10 +672,10 @@ github.com/pulumi/pulumi-go-provider v1.8.0 h1:Fp24jhdu5px0gEho0ACamwj4kAPbDysYT
 github.com/pulumi/pulumi-go-provider v1.8.0/go.mod h1:Ay6SbxX3OlASA2OOu914jovxV0alWNIaLk+q/uaQZfI=
 github.com/pulumi/pulumi-java v1.40.1 h1:JuE0Lz9uHOW7pIxvX5r9MVdgb7FEMDZvcDxEwwPJwSs=
 github.com/pulumi/pulumi-java v1.40.1/go.mod h1:LfReqXbYIbYjKSIUvM+dJxbltGGVRAq7EYfaZfo2WiE=
-github.com/pulumi/pulumi/pkg/v3 v3.276.0 h1:RKovVWNh+H8qnmbv88QZWirM/HmfBqR28rbnRN3n6FA=
-github.com/pulumi/pulumi/pkg/v3 v3.276.0/go.mod h1:uM3JWZ2l7UhbY+gFQjGQdkHOBCVsXmvza+TY9fu/CNE=
-github.com/pulumi/pulumi/sdk/v3 v3.276.0 h1:xkrmwkmAaHC2wilul4RTcPVrGfA6yQetstZpeQrvRWI=
-github.com/pulumi/pulumi/sdk/v3 v3.276.0/go.mod h1:WnPO90tGSd4h5BDTfK4BeDZ/b2Rsq7bhZ2yEcfvScEc=
+github.com/pulumi/pulumi/pkg/v3 v3.277.0 h1:dzhb2VsqmVTVoFwHyRG5s9eK/wH8byt+96d6888j+p0=
+github.com/pulumi/pulumi/pkg/v3 v3.277.0/go.mod h1:smRlDtGHw5PQX8JCyU2uz1RH35nQmiNtX6IwKx4MgPA=
+github.com/pulumi/pulumi/sdk/v3 v3.277.0 h1:RtkvbNSWGfWMCKpzTPuTzcdFF9hifstkSw7gPVwUPZ0=
+github.com/pulumi/pulumi/sdk/v3 v3.277.0/go.mod h1:19B7NrlAk0Cw7kN0uzoQPa5Sn90xSxEqOVu2WWLuQFo=
 github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9 h1:bsUq1dX0N8AOIL7EB/X911+m4EHsnWEHeJ0c+3TTBrg=
 github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9/go.mod h1:bCqnVzQkZxMG4s8nGwiZ5l3QUCyqpo9Y+/ZMZ9VjZe4=
 github.com/regclient/regclient v0.11.5 h1:OHRsXO0F3qHGfa4HEUv+EkMH9NXNcCTBKjNzyC/UhIA=
