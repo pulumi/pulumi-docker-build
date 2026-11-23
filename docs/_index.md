@@ -24,7 +24,7 @@ image, publish it to a remote AWS ECR registry, and use an [inline
 cache](https://docs.docker.com/build/cache/backends/inline/) to speed up
 subsequent builds.
 
-{{< chooser language "typescript,python,csharp,go,yaml,java" >}}
+{{< chooser language "typescript,python,csharp,go,yaml,java,hcl" >}}
 
 {{% choosable language typescript %}}
 
@@ -420,6 +420,66 @@ public class App {
 
         ctx.export("ref", myImage.ref());
     }
+}
+```
+
+{{% /choosable %}}
+
+{{% choosable language hcl %}}
+
+```hcl
+terraform {
+  required_providers {
+    aws = {
+      source = "pulumi/aws"
+    }
+    docker-build = {
+      source = "pulumi/docker-build"
+    }
+  }
+}
+
+# Create an ECR repository for pushing.
+resource "aws_ecr_repository" "ecr-repository" {
+}
+
+# Grab auth credentials for ECR.
+data "aws_ecr_authorization_token" "auth-token" {
+  registry_id = aws_ecr_repository.ecr-repository.registry_id
+}
+
+# Build and push an image to ECR with inline caching.
+resource "docker-build_image" "my-image" {
+  # Tag our image with our ECR repository's address.
+  tags = ["${aws_ecr_repository.ecr-repository.repository_url}:latest"]
+  context = {
+    location = "./app"
+  }
+  # Use the pushed image as a cache source.
+  cache_from {
+    registry = {
+      ref = "${aws_ecr_repository.ecr-repository.repository_url}:latest"
+    }
+  }
+  # Include an inline cache with our pushed image.
+  cache_to {
+    inline = {}
+  }
+  # Build a multi-platform image manifest for ARM and AMD.
+  platforms = ["linux/amd64", "linux/arm64"]
+  # Push the final result to ECR.
+  push = true
+  # Provide our ECR credentials.
+  registries {
+    address  = aws_ecr_repository.ecr-repository.repository_url
+    password = data.aws_ecr_authorization_token.auth-token.password
+    username = data.aws_ecr_authorization_token.auth-token.user_name
+  }
+}
+
+# Export a ref for the pushed images so we can deploy it.
+output "ref" {
+  value = docker-build_image.my-image.ref
 }
 ```
 
