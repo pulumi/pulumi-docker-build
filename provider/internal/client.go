@@ -289,7 +289,7 @@ func (c *cli) Build(
 				authprovider.NewDockerAuthProvider(authprovider.DockerAuthProviderConfig{
 					// ConfigFile-only lookup; buildx's dockerconfig variant also
 					// scans on-disk config dirs, breaking wrap()'s isolation.
-					AuthConfigProvider: authprovider.LoadAuthConfig(c.ConfigFile()),
+					AuthConfigProvider: c.authConfigProvider(),
 				}),
 				build.Secrets(),
 			},
@@ -308,7 +308,7 @@ func (c *cli) Build(
 		defer close(errC)
 		results, err := c.builder.Build(
 			ctx,
-			b.nodes,
+			c.nodesWithAuth(b.nodes),
 			payload,
 			dockerutil.NewClient(c),
 			confutil.NewConfig(c),
@@ -330,6 +330,34 @@ func (c *cli) Build(
 	case <-ctx.Done():
 		return nil, ctx.Err()
 	}
+}
+
+// authConfigProvider looks up credentials in this client's config file only,
+// which holds the host's credentials with the resource's registries layered on
+// top. buildx's own dockerconfig variant also scans on-disk config dirs,
+// breaking wrap()'s isolation.
+func (c *cli) authConfigProvider() authprovider.AuthConfigProvider {
+	return authprovider.LoadAuthConfig(c.ConfigFile())
+}
+
+// nodesWithAuth returns a copy of the builder's nodes that authenticate with
+// this client's config.
+//
+// Nodes come from the host's Docker CLI, which knows nothing about the
+// resource's registries, and buildx uses their auth when it merges a
+// multi-platform build's per-node images into a manifest list. That merge runs
+// in our process, not in the BuildKit session, so without this a builder with
+// one node per platform fails with a 401 or 403 on a registry that only the
+// resource's registries can access. The nodes are cached and shared between
+// resources, so we copy them rather than change them.
+func (c *cli) nodesWithAuth(nodes []builder.Node) []builder.Node {
+	out := make([]builder.Node, len(nodes))
+	copy(out, nodes)
+	auth := c.authConfigProvider()
+	for i := range out {
+		out[i].ImageOpt.Auth = auth
+	}
+	return out
 }
 
 // BuildKitEnabled returns true if the client supports buildkit.

@@ -6,6 +6,7 @@
 
 ### Fixed
 
+- Multi-platform `Image` builds on a builder with one node per platform (for example remote builders) now use the `registries` credentials when merging the per-node images into a manifest list, instead of failing with a 401 or 403 unless `exec: true` was set.
 - `Image` is no longer deleted from state when a registry read fails with a non-404 error (expired credentials, auth failure, or transient network error) during refresh. (https://github.com/pulumi/pulumi-docker-build/pull/930)
 - Fixes a regression where a 404 status code during deletion wasn't considered deleted. (https://github.com/pulumi/pulumi-docker-build/issues/849)
 - Fixed `exec: true` builds failing with `exit status 125` due to malformed buildx arguments. (https://github.com/pulumi/pulumi-docker-build/issues/656)
