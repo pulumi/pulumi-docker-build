@@ -109,7 +109,12 @@ func (h *host) builderFor(ctx context.Context, build Build) (*cachedBuilder, err
 		)
 	}
 	if err != nil {
-		return nil, fmt.Errorf("new builder: %w", err)
+		err = fmt.Errorf("new builder: %w", err)
+		// buildx reports a missing builder with an untyped error.
+		if opts.Builder != "" && strings.Contains(err.Error(), fmt.Sprintf("no builder %q found", opts.Builder)) {
+			return nil, builderNotFoundError{err}
+		}
+		return nil, err
 	}
 
 	// If we didn't request a particular builder, and we loaded a default
@@ -199,6 +204,23 @@ func (h *host) builderFor(ctx context.Context, build Build) (*cachedBuilder, err
 	h.builders[opts.Builder] = cached
 
 	return cached, nil
+}
+
+// builderNotFoundError is returned when the requested builder doesn't exist,
+// for example because it was created by an earlier run and has since been
+// removed.
+type builderNotFoundError struct {
+	err error
+}
+
+func (e builderNotFoundError) Error() string {
+	return e.err.Error() + "\nMake sure `builder.name` refers to an existing builder " +
+		"(see `docker buildx ls`), or omit it to use the default builder. If the name is " +
+		"left over from an earlier run, check that `builder` isn't listed in `ignoreChanges`."
+}
+
+func (e builderNotFoundError) Unwrap() error {
+	return e.err
 }
 
 // cachedBuilder caches the builders we've loaded. Repeatedly fetching them can

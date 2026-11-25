@@ -445,6 +445,36 @@ func TestReadInspectError(t *testing.T) {
 	})
 }
 
+// A builder recorded by an earlier run may no longer exist on the host.
+func TestUpdateMissingBuilder(t *testing.T) {
+	t.Parallel()
+
+	update := func(t *testing.T, dryRun bool) error {
+		i := &Image{clientF: mockClientF(testcli(t, true))}
+		_, err := i.Update(t.Context(), infer.UpdateRequest[ImageArgs, ImageState]{
+			Inputs: ImageArgs{
+				Builder:    &BuilderConfig{Name: "pulumi-test-builder-does-not-exist"},
+				Context:    &BuildContext{Context: Context{Location: exampleAppContext}},
+				Dockerfile: &Dockerfile{Inline: "FROM scratch"},
+			},
+			DryRun: dryRun,
+		})
+		return err
+	}
+
+	t.Run("preview skips the build", func(t *testing.T) {
+		t.Parallel()
+		assert.NoError(t, update(t, true))
+	})
+
+	t.Run("update fails with an actionable error", func(t *testing.T) {
+		t.Parallel()
+		err := update(t, false)
+		assert.ErrorContains(t, err, `no builder "pulumi-test-builder-does-not-exist" found`)
+		assert.ErrorContains(t, err, "docker buildx ls")
+	})
+}
+
 func TestImageDiff(t *testing.T) {
 	t.Parallel()
 	host := Host
